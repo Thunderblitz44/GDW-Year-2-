@@ -48,7 +48,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     [SerializeField] float playerHeight = 2;
     Vector3 velocity;
     float airTime;
-    bool isGrounded;
+    //
+    public bool isGrounded;
+    //
     bool wasGrounded;
     [Space(10f)]
 
