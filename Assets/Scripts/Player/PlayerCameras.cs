@@ -1,33 +1,35 @@
 using Cinemachine;
 using System;
 using System.Collections;
-using UnityEditor.PackageManager;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
 {
     [SerializeField] Transform freeLookCamera;
     [SerializeField] Transform combatCamera;
+    [SerializeField] Transform lockOnCamera;
     [SerializeField] LayerMask lockOnLayers;
-    [SerializeField] GameObject sphere;
 
     Player playerScript;
     ActionMap actions;
-    Transform aimSphere;
-    bool isLockedOn;
 
-    Transform originalFreeLookLookAt;
-    Transform originalCombatLookAt;
-
-
+    bool isLockedOn = false;
+    GameObject lastUsedCamera;
+    RaycastHit[] targets;
+    Transform currentTarget;
+    List<int> ints = new();
+    int i;
     public void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
 
-        aimSphere = Instantiate(sphere).transform;
-        originalFreeLookLookAt = freeLookCamera.GetComponent<CinemachineFreeLook>().LookAt;
-        originalCombatLookAt = combatCamera.GetComponent<CinemachineFreeLook>().LookAt;
+    private void Update()
+    {
+       
     }
 
     public Transform GetCameraTransform()
@@ -36,8 +38,14 @@ public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
         {
             return freeLookCamera;
         }
-
-        return combatCamera;
+        else if (combatCamera.gameObject.activeSelf)
+        {
+            return combatCamera;
+        }   
+        else
+        {
+            return lockOnCamera;
+        }
     }
 
     #region IPlayerStateListener
@@ -63,72 +71,74 @@ public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
         playerScript = (Player)sender;
         this.actions = actions;
 
+        // Lock on to target
         actions.CameraControl.LockOnToTarget.performed += ctx =>
         {
-            // does not work
+            if (isLockedOn)
+            {
+                isLockedOn = false;
+                lockOnCamera.gameObject.SetActive(false);
+                lastUsedCamera.gameObject.SetActive(true);
+                return;
+            }
 
             RaycastHit hitInfo;
             if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hitInfo, 100f, lockOnLayers))
             {
-                //playerScript.SetFreeLookState();
                 if (!isLockedOn)
                 {
-                    freeLookCamera.GetComponent<CinemachineFreeLook>().LookAt = hitInfo.transform;
-                    combatCamera.GetComponent<CinemachineFreeLook>().LookAt = hitInfo.transform;
-                }
-                else
-                {
-                    freeLookCamera.GetComponent<CinemachineFreeLook>().LookAt = originalFreeLookLookAt;
-                    combatCamera.GetComponent<CinemachineFreeLook>().LookAt = originalCombatLookAt;
-                }
+                    isLockedOn = true;
+                    lastUsedCamera = GetCameraTransform().gameObject;
+                    lastUsedCamera.gameObject.SetActive(false);
+                    lockOnCamera.gameObject.SetActive(true);
+                    currentTarget = hitInfo.collider.transform;
 
+                    
 
-                //RaycastHit hit2;
-                //if (Physics.Raycast(new Ray(hitInfo.point, hitInfo.transform.position - hitInfo.point), out hit2,3f, lockOnLayers, QueryTriggerInteraction.Ignore))
-                //{
-                //    //Destroy(Instantiate(sphere, hit2.point, Quaternion.identity), 3.0f);
-                //}
+                    lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
+                }
             }
 
+            if (isLockedOn)
+            {
+                // get other targets
+                targets = Physics.SphereCastAll(new Ray(transform.position, Vector3.forward), 100f, 100f, lockOnLayers);
+                Debug.Log(targets.Length);
+            }
         };
 
-        // Look
-        actions.CameraControl.Look.performed += ctx =>
+        // Cycle Targets
+        actions.CameraControl.CycleTargets.performed += ctx =>
         {
-            if (Cursor.visible) 
+            if (!isLockedOn) return;
+
+            if (targets.Length > 0)
             {
-                //Debug.Log("cursor visible");
+                targets = targets.OrderBy((d) => (d.transform.position - transform.position).sqrMagnitude).ToArray();
             }
 
-            if ((playerScript.GetMovementScript().IsMoving() && !playerScript.isInCombat) || playerScript.isInCombat)
+            for (; i < targets.Length; i++)
             {
-                // Recalculate body rotation
-                playerScript.GetMovementScript().RecalculateBodyRotation();
+                if (targets[i].collider.transform != currentTarget)
+                {
+                    currentTarget = targets[i].collider.transform;
+                    lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
+                    ints.Add(i);
+                    break;
+                }
             }
-
-            //RaycastHit hitInfo;
-            //if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hitInfo, 100f, lockOnLayers))
-            //{
-            //    RaycastHit hit2;
-            //    if (Physics.Raycast(new Ray(hitInfo.point, hitInfo.transform.position - hitInfo.point), out hit2, 3f, lockOnLayers, QueryTriggerInteraction.Ignore))
-            //    {
-            //        aimSphere.position = hit2.point;
-            //        //Destroy(Instantiate(sphere, hit2.point, Quaternion.identity), 3.0f);
-            //    }
-            //}
+            if (i >= targets.Length) i = 0;
         };
 
-        //EnableCameraLockOn();
         EnableCameraControl();
     }
 
     #endregion
 
 
-
-
     public void EnableCameraControl() => actions.CameraControl.Enable();
     public void DisableCameraControl() => actions.CameraControl.Disable();
     public void EnableCameraLockOn() => actions.CameraControl.LockOnToTarget.Enable();
     public void DisableCameraLockOn() => actions.CameraControl.LockOnToTarget.Disable();
+    public bool IsLockedOnToATarget() => isLockedOn;
 }

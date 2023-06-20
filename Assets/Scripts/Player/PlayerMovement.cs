@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListener
 {
@@ -11,7 +10,10 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     [SerializeField] float walkSpeed = 5f;
     [SerializeField] float runSpeed = 12f;
     [SerializeField] float groundDrag = 5f;
+    [SerializeField] AnimationCurve runSpeedCurve;
+    [SerializeField] float runAccelMultiplier = 1f;
     float moveSpeed;
+    float runAccelTime;
     [Space(10f)]
 
     // 3RD PERSON
@@ -133,6 +135,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
                 correctBodyRotation = false;
             }
         }
+
+        if ((IsMoving() && !playerScript.isInCombat) || playerScript.isInCombat)
+        {
+            RecalculateBodyRotation();
+        }
     }
 
     private void LateUpdate()
@@ -225,19 +232,31 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     void Move()
     {
-        Vector3 moveDirection = orientation.forward * inputMoveDirection.z + orientation.right * inputMoveDirection.x;
+        Vector3 moveDirection;
+        if (!playerScript.GetCameraControllerScript().IsLockedOnToATarget())
+        {
+            moveDirection = orientation.forward * inputMoveDirection.z + orientation.right * inputMoveDirection.x;
+        }
+        else
+        {
+            moveDirection = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z) * inputMoveDirection.z + 
+                new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z) * inputMoveDirection.x;
+        }
+
+
+
 
         if (!playerScript.isInCombat) body.forward = Vector3.Slerp(body.forward, moveDirection.normalized, Time.deltaTime * rotationSpeed);
 
         if (OnSlope() && !isExitingSlope)
         {
-            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
+            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * rb.mass * 20f, ForceMode.Force);
 
-            if (rb.velocity.y > 0f) rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            if (rb.velocity.y > 0f) rb.AddForce(Vector3.down * 80f * rb.mass, ForceMode.Force);
         }
 
-        if (isGrounded) rb.AddForce(moveDirection * moveSpeed * 10f, ForceMode.Force);
-        else rb.AddForce(moveDirection * moveSpeed * airMultiplier * 10f, ForceMode.Force);
+        if (isGrounded) rb.AddForce(moveDirection * moveSpeed * rb.mass * 10f, ForceMode.Force);
+        else rb.AddForce(moveDirection * moveSpeed * airMultiplier * rb.mass * 10f, ForceMode.Force);
 
         rb.useGravity = !OnSlope();
     }
@@ -262,7 +281,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
         isCrouching = true;
         transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-        if (isGrounded) rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        if (isGrounded) rb.AddForce(Vector3.down * 5f * rb.mass, ForceMode.Impulse);
     }
 
     void UnCrouch()
@@ -285,7 +304,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         // stop any up/down movement
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         // jump
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * jumpForce * rb.mass, ForceMode.Impulse);
 
     }
 
@@ -314,6 +333,13 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
                 Vector3 limitedVel = flatVel.normalized * moveSpeed;
                 rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
             }
+        }
+
+
+        if (isRunning)
+        {
+            runAccelTime += Time.deltaTime * runAccelMultiplier;
+            moveSpeed = Mathf.Lerp(walkSpeed, runSpeed, runSpeedCurve.Evaluate(runAccelTime));
         }
     }
 
@@ -400,11 +426,13 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     void SetToWalk()
     {
         moveSpeed = walkSpeed;
+
     }
 
     void SetToRun()
     {
-        moveSpeed = runSpeed;
+        //moveSpeed = runSpeedCurve.Evaluate(0);
+        runAccelTime = 0f;
     }
 
     void SetToCrouch()

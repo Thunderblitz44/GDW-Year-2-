@@ -176,6 +176,15 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CycleTargets"",
+                    ""type"": ""Button"",
+                    ""id"": ""de9a90db-890e-4372-ace2-f5dcf5ebd80a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -225,12 +234,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7da33ea4-a9af-49d4-881e-254029b7d412"",
+                    ""id"": ""61df7e55-88c9-4b5a-b7ab-5655f9eabae2"",
                     ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""LockOnToTarget"",
+                    ""action"": ""CycleTargets"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -413,6 +422,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_CameraControl = asset.FindActionMap("CameraControl", throwIfNotFound: true);
         m_CameraControl_Look = m_CameraControl.FindAction("Look", throwIfNotFound: true);
         m_CameraControl_LockOnToTarget = m_CameraControl.FindAction("LockOnToTarget", throwIfNotFound: true);
+        m_CameraControl_CycleTargets = m_CameraControl.FindAction("CycleTargets", throwIfNotFound: true);
         // Interaction
         m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
         m_Interaction_Interact = m_Interaction.FindAction("Interact", throwIfNotFound: true);
@@ -559,12 +569,14 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private List<ICameraControlActions> m_CameraControlActionsCallbackInterfaces = new List<ICameraControlActions>();
     private readonly InputAction m_CameraControl_Look;
     private readonly InputAction m_CameraControl_LockOnToTarget;
+    private readonly InputAction m_CameraControl_CycleTargets;
     public struct CameraControlActions
     {
         private @ActionMap m_Wrapper;
         public CameraControlActions(@ActionMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @Look => m_Wrapper.m_CameraControl_Look;
         public InputAction @LockOnToTarget => m_Wrapper.m_CameraControl_LockOnToTarget;
+        public InputAction @CycleTargets => m_Wrapper.m_CameraControl_CycleTargets;
         public InputActionMap Get() { return m_Wrapper.m_CameraControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -580,6 +592,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @LockOnToTarget.started += instance.OnLockOnToTarget;
             @LockOnToTarget.performed += instance.OnLockOnToTarget;
             @LockOnToTarget.canceled += instance.OnLockOnToTarget;
+            @CycleTargets.started += instance.OnCycleTargets;
+            @CycleTargets.performed += instance.OnCycleTargets;
+            @CycleTargets.canceled += instance.OnCycleTargets;
         }
 
         private void UnregisterCallbacks(ICameraControlActions instance)
@@ -590,6 +605,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @LockOnToTarget.started -= instance.OnLockOnToTarget;
             @LockOnToTarget.performed -= instance.OnLockOnToTarget;
             @LockOnToTarget.canceled -= instance.OnLockOnToTarget;
+            @CycleTargets.started -= instance.OnCycleTargets;
+            @CycleTargets.performed -= instance.OnCycleTargets;
+            @CycleTargets.canceled -= instance.OnCycleTargets;
         }
 
         public void RemoveCallbacks(ICameraControlActions instance)
@@ -788,6 +806,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     {
         void OnLook(InputAction.CallbackContext context);
         void OnLockOnToTarget(InputAction.CallbackContext context);
+        void OnCycleTargets(InputAction.CallbackContext context);
     }
     public interface IInteractionActions
     {
