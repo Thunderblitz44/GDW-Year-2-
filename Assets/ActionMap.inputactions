@@ -163,6 +163,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ChangeCameraMode",
+                    "type": "Button",
+                    "id": "bede9ddc-7fe5-4c6b-a556-f450f77d6750",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -218,6 +227,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "CycleTargets",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1bcc878b-b0da-465a-bd1a-7291e92976fe",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeCameraMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

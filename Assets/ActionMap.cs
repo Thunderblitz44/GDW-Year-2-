@@ -185,6 +185,15 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeCameraMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""bede9ddc-7fe5-4c6b-a556-f450f77d6750"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -240,6 +249,17 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""CycleTargets"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1bcc878b-b0da-465a-bd1a-7291e92976fe"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCameraMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -423,6 +443,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_CameraControl_Look = m_CameraControl.FindAction("Look", throwIfNotFound: true);
         m_CameraControl_LockOnToTarget = m_CameraControl.FindAction("LockOnToTarget", throwIfNotFound: true);
         m_CameraControl_CycleTargets = m_CameraControl.FindAction("CycleTargets", throwIfNotFound: true);
+        m_CameraControl_ChangeCameraMode = m_CameraControl.FindAction("ChangeCameraMode", throwIfNotFound: true);
         // Interaction
         m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
         m_Interaction_Interact = m_Interaction.FindAction("Interact", throwIfNotFound: true);
@@ -570,6 +591,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_CameraControl_Look;
     private readonly InputAction m_CameraControl_LockOnToTarget;
     private readonly InputAction m_CameraControl_CycleTargets;
+    private readonly InputAction m_CameraControl_ChangeCameraMode;
     public struct CameraControlActions
     {
         private @ActionMap m_Wrapper;
@@ -577,6 +599,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_CameraControl_Look;
         public InputAction @LockOnToTarget => m_Wrapper.m_CameraControl_LockOnToTarget;
         public InputAction @CycleTargets => m_Wrapper.m_CameraControl_CycleTargets;
+        public InputAction @ChangeCameraMode => m_Wrapper.m_CameraControl_ChangeCameraMode;
         public InputActionMap Get() { return m_Wrapper.m_CameraControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -595,6 +618,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @CycleTargets.started += instance.OnCycleTargets;
             @CycleTargets.performed += instance.OnCycleTargets;
             @CycleTargets.canceled += instance.OnCycleTargets;
+            @ChangeCameraMode.started += instance.OnChangeCameraMode;
+            @ChangeCameraMode.performed += instance.OnChangeCameraMode;
+            @ChangeCameraMode.canceled += instance.OnChangeCameraMode;
         }
 
         private void UnregisterCallbacks(ICameraControlActions instance)
@@ -608,6 +634,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @CycleTargets.started -= instance.OnCycleTargets;
             @CycleTargets.performed -= instance.OnCycleTargets;
             @CycleTargets.canceled -= instance.OnCycleTargets;
+            @ChangeCameraMode.started -= instance.OnChangeCameraMode;
+            @ChangeCameraMode.performed -= instance.OnChangeCameraMode;
+            @ChangeCameraMode.canceled -= instance.OnChangeCameraMode;
         }
 
         public void RemoveCallbacks(ICameraControlActions instance)
@@ -807,6 +836,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnLockOnToTarget(InputAction.CallbackContext context);
         void OnCycleTargets(InputAction.CallbackContext context);
+        void OnChangeCameraMode(InputAction.CallbackContext context);
     }
     public interface IInteractionActions
     {

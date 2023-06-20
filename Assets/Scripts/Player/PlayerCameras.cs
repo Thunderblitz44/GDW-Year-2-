@@ -103,7 +103,6 @@ public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
             {
                 // get other targets
                 targets = Physics.SphereCastAll(new Ray(transform.position, Vector3.forward), 100f, 100f, lockOnLayers);
-                Debug.Log(targets.Length);
             }
         };
 
@@ -128,6 +127,12 @@ public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
                 }
             }
             if (i >= targets.Length) i = 0;
+        };
+
+        // toggle cameras
+        actions.CameraControl.ChangeCameraMode.performed += ctx =>
+        {
+            playerScript.SetIsInCombat(!playerScript.isInCombat);
         };
 
         EnableCameraControl();

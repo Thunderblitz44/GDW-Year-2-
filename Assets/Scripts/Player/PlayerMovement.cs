@@ -453,6 +453,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     public Vector3 GetVelocity() => velocity;
     public float GetAirTime() => airTime;
     public Transform GetOrientation() => orientation;
+    public Rigidbody GetRigidbody() => rb;
 
     // Controls Toggles
     public void EnableLocomotion() => actions.Locomotion.Enable();

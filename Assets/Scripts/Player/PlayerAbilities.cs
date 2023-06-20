@@ -1,9 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAbilities : MonoBehaviour, IInputExpander
 {
+
+    // DASH
+    [SerializeField] float maxDistance = 20f;
+    [SerializeField] float force = 10f;
+    [SerializeField] float cooldown = 2f;
+    bool isDashing = false;
+    float dashTime = 0f;
+    
+
     Player playerScript;
     ActionMap actions;
 
@@ -14,19 +24,13 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
 
         actions.Abilities.GrappleAbility.performed += ctx =>
         {
-            Debug.Log("Grapple");
-            playerScript.SetIsInCombat(!playerScript.isInCombat);
-            // ray cast
-            // hit?
-            // check if is either:
-            // enemy, movableObject or immovableObject
 
         };
         actions.Abilities.DashAbility.performed += ctx =>
         {
-            // max 3 dashes
-            // impulse
-
+            Rigidbody rb = playerScript.GetMovementScript().GetRigidbody();
+            rb.AddForce(transform.forward * force * rb.mass, ForceMode.Impulse);
+            isDashing = true;
         };
         actions.Abilities.ShieldAbility.performed += ctx =>
         {
@@ -43,6 +47,14 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         EnableAllAbilities();
     }
 
+
+    private void Update()
+    {
+        if (isDashing)
+        {
+
+        }   
+    }
 
 
     public void EnableAllAbilities() => actions.Abilities.Enable();
