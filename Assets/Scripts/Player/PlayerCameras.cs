@@ -135,6 +135,14 @@ public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
             playerScript.SetIsInCombat(!playerScript.isInCombat);
         };
 
+
+        // look
+        actions.CameraControl.Look.performed += ctx =>
+        { 
+            
+        };
+
+
         EnableCameraControl();
     }
 

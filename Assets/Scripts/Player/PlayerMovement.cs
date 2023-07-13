@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     [SerializeField] float groundDrag = 5f;
     [SerializeField] AnimationCurve runSpeedCurve;
     [SerializeField] float runAccelMultiplier = 1f;
+    [SerializeField] float runDecelMultiplier = 1f;
     float moveSpeed;
     float runAccelTime;
     [Space(10f)]
@@ -140,6 +141,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         {
             RecalculateBodyRotation();
         }
+
+        
     }
 
     private void LateUpdate()
