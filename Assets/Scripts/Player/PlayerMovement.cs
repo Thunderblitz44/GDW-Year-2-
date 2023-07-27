@@ -51,10 +51,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     [SerializeField] float playerHeight = 2;
     Vector3 velocity;
     float airTime;
-    //
     public bool isGrounded;
-    //
     bool wasGrounded;
+    GameObject floor;
     [Space(10f)]
 
 
@@ -64,6 +63,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     // SOME UNORGANIZED DATA
     Rigidbody rb;
+    [SerializeField] CapsuleCollider cc;
 
 
     // DELEGATES
@@ -76,6 +76,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     bool isRunning;
     bool isCrouching;
     bool correctBodyRotation;
+    bool ignoreStates;
 
     [Header("Important")]
     [SerializeField] Transform orientation;
@@ -106,7 +107,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     private void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        if (ignoreStates) return;
+
 
         SpeedControl();
 
@@ -143,6 +145,24 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         }
 
         
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.GetContact(0).point.y < cc.bounds.min.y)
+        {
+            isGrounded = true; 
+            floor = collision.gameObject;
+        }
+
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject == floor)
+        {
+            isGrounded = false;
+        }
     }
 
     private void LateUpdate()
@@ -222,8 +242,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
             if (CanJump()) Jump();
         };
 
-
-        
 
         EnableLocomotion();
     }
@@ -443,6 +461,18 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         moveSpeed = crouchSpeed;
     }
 
+    public void SetToIgnore()
+    {
+        ignoreStates = true;
+        DisableLocomotion();
+    }
+
+    public void AutoDetectState()
+    {
+        ignoreStates = false;
+        EnableLocomotion();
+    }
+
     #endregion
 
     #region Getters/Setters
@@ -464,7 +494,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     
 
     #endregion
-
 
     #region IPlayerStateListener
 

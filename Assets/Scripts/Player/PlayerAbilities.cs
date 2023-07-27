@@ -12,10 +12,25 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     [SerializeField] float cooldown = 2f;
     bool isDashing = false;
     float dashTime = 0f;
-    
+
+    public float thing = 5f;
+
+    public LayerMask whatIsGrapplable;
 
     Player playerScript;
     ActionMap actions;
+    Rigidbody rb;
+
+    bool isGrappling;
+    float distance;
+    float grappleTime;
+
+    public Action OnGrappleStarted, OnGrappleEnded;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     public void SetupInputEvents(object sender, ActionMap actions)
     {
@@ -24,11 +39,16 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
 
         actions.Abilities.GrappleAbility.performed += ctx =>
         {
-
+            RaycastHit hit;
+            if (Physics.Raycast(new Ray(transform.position, Camera.main.transform.forward),out hit, 50f, whatIsGrapplable))
+            {
+                playerScript.GetMovementScript().SetToIgnore();
+                isGrappling = true;
+                rb.velocity = CalculateLaunchVelocity(transform.position, hit.transform.position);
+            }
         };
         actions.Abilities.DashAbility.performed += ctx =>
         {
-            Rigidbody rb = playerScript.GetMovementScript().GetRigidbody();
             rb.AddForce(transform.forward * force * rb.mass, ForceMode.Impulse);
             isDashing = true;
         };
@@ -48,12 +68,33 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     }
 
 
+
+    Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint)
+    {
+        float gravity = Physics.gravity.y;
+        float displacementY = endpoint.y - startpoint.y;
+        float h = displacementY + thing;
+        Vector3 displacementXZ = new Vector3(endpoint.x - startpoint.x, 0f, endpoint.z - startpoint.z);
+
+        Vector3 velocityY = Vector3.up * MathF.Sqrt(-2 * gravity * h);
+        Vector3 velocityXZ = displacementXZ / (MathF.Sqrt(-2 * h / gravity) 
+            + MathF.Sqrt(2 * (displacementY - h) / gravity));
+        return velocityXZ + velocityY;
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (isGrappling)
+        {
+            isGrappling = false;
+            playerScript.GetMovementScript().AutoDetectState();
+            Debug.Log("grapple finished");
+        }
+    }
+
     private void Update()
     {
-        if (isDashing)
-        {
-
-        }   
     }
 
 
