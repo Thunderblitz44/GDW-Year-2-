@@ -109,7 +109,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     {
         if (ignoreStates) return;
 
-
         SpeedControl();
 
         if (isGrounded)
@@ -465,6 +464,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     {
         ignoreStates = true;
         DisableLocomotion();
+        
     }
 
     public void AutoDetectState()

@@ -21,6 +21,7 @@ public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
     Transform currentTarget;
     List<int> ints = new();
     int i;
+
     public void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;

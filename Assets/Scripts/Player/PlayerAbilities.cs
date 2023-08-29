@@ -22,8 +22,6 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     Rigidbody rb;
 
     bool isGrappling;
-    float distance;
-    float grappleTime;
 
     public Action OnGrappleStarted, OnGrappleEnded;
 
@@ -39,12 +37,17 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
 
         actions.Abilities.GrappleAbility.performed += ctx =>
         {
+            if (isGrappling) return;
+            
             RaycastHit hit;
             if (Physics.Raycast(new Ray(transform.position, Camera.main.transform.forward),out hit, 50f, whatIsGrapplable))
             {
                 playerScript.GetMovementScript().SetToIgnore();
                 isGrappling = true;
-                rb.velocity = CalculateLaunchVelocity(transform.position, hit.transform.position);
+
+                rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+                rb.AddForce(CalculateLaunchVelocity(transform.position, hit.transform.position) * rb.mass, ForceMode.Impulse);
+                //rb.velocity = CalculateLaunchVelocity(transform.position, hit.transform.position);
             }
         };
         actions.Abilities.DashAbility.performed += ctx =>
