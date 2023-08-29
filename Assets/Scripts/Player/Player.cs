@@ -6,10 +6,8 @@ public class Player : MonoBehaviour, IPlayerStateListener
 {
     [Header("Objects")]
     [SerializeField] PlayerMovement movementScript;
-    [SerializeField] PlayerInteraction interactionScript;
     [SerializeField] PlayerCameras playerCamerasScript;
     [SerializeField] PlayerAbilities abilitiesScript;
-    [SerializeField] HUD hudScript;
 
     public bool isInCombat { get; private set; }
 
@@ -49,8 +47,6 @@ public class Player : MonoBehaviour, IPlayerStateListener
 
     public PlayerCameras GetCameraControllerScript() => playerCamerasScript;
     public PlayerMovement GetMovementScript() => movementScript;
-    public PlayerInteraction GetInteractionScript() => interactionScript;
-    public HUD GetHUDScript() => hudScript;
     public ActionMap GetActionMap() => actions;
 
     public void SetCombatState()

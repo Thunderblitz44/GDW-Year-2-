@@ -7,7 +7,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
 {
 
     // DASH
-    [SerializeField] float maxDistance = 20f;
+    [SerializeField] float dashDistance = 20f;
     [SerializeField] float force = 10f;
     [SerializeField] float cooldown = 2f;
     bool isDashing = false;
@@ -53,6 +53,9 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         actions.Abilities.DashAbility.performed += ctx =>
         {
             rb.AddForce(transform.forward * force * rb.mass, ForceMode.Impulse);
+            // raycast - make sure there are no walls
+            // if wall, adjust distance
+            // lerp
             isDashing = true;
         };
         actions.Abilities.ShieldAbility.performed += ctx =>

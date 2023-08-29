@@ -160,15 +160,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             ""id"": ""20b2cb7d-b37e-4108-b0cf-c554537bedbb"",
             ""actions"": [
                 {
-                    ""name"": ""Look"",
-                    ""type"": ""Value"",
-                    ""id"": ""3c0513c4-9940-4067-ae6e-f560e841bc46"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""LockOnToTarget"",
                     ""type"": ""Button"",
                     ""id"": ""cfc2f0d9-3def-40e4-a3f6-bdbe7f7d897d"",
@@ -187,49 +178,25 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ChangeCameraMode"",
+                    ""name"": ""Aim"",
                     ""type"": ""Button"",
-                    ""id"": ""bede9ddc-7fe5-4c6b-a556-f450f77d6750"",
+                    ""id"": ""a555938b-472a-4676-ba43-13c09c6ac675"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""b10125f1-20e3-4220-a923-7d33c2ce964c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""55b814c0-df89-4828-ad47-35ac47470596"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b6466304-3bae-4c30-93c7-8e9a1fc96abf"",
-                    ""path"": ""<Pointer>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""70b34016-733b-427d-8175-284026dd6ca3"",
-                    ""path"": ""<Joystick>/{Hatswitch}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""686dea2d-f0aa-4914-9746-a5ee940eef32"",
@@ -254,60 +221,23 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1bcc878b-b0da-465a-bd1a-7291e92976fe"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""id"": ""38bd829f-495e-4ee5-9de3-a984cf342fed"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ChangeCameraMode"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""Interaction"",
-            ""id"": ""ab63ab36-3992-431b-b445-f1a251ccec80"",
-            ""actions"": [
-                {
-                    ""name"": ""Interact"",
-                    ""type"": ""Button"",
-                    ""id"": ""6ab119e2-9c5a-4500-8a14-481cc4335e6b"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": ""Hold"",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Inspect"",
-                    ""type"": ""Button"",
-                    ""id"": ""f74cc332-15bc-439d-9343-650f97fb25d4"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""5b483f83-9ba4-4f2f-9cca-11a5946aef00"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Interact"",
+                    ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""424d7070-5597-413f-94eb-bc18cccd9984"",
-                    ""path"": ""<Keyboard>/i"",
+                    ""id"": ""9d256245-29d9-499a-ada8-ffc3e8b5f608"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Inspect"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -440,14 +370,10 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_Locomotion_Crouch = m_Locomotion.FindAction("Crouch", throwIfNotFound: true);
         // CameraControl
         m_CameraControl = asset.FindActionMap("CameraControl", throwIfNotFound: true);
-        m_CameraControl_Look = m_CameraControl.FindAction("Look", throwIfNotFound: true);
         m_CameraControl_LockOnToTarget = m_CameraControl.FindAction("LockOnToTarget", throwIfNotFound: true);
         m_CameraControl_CycleTargets = m_CameraControl.FindAction("CycleTargets", throwIfNotFound: true);
-        m_CameraControl_ChangeCameraMode = m_CameraControl.FindAction("ChangeCameraMode", throwIfNotFound: true);
-        // Interaction
-        m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
-        m_Interaction_Interact = m_Interaction.FindAction("Interact", throwIfNotFound: true);
-        m_Interaction_Inspect = m_Interaction.FindAction("Inspect", throwIfNotFound: true);
+        m_CameraControl_Aim = m_CameraControl.FindAction("Aim", throwIfNotFound: true);
+        m_CameraControl_Look = m_CameraControl.FindAction("Look", throwIfNotFound: true);
         // Abilities
         m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
         m_Abilities_GrappleAbility = m_Abilities.FindAction("GrappleAbility", throwIfNotFound: true);
@@ -588,18 +514,18 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     // CameraControl
     private readonly InputActionMap m_CameraControl;
     private List<ICameraControlActions> m_CameraControlActionsCallbackInterfaces = new List<ICameraControlActions>();
-    private readonly InputAction m_CameraControl_Look;
     private readonly InputAction m_CameraControl_LockOnToTarget;
     private readonly InputAction m_CameraControl_CycleTargets;
-    private readonly InputAction m_CameraControl_ChangeCameraMode;
+    private readonly InputAction m_CameraControl_Aim;
+    private readonly InputAction m_CameraControl_Look;
     public struct CameraControlActions
     {
         private @ActionMap m_Wrapper;
         public CameraControlActions(@ActionMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Look => m_Wrapper.m_CameraControl_Look;
         public InputAction @LockOnToTarget => m_Wrapper.m_CameraControl_LockOnToTarget;
         public InputAction @CycleTargets => m_Wrapper.m_CameraControl_CycleTargets;
-        public InputAction @ChangeCameraMode => m_Wrapper.m_CameraControl_ChangeCameraMode;
+        public InputAction @Aim => m_Wrapper.m_CameraControl_Aim;
+        public InputAction @Look => m_Wrapper.m_CameraControl_Look;
         public InputActionMap Get() { return m_Wrapper.m_CameraControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -609,34 +535,34 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_CameraControlActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_CameraControlActionsCallbackInterfaces.Add(instance);
-            @Look.started += instance.OnLook;
-            @Look.performed += instance.OnLook;
-            @Look.canceled += instance.OnLook;
             @LockOnToTarget.started += instance.OnLockOnToTarget;
             @LockOnToTarget.performed += instance.OnLockOnToTarget;
             @LockOnToTarget.canceled += instance.OnLockOnToTarget;
             @CycleTargets.started += instance.OnCycleTargets;
             @CycleTargets.performed += instance.OnCycleTargets;
             @CycleTargets.canceled += instance.OnCycleTargets;
-            @ChangeCameraMode.started += instance.OnChangeCameraMode;
-            @ChangeCameraMode.performed += instance.OnChangeCameraMode;
-            @ChangeCameraMode.canceled += instance.OnChangeCameraMode;
+            @Aim.started += instance.OnAim;
+            @Aim.performed += instance.OnAim;
+            @Aim.canceled += instance.OnAim;
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
         }
 
         private void UnregisterCallbacks(ICameraControlActions instance)
         {
-            @Look.started -= instance.OnLook;
-            @Look.performed -= instance.OnLook;
-            @Look.canceled -= instance.OnLook;
             @LockOnToTarget.started -= instance.OnLockOnToTarget;
             @LockOnToTarget.performed -= instance.OnLockOnToTarget;
             @LockOnToTarget.canceled -= instance.OnLockOnToTarget;
             @CycleTargets.started -= instance.OnCycleTargets;
             @CycleTargets.performed -= instance.OnCycleTargets;
             @CycleTargets.canceled -= instance.OnCycleTargets;
-            @ChangeCameraMode.started -= instance.OnChangeCameraMode;
-            @ChangeCameraMode.performed -= instance.OnChangeCameraMode;
-            @ChangeCameraMode.canceled -= instance.OnChangeCameraMode;
+            @Aim.started -= instance.OnAim;
+            @Aim.performed -= instance.OnAim;
+            @Aim.canceled -= instance.OnAim;
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
         }
 
         public void RemoveCallbacks(ICameraControlActions instance)
@@ -654,60 +580,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         }
     }
     public CameraControlActions @CameraControl => new CameraControlActions(this);
-
-    // Interaction
-    private readonly InputActionMap m_Interaction;
-    private List<IInteractionActions> m_InteractionActionsCallbackInterfaces = new List<IInteractionActions>();
-    private readonly InputAction m_Interaction_Interact;
-    private readonly InputAction m_Interaction_Inspect;
-    public struct InteractionActions
-    {
-        private @ActionMap m_Wrapper;
-        public InteractionActions(@ActionMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Interact => m_Wrapper.m_Interaction_Interact;
-        public InputAction @Inspect => m_Wrapper.m_Interaction_Inspect;
-        public InputActionMap Get() { return m_Wrapper.m_Interaction; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(InteractionActions set) { return set.Get(); }
-        public void AddCallbacks(IInteractionActions instance)
-        {
-            if (instance == null || m_Wrapper.m_InteractionActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_InteractionActionsCallbackInterfaces.Add(instance);
-            @Interact.started += instance.OnInteract;
-            @Interact.performed += instance.OnInteract;
-            @Interact.canceled += instance.OnInteract;
-            @Inspect.started += instance.OnInspect;
-            @Inspect.performed += instance.OnInspect;
-            @Inspect.canceled += instance.OnInspect;
-        }
-
-        private void UnregisterCallbacks(IInteractionActions instance)
-        {
-            @Interact.started -= instance.OnInteract;
-            @Interact.performed -= instance.OnInteract;
-            @Interact.canceled -= instance.OnInteract;
-            @Inspect.started -= instance.OnInspect;
-            @Inspect.performed -= instance.OnInspect;
-            @Inspect.canceled -= instance.OnInspect;
-        }
-
-        public void RemoveCallbacks(IInteractionActions instance)
-        {
-            if (m_Wrapper.m_InteractionActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IInteractionActions instance)
-        {
-            foreach (var item in m_Wrapper.m_InteractionActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_InteractionActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public InteractionActions @Interaction => new InteractionActions(this);
 
     // Abilities
     private readonly InputActionMap m_Abilities;
@@ -833,15 +705,10 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     }
     public interface ICameraControlActions
     {
-        void OnLook(InputAction.CallbackContext context);
         void OnLockOnToTarget(InputAction.CallbackContext context);
         void OnCycleTargets(InputAction.CallbackContext context);
-        void OnChangeCameraMode(InputAction.CallbackContext context);
-    }
-    public interface IInteractionActions
-    {
-        void OnInteract(InputAction.CallbackContext context);
-        void OnInspect(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
     }
     public interface IAbilitiesActions
     {

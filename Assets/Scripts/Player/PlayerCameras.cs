@@ -131,16 +131,13 @@ public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
         };
 
         // toggle cameras
-        actions.CameraControl.ChangeCameraMode.performed += ctx =>
+        actions.CameraControl.Aim.started += ctx =>
         {
-            playerScript.SetIsInCombat(!playerScript.isInCombat);
+            playerScript.SetIsInCombat(true);
         };
-
-
-        // look
-        actions.CameraControl.Look.performed += ctx =>
-        { 
-            
+        actions.CameraControl.Aim.canceled += ctx =>
+        {
+            playerScript.SetIsInCombat(false);
         };
 
 

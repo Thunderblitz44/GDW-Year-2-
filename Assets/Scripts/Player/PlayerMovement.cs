@@ -126,24 +126,10 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
             airTime += Time.deltaTime;
         }
 
-
-        // doesnt work
-        if (correctBodyRotation)
-        {
-            body.forward = Vector3.Slerp(body.forward, orientation.forward, Time.deltaTime * rotationSpeed);
-            if (body.forward == orientation.forward)
-            {
-                //Debug.Log("dnoafg");
-                correctBodyRotation = false;
-            }
-        }
-
         if ((IsMoving() && !playerScript.isInCombat) || playerScript.isInCombat)
         {
             RecalculateBodyRotation();
         }
-
-        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -257,15 +243,17 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         {
             moveDirection = orientation.forward * inputMoveDirection.z + orientation.right * inputMoveDirection.x;
         }
-        else
+        else if (!playerScript.isInCombat)
         {
             moveDirection = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z) * inputMoveDirection.z + 
                 new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z) * inputMoveDirection.x;
         }
+        else
+        {
+            moveDirection = inputMoveDirection;
+        }
 
-
-
-
+        // rotate the body
         if (!playerScript.isInCombat) body.forward = Vector3.Slerp(body.forward, moveDirection.normalized, Time.deltaTime * rotationSpeed);
 
         if (OnSlope() && !isExitingSlope)
