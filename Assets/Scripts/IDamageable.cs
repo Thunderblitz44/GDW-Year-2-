@@ -4,11 +4,7 @@ using UnityEngine;
 
 public interface IDamageable
 {
-    public bool ApplyDamage();
-}
+    public void ApplyDamage(float damage);
 
-
-static class Damage
-{
-
+    public void ApplyDamageOverTime(float damage, float duration);
 }

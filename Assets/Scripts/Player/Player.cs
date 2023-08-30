@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IPlayerStateListener
+public class Player : DamageableEntity, IPlayerStateListener
 {
-    [Header("Objects")]
-    [SerializeField] PlayerMovement movementScript;
-    [SerializeField] PlayerCameras playerCamerasScript;
-    [SerializeField] PlayerAbilities abilitiesScript;
+    PlayerMovement movementScript;
+    PlayerCameras playerCamerasScript;
+    PlayerAbilities abilitiesScript;
 
     public bool isInCombat { get; private set; }
 
@@ -16,6 +15,9 @@ public class Player : MonoBehaviour, IPlayerStateListener
 
     private void Awake()
     {
+        movementScript = GetComponent<PlayerMovement>();
+        playerCamerasScript = GetComponent<PlayerCameras>();
+
         actions = new ActionMap();
 
         // All modules attached to this gameobject
