@@ -134,12 +134,15 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.GetContact(0).point.y < cc.bounds.min.y)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            isGrounded = true; 
-            floor = collision.gameObject;
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position,Vector3.down * 1.01f, out hit, 2, whatIsGround, QueryTriggerInteraction.Ignore))
+            {
+                isGrounded = true; 
+                floor = hit.collider.gameObject;
+            }
         }
-
     }
 
     private void OnCollisionExit(Collision collision)
@@ -239,14 +242,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     void Move()
     {
         Vector3 moveDirection;
+
+        // set move direction - normal operation
         if (!playerScript.GetCameraControllerScript().IsLockedOnToATarget())
         {
             moveDirection = orientation.forward * inputMoveDirection.z + orientation.right * inputMoveDirection.x;
-        }
-        else if (!playerScript.isInCombat)
-        {
-            moveDirection = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z) * inputMoveDirection.z + 
-                new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z) * inputMoveDirection.x;
         }
         else
         {
@@ -256,6 +256,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         // rotate the body
         if (!playerScript.isInCombat) body.forward = Vector3.Slerp(body.forward, moveDirection.normalized, Time.deltaTime * rotationSpeed);
 
+
+        // slope movement
         if (OnSlope() && !isExitingSlope)
         {
             rb.AddForce(GetSlopeMoveDirection() * moveSpeed * rb.mass * 20f, ForceMode.Force);
@@ -263,9 +265,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
             if (rb.velocity.y > 0f) rb.AddForce(Vector3.down * 80f * rb.mass, ForceMode.Force);
         }
 
+        // move
         if (isGrounded) rb.AddForce(moveDirection * moveSpeed * rb.mass * 10f, ForceMode.Force);
         else rb.AddForce(moveDirection * moveSpeed * airMultiplier * rb.mass * 10f, ForceMode.Force);
 
+        // if not on slope, use gravity
         rb.useGravity = !OnSlope();
     }
 
