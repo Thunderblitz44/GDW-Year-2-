@@ -42,18 +42,15 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     [Header("Slope Movement")]
     [SerializeField] float maxSlopeAngle = 45f;
     RaycastHit slopeHit;
-    bool isExitingSlope;
 
 
     // GROUND CHECK
     [Header("Ground Check")]
     [SerializeField] LayerMask whatIsGround;
     [SerializeField] float playerHeight = 2;
-    Vector3 velocity;
     float airTime;
     public bool isGrounded;
     bool wasGrounded;
-    GameObject floor;
     [Space(10f)]
 
 
@@ -109,6 +106,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     {
         if (ignoreStates) return;
 
+        GroundCheck();
+
         SpeedControl();
 
         if (isGrounded)
@@ -132,30 +131,15 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void GroundCheck()
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        RaycastHit hit;
+        if (Physics.SphereCast(transform.position,0.3f,Vector3.down, out hit, playerHeight * 0.5f + 0.05f, whatIsGround, QueryTriggerInteraction.Ignore))
         {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position,Vector3.down * 1.01f, out hit, 2, whatIsGround, QueryTriggerInteraction.Ignore))
-            {
-                isGrounded = true; 
-                floor = hit.collider.gameObject;
-            }
+            isGrounded = true; 
+            return;
         }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject == floor)
-        {
-            isGrounded = false;
-        }
-    }
-
-    private void LateUpdate()
-    {
-        velocity = rb.velocity;
+        isGrounded = false;
     }
 
     private void FixedUpdate()
@@ -241,6 +225,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     void Move()
     {
+
         Vector3 moveDirection;
 
         // set move direction - normal operation
@@ -253,24 +238,20 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
             moveDirection = inputMoveDirection;
         }
 
+        if (Physics.Raycast(transform.position, moveDirection, 0.6f))
+        {
+            return;
+        }
+
+        // adjust move direction for slopes
+        if (OnSlope()) moveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal);
+
         // rotate the body
         if (!playerScript.isInCombat) body.forward = Vector3.Slerp(body.forward, moveDirection.normalized, Time.deltaTime * rotationSpeed);
-
-
-        // slope movement
-        if (OnSlope() && !isExitingSlope)
-        {
-            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * rb.mass * 20f, ForceMode.Force);
-
-            if (rb.velocity.y > 0f) rb.AddForce(Vector3.down * 80f * rb.mass, ForceMode.Force);
-        }
 
         // move
         if (isGrounded) rb.AddForce(moveDirection * moveSpeed * rb.mass * 10f, ForceMode.Force);
         else rb.AddForce(moveDirection * moveSpeed * airMultiplier * rb.mass * 10f, ForceMode.Force);
-
-        // if not on slope, use gravity
-        rb.useGravity = !OnSlope();
     }
 
     void Run()
@@ -311,13 +292,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     {
         // prevent spamming
         readyToJump = false;
-        isExitingSlope = true;
 
         // stop any up/down movement
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         // jump
         rb.AddForce(Vector3.up * jumpForce * rb.mass, ForceMode.Impulse);
-
     }
 
     private void ResetJump()
@@ -332,7 +311,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     private void SpeedControl()
     {
         // if on slope
-        if (OnSlope() && !isExitingSlope)
+        if (OnSlope())
         {
             if (rb.velocity.magnitude > moveSpeed) rb.velocity = rb.velocity.normalized * moveSpeed;
         }
@@ -347,7 +326,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
             }
         }
 
-
         if (isRunning)
         {
             runAccelTime += Time.deltaTime * runAccelMultiplier;
@@ -357,19 +335,13 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight, whatIsGround, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle < maxSlopeAngle && angle != 0;
+            return angle <= maxSlopeAngle && angle > 0;
         }
         return false;
     }
-
-    private Vector3 GetSlopeMoveDirection()
-    {
-        return Vector3.ProjectOnPlane(inputMoveDirection, slopeHit.normal).normalized;
-    }
-
 
     void UpdateMoveSpeed()
     {
@@ -425,10 +397,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         if (jumpCooldown > 0) Invoke(nameof(ResetJump), jumpCooldown);
         else ResetJump();
 
-        Debug.Log("air time = " + airTime);
+        //Debug.Log("air time = " + airTime);
 
         airTime = 0f;
-        velocity = Vector3.zero;
     }
 
     #endregion
@@ -475,7 +446,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     public bool IsCrouching() => isCrouching;
     public bool IsJumping() => readyToJump == false;
     public float GetMoveSpeed() => moveSpeed;
-    public Vector3 GetVelocity() => velocity;
     public float GetAirTime() => airTime;
     public Transform GetOrientation() => orientation;
     public Rigidbody GetRigidbody() => rb;
