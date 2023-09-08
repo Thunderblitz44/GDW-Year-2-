@@ -5,16 +5,15 @@ using UnityEngine;
 
 public class PlayerAbilities : MonoBehaviour, IInputExpander
 {
-
     // DASH
     [SerializeField] float dashDistance = 20f;
-    [SerializeField] float force = 10f;
-    [SerializeField] float cooldown = 2f;
+    [SerializeField] float dashSpeed = 10f;
+    [SerializeField] AnimationCurve dashCurve;
     bool isDashing = false;
-    float dashTime = 0f;
 
     public float thing = 5f;
 
+    public LayerMask whatIsDashObstacle;
     public LayerMask whatIsGrapplable;
 
     Player playerScript;
@@ -40,23 +39,48 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             if (isGrappling) return;
             
             RaycastHit hit;
-            if (Physics.Raycast(new Ray(transform.position, Camera.main.transform.forward),out hit, 50f, whatIsGrapplable))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward,out hit, 50f, whatIsGrapplable))
             {
-                playerScript.GetMovementScript().SetToIgnore();
+                playerScript.GetMovementScript().Disable();
                 isGrappling = true;
 
+                
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
                 rb.AddForce(CalculateLaunchVelocity(transform.position, hit.transform.position) * rb.mass, ForceMode.Impulse);
-                //rb.velocity = CalculateLaunchVelocity(transform.position, hit.transform.position);
             }
         };
         actions.Abilities.DashAbility.performed += ctx =>
         {
-            rb.AddForce(transform.forward * force * rb.mass, ForceMode.Impulse);
-            // raycast - make sure there are no walls
-            // if wall, adjust distance
-            // lerp
+            if (isDashing) return;
             isDashing = true;
+            playerScript.GetMovementScript().Disable();
+
+            // raycast - make sure there are no obstacles in the way
+            float newDist = dashDistance;
+
+            Vector3 end;
+            if (rb.velocity.magnitude > 0) end = transform.position + rb.velocity.normalized * newDist;
+            else { end = Camera.main.transform.forward; end.y = 0; end += transform.position; }
+
+            // slight issue here - fix the cameras first
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, (transform.position - end).normalized, 
+                out hit, dashDistance, whatIsDashObstacle))
+            {
+                newDist = Vector3.Distance(hit.point, transform.position) - 0.7f;
+            }
+
+            // lerp
+            if (rb.velocity.magnitude > 0) end = transform.position + rb.velocity.normalized * newDist;
+            else { end = Camera.main.transform.forward; end.y = 0; end += transform.position; }
+
+            Debug.DrawRay(transform.position, end - transform.position, Color.red, 3f);
+
+            dashCurve.ClearKeys();
+            dashCurve.AddKey(0,0);
+            dashCurve.AddKey(newDist / dashSpeed, 1);
+
+            StartCoroutine(DashRoutine(end));
         };
         actions.Abilities.ShieldAbility.performed += ctx =>
         {
@@ -73,7 +97,22 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         EnableAllAbilities();
     }
 
+    IEnumerator DashRoutine(Vector3 endPos)
+    {
+        Vector3 startPos = transform.position;
+        float time = 0;
+        float dashTime = dashCurve.keys[1].time;
 
+        while (time < dashTime)
+        {
+            transform.position = Vector3.Lerp(startPos,endPos, dashCurve.Evaluate(time += Time.deltaTime));
+
+            yield return null;
+        }
+
+        playerScript.GetMovementScript().Enable();
+        isDashing = false;
+    }
 
     Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint)
     {
@@ -94,15 +133,10 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         if (isGrappling)
         {
             isGrappling = false;
-            playerScript.GetMovementScript().AutoDetectState();
+            playerScript.GetMovementScript().Enable();
             Debug.Log("grapple finished");
         }
     }
-
-    private void Update()
-    {
-    }
-
 
     public void EnableAllAbilities() => actions.Abilities.Enable();
     public void DisableAllAbilities() => actions.Abilities.Disable();
