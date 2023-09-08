@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour, IInputExpander
+public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListener
 {
     // MOVEMENT
     [Header("Movement")]
@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     // PLAYER STATES
     bool isRunning;
     bool isCrouching;
-    bool isAiming;
+    bool correctBodyRotation;
     bool ignoreStates;
 
     [Header("Important")]
@@ -112,6 +112,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
         if (isGrounded)
         {
+            rb.drag = groundDrag;
+
             // onLanded
             if (!wasGrounded) onPlayerLanded?.Invoke();
         }
@@ -119,22 +121,14 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         {
             if (wasGrounded) wasGrounded = false;
 
+            rb.drag = 0f;
             airTime += Time.deltaTime;
-            DebugHUD.instance.SetAirTime(airTime);
         }
 
-        if (isAiming)
+        if ((IsMoving() && !playerScript.isInCombat) || playerScript.isInCombat)
         {
-            Vector3 forward = new Vector3(transform.position.x + Camera.main.transform.forward.x, 
-                transform.position.y, transform.position.z + Camera.main.transform.forward.z);
-            transform.LookAt(forward, Vector3.up);
-            body.rotation = transform.rotation;
+            RecalculateBodyRotation();
         }
-
-        // double check in case we are still grounded after jumping (it can happen)
-        if (isGrounded && !CanJump()) onPlayerLanded();
-
-        DebugHUD.instance.SetSpeed(rb.velocity.magnitude);
     }
 
     void GroundCheck()
@@ -167,9 +161,12 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // Movement
         actions.Locomotion.Move.performed += ctx =>
         {
-            if (!isAiming) orientation.forward = CalculateBodyRotation();
+            if (playerScript.isInCombat == false) orientation.forward = CalculateBodyRotation();
+
             Vector2 input = ctx.ReadValue<Vector2>();
+
             inputMoveDirection = new Vector3(input.x, 0, input.y);
+
             UpdateMoveSpeed();
         };
 
@@ -178,29 +175,35 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             inputMoveDirection = Vector3.zero;
         };
 
+
         // Run
         actions.Locomotion.Run.started += ctx =>
         {
             Run();
+
             UpdateMoveSpeed();
         };
 
         actions.Locomotion.Run.canceled += ctx =>
         {
             StopRun();
+
             UpdateMoveSpeed();
         };
+
 
         // Crouch
         actions.Locomotion.Crouch.started += ctx =>
         {
             Crouch();
+          
             UpdateMoveSpeed();
         };
 
         actions.Locomotion.Crouch.canceled += ctx =>
         {
             UnCrouch();
+          
             UpdateMoveSpeed();
         };
 
@@ -211,8 +214,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (CanJump()) Jump();
         };
 
-        actions.CameraControl.Aim.started += ctx => isAiming = true;
-        actions.CameraControl.Aim.canceled += ctx => isAiming = false;
 
         EnableLocomotion();
     }
@@ -224,6 +225,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     void Move()
     {
+
         Vector3 moveDirection;
 
         // set move direction - normal operation
@@ -233,20 +235,19 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         }
         else
         {
-            Transform camera = Camera.main.transform;
-            moveDirection = new Vector3(camera.forward.x, 0, camera.forward.z) * inputMoveDirection.z +
-                new Vector3(camera.right.x, 0, camera.right.z) * inputMoveDirection.x;
+            moveDirection = inputMoveDirection;
         }
 
-        // ignore the rest of this function if we are trying to move into an obstacle while jumping
-        if (Physics.Raycast(transform.position, moveDirection, 0.6f, LayerMask.NameToLayer("Everything"), QueryTriggerInteraction.Ignore) && 
-            !IsJumping() && !isGrounded) return;
+        if (Physics.Raycast(transform.position, moveDirection, 0.6f))
+        {
+            return;
+        }
 
         // adjust move direction for slopes
         if (OnSlope()) moveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal);
 
         // rotate the body
-        if (!isAiming) body.forward = Vector3.Slerp(body.forward, moveDirection.normalized, Time.deltaTime * rotationSpeed);
+        if (!playerScript.isInCombat) body.forward = Vector3.Slerp(body.forward, moveDirection.normalized, Time.deltaTime * rotationSpeed);
 
         // move
         if (isGrounded) rb.AddForce(moveDirection * moveSpeed * rb.mass * 10f, ForceMode.Force);
@@ -294,7 +295,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
         // stop any up/down movement
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
         // jump
         rb.AddForce(Vector3.up * jumpForce * rb.mass, ForceMode.Impulse);
     }
@@ -367,8 +367,17 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     Vector3 CalculateBodyRotation()
     {
-        Vector3 cameraPosition = Camera.main.transform.position;
-        Vector3 viewDir = transform.position - new Vector3(cameraPosition.x, transform.position.y, cameraPosition.z);
+        Vector3 viewDir;
+        Vector3 cameraPosition = playerScript.GetCameraControllerScript().GetCameraTransform().position;
+
+        if (playerScript.isInCombat)
+        {
+            viewDir = combatLookAt.position - new Vector3(cameraPosition.x, combatLookAt.position.y, cameraPosition.z);
+            transform.forward = viewDir.normalized;
+            return viewDir.normalized;
+        }
+        
+        viewDir = transform.position - new Vector3(cameraPosition.x, transform.position.y, cameraPosition.z);
         return viewDir.normalized;
     }
 
@@ -387,6 +396,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
         if (jumpCooldown > 0) Invoke(nameof(ResetJump), jumpCooldown);
         else ResetJump();
+
+        //Debug.Log("air time = " + airTime);
+
         airTime = 0f;
     }
 
@@ -411,13 +423,14 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         moveSpeed = crouchSpeed;
     }
 
-    public void Disable()
+    public void SetToIgnore()
     {
         ignoreStates = true;
         DisableLocomotion();
+        
     }
 
-    public void Enable()
+    public void AutoDetectState()
     {
         ignoreStates = false;
         EnableLocomotion();
@@ -436,13 +449,26 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     public float GetAirTime() => airTime;
     public Transform GetOrientation() => orientation;
     public Rigidbody GetRigidbody() => rb;
-    public Transform GetBody() => body;
-    public Vector3 GetInputMoveDirection() => inputMoveDirection;
 
     // Controls Toggles
     public void EnableLocomotion() => actions.Locomotion.Enable();
     public void DisableLocomotion() => actions.Locomotion.Disable();
     
+
+    #endregion
+
+    #region IPlayerStateListener
+
+    public void SetCombatState()
+    {
+        Debug.Log("Combat");
+        correctBodyRotation = true;
+    }
+
+    public void SetFreeLookState()
+    {
+        Debug.Log("freelok");
+    }
 
     #endregion
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PlayerCameras : MonoBehaviour, IInputExpander
+public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
 {
     [SerializeField] Transform freeLookCamera;
     [SerializeField] Transform combatCamera;
@@ -28,38 +28,9 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
         Cursor.visible = false;
     }
 
-    void LockOnFunction()
+    private void Update()
     {
-        if (isLockedOn)
-        {
-            isLockedOn = false;
-            lockOnCamera.gameObject.SetActive(false);
-            lastUsedCamera.gameObject.SetActive(true);
-            return;
-        }
-
-        RaycastHit hitInfo;
-        if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hitInfo, 100f, lockOnLayers))
-        {
-            if (!isLockedOn)
-            {
-                isLockedOn = true;
-                lastUsedCamera = GetCameraTransform().gameObject;
-                lastUsedCamera.gameObject.SetActive(false);
-                lockOnCamera.gameObject.SetActive(true);
-                currentTarget = hitInfo.collider.transform;
-
-
-
-                lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
-            }
-        }
-
-        if (isLockedOn)
-        {
-            // get other targets
-            targets = Physics.SphereCastAll(new Ray(transform.position, Vector3.forward), 100f, 100f, lockOnLayers);
-        }
+       
     }
 
     public Transform GetCameraTransform()
@@ -78,6 +49,21 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
         }
     }
 
+    #region IPlayerStateListener
+
+    public void SetCombatState()
+    {
+        combatCamera.gameObject.SetActive(true);
+        freeLookCamera.gameObject.SetActive(false);
+    }
+
+    public void SetFreeLookState()
+    {
+        freeLookCamera.gameObject.SetActive(true);
+        combatCamera.gameObject.SetActive(false);
+    }
+
+    #endregion
 
     #region IInputExpander
 
@@ -89,7 +75,36 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
         // Lock on to target
         actions.CameraControl.LockOnToTarget.performed += ctx =>
         {
-            LockOnFunction();
+            if (isLockedOn)
+            {
+                isLockedOn = false;
+                lockOnCamera.gameObject.SetActive(false);
+                lastUsedCamera.gameObject.SetActive(true);
+                return;
+            }
+
+            RaycastHit hitInfo;
+            if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hitInfo, 100f, lockOnLayers))
+            {
+                if (!isLockedOn)
+                {
+                    isLockedOn = true;
+                    lastUsedCamera = GetCameraTransform().gameObject;
+                    lastUsedCamera.gameObject.SetActive(false);
+                    lockOnCamera.gameObject.SetActive(true);
+                    currentTarget = hitInfo.collider.transform;
+
+                    
+
+                    lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
+                }
+            }
+
+            if (isLockedOn)
+            {
+                // get other targets
+                targets = Physics.SphereCastAll(new Ray(transform.position, Vector3.forward), 100f, 100f, lockOnLayers);
+            }
         };
 
         // Cycle Targets
@@ -118,14 +133,11 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
         // toggle cameras
         actions.CameraControl.Aim.started += ctx =>
         {
-            if (isLockedOn) LockOnFunction();
-            combatCamera.gameObject.SetActive(true);
-            freeLookCamera.gameObject.SetActive(false);
+            playerScript.SetIsInCombat(true);
         };
         actions.CameraControl.Aim.canceled += ctx =>
         {
-            freeLookCamera.gameObject.SetActive(true);
-            combatCamera.gameObject.SetActive(false);
+            playerScript.SetIsInCombat(false);
         };
 
 
