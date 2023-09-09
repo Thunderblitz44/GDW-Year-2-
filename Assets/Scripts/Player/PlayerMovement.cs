@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -61,8 +59,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     // SOME UNORGANIZED DATA
     Rigidbody rb;
-    [SerializeField] CapsuleCollider cc;
-
 
     // DELEGATES
     public Action onPlayerLanded;
@@ -78,7 +74,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     [Header("Important")]
     [SerializeField] Transform orientation;
-    [SerializeField] Transform combatLookAt;
     [SerializeField] Transform body;
 
     
@@ -233,7 +228,11 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
         // set move direction - normal operation
         if (!playerScript.GetCameraControllerScript().IsLockedOnToATarget())
         {
-            moveDirection = orientation.forward * inputMoveDirection.z + orientation.right * inputMoveDirection.x;
+            Vector3 cameraFwd = Camera.main.transform.forward;
+            Vector3 cameraRight = Camera.main.transform.right;
+            cameraFwd.y = 0f;
+            cameraRight.y = 0f;
+            moveDirection = cameraFwd * inputMoveDirection.z + cameraRight * inputMoveDirection.x;
         }
         else
         {

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAbilities : MonoBehaviour, IInputExpander
@@ -93,6 +92,17 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             // increase damage resistance
             // last x seconds
         };
+
+        actions.General.DamageSelf.performed += ctx => 
+        {
+            GetComponent<IDamageable>().ApplyDamage(1f); 
+        };
+        actions.General.HealSelf.performed += ctx =>
+        {
+            GetComponent<IDamageable>().ApplyDamage(-1f);
+        };
+        actions.General.DamageSelf.Enable();
+        actions.General.HealSelf.Enable();
 
         EnableAllAbilities();
     }

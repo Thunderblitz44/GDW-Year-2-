@@ -1,16 +1,13 @@
-using Cinemachine;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerCameras : MonoBehaviour, IInputExpander
+public class PlayerCameras : NetworkBehaviour, IInputExpander
 {
     [SerializeField] Camera mainCamera;
     [SerializeField] Transform freeLookCamera;
-    [SerializeField] Transform combatCamera;
-    [SerializeField] Transform lockOnCamera;
+    [SerializeField] Transform aim;
     [SerializeField] LayerMask lockOnLayers;
 
     Player playerScript;
@@ -25,6 +22,12 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
 
     public void Start()
     {
+        if (!IsOwner)
+        {
+            mainCamera.gameObject.SetActive(false);
+            return;
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -34,7 +37,7 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
         if (isLockedOn)
         {
             isLockedOn = false;
-            lockOnCamera.gameObject.SetActive(false);
+            //lockOnCamera.gameObject.SetActive(false);
             lastUsedCamera.gameObject.SetActive(true);
             return;
         }
@@ -47,12 +50,12 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
                 isLockedOn = true;
                 lastUsedCamera = GetCameraTransform().gameObject;
                 lastUsedCamera.gameObject.SetActive(false);
-                lockOnCamera.gameObject.SetActive(true);
+                //lockOnCamera.gameObject.SetActive(true);
                 currentTarget = hitInfo.collider.transform;
 
 
 
-                lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
+                //lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
             }
         }
 
@@ -65,18 +68,7 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
 
     public Transform GetCameraTransform()
     {
-        if (freeLookCamera.gameObject.activeSelf)
-        {
-            return freeLookCamera;
-        }
-        else if (combatCamera.gameObject.activeSelf)
-        {
-            return combatCamera;
-        }   
-        else
-        {
-            return lockOnCamera;
-        }
+        return freeLookCamera;
     }
 
 
@@ -90,7 +82,7 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
         // Lock on to target
         actions.CameraControl.LockOnToTarget.performed += ctx =>
         {
-            LockOnFunction();
+            //LockOnFunction();
         };
 
         // Cycle Targets
@@ -108,7 +100,7 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
                 if (targets[i].collider.transform != currentTarget)
                 {
                     currentTarget = targets[i].collider.transform;
-                    lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
+                    //lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
                     ints.Add(i);
                     break;
                 }
@@ -119,14 +111,9 @@ public class PlayerCameras : MonoBehaviour, IInputExpander
         // toggle cameras
         actions.CameraControl.Aim.started += ctx =>
         {
-            if (isLockedOn) LockOnFunction();
-            combatCamera.gameObject.SetActive(true);
-            freeLookCamera.gameObject.SetActive(false);
         };
         actions.CameraControl.Aim.canceled += ctx =>
         {
-            freeLookCamera.gameObject.SetActive(true);
-            combatCamera.gameObject.SetActive(false);
         };
 
 

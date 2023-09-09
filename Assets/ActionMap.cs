@@ -541,6 +541,24 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DamageSelf"",
+                    ""type"": ""Button"",
+                    ""id"": ""615a93eb-8ea6-4054-b2fd-cf1376d12467"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HealSelf"",
+                    ""type"": ""Button"",
+                    ""id"": ""bef8065f-2f8d-47a5-b6c4-6f112a22c95b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -552,6 +570,28 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4275636f-3072-451b-81c2-a533da81a796"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DamageSelf"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""91d33e2a-e8b9-426d-96ba-ff71a2fdd33d"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HealSelf"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -581,6 +621,8 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         // General
         m_General = asset.FindActionMap("General", throwIfNotFound: true);
         m_General_Escape = m_General.FindAction("Escape", throwIfNotFound: true);
+        m_General_DamageSelf = m_General.FindAction("DamageSelf", throwIfNotFound: true);
+        m_General_HealSelf = m_General.FindAction("HealSelf", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -853,11 +895,15 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_General;
     private List<IGeneralActions> m_GeneralActionsCallbackInterfaces = new List<IGeneralActions>();
     private readonly InputAction m_General_Escape;
+    private readonly InputAction m_General_DamageSelf;
+    private readonly InputAction m_General_HealSelf;
     public struct GeneralActions
     {
         private @ActionMap m_Wrapper;
         public GeneralActions(@ActionMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @Escape => m_Wrapper.m_General_Escape;
+        public InputAction @DamageSelf => m_Wrapper.m_General_DamageSelf;
+        public InputAction @HealSelf => m_Wrapper.m_General_HealSelf;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -870,6 +916,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Escape.started += instance.OnEscape;
             @Escape.performed += instance.OnEscape;
             @Escape.canceled += instance.OnEscape;
+            @DamageSelf.started += instance.OnDamageSelf;
+            @DamageSelf.performed += instance.OnDamageSelf;
+            @DamageSelf.canceled += instance.OnDamageSelf;
+            @HealSelf.started += instance.OnHealSelf;
+            @HealSelf.performed += instance.OnHealSelf;
+            @HealSelf.canceled += instance.OnHealSelf;
         }
 
         private void UnregisterCallbacks(IGeneralActions instance)
@@ -877,6 +929,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Escape.started -= instance.OnEscape;
             @Escape.performed -= instance.OnEscape;
             @Escape.canceled -= instance.OnEscape;
+            @DamageSelf.started -= instance.OnDamageSelf;
+            @DamageSelf.performed -= instance.OnDamageSelf;
+            @DamageSelf.canceled -= instance.OnDamageSelf;
+            @HealSelf.started -= instance.OnHealSelf;
+            @HealSelf.performed -= instance.OnHealSelf;
+            @HealSelf.canceled -= instance.OnHealSelf;
         }
 
         public void RemoveCallbacks(IGeneralActions instance)
@@ -918,5 +976,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     public interface IGeneralActions
     {
         void OnEscape(InputAction.CallbackContext context);
+        void OnDamageSelf(InputAction.CallbackContext context);
+        void OnHealSelf(InputAction.CallbackContext context);
     }
 }

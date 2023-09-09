@@ -1,12 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class DamageableEntity : MonoBehaviour, IDamageable
+public class DamageableEntity : NetworkBehaviour, IDamageable
 {
     HealthComponent hp;
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         hp = GetComponent<HealthComponent>();
         hp.onHealthZeroed += OnHealthZeroed;
     }

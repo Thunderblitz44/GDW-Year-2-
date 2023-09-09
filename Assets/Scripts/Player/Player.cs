@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class Player : DamageableEntity
 {
@@ -24,8 +21,9 @@ public class Player : DamageableEntity
         }
     }
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         actions.Dispose();
     }
 
