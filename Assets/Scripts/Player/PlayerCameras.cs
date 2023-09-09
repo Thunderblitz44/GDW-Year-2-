@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class PlayerCameras : MonoBehaviour, IInputExpander
 {
+    [SerializeField] Camera mainCamera;
     [SerializeField] Transform freeLookCamera;
     [SerializeField] Transform combatCamera;
     [SerializeField] Transform lockOnCamera;

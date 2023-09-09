@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour, IInputExpander
+public class PlayerMovement : NetworkBehaviour, IInputExpander
 {
     // MOVEMENT
     [Header("Movement")]
@@ -89,8 +90,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         rb = GetComponent<Rigidbody>();
     }
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         onPlayerLanded -= OnLanded;
     }
 
@@ -104,7 +106,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     private void Update()
     {
-        if (ignoreStates) return;
+        if (ignoreStates || !IsOwner) return;
 
         GroundCheck();
 
@@ -150,6 +152,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     private void FixedUpdate()
     {
+        if (!IsOwner) return;
+
         Move();
     }
 
