@@ -13,6 +13,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     [SerializeField] float dashCooldown = 5f;
     [SerializeField] AnimationCurve dashCurve;
     [SerializeField] LayerMask whatIsDashObstacle;
+    [SerializeField] GameObject dashMeterPrefab;
     DashUI dashUI;
     bool isDashing = false;
     int dashes = 0;
@@ -29,13 +30,11 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        dashUI = Instantiate(dashMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<DashUI>();
     }
 
     private void Start()
     {
-        dashUI = GameSettings.instance.dashUI;
-
-        if (dashUI == null) return;
         dashUI.SetDashVisual(maxDashes);
         dashUI.onDashesRecharged += OnDashRecharged;
     }
@@ -65,7 +64,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             if (isDashing || dashes >= maxDashes) return;
             isDashing = true;
             dashes++;
-            if (dashUI) dashUI.SpendDash();
+            dashUI.SpendDash();
             playerScript.GetMovementScript().Disable();
             CancelInvoke(nameof(DashTimeout));
 
@@ -144,7 +143,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         // cooldown
         if (dashes >= maxDashes)
         {
-            if (dashUI) dashUI.RechargeDashes(dashCooldown);
+            dashUI.RechargeDashes(dashCooldown);
         }
         else
         {
@@ -160,7 +159,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     void DashTimeout()
     {
         dashes = maxDashes;
-        if (dashUI) dashUI.RechargeDashes(dashCooldown);
+        dashUI.RechargeDashes(dashCooldown);
     }
 
     Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint)
