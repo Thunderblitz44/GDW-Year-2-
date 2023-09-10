@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -12,11 +13,17 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     [SerializeField] float timeLimitBetweenDashes = 1f;
     [SerializeField] float dashCooldown = 5f;
     [SerializeField] AnimationCurve dashCurve;
+    [SerializeField] AnimationCurve dashFovIntensityCurve;
+    [SerializeField] float dashFovIncrease = 10;
+    [SerializeField] AnimationCurve fovRestoreCurve;
+    [SerializeField] float fovRestoreSpeed = 5;
     [SerializeField] LayerMask whatIsDashObstacle;
     [SerializeField] GameObject dashMeterPrefab;
+    Coroutine currentDashRoutine;
     DashUI dashUI;
     bool isDashing = false;
     int dashes = 0;
+
 
     [Header("GRAPPLE"), Space(5f)]
     [SerializeField] LayerMask whatIsGrapplable;
@@ -95,7 +102,8 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             dashCurve.AddKey(0,0);
             dashCurve.AddKey(newDist / dashSpeed, 1);
 
-            StartCoroutine(DashRoutine(end));
+            if (currentDashRoutine != null) StopCoroutine(currentDashRoutine);
+            currentDashRoutine = StartCoroutine(DashRoutine(end));
         };
         actions.Abilities.ShieldAbility.performed += ctx =>
         {
@@ -128,10 +136,18 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         Vector3 startPos = transform.position;
         float time = 0;
         float dashTime = dashCurve.keys[1].time;
-
+        CinemachineFreeLook camera = playerScript.GetCameraControllerScript().GetCameraTransform().GetComponent<CinemachineFreeLook>();
+        float startFOV = camera.m_Lens.FieldOfView;
+        float targetFOV = GameSettings.instance.defaultFOV + dashFovIncrease;
         while (time < dashTime)
         {
             transform.position = Vector3.Lerp(startPos,endPos, dashCurve.Evaluate(time += Time.deltaTime));
+
+            // trying to "lerp" fov from whatever it was to the max
+            if (startFOV < targetFOV)
+                camera.m_Lens.FieldOfView = Mathf.Clamp(startFOV + dashFovIntensityCurve.Evaluate(time/dashTime) * dashFovIncrease, startFOV, targetFOV);
+            else
+                camera.m_Lens.FieldOfView = Mathf.Clamp(startFOV + dashFovIntensityCurve.Evaluate(time / dashTime) * dashFovIncrease, targetFOV, startFOV);
 
             yield return null;
         }
@@ -149,6 +165,23 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         {
             Invoke(nameof(DashTimeout), timeLimitBetweenDashes);
         }
+
+        // restore fov
+        time = 0f;
+        startFOV = camera.m_Lens.FieldOfView;
+        targetFOV = GameSettings.instance.defaultFOV;
+        while (time < 1)
+        {
+            // "lerp" back to default fov
+            if (targetFOV < startFOV)
+                camera.m_Lens.FieldOfView = Mathf.Clamp(startFOV - fovRestoreCurve.Evaluate(time) * dashFovIncrease, targetFOV, startFOV);
+            else
+                camera.m_Lens.FieldOfView = Mathf.Clamp(startFOV - fovRestoreCurve.Evaluate(time) * dashFovIncrease, startFOV, targetFOV);
+
+            time += Time.deltaTime * fovRestoreSpeed;
+            yield return null;
+        }
+        camera.m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
     }
 
     void OnDashRecharged()

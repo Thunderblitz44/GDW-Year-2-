@@ -27,6 +27,7 @@ public class DashPoint : MonoBehaviour
             img.fillAmount = t / time;
             yield return null;
         }
+        img.fillAmount = 1f;
 
         isSpent = false;
         onDashCharged?.Invoke();

@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
@@ -30,6 +31,7 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        freeLookCamera.GetComponent<CinemachineFreeLook>().m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
     }
 
     void LockOnFunction()
