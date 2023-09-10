@@ -57,27 +57,33 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             // raycast - make sure there are no obstacles in the way
             float newDist = dashDistance;
 
+            Transform body = playerScript.GetMovementScript().GetBody();
+            Transform cam = Camera.main.transform;
             Vector3 end;
-            if (rb.velocity.magnitude > 0) end = transform.position + rb.velocity.normalized * newDist;
-            else { end = Camera.main.transform.forward; end.y = 0; end += transform.position; }
+            
+            // calculate end for the raycast
+            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetInputMoveDirection() * newDist;
+            else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
-            // slight issue here - fix the cameras first
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, (transform.position - end).normalized, 
+            if (Physics.Raycast(body.position, (end - body.position).normalized, 
                 out hit, dashDistance, whatIsDashObstacle))
             {
-                newDist = Vector3.Distance(hit.point, transform.position) - 0.7f;
+                newDist = Vector3.Distance(hit.point, body.position) - 0.5f;
             }
 
-            // lerp
-            if (rb.velocity.magnitude > 0) end = transform.position + rb.velocity.normalized * newDist;
-            else { end = Camera.main.transform.forward; end.y = 0; end += transform.position; }
+            // re-calculate end in case newdist changed
+            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetInputMoveDirection() * newDist;
+            else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
-            Debug.DrawRay(transform.position, end - transform.position, Color.red, 3f);
+            Debug.DrawRay(body.position, end - body.position, Color.red, 3f);
 
+            // lerp it
             dashCurve.ClearKeys();
             dashCurve.AddKey(0,0);
             dashCurve.AddKey(newDist / dashSpeed, 1);
+
+            Debug.Log("dashDist = " + dashDistance + " | newDist = " + newDist);
 
             StartCoroutine(DashRoutine(end));
         };
