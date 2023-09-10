@@ -5,27 +5,39 @@ using UnityEngine;
 public class PlayerAbilities : MonoBehaviour, IInputExpander
 {
     // DASH
+    [Header("DASH"), Space(5f)]
     [SerializeField] float dashDistance = 20f;
     [SerializeField] float dashSpeed = 10f;
+    [SerializeField] int maxDashes = 3;
+    [SerializeField] float timeLimitBetweenDashes = 1f;
+    [SerializeField] float dashCooldown = 5f;
     [SerializeField] AnimationCurve dashCurve;
+    [SerializeField] LayerMask whatIsDashObstacle;
+    DashUI dashUI;
     bool isDashing = false;
+    int dashes = 0;
 
-    public float thing = 5f;
-
-    public LayerMask whatIsDashObstacle;
-    public LayerMask whatIsGrapplable;
+    [Header("GRAPPLE"), Space(5f)]
+    [SerializeField] LayerMask whatIsGrapplable;
+    [SerializeField] float overshoot = 5f;
+    bool isGrappling;
 
     Player playerScript;
     ActionMap actions;
     Rigidbody rb;
 
-    bool isGrappling;
-
-    public Action OnGrappleStarted, OnGrappleEnded;
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void Start()
+    {
+        dashUI = GameSettings.instance.dashUI;
+
+        if (dashUI == null) return;
+        dashUI.SetDashVisual(maxDashes);
+        dashUI.onDashesRecharged += OnDashRecharged;
     }
 
     public void SetupInputEvents(object sender, ActionMap actions)
@@ -50,9 +62,12 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         };
         actions.Abilities.DashAbility.performed += ctx =>
         {
-            if (isDashing) return;
+            if (isDashing || dashes >= maxDashes) return;
             isDashing = true;
+            dashes++;
+            if (dashUI) dashUI.SpendDash();
             playerScript.GetMovementScript().Disable();
+            CancelInvoke(nameof(DashTimeout));
 
             // raycast - make sure there are no obstacles in the way
             float newDist = dashDistance;
@@ -67,23 +82,19 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
 
             RaycastHit hit;
             if (Physics.Raycast(body.position, (end - body.position).normalized, 
-                out hit, dashDistance, whatIsDashObstacle))
+                out hit, dashDistance, whatIsDashObstacle, QueryTriggerInteraction.Ignore))
             {
                 newDist = Vector3.Distance(hit.point, body.position) - 0.5f;
             }
 
-            // re-calculate end in case newdist changed
+            // re-calculate end in case newDist changed
             if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetInputMoveDirection() * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
-
-            Debug.DrawRay(body.position, end - body.position, Color.red, 3f);
 
             // lerp it
             dashCurve.ClearKeys();
             dashCurve.AddKey(0,0);
             dashCurve.AddKey(newDist / dashSpeed, 1);
-
-            Debug.Log("dashDist = " + dashDistance + " | newDist = " + newDist);
 
             StartCoroutine(DashRoutine(end));
         };
@@ -126,15 +137,37 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             yield return null;
         }
 
+        // dash end
         playerScript.GetMovementScript().Enable();
         isDashing = false;
+
+        // cooldown
+        if (dashes >= maxDashes)
+        {
+            if (dashUI) dashUI.RechargeDashes(dashCooldown);
+        }
+        else
+        {
+            Invoke(nameof(DashTimeout), timeLimitBetweenDashes);
+        }
+    }
+
+    void OnDashRecharged()
+    {
+        dashes = 0;
+    }
+
+    void DashTimeout()
+    {
+        dashes = maxDashes;
+        if (dashUI) dashUI.RechargeDashes(dashCooldown);
     }
 
     Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint)
     {
         float gravity = Physics.gravity.y;
         float displacementY = endpoint.y - startpoint.y;
-        float h = displacementY + thing;
+        float h = displacementY + overshoot;
         Vector3 displacementXZ = new Vector3(endpoint.x - startpoint.x, 0f, endpoint.z - startpoint.z);
 
         Vector3 velocityY = Vector3.up * MathF.Sqrt(-2 * gravity * h);
@@ -150,7 +183,6 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         {
             isGrappling = false;
             playerScript.GetMovementScript().Enable();
-            Debug.Log("grapple finished");
         }
     }
 

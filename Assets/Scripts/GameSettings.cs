@@ -8,6 +8,7 @@ public class GameSettings : NetworkBehaviour
     public float damageOverTimeInterval = 0.25f;
     public Transform canvas;
     public Transform worldCanvas;
+    public DashUI dashUI;
 
     private void Awake()
     {

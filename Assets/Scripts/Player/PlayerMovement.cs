@@ -8,10 +8,8 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
     [Header("Movement")]
     [SerializeField] float walkSpeed = 5f;
     [SerializeField] float runSpeed = 12f;
-    [SerializeField] float groundDrag = 5f;
     [SerializeField] AnimationCurve runSpeedCurve;
     [SerializeField] float runAccelMultiplier = 1f;
-    [SerializeField] float runDecelMultiplier = 1f;
     float moveSpeed;
     float runAccelTime;
     [Space(10f)]
@@ -29,19 +27,16 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
     bool readyToJump;
     [Space(10f)]
 
-
     // CROUCHING
     [Header("Crouching")]
     [SerializeField] float crouchSpeed = 3f;
     [SerializeField] float crouchYScale = .5f;
     float normalYScale;
 
-
     // SLOPE
     [Header("Slope Movement")]
     [SerializeField] float maxSlopeAngle = 45f;
     RaycastHit slopeHit;
-
 
     // GROUND CHECK
     [Header("Ground Check")]
@@ -51,7 +46,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
     public bool isGrounded;
     bool wasGrounded;
     [Space(10f)]
-
 
     // INPUT
     Vector3 inputMoveDirection;

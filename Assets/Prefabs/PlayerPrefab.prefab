@@ -1802,7 +1802,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5147890161671351804}
-  m_LocalRotation: {x: -0.014880541, y: -0.41631892, z: -0.006814702, w: 0.9090713}
+  m_LocalRotation: {x: -0.01488054, y: -0.41631895, z: -0.006814702, w: 0.9090713}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2938,7 +2938,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   runSpeed: 10
-  groundDrag: 5
   runSpeedCurve:
     serializedVersion: 2
     m_Curve:
@@ -2964,7 +2963,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   runAccelMultiplier: 1
-  runDecelMultiplier: 1
   rotationSpeed: 10
   jumpForce: 10
   airMultiplier: 0.1
@@ -3035,13 +3033,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  thing: 5
   whatIsDashObstacle:
     serializedVersion: 2
     m_Bits: 193
   whatIsGrapplable:
     serializedVersion: 2
     m_Bits: 129
+  overshoot: 5
 --- !u!114 &6148831655936662401
 MonoBehaviour:
   m_ObjectHideFlags: 0
