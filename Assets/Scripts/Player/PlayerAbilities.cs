@@ -1,7 +1,6 @@
 using Cinemachine;
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAbilities : MonoBehaviour, IInputExpander
@@ -156,7 +155,9 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         {
             // instantiate an object with a collider - in front of player
             // follow player
+            // have a small amount of delay with movement (juice)
             // stay in front of player
+            // have a small rotational delay (juice)
             // hold it for x seconds or until released
             // idea: cooldown is the held length
             
@@ -169,6 +170,8 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             // last x seconds
         };
 
+
+        // for testing
         actions.General.DamageSelf.performed += ctx => 
         {
             GetComponent<IDamageable>().ApplyDamage(1f); 
@@ -177,6 +180,8 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         {
             GetComponent<IDamageable>().ApplyDamage(-1f);
         };
+
+        // For testing
         actions.General.Attack.performed += ctx =>
         {
             GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f);
