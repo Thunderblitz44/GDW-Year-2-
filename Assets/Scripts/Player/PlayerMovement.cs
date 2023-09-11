@@ -116,10 +116,7 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
         if (isAiming)
         {
-            Vector3 forward = new Vector3(transform.position.x + Camera.main.transform.forward.x, 
-                transform.position.y, transform.position.z + Camera.main.transform.forward.z);
-            transform.LookAt(forward, Vector3.up);
-            body.rotation = transform.rotation;
+            body.rotation = new Quaternion(0, Camera.main.transform.rotation.y, 0, Camera.main.transform.rotation.w).normalized;
         }
 
         // double check in case we are still grounded after jumping (it can happen)

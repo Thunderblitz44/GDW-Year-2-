@@ -63,7 +63,6 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             RaycastHit hit;
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward,out hit, grappleDistance, whatIsGrapplable))
             {
-                playerScript.GetMovementScript().Disable();
                 isGrappling = true;
 
                 Vector3 launchForce = Vector3.zero;
@@ -97,7 +96,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
                     return;
                 }
 
-
+                playerScript.GetMovementScript().Disable();
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
                 rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
             }
@@ -234,10 +233,10 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint)
     {
         float gravity = Physics.gravity.y;
-        float displacementY = endpoint.y - startpoint.y;
+        float displacementY = Math.Abs(endpoint.y - startpoint.y);
         float h = displacementY + overshoot;
-        Vector3 displacementXZ = new Vector3(endpoint.x - startpoint.x, 0f, endpoint.z - startpoint.z);
 
+        Vector3 displacementXZ = new Vector3(endpoint.x - startpoint.x, 0f, endpoint.z - startpoint.z);
         Vector3 velocityY = Vector3.up * MathF.Sqrt(-2 * gravity * h);
         Vector3 velocityXZ = displacementXZ / (MathF.Sqrt(-2 * h / gravity) 
             + MathF.Sqrt(2 * (displacementY - h) / gravity));
