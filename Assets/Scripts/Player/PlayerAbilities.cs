@@ -26,8 +26,13 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
 
 
     [Header("GRAPPLE"), Space(5f)]
-    [SerializeField] LayerMask whatIsGrapplable;
+    [SerializeField] float grappleDistance = 50f;
+    [SerializeField] float lightWeightMaxMass = 1f;
     [SerializeField] float overshoot = 5f;
+    [SerializeField] float playerLandingSpace = 1f;
+    [SerializeField] float meetInTheMiddleSpacing = 0.5f;
+    [SerializeField] float itemLandingSpace = 1f;
+    [SerializeField] LayerMask whatIsGrapplable;
     bool isGrappling;
 
     Player playerScript;
@@ -56,14 +61,45 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             if (isGrappling) return;
             
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward,out hit, 50f, whatIsGrapplable))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward,out hit, grappleDistance, whatIsGrapplable))
             {
                 playerScript.GetMovementScript().Disable();
                 isGrappling = true;
 
-                
+                Vector3 launchForce = Vector3.zero;
+                Transform target = hit.transform;
+                Vector3 dir = (target.position - transform.position).normalized;
+
+                // process the grapple target
+                if (!hit.rigidbody)
+                {
+                    // grapple point - we go to it
+                    float dist = Vector3.Distance(transform.position, target.position) - playerLandingSpace;
+                    Vector3 playerEndPoint = transform.position + dir * dist;
+                    launchForce = CalculateLaunchVelocity(transform.position, playerEndPoint);
+                }
+                else if (hit.rigidbody.mass > lightWeightMaxMass)
+                {
+                    // something heavy, meet in the middle
+                    float dist = Vector3.Distance(transform.position, target.position) / 2 - meetInTheMiddleSpacing;
+                    Vector3 playerEndPoint = transform.position + dir * dist;
+                    Vector3 targetEndPoint = target.position - dir * dist;
+
+                    launchForce = CalculateLaunchVelocity(transform.position, playerEndPoint);
+                    hit.rigidbody.AddForce(CalculateLaunchVelocity(target.position, targetEndPoint) * hit.rigidbody.mass, ForceMode.Impulse);
+                }
+                else
+                {
+                    // light object, it comes to us
+                    float dist = Vector3.Distance(transform.position, target.position) - itemLandingSpace;
+                    Vector3 targetEndPoint = target.position - dir * dist;
+                    hit.rigidbody.AddForce(CalculateLaunchVelocity(target.position, targetEndPoint), ForceMode.Impulse);
+                    return;
+                }
+
+
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-                rb.AddForce(CalculateLaunchVelocity(transform.position, hit.transform.position) * rb.mass, ForceMode.Impulse);
+                rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
             }
         };
         actions.Abilities.DashAbility.performed += ctx =>

@@ -3042,8 +3042,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -3060,7 +3060,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  dashFovIncrease: 20
+  dashFovIncrease: -20
   fovRestoreCurve:
     serializedVersion: 2
     m_Curve:
@@ -3090,10 +3090,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 193
   dashMeterPrefab: {fileID: 3716428700116357348, guid: 2028562b395f7654a92ee0cb67329858, type: 3}
+  grappleDistance: 50
+  lightWeightMaxMass: 1
+  overshoot: 5
+  playerLandingSpace: 1
+  meetInTheMiddleSpacing: 0.5
+  itemLandingSpace: 1
   whatIsGrapplable:
     serializedVersion: 2
     m_Bits: 129
-  overshoot: 5
 --- !u!114 &6148831655936662401
 MonoBehaviour:
   m_ObjectHideFlags: 0
