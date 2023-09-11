@@ -1,6 +1,7 @@
 using Cinemachine;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAbilities : MonoBehaviour, IInputExpander
@@ -32,8 +33,12 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     [SerializeField] float playerLandingSpace = 1f;
     [SerializeField] float meetInTheMiddleSpacing = 0.5f;
     [SerializeField] float itemLandingSpace = 1f;
+    [SerializeField] float grappleCooldown = 3f;
     [SerializeField] LayerMask whatIsGrapplable;
-    bool isGrappling;
+    [SerializeField] GameObject grappleMeterPrefab;
+    bool isGrappling = false;
+    bool grappleCharged = true;
+    GrappleUI grappleUI;
 
     Player playerScript;
     ActionMap actions;
@@ -43,12 +48,15 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     {
         rb = GetComponent<Rigidbody>();
         dashUI = Instantiate(dashMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<DashUI>();
+        grappleUI = Instantiate(grappleMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<GrappleUI>();
     }
 
     private void Start()
     {
         dashUI.SetDashVisual(maxDashes);
         dashUI.onDashesRecharged += OnDashRecharged;
+
+        grappleUI.onGrappleRecharged += OnGrappleRecharged;
     }
 
     public void SetupInputEvents(object sender, ActionMap actions)
@@ -58,12 +66,13 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
 
         actions.Abilities.GrappleAbility.performed += ctx =>
         {
-            if (isGrappling) return;
-            
+            if (isGrappling || !grappleCharged) return;
+
             RaycastHit hit;
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward,out hit, grappleDistance, whatIsGrapplable))
             {
                 isGrappling = true;
+                grappleUI.SpendPoint();
 
                 Vector3 launchForce = Vector3.zero;
                 Transform target = hit.transform;
@@ -93,12 +102,16 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
                     float dist = Vector3.Distance(transform.position, target.position) - itemLandingSpace;
                     Vector3 targetEndPoint = target.position - dir * dist;
                     hit.rigidbody.AddForce(CalculateLaunchVelocity(target.position, targetEndPoint), ForceMode.Impulse);
-                    return;
+                    goto cooldown;
                 }
 
                 playerScript.GetMovementScript().Disable();
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
                 rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
+
+            cooldown:
+                grappleCharged = false;
+                grappleUI.RechargePoint(grappleCooldown);
             }
         };
         actions.Abilities.DashAbility.performed += ctx =>
@@ -243,6 +256,10 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         return velocityXZ + velocityY;
     }
 
+    private void OnGrappleRecharged()
+    {
+        grappleCharged = true;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {

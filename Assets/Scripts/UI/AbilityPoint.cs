@@ -3,10 +3,10 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DashPoint : MonoBehaviour
+public class AbilityPoint : MonoBehaviour
 {
     Image img;
-    public Action onDashCharged;
+    public Action onAbilityPointCharged;
     public bool isSpent { get; private set; }
 
     private void Awake()
@@ -30,6 +30,6 @@ public class DashPoint : MonoBehaviour
         img.fillAmount = 1f;
 
         isSpent = false;
-        onDashCharged?.Invoke();
+        onAbilityPointCharged?.Invoke();
     }
 }

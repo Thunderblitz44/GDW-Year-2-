@@ -6,7 +6,7 @@ public class DashUI : MonoBehaviour
 {
     [SerializeField] Transform gridGroup;
     [SerializeField] GameObject dashPointPrefab;
-    List<DashPoint> points = new();
+    List<AbilityPoint> points = new();
     int chargedDashes;
     public Action onDashesRecharged;
 
@@ -33,8 +33,8 @@ public class DashUI : MonoBehaviour
         // make a list of all points
         for (int i = 0; i < gridGroup.childCount; i++)
         {
-            points.Add(gridGroup.GetChild(i).GetComponent<DashPoint>());
-            points[i].onDashCharged += OnDashCharged;
+            points.Add(gridGroup.GetChild(i).GetComponent<AbilityPoint>());
+            points[i].onAbilityPointCharged += OnDashCharged;
         }
     }
 
