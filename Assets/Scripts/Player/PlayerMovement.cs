@@ -49,6 +49,7 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     // INPUT
     Vector3 inputMoveDirection;
+    Vector3 moveDirection;
     ActionMap actions;
 
     // SOME UNORGANIZED DATA
@@ -98,7 +99,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
         if (ignoreStates || !IsOwner) return;
 
         GroundCheck();
-
         SpeedControl();
 
         if (isGrounded)
@@ -214,8 +214,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     void Move()
     {
-        Vector3 moveDirection;
-
         // set move direction - normal operation
         if (!playerScript.GetCameraControllerScript().IsLockedOnToATarget())
         {
@@ -431,7 +429,7 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
     public Transform GetOrientation() => orientation;
     public Rigidbody GetRigidbody() => rb;
     public Transform GetBody() => body;
-    public Vector3 GetInputMoveDirection() => inputMoveDirection;
+    public Vector3 GetMoveDirection() => moveDirection;
 
     // Controls Toggles
     public void EnableLocomotion() => actions.Locomotion.Enable();

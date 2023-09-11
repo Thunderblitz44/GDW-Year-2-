@@ -5,11 +5,13 @@ using UnityEngine.UI;
 
 public class HPBar : NetworkBehaviour
 {
-    [SerializeField] Image filler;
-    [SerializeField] TextMeshProUGUI text;
+    [SerializeField] internal Image filler;
+    [SerializeField] internal TextMeshProUGUI text;
     [SerializeField] GameObject floatingTextPrefab;
     [HideInInspector] public float maxHP;
-    public bool enableDamageNumbers = true;
+    [SerializeField] bool enableDamageNumbers = true;
+    [SerializeField] float damageNumberSpawnHeight = 0.5f;
+    
     float hp;
 
     public void SetHPValue(float value)
@@ -31,7 +33,7 @@ public class HPBar : NetworkBehaviour
         SetHPFill();
     }
 
-    public void ChangeHPByAmount(float amount)
+    public virtual void ChangeHPByAmount(float amount)
     {
         if (!filler || !text) return;
 
@@ -41,7 +43,7 @@ public class HPBar : NetworkBehaviour
         TrySpawnHPChangeIndicator(amount);
     }
 
-    public void ChangeHpByPercentage(float value01)
+    public virtual void ChangeHpByPercentage(float value01)
     {
         if (!filler || !text) return;
 
@@ -67,9 +69,9 @@ public class HPBar : NetworkBehaviour
         if (!enableDamageNumbers) return;
         
         Transform t = Instantiate(floatingTextPrefab).transform;
-        t.position = transform.position + Vector3.up * 1.5f;
+        t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
         t.GetComponent<TextMeshProUGUI>().text = changeValue.ToString();
         t.GetComponent<NetworkObject>().Spawn(true);
-        t.SetParent(GameSettings.instance.worldCanvas, true);
+        t.SetParent(GameSettings.instance.GetWorldCanvas(), true);
     }
 }

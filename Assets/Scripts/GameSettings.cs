@@ -7,8 +7,8 @@ public class GameSettings : NetworkBehaviour
 
     public float damageOverTimeInterval = 0.25f;
     public float defaultFOV = 50f;
-    public Transform canvas;
-    public Transform worldCanvas;
+    [SerializeField] Transform canvas;
+    [SerializeField] Transform worldCanvas;
 
     private void Awake()
     {
@@ -23,4 +23,5 @@ public class GameSettings : NetworkBehaviour
     }
 
     public Transform GetCanvas() => canvas;
+    public Transform GetWorldCanvas() => worldCanvas;
 }

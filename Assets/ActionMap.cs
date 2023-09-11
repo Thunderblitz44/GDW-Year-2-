@@ -559,6 +559,15 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""88754d92-0249-466f-b0d8-80fea8afdeb0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -594,6 +603,17 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""action"": ""HealSelf"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf6abe54-c14d-4d54-905d-61ea0f2a1478"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -623,6 +643,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_General_Escape = m_General.FindAction("Escape", throwIfNotFound: true);
         m_General_DamageSelf = m_General.FindAction("DamageSelf", throwIfNotFound: true);
         m_General_HealSelf = m_General.FindAction("HealSelf", throwIfNotFound: true);
+        m_General_Attack = m_General.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -897,6 +918,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_General_Escape;
     private readonly InputAction m_General_DamageSelf;
     private readonly InputAction m_General_HealSelf;
+    private readonly InputAction m_General_Attack;
     public struct GeneralActions
     {
         private @ActionMap m_Wrapper;
@@ -904,6 +926,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @Escape => m_Wrapper.m_General_Escape;
         public InputAction @DamageSelf => m_Wrapper.m_General_DamageSelf;
         public InputAction @HealSelf => m_Wrapper.m_General_HealSelf;
+        public InputAction @Attack => m_Wrapper.m_General_Attack;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -922,6 +945,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @HealSelf.started += instance.OnHealSelf;
             @HealSelf.performed += instance.OnHealSelf;
             @HealSelf.canceled += instance.OnHealSelf;
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
         }
 
         private void UnregisterCallbacks(IGeneralActions instance)
@@ -935,6 +961,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @HealSelf.started -= instance.OnHealSelf;
             @HealSelf.performed -= instance.OnHealSelf;
             @HealSelf.canceled -= instance.OnHealSelf;
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
         }
 
         public void RemoveCallbacks(IGeneralActions instance)
@@ -978,5 +1007,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         void OnEscape(InputAction.CallbackContext context);
         void OnDamageSelf(InputAction.CallbackContext context);
         void OnHealSelf(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }

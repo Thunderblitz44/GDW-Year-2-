@@ -59,6 +59,7 @@ MonoBehaviour:
   floatingTextPrefab: {fileID: 8871694063274449216, guid: 55652b8c6a95fec4c8cf0a4c1acb9422, type: 3}
   maxHP: 0
   enableDamageNumbers: 0
+  damageNumberSpawnHeight: 0.5
 --- !u!114 &-3876397320809015118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,14 +350,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.509434, g: 0.509434, b: 0.509434, a: 0.7529412}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: c7582395ebfee5b47a344296d9058e00, type: 3}
-  m_Type: 3
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
@@ -425,7 +426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.08451243, g: 0.764151, b: 0.038928382, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

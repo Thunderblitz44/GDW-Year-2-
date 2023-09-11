@@ -120,7 +120,6 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             isDashing = true;
             dashes++;
             dashUI.SpendDash();
-            playerScript.GetMovementScript().Disable();
             CancelInvoke(nameof(DashTimeout));
 
             // raycast - make sure there are no obstacles in the way
@@ -131,7 +130,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             Vector3 end;
             
             // calculate end for the raycast
-            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetInputMoveDirection() * newDist;
+            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
             RaycastHit hit;
@@ -142,7 +141,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             }
 
             // re-calculate end in case newDist changed
-            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetInputMoveDirection() * newDist;
+            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
             // lerp it
@@ -155,7 +154,12 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         };
         actions.Abilities.ShieldAbility.performed += ctx =>
         {
-            // instantiate sphere collider or plane
+            // instantiate an object with a collider - in front of player
+            // follow player
+            // stay in front of player
+            // hold it for x seconds or until released
+            // idea: cooldown is the held length
+            
 
         };
         actions.Abilities.BuffAbility.performed += ctx =>
@@ -173,14 +177,31 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         {
             GetComponent<IDamageable>().ApplyDamage(-1f);
         };
+        actions.General.Attack.performed += ctx =>
+        {
+            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f);
+        };
+        actions.CameraControl.Aim.performed += ctx =>
+        { 
+            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f);
+        };
+
+        actions.General.Attack.Enable();
         actions.General.DamageSelf.Enable();
         actions.General.HealSelf.Enable();
+
 
         EnableAllAbilities();
     }
 
+    private void Attack_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        throw new NotImplementedException();
+    }
+
     IEnumerator DashRoutine(Vector3 endPos)
     {
+        playerScript.GetMovementScript().Disable();
         Vector3 startPos = transform.position;
         float time = 0;
         float dashTime = dashCurve.keys[1].time;
