@@ -142,8 +142,8 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         };
         actions.Abilities.ShieldAbility.performed += ctx =>
         {
-            // stop moving
-            // no dmg
+            // instantiate sphere collider or plane
+
         };
         actions.Abilities.BuffAbility.performed += ctx =>
         {
