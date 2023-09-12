@@ -1,17 +1,17 @@
 using Cinemachine;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerCameras : NetworkBehaviour, IInputExpander
 {
-    [SerializeField] GameObject cameraRig;
-    CinemachineFreeLook freeLookCamera;
-    [SerializeField] Transform aimPoint;
+    [SerializeField] Camera mainCamera;
+    [SerializeField] Transform freeLookCamera;
+    [SerializeField] Transform aim;
     [SerializeField] LayerMask lockOnLayers;
 
+    Player playerScript;
     ActionMap actions;
 
     bool isLockedOn = false;
@@ -21,26 +21,17 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
     List<int> ints = new();
     int i;
 
-    [ClientRpc]
-    void SpawnCameraRigClientRpc()
+    public void Start()
     {
-        Transform cams = Instantiate(cameraRig).transform;
-        freeLookCamera = cams.GetChild(1).GetComponent<CinemachineFreeLook>();
-
-        freeLookCamera.Follow = transform;
-        freeLookCamera.LookAt = transform;
-
-        freeLookCamera.m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
-    }
-
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        //if (!IsOwner) return;
-        SpawnCameraRigClientRpc();
+        if (!IsOwner)
+        {
+            mainCamera.gameObject.SetActive(false);
+            return;
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        freeLookCamera.GetComponent<CinemachineFreeLook>().m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
     }
 
     void LockOnFunction()
@@ -59,7 +50,7 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
             if (!isLockedOn)
             {
                 isLockedOn = true;
-                //lastUsedCamera = GetCameraTransform().gameObject;
+                lastUsedCamera = GetCameraTransform().gameObject;
                 lastUsedCamera.gameObject.SetActive(false);
                 //lockOnCamera.gameObject.SetActive(true);
                 currentTarget = hitInfo.collider.transform;
@@ -77,9 +68,8 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
         }
     }
 
-    public CinemachineFreeLook GetCamera()
+    public Transform GetCameraTransform()
     {
-        //if (!IsOwner) return null;
         return freeLookCamera;
     }
 
@@ -88,6 +78,7 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
 
     public void SetupInputEvents(object sender, ActionMap actions)
     {
+        playerScript = (Player)sender;
         this.actions = actions;
 
         // Lock on to target

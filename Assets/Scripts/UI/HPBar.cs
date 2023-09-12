@@ -7,7 +7,10 @@ public class HPBar : NetworkBehaviour
 {
     [SerializeField] internal Image filler;
     [SerializeField] internal TextMeshProUGUI text;
+    [SerializeField] GameObject floatingTextPrefab;
     [HideInInspector] public float maxHP;
+    [SerializeField] bool enableDamageNumbers = true;
+    [SerializeField] float damageNumberSpawnHeight = 0.5f;
     
     float hp;
 
@@ -37,6 +40,7 @@ public class HPBar : NetworkBehaviour
         hp = Mathf.Clamp(hp + amount, 0, maxHP);
         SetHPInText();
         SetHPFill();
+        TrySpawnHPChangeIndicator(amount);
     }
 
     public virtual void ChangeHpByPercentage(float value01)
@@ -47,6 +51,7 @@ public class HPBar : NetworkBehaviour
         hp = Mathf.Clamp(hp + value01 * maxHP, 0, maxHP);
         SetHPInText();
         SetHPFill();
+        TrySpawnHPChangeIndicator(value01 * maxHP);
     }
 
     void SetHPInText()
@@ -57,5 +62,16 @@ public class HPBar : NetworkBehaviour
     void SetHPFill()
     {
         filler.fillAmount = maxHP > 0? hp / maxHP : 0;
+    }
+
+    void TrySpawnHPChangeIndicator(float changeValue)
+    {
+        if (!enableDamageNumbers) return;
+        
+        Transform t = Instantiate(floatingTextPrefab).transform;
+        t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
+        t.GetComponent<TextMeshProUGUI>().text = changeValue.ToString();
+        t.GetComponent<NetworkObject>().Spawn(true);
+        t.SetParent(GameSettings.instance.GetWorldCanvas(), true);
     }
 }

@@ -1,20 +1,15 @@
 using System.Collections;
-using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class DamageableEntity : MonoBehaviour, IDamageable
+public class DamageableEntity : NetworkBehaviour, IDamageable
 {
     HealthComponent hp;
-    [SerializeField] float damageNumberSpawnHeight = 1.5f;
-    [SerializeField] GameObject floatingTextPrefab;
-    [SerializeField] bool enableDamageNumbers = true;
-
-    void Awake()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         hp = GetComponent<HealthComponent>();
-        if (hp) hp.onHealthZeroed += OnHealthZeroed;
+        hp.onHealthZeroed += OnHealthZeroed;
     }
 
     internal virtual void OnHealthZeroed()
@@ -22,39 +17,26 @@ public class DamageableEntity : MonoBehaviour, IDamageable
 
     }
 
-    public void ApplyDamage(float damage, DamageTypes type)
+    public void ApplyDamage(float damage)
     {
         hp.DeductHealth(damage);
-        if (!enableDamageNumbers) return;
-
-        string msg = $"<color=#{(type == DamageTypes.physical? GameSettings.instance.physicalDamageColor.ToHexString() : GameSettings.instance.magicDamageColor.ToHexString())}>{damage}</color>";
-        SpawnFloatingText(msg);
     }
 
-    public void ApplyDamageOverTime(float dps, DamageTypes type, float duration)
+    public void ApplyDamageOverTime(float dps, float duration)
     {
-        StartCoroutine(DamageOverTimeRoutine(dps, type, duration));
+        StartCoroutine(DamageOverTimeRoutine(dps, duration));
     }
 
-    IEnumerator DamageOverTimeRoutine(float dps, DamageTypes type, float duration)
+    IEnumerator DamageOverTimeRoutine(float dps, float duration)
     {
         for (float i = 0, n = 0; i < duration; i += Time.deltaTime, n += Time.deltaTime)
         {
             if (n > GameSettings.instance.damageOverTimeInterval)
             {
                 n = 0;
-                ApplyDamage(dps * GameSettings.instance.damageOverTimeInterval, type);
+                ApplyDamage(dps * GameSettings.instance.damageOverTimeInterval);
             }
             yield return null;
         }
-    }
-
-    void SpawnFloatingText(string message)
-    {
-        Transform t = Instantiate(floatingTextPrefab).transform;
-        t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
-        t.GetComponent<TextMeshProUGUI>().text = message;
-        t.GetComponent<NetworkObject>().Spawn(true);
-        t.SetParent(GameSettings.instance.GetWorldCanvas(), true);
     }
 }

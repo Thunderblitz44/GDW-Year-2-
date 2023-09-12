@@ -1,22 +1,12 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public enum DamageTypes
-{
-    physical,
-    magic
-}
-
-
 public class GameSettings : NetworkBehaviour
 {
     public static GameSettings instance;
 
     public float damageOverTimeInterval = 0.25f;
     public float defaultFOV = 50f;
-    public Color physicalDamageColor = Color.white;
-    public Color magicDamageColor = Color.magenta;
-
     [SerializeField] Transform canvas;
     [SerializeField] Transform worldCanvas;
 

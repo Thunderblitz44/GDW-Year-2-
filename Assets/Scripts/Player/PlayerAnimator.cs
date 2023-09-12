@@ -33,7 +33,7 @@ public class PlayerAnimator : MonoBehaviour
         //Jumping/Falling
 
         // Matches isGrounded with Groundcheck bool in animator
-        bool isGrounded = playerMovement.IsGrounded();
+        bool isGrounded = playerMovement.isGrounded;
         animator.SetBool("GroundCheck", isGrounded);
       
     }

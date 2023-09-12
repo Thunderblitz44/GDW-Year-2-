@@ -21,8 +21,9 @@ public class Player : DamageableEntity
         }
     }
 
-    void OnDestroy()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         actions.Dispose();
     }
 

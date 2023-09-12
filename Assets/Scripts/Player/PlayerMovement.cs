@@ -2,7 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour, IInputExpander
+public class PlayerMovement : NetworkBehaviour, IInputExpander
 {
     // MOVEMENT
     [Header("Movement")]
@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     [SerializeField] LayerMask whatIsGround;
     [SerializeField] float playerHeight = 2;
     float airTime;
-    bool isGrounded;
+    public bool isGrounded;
     bool wasGrounded;
     [Space(10f)]
 
@@ -80,9 +80,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         rb = GetComponent<Rigidbody>();
     }
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
-        //base.OnDestroy();
+        base.OnDestroy();
         onPlayerLanded -= OnLanded;
     }
 
@@ -96,8 +96,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     private void Update()
     {
-        //if (!IsOwner) return;
-        if (ignoreStates) return;
+        if (ignoreStates || !IsOwner) return;
 
         GroundCheck();
         SpeedControl();
@@ -139,7 +138,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     private void FixedUpdate()
     {
-        //if (!IsOwner) return;
+        if (!IsOwner) return;
 
         Move();
     }
@@ -215,23 +214,21 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     void Move()
     {
-        if (!Camera.main) return;
-        if (!Camera.main.transform) return;
         // set move direction - normal operation
-        //if (!playerScript.GetCameraControllerScript().IsLockedOnToATarget())
-        //{
+        if (!playerScript.GetCameraControllerScript().IsLockedOnToATarget())
+        {
             Vector3 cameraFwd = Camera.main.transform.forward;
             Vector3 cameraRight = Camera.main.transform.right;
             cameraFwd.y = 0f;
             cameraRight.y = 0f;
             moveDirection = cameraFwd * inputMoveDirection.z + cameraRight * inputMoveDirection.x;
-        /*}
+        }
         else
         {
             Transform camera = Camera.main.transform;
             moveDirection = new Vector3(camera.forward.x, 0, camera.forward.z) * inputMoveDirection.z +
                 new Vector3(camera.right.x, 0, camera.right.z) * inputMoveDirection.x;
-        }*/
+        }
 
         // ignore the rest of this function if we are trying to move into an obstacle while jumping
         if (Physics.Raycast(transform.position, moveDirection, 0.6f, LayerMask.NameToLayer("Everything"), QueryTriggerInteraction.Ignore) && 
