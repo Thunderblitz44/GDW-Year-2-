@@ -174,26 +174,30 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         // for testing
         actions.General.DamageSelf.performed += ctx => 
         {
-            GetComponent<IDamageable>().ApplyDamage(1f); 
+            GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical); 
         };
         actions.General.HealSelf.performed += ctx =>
         {
-            GetComponent<IDamageable>().ApplyDamage(-1f);
+            GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.physical);
         };
 
         // For testing
         actions.General.Attack.performed += ctx =>
         {
-            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f);
+            //GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical);
+            //Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
         };
         actions.CameraControl.Aim.performed += ctx =>
         { 
-            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f);
+            //GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.magic);
+        };
+        actions.General.Escape.performed += ctx => { 
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         };
 
-        actions.General.Attack.Enable();
-        actions.General.DamageSelf.Enable();
-        actions.General.HealSelf.Enable();
+        actions.General.Enable();
 
 
         EnableAllAbilities();
@@ -210,7 +214,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         Vector3 startPos = transform.position;
         float time = 0;
         float dashTime = dashCurve.keys[1].time;
-        CinemachineFreeLook camera = playerScript.GetCameraControllerScript().GetCameraTransform().GetComponent<CinemachineFreeLook>();
+        CinemachineFreeLook camera = playerScript.GetCameraControllerScript().GetCamera();
         float startFOV = camera.m_Lens.FieldOfView;
         float targetFOV = GameSettings.instance.defaultFOV + dashFovIncrease;
         while (time < dashTime)

@@ -5,8 +5,10 @@ public class DebugHUD : MonoBehaviour
 {
     public static DebugHUD instance;
 
+    [SerializeField] TextMeshProUGUI joinCodetxt;
     [SerializeField] TextMeshProUGUI speedTxt;
     [SerializeField] TextMeshProUGUI airtimeTxt;
+    [SerializeField] TextMeshProUGUI messageTxt;
 
     private void Awake()
     {
@@ -35,9 +37,22 @@ public class DebugHUD : MonoBehaviour
         Invoke(nameof(ResetAirtime), 2f);
     }
 
+    public void SetJoinCode(string value)
+    {
+        if (!joinCodetxt) return;
+        joinCodetxt.text = $"Join Code : {value}";
+    }
+
     void ResetAirtime()
     {
         if (!airtimeTxt) return;
         airtimeTxt.text = $"Air time : 0.000s";
+    }
+
+    public void SetMessage(string message)
+    {
+        if (!messageTxt) return;
+
+        messageTxt.text = message;
     }
 }
