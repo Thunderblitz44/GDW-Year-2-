@@ -148,7 +148,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     #region Inputs
 
-    // call in awake
     public void SetupInputEvents(object sender, ActionMap actions)
     {
         this.actions = actions;
@@ -214,21 +213,11 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     void Move()
     {
-        // set move direction - normal operation
-        if (!playerScript.GetCameraControllerScript().IsLockedOnToATarget())
-        {
-            Vector3 cameraFwd = Camera.main.transform.forward;
-            Vector3 cameraRight = Camera.main.transform.right;
-            cameraFwd.y = 0f;
-            cameraRight.y = 0f;
-            moveDirection = cameraFwd * inputMoveDirection.z + cameraRight * inputMoveDirection.x;
-        }
-        else
-        {
-            Transform camera = Camera.main.transform;
-            moveDirection = new Vector3(camera.forward.x, 0, camera.forward.z) * inputMoveDirection.z +
-                new Vector3(camera.right.x, 0, camera.right.z) * inputMoveDirection.x;
-        }
+        Vector3 cameraFwd = Camera.main.transform.forward;
+        Vector3 cameraRight = Camera.main.transform.right;
+        cameraFwd.y = 0f;
+        cameraRight.y = 0f;
+        moveDirection = cameraFwd * inputMoveDirection.z + cameraRight * inputMoveDirection.x;
 
         // ignore the rest of this function if we are trying to move into an obstacle while jumping
         if (Physics.Raycast(transform.position, moveDirection, 0.6f, LayerMask.NameToLayer("Everything"), QueryTriggerInteraction.Ignore) && 

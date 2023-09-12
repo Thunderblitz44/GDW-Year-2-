@@ -6,12 +6,11 @@ using UnityEngine;
 
 public class PlayerCameras : NetworkBehaviour, IInputExpander
 {
-    [SerializeField] Camera mainCamera;
-    [SerializeField] Transform freeLookCamera;
+    [SerializeField] GameObject cameraRig;
+    CinemachineFreeLook freeLookCamera;
     [SerializeField] Transform aim;
     [SerializeField] LayerMask lockOnLayers;
 
-    Player playerScript;
     ActionMap actions;
 
     bool isLockedOn = false;
@@ -21,17 +20,17 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
     List<int> ints = new();
     int i;
 
-    public void Start()
+    void Start()
     {
-        if (!IsOwner)
-        {
-            mainCamera.gameObject.SetActive(false);
-            return;
-        }
+        if (!IsOwner) return;
+        
+        freeLookCamera = Instantiate(cameraRig).transform.GetChild(1).GetComponent<CinemachineFreeLook>();
+        freeLookCamera.LookAt = transform;
+        freeLookCamera.Follow = transform;
+        freeLookCamera.m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        freeLookCamera.GetComponent<CinemachineFreeLook>().m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
 
     void LockOnFunction()
@@ -50,7 +49,7 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
             if (!isLockedOn)
             {
                 isLockedOn = true;
-                lastUsedCamera = GetCameraTransform().gameObject;
+                lastUsedCamera = GetFreeLookCamera().gameObject;
                 lastUsedCamera.gameObject.SetActive(false);
                 //lockOnCamera.gameObject.SetActive(true);
                 currentTarget = hitInfo.collider.transform;
@@ -68,7 +67,7 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
         }
     }
 
-    public Transform GetCameraTransform()
+    public CinemachineFreeLook GetFreeLookCamera()
     {
         return freeLookCamera;
     }
@@ -78,7 +77,6 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
 
     public void SetupInputEvents(object sender, ActionMap actions)
     {
-        playerScript = (Player)sender;
         this.actions = actions;
 
         // Lock on to target

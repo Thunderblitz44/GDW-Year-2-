@@ -1,9 +1,10 @@
 using Cinemachine;
 using System;
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerAbilities : MonoBehaviour, IInputExpander
+public class PlayerAbilities : NetworkBehaviour, IInputExpander
 {
     // DASH
     [Header("DASH"), Space(5f)]
@@ -43,18 +44,17 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
     ActionMap actions;
     Rigidbody rb;
 
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-        dashUI = Instantiate(dashMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<DashUI>();
-        grappleUI = Instantiate(grappleMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<GrappleUI>();
-    }
-
     private void Start()
     {
+        if (!IsOwner) return;
+
+        rb = GetComponent<Rigidbody>();
+        
+        dashUI = Instantiate(dashMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<DashUI>();
         dashUI.SetDashVisual(maxDashes);
         dashUI.onDashesRecharged += OnDashRecharged;
-
+        
+        grappleUI = Instantiate(grappleMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<GrappleUI>();
         grappleUI.onGrappleRecharged += OnGrappleRecharged;
     }
 
@@ -174,21 +174,21 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         // for testing
         actions.General.DamageSelf.performed += ctx => 
         {
-            GetComponent<IDamageable>().ApplyDamage(1f); 
+            GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical); 
         };
         actions.General.HealSelf.performed += ctx =>
         {
-            GetComponent<IDamageable>().ApplyDamage(-1f);
+            GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.physical);
         };
 
         // For testing
         actions.General.Attack.performed += ctx =>
         {
-            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f);
+            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f , DamageTypes.physical);
         };
         actions.CameraControl.Aim.performed += ctx =>
         { 
-            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f);
+            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.magic);
         };
 
         actions.General.Attack.Enable();
@@ -210,7 +210,7 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
         Vector3 startPos = transform.position;
         float time = 0;
         float dashTime = dashCurve.keys[1].time;
-        CinemachineFreeLook camera = playerScript.GetCameraControllerScript().GetCameraTransform().GetComponent<CinemachineFreeLook>();
+        CinemachineFreeLook camera = playerScript.GetCameraControllerScript().GetFreeLookCamera();
         float startFOV = camera.m_Lens.FieldOfView;
         float targetFOV = GameSettings.instance.defaultFOV + dashFovIncrease;
         while (time < dashTime)

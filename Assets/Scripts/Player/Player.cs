@@ -7,8 +7,10 @@ public class Player : DamageableEntity
     // INPUT
     ActionMap actions;
 
-    private void Awake()
+    private void Start()
     {
+        if (!IsOwner) return;
+
         movementScript = GetComponent<PlayerMovement>();
         playerCamerasScript = GetComponent<PlayerCameras>();
 
