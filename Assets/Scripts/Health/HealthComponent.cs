@@ -25,7 +25,7 @@ public class HealthComponent : NetworkBehaviour
             entityHPBar.maxHP = maxHealth;
             entityHPBar.SetHPValue(health.Value);
         }
-        else if (hpBarPrefab.GetComponent<HPBar>())
+        else if (IsOwner && hpBarPrefab.GetComponent<HPBar>())
         {
             hpbar = Instantiate(hpBarPrefab, GameSettings.instance.GetCanvas()).GetComponent<HPBar>();
             hpbar.maxHP = maxHealth;
@@ -42,12 +42,12 @@ public class HealthComponent : NetworkBehaviour
 
     public void DeductHealth(float value)
     {
-        if (hpbar) hpbar.ChangeHPByAmount(-value);
-        else entityHPBar.ChangeHPByAmount(-value);
+        if (IsOwner && hpbar) hpbar.ChangeHPByAmount(-value);
+        else if (entityHPBar) entityHPBar.ChangeHPByAmount(-value);
 
         if (!IsOwner) return;
         if ((health.Value = GetHealth()) == 0) onHealthZeroed?.Invoke();
     }
 
-    public float GetHealth() => hpbar != null ? hpbar.GetHP() : entityHPBar.GetHP();
+    public float GetHealth() => hpbar == null ? entityHPBar == null ? 0 : entityHPBar.GetHP() : hpbar.GetHP();
 }

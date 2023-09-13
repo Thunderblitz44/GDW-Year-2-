@@ -68,9 +68,8 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
             if (isGrappling || !grappleCharged) return;
 
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward,out hit, grappleDistance, whatIsGrapplable))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, grappleDistance, whatIsGrapplable))
             {
-                isGrappling = true;
                 grappleUI.SpendPoint();
 
                 Vector3 launchForce = Vector3.zero;
@@ -93,17 +92,22 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
                     Vector3 targetEndPoint = target.position - dir * dist;
 
                     launchForce = CalculateLaunchVelocity(transform.position, playerEndPoint);
-                    hit.rigidbody.AddForce(CalculateLaunchVelocity(target.position, targetEndPoint) * hit.rigidbody.mass, ForceMode.Impulse);
+
+                    // tell the server to launch the target
+                    LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, CalculateLaunchVelocity(target.position, targetEndPoint) * hit.rigidbody.mass);
                 }
                 else
                 {
                     // light object, it comes to us
                     float dist = Vector3.Distance(transform.position, target.position) - itemLandingSpace;
                     Vector3 targetEndPoint = target.position - dir * dist;
-                    hit.rigidbody.AddForce(CalculateLaunchVelocity(target.position, targetEndPoint), ForceMode.Impulse);
+                    
+                    // tell the server to launch the target
+                    LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, CalculateLaunchVelocity(target.position, targetEndPoint) * hit.rigidbody.mass);
                     goto cooldown;
                 }
 
+                isGrappling = true;
                 playerScript.GetMovementScript().Disable();
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
                 rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
@@ -174,11 +178,11 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
         // for testing
         actions.General.DamageSelf.performed += ctx => 
         {
-            GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical); 
+            if (IsOwner) GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical); 
         };
         actions.General.HealSelf.performed += ctx =>
         {
-            GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.physical);
+            if (IsOwner) GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.physical);
         };
 
         // For testing
@@ -199,9 +203,12 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
         EnableAllAbilities();
     }
 
-    private void Attack_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+
+    [ServerRpc(RequireOwnership = false)]
+    void LaunchTargetServerRpc(ulong networkObjectId, Vector3 force)
     {
-        throw new NotImplementedException();
+        NetworkObject no = NetworkManager.SpawnManager.SpawnedObjects[networkObjectId];
+        no.GetComponent<Rigidbody>().AddForce(force ,ForceMode.Impulse);
     }
 
     IEnumerator DashRoutine(Vector3 endPos)
