@@ -19,16 +19,12 @@ public class DamageableEntity : NetworkBehaviour, IDamageable
 
     internal virtual void OnHealthZeroed()
     {
-
+        Debug.Log(name + " died");
     }
 
     public void ApplyDamage(float damage, DamageTypes type)
     {
-        hp.DeductHealth(damage);
-
-        if (!enableDamageNumbers) return;
-        string msg = $"<color=#{(type == DamageTypes.physical ? GameSettings.instance.physicalDamageColor.ToHexString() : GameSettings.instance.magicDamageColor.ToHexString())}>{damage}</color>";
-        SpawnFloatingTextServerRpc(msg);
+        ApplyDamageServerRpc(damage, type);
     }
 
     public void ApplyDamageOverTime(float dps, DamageTypes type, float duration)
@@ -49,13 +45,33 @@ public class DamageableEntity : NetworkBehaviour, IDamageable
         }
     }
 
-    [ServerRpc]
-    void SpawnFloatingTextServerRpc(string message)
+
+    [ClientRpc]
+    void SpawnFloatingTextClientRpc(string message)
     {
+        if (!IsClient) return;
+
         Transform t = Instantiate(floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
         t.GetComponent<TextMeshProUGUI>().text = message;
-        t.GetComponent<NetworkObject>().Spawn(true);
         t.SetParent(GameSettings.instance.GetWorldCanvas(), true);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void ApplyDamageServerRpc(float damage, DamageTypes type)
+    {
+        if (!IsServer) return;
+
+        ApplyDamageClientRpc(damage);
+
+        if (!enableDamageNumbers) return;
+        string msg = $"<color=#{(type == DamageTypes.physical ? GameSettings.instance.physicalDamageColor.ToHexString() : GameSettings.instance.magicDamageColor.ToHexString())}>{damage}</color>";
+        SpawnFloatingTextClientRpc(msg);
+    }
+
+    [ClientRpc]
+    void ApplyDamageClientRpc(float damage)
+    {
+        hp.DeductHealth(damage);
     }
 }

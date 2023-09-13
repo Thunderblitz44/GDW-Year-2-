@@ -1,9 +1,8 @@
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HPBar : NetworkBehaviour
+public class HPBar : MonoBehaviour
 {
     [SerializeField] internal Image filler;
     [SerializeField] internal TextMeshProUGUI text;
@@ -59,5 +58,5 @@ public class HPBar : NetworkBehaviour
         filler.fillAmount = maxHP > 0? hp / maxHP : 0;
     }
 
-    
+    public float GetHP() => hp;
 }

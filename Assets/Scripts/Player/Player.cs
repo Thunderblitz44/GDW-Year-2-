@@ -25,8 +25,9 @@ public class Player : DamageableEntity
 
     public override void OnDestroy()
     {
-        base.OnDestroy();
+        if (!IsOwner) return; 
         actions.Dispose();
+        base.OnDestroy();
     }
 
     public PlayerCameras GetCameraControllerScript() => playerCamerasScript;

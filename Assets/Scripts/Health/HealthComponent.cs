@@ -1,42 +1,53 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class HealthComponent : MonoBehaviour
+public class HealthComponent : NetworkBehaviour
 {
     [SerializeField] float maxHealth;
+    [SerializeField] float height = 1.5f;
     [SerializeField] GameObject hpBarPrefab;
     HPBar hpbar;
     EntityHPBar entityHPBar;
-    float health;
+
+    NetworkVariable<float> health = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public Action onHealthZeroed;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
+        if (IsOwner) health.Value = maxHealth;
+
         if (hpBarPrefab.GetComponent<EntityHPBar>())
         {
             entityHPBar = Instantiate(hpBarPrefab, GameSettings.instance.GetWorldCanvas()).GetComponent<EntityHPBar>();
-            entityHPBar.transform.position = transform.position + Vector3.up * 1.5f;
+            entityHPBar.transform.position = transform.position + Vector3.up * height;
             entityHPBar.maxHP = maxHealth;
-            entityHPBar.SetHPValue01(1);
+            entityHPBar.SetHPValue(health.Value);
         }
         else if (hpBarPrefab.GetComponent<HPBar>())
         {
             hpbar = Instantiate(hpBarPrefab, GameSettings.instance.GetCanvas()).GetComponent<HPBar>();
             hpbar.maxHP = maxHealth;
-            hpbar.SetHPValue01(1);
+            hpbar.SetHPValue(health.Value);
         }
+    }
+
+    private void Update()
+    {
+        if (!entityHPBar) return;
+
+        entityHPBar.transform.position = transform.position + Vector3.up * height;
     }
 
     public void DeductHealth(float value)
     {
-        health = Mathf.Clamp(health - value, 0, maxHealth);
-
         if (hpbar) hpbar.ChangeHPByAmount(-value);
         else entityHPBar.ChangeHPByAmount(-value);
 
-        if (health == 0) onHealthZeroed?.Invoke();
+        if (!IsOwner) return;
+        if ((health.Value = GetHealth()) == 0) onHealthZeroed?.Invoke();
     }
 
-    public float GetHealth() => health;
+    public float GetHealth() => hpbar != null ? hpbar.GetHP() : entityHPBar.GetHP();
 }

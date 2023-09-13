@@ -1,4 +1,6 @@
 
+using Unity.Netcode;
+
 public interface IDamageable
 {
     public void ApplyDamage(float damage, DamageTypes type);

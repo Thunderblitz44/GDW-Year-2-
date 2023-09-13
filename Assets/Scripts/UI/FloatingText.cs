@@ -1,9 +1,8 @@
 using System.Collections;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 
-public class FloatingText : NetworkBehaviour
+public class FloatingText : MonoBehaviour
 {
     TextMeshProUGUI textmesh;
     [SerializeField] float endHeightMult = 0.5f;
@@ -17,9 +16,8 @@ public class FloatingText : NetworkBehaviour
         transform.rotation = Camera.main.transform.rotation;
     }
 
-    public override void OnNetworkSpawn()
+    private void Start()
     {
-        base.OnNetworkSpawn();
         StartCoroutine(FloatingTextRoutine());
     }
 
