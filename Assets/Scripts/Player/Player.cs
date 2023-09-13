@@ -1,23 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class Player : MonoBehaviour, IPlayerStateListener
+public class Player : DamageableEntity
 {
-    [Header("Objects")]
-    [SerializeField] PlayerMovement movementScript;
-    [SerializeField] PlayerInteraction interactionScript;
-    [SerializeField] PlayerCameras playerCamerasScript;
-    [SerializeField] PlayerAbilities abilitiesScript;
-    [SerializeField] HUD hudScript;
-
-    public bool isInCombat { get; private set; }
+    PlayerMovement movementScript;
+    PlayerCameras playerCamerasScript;
 
     // INPUT
     ActionMap actions;
 
-    private void Awake()
+    private void Start()
     {
+        if (!IsOwner) return;
+
+        movementScript = GetComponent<PlayerMovement>();
+        playerCamerasScript = GetComponent<PlayerCameras>();
+
         actions = new ActionMap();
 
         // All modules attached to this gameobject
@@ -27,39 +23,13 @@ public class Player : MonoBehaviour, IPlayerStateListener
         }
     }
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
+        if (!IsOwner) return; 
         actions.Dispose();
-    }
-
-    public void SetIsInCombat(bool isInCombat)
-    {
-        foreach (IPlayerStateListener listener in GetComponents<IPlayerStateListener>())
-        {
-            if (isInCombat)
-            {
-                listener.SetCombatState();
-            }
-            else
-            {
-                listener.SetFreeLookState();
-            }
-        }
+        base.OnDestroy();
     }
 
     public PlayerCameras GetCameraControllerScript() => playerCamerasScript;
     public PlayerMovement GetMovementScript() => movementScript;
-    public PlayerInteraction GetInteractionScript() => interactionScript;
-    public HUD GetHUDScript() => hudScript;
-    public ActionMap GetActionMap() => actions;
-
-    public void SetCombatState()
-    {
-        isInCombat = true;
-    }
-
-    public void SetFreeLookState()
-    {
-        isInCombat = false;
-    }
 }

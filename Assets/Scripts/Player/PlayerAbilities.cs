@@ -1,11 +1,62 @@
+using Cinemachine;
+using System;
 using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerAbilities : MonoBehaviour, IInputExpander
+public class PlayerAbilities : NetworkBehaviour, IInputExpander
 {
+    // DASH
+    [Header("DASH"), Space(5f)]
+    [SerializeField] float dashDistance = 20f;
+    [SerializeField] float dashSpeed = 10f;
+    [SerializeField] int maxDashes = 3;
+    [SerializeField] float timeLimitBetweenDashes = 1f;
+    [SerializeField] float dashCooldown = 5f;
+    [SerializeField] AnimationCurve dashCurve;
+    [SerializeField] AnimationCurve dashFovIntensityCurve;
+    [SerializeField] float dashFovIncrease = 10;
+    [SerializeField] AnimationCurve fovRestoreCurve;
+    [SerializeField] float fovRestoreSpeed = 5;
+    [SerializeField] LayerMask whatIsDashObstacle;
+    [SerializeField] GameObject dashMeterPrefab;
+    Coroutine currentDashRoutine;
+    DashUI dashUI;
+    bool isDashing = false;
+    int dashes = 0;
+
+
+    [Header("GRAPPLE"), Space(5f)]
+    [SerializeField] float grappleDistance = 50f;
+    [SerializeField] float lightWeightMaxMass = 1f;
+    [SerializeField] float overshoot = 5f;
+    [SerializeField] float playerLandingSpace = 1f;
+    [SerializeField] float meetInTheMiddleSpacing = 0.5f;
+    [SerializeField] float itemLandingSpace = 1f;
+    [SerializeField] float grappleCooldown = 3f;
+    [SerializeField] LayerMask whatIsGrapplable;
+    [SerializeField] GameObject grappleMeterPrefab;
+    bool isGrappling = false;
+    bool grappleCharged = true;
+    GrappleUI grappleUI;
+
     Player playerScript;
     ActionMap actions;
+    Rigidbody rb;
+
+    private void Start()
+    {
+        if (!IsOwner) return;
+
+        rb = GetComponent<Rigidbody>();
+        
+        dashUI = Instantiate(dashMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<DashUI>();
+        dashUI.SetDashVisual(maxDashes);
+        dashUI.onDashesRecharged += OnDashRecharged;
+        
+        grappleUI = Instantiate(grappleMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<GrappleUI>();
+        grappleUI.onGrappleRecharged += OnGrappleRecharged;
+    }
 
     public void SetupInputEvents(object sender, ActionMap actions)
     {
@@ -14,24 +65,107 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
 
         actions.Abilities.GrappleAbility.performed += ctx =>
         {
-            Debug.Log("Grapple");
-            playerScript.SetIsInCombat(!playerScript.isInCombat);
-            // ray cast
-            // hit?
-            // check if is either:
-            // enemy, movableObject or immovableObject
+            if (isGrappling || !grappleCharged) return;
 
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, grappleDistance, whatIsGrapplable))
+            {
+                grappleUI.SpendPoint();
+
+                Vector3 launchForce = Vector3.zero;
+                Transform target = hit.transform;
+                Vector3 dir = (target.position - transform.position).normalized;
+
+                // process the grapple target
+                if (!hit.rigidbody)
+                {
+                    // grapple point - we go to it
+                    float dist = Vector3.Distance(transform.position, target.position) - playerLandingSpace;
+                    Vector3 playerEndPoint = transform.position + dir * dist;
+                    launchForce = CalculateLaunchVelocity(transform.position, playerEndPoint);
+                }
+                else if (hit.rigidbody.mass > lightWeightMaxMass)
+                {
+                    // something heavy, meet in the middle
+                    float dist = Vector3.Distance(transform.position, target.position) / 2 - meetInTheMiddleSpacing;
+                    Vector3 playerEndPoint = transform.position + dir * dist;
+                    Vector3 targetEndPoint = target.position - dir * dist;
+
+                    launchForce = CalculateLaunchVelocity(transform.position, playerEndPoint);
+
+                    // tell the server to launch the target
+                    LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, CalculateLaunchVelocity(target.position, targetEndPoint) * hit.rigidbody.mass);
+                }
+                else
+                {
+                    // light object, it comes to us
+                    float dist = Vector3.Distance(transform.position, target.position) - itemLandingSpace;
+                    Vector3 targetEndPoint = target.position - dir * dist;
+                    
+                    // tell the server to launch the target
+                    LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, CalculateLaunchVelocity(target.position, targetEndPoint) * hit.rigidbody.mass);
+                    goto cooldown;
+                }
+
+                isGrappling = true;
+                playerScript.GetMovementScript().Disable();
+                rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+                rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
+
+            cooldown:
+                grappleCharged = false;
+                grappleUI.RechargePoint(grappleCooldown);
+            }
         };
         actions.Abilities.DashAbility.performed += ctx =>
         {
-            // max 3 dashes
-            // impulse
+            if (isDashing || dashes >= maxDashes) return;
+            isDashing = true;
+            dashes++;
+            dashUI.SpendDash();
+            CancelInvoke(nameof(DashTimeout));
 
+            // raycast - make sure there are no obstacles in the way
+            float newDist = dashDistance;
+
+            Transform body = playerScript.GetMovementScript().GetBody();
+            Transform cam = Camera.main.transform;
+            Vector3 end;
+            
+            // calculate end for the raycast
+            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
+            else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
+
+            RaycastHit hit;
+            if (Physics.Raycast(body.position, (end - body.position).normalized, 
+                out hit, dashDistance, whatIsDashObstacle, QueryTriggerInteraction.Ignore))
+            {
+                newDist = Vector3.Distance(hit.point, body.position) - 0.5f;
+            }
+
+            // re-calculate end in case newDist changed
+            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
+            else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
+
+            // lerp it
+            dashCurve.ClearKeys();
+            dashCurve.AddKey(0,0);
+            dashCurve.AddKey(newDist / dashSpeed, 1);
+
+            if (currentDashRoutine != null) StopCoroutine(currentDashRoutine);
+            currentDashRoutine = StartCoroutine(DashRoutine(end));
         };
         actions.Abilities.ShieldAbility.performed += ctx =>
         {
-            // stop moving
-            // no dmg
+            // instantiate an object with a collider - in front of player
+            // follow player
+            // have a small amount of delay with movement (juice)
+            // stay in front of player
+            // have a small rotational delay (juice)
+            // hold it for x seconds or until released
+            // idea: cooldown is the held length
+            
+
         };
         actions.Abilities.BuffAbility.performed += ctx =>
         {
@@ -40,10 +174,134 @@ public class PlayerAbilities : MonoBehaviour, IInputExpander
             // last x seconds
         };
 
+
+        // for testing
+        actions.General.DamageSelf.performed += ctx => 
+        {
+            if (IsOwner) GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical); 
+        };
+        actions.General.HealSelf.performed += ctx =>
+        {
+            if (IsOwner) GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.physical);
+        };
+
+        // For testing
+        actions.General.Attack.performed += ctx =>
+        {
+            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f , DamageTypes.physical);
+        };
+        actions.CameraControl.Aim.performed += ctx =>
+        { 
+            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.magic);
+        };
+
+        actions.General.Attack.Enable();
+        actions.General.DamageSelf.Enable();
+        actions.General.HealSelf.Enable();
+
+
         EnableAllAbilities();
     }
 
 
+    [ServerRpc(RequireOwnership = false)]
+    void LaunchTargetServerRpc(ulong networkObjectId, Vector3 force)
+    {
+        NetworkObject no = NetworkManager.SpawnManager.SpawnedObjects[networkObjectId];
+        no.GetComponent<Rigidbody>().AddForce(force ,ForceMode.Impulse);
+    }
+
+    IEnumerator DashRoutine(Vector3 endPos)
+    {
+        playerScript.GetMovementScript().Disable();
+        Vector3 startPos = transform.position;
+        float time = 0;
+        float dashTime = dashCurve.keys[1].time;
+        CinemachineFreeLook camera = playerScript.GetCameraControllerScript().GetFreeLookCamera();
+        float startFOV = camera.m_Lens.FieldOfView;
+        float targetFOV = GameSettings.instance.defaultFOV + dashFovIncrease;
+        while (time < dashTime)
+        {
+            transform.position = Vector3.Lerp(startPos,endPos, dashCurve.Evaluate(time += Time.deltaTime));
+
+            // trying to "lerp" fov from whatever it was to the max
+            if (startFOV < targetFOV)
+                camera.m_Lens.FieldOfView = Mathf.Clamp(startFOV + dashFovIntensityCurve.Evaluate(time/dashTime) * dashFovIncrease, startFOV, targetFOV);
+            else
+                camera.m_Lens.FieldOfView = Mathf.Clamp(startFOV + dashFovIntensityCurve.Evaluate(time / dashTime) * dashFovIncrease, targetFOV, startFOV);
+
+            yield return null;
+        }
+
+        // dash end
+        playerScript.GetMovementScript().Enable();
+        isDashing = false;
+
+        // cooldown
+        if (dashes >= maxDashes)
+        {
+            dashUI.RechargeDashes(dashCooldown);
+        }
+        else
+        {
+            Invoke(nameof(DashTimeout), timeLimitBetweenDashes);
+        }
+
+        // restore fov
+        time = 0f;
+        startFOV = camera.m_Lens.FieldOfView;
+        targetFOV = GameSettings.instance.defaultFOV;
+        while (time < 1)
+        {
+            // "lerp" back to default fov
+            if (targetFOV < startFOV)
+                camera.m_Lens.FieldOfView = Mathf.Clamp(startFOV - fovRestoreCurve.Evaluate(time) * dashFovIncrease, targetFOV, startFOV);
+            else
+                camera.m_Lens.FieldOfView = Mathf.Clamp(startFOV - fovRestoreCurve.Evaluate(time) * dashFovIncrease, startFOV, targetFOV);
+
+            time += Time.deltaTime * fovRestoreSpeed;
+            yield return null;
+        }
+        camera.m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
+    }
+
+    void OnDashRecharged()
+    {
+        dashes = 0;
+    }
+
+    void DashTimeout()
+    {
+        dashes = maxDashes;
+        dashUI.RechargeDashes(dashCooldown);
+    }
+
+    Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint)
+    {
+        float gravity = Physics.gravity.y;
+        float displacementY = Math.Abs(endpoint.y - startpoint.y);
+        float h = displacementY + overshoot;
+
+        Vector3 displacementXZ = new Vector3(endpoint.x - startpoint.x, 0f, endpoint.z - startpoint.z);
+        Vector3 velocityY = Vector3.up * MathF.Sqrt(-2 * gravity * h);
+        Vector3 velocityXZ = displacementXZ / (MathF.Sqrt(-2 * h / gravity) 
+            + MathF.Sqrt(2 * (displacementY - h) / gravity));
+        return velocityXZ + velocityY;
+    }
+
+    private void OnGrappleRecharged()
+    {
+        grappleCharged = true;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (isGrappling)
+        {
+            isGrappling = false;
+            playerScript.GetMovementScript().Enable();
+        }
+    }
 
     public void EnableAllAbilities() => actions.Abilities.Enable();
     public void DisableAllAbilities() => actions.Abilities.Disable();

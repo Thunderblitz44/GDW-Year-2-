@@ -1,18 +1,16 @@
 using Cinemachine;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
+public class PlayerCameras : NetworkBehaviour, IInputExpander
 {
-    [SerializeField] Transform freeLookCamera;
-    [SerializeField] Transform combatCamera;
-    [SerializeField] Transform lockOnCamera;
+    [SerializeField] GameObject cameraRig;
+    CinemachineFreeLook freeLookCamera;
+    [SerializeField] Transform aim;
     [SerializeField] LayerMask lockOnLayers;
 
-    Player playerScript;
     ActionMap actions;
 
     bool isLockedOn = false;
@@ -21,90 +19,81 @@ public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
     Transform currentTarget;
     List<int> ints = new();
     int i;
-    public void Start()
+
+    void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (!IsOwner) return;
+        
+        freeLookCamera = Instantiate(cameraRig).transform.GetChild(1).GetComponent<CinemachineFreeLook>();
+        freeLookCamera.LookAt = transform;
+        freeLookCamera.Follow = transform;
+        freeLookCamera.m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
+
+        Application.focusChanged += (bool isFocused) => 
+        { 
+            if (isFocused)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+        };
     }
 
-    private void Update()
+    void LockOnFunction()
     {
-       
-    }
-
-    public Transform GetCameraTransform()
-    {
-        if (freeLookCamera.gameObject.activeSelf)
+        if (isLockedOn)
         {
-            return freeLookCamera;
+            isLockedOn = false;
+            //lockOnCamera.gameObject.SetActive(false);
+            lastUsedCamera.gameObject.SetActive(true);
+            return;
         }
-        else if (combatCamera.gameObject.activeSelf)
+
+        RaycastHit hitInfo;
+        if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hitInfo, 100f, lockOnLayers))
         {
-            return combatCamera;
-        }   
-        else
+            if (!isLockedOn)
+            {
+                isLockedOn = true;
+                lastUsedCamera = GetFreeLookCamera().gameObject;
+                lastUsedCamera.gameObject.SetActive(false);
+                //lockOnCamera.gameObject.SetActive(true);
+                currentTarget = hitInfo.collider.transform;
+
+
+
+                //lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
+            }
+        }
+
+        if (isLockedOn)
         {
-            return lockOnCamera;
+            // get other targets
+            targets = Physics.SphereCastAll(new Ray(transform.position, Vector3.forward), 100f, 100f, lockOnLayers);
         }
     }
 
-    #region IPlayerStateListener
-
-    public void SetCombatState()
+    public CinemachineFreeLook GetFreeLookCamera()
     {
-        combatCamera.gameObject.SetActive(true);
-        freeLookCamera.gameObject.SetActive(false);
+        return freeLookCamera;
     }
 
-    public void SetFreeLookState()
-    {
-        freeLookCamera.gameObject.SetActive(true);
-        combatCamera.gameObject.SetActive(false);
-    }
-
-    #endregion
 
     #region IInputExpander
 
     public void SetupInputEvents(object sender, ActionMap actions)
     {
-        playerScript = (Player)sender;
         this.actions = actions;
 
         // Lock on to target
         actions.CameraControl.LockOnToTarget.performed += ctx =>
         {
-            if (isLockedOn)
-            {
-                isLockedOn = false;
-                lockOnCamera.gameObject.SetActive(false);
-                lastUsedCamera.gameObject.SetActive(true);
-                return;
-            }
-
-            RaycastHit hitInfo;
-            if (Physics.Raycast(new Ray(Camera.main.transform.position, Camera.main.transform.forward), out hitInfo, 100f, lockOnLayers))
-            {
-                if (!isLockedOn)
-                {
-                    isLockedOn = true;
-                    lastUsedCamera = GetCameraTransform().gameObject;
-                    lastUsedCamera.gameObject.SetActive(false);
-                    lockOnCamera.gameObject.SetActive(true);
-                    currentTarget = hitInfo.collider.transform;
-
-                    
-
-                    lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
-                }
-            }
-
-            if (isLockedOn)
-            {
-                // get other targets
-                targets = Physics.SphereCastAll(new Ray(transform.position, Vector3.forward), 100f, 100f, lockOnLayers);
-                Debug.Log(targets.Length);
-            }
+            //LockOnFunction();
         };
 
         // Cycle Targets
@@ -122,13 +111,29 @@ public class PlayerCameras : MonoBehaviour, IPlayerStateListener, IInputExpander
                 if (targets[i].collider.transform != currentTarget)
                 {
                     currentTarget = targets[i].collider.transform;
-                    lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
+                    //lockOnCamera.GetComponent<CinemachineFreeLook>().LookAt = currentTarget;
                     ints.Add(i);
                     break;
                 }
             }
             if (i >= targets.Length) i = 0;
         };
+
+        // toggle cameras
+        actions.CameraControl.Aim.started += ctx =>
+        {
+        };
+        actions.CameraControl.Aim.canceled += ctx =>
+        {
+        };
+
+        actions.General.Escape.performed += ctx => 
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        };
+
+        actions.General.Escape.Enable();
 
         EnableCameraControl();
     }

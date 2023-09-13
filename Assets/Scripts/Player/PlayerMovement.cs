@@ -1,15 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListener
+public class PlayerMovement : NetworkBehaviour, IInputExpander
 {
     // MOVEMENT
     [Header("Movement")]
     [SerializeField] float walkSpeed = 5f;
     [SerializeField] float runSpeed = 12f;
-    [SerializeField] float groundDrag = 5f;
     [SerializeField] AnimationCurve runSpeedCurve;
     [SerializeField] float runAccelMultiplier = 1f;
     float moveSpeed;
@@ -29,41 +27,33 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     bool readyToJump;
     [Space(10f)]
 
-
     // CROUCHING
     [Header("Crouching")]
     [SerializeField] float crouchSpeed = 3f;
     [SerializeField] float crouchYScale = .5f;
     float normalYScale;
 
-
     // SLOPE
     [Header("Slope Movement")]
     [SerializeField] float maxSlopeAngle = 45f;
     RaycastHit slopeHit;
-    bool isExitingSlope;
-
 
     // GROUND CHECK
     [Header("Ground Check")]
     [SerializeField] LayerMask whatIsGround;
     [SerializeField] float playerHeight = 2;
-    Vector3 velocity;
     float airTime;
-    //
     public bool isGrounded;
-    //
     bool wasGrounded;
     [Space(10f)]
 
-
     // INPUT
     Vector3 inputMoveDirection;
+    Vector3 moveDirection;
     ActionMap actions;
 
     // SOME UNORGANIZED DATA
     Rigidbody rb;
-
 
     // DELEGATES
     public Action onPlayerLanded;
@@ -74,11 +64,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     // PLAYER STATES
     bool isRunning;
     bool isCrouching;
-    bool correctBodyRotation;
+    bool isAiming;
+    bool ignoreStates;
 
     [Header("Important")]
     [SerializeField] Transform orientation;
-    [SerializeField] Transform combatLookAt;
     [SerializeField] Transform body;
 
     
@@ -90,8 +80,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         rb = GetComponent<Rigidbody>();
     }
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         onPlayerLanded -= OnLanded;
     }
 
@@ -105,14 +96,13 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     private void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        if (ignoreStates || !IsOwner) return;
 
+        GroundCheck();
         SpeedControl();
 
         if (isGrounded)
         {
-            rb.drag = groundDrag;
-
             // onLanded
             if (!wasGrounded) onPlayerLanded?.Invoke();
         }
@@ -120,35 +110,36 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         {
             if (wasGrounded) wasGrounded = false;
 
-            rb.drag = 0f;
             airTime += Time.deltaTime;
+            DebugHUD.instance.SetAirTime(airTime);
         }
 
-
-        // doesnt work
-        if (correctBodyRotation)
+        if (isAiming)
         {
-            body.forward = Vector3.Slerp(body.forward, orientation.forward, Time.deltaTime * rotationSpeed);
-            if (body.forward == orientation.forward)
-            {
-                //Debug.Log("dnoafg");
-                correctBodyRotation = false;
-            }
+            body.rotation = new Quaternion(0, Camera.main.transform.rotation.y, 0, Camera.main.transform.rotation.w).normalized;
         }
 
-        if ((IsMoving() && !playerScript.isInCombat) || playerScript.isInCombat)
-        {
-            RecalculateBodyRotation();
-        }
+        // double check in case we are still grounded after jumping (it can happen)
+        if (isGrounded && !CanJump()) onPlayerLanded();
+
+        DebugHUD.instance.SetSpeed(rb.velocity.magnitude);
     }
 
-    private void LateUpdate()
+    void GroundCheck()
     {
-        velocity = rb.velocity;
+        RaycastHit hit;
+        if (Physics.SphereCast(transform.position,0.3f,Vector3.down, out hit, playerHeight * 0.5f + 0.05f, whatIsGround, QueryTriggerInteraction.Ignore))
+        {
+            isGrounded = true; 
+            return;
+        }
+        isGrounded = false;
     }
 
     private void FixedUpdate()
     {
+        if (!IsOwner) return;
+
         Move();
     }
 
@@ -157,7 +148,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     #region Inputs
 
-    // call in awake
     public void SetupInputEvents(object sender, ActionMap actions)
     {
         this.actions = actions;
@@ -166,12 +156,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         // Movement
         actions.Locomotion.Move.performed += ctx =>
         {
-            if (playerScript.isInCombat == false) orientation.forward = CalculateBodyRotation();
-
+            if (!isAiming) orientation.forward = CalculateBodyRotation();
             Vector2 input = ctx.ReadValue<Vector2>();
-
             inputMoveDirection = new Vector3(input.x, 0, input.y);
-
             UpdateMoveSpeed();
         };
 
@@ -180,35 +167,29 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
             inputMoveDirection = Vector3.zero;
         };
 
-
         // Run
         actions.Locomotion.Run.started += ctx =>
         {
             Run();
-
             UpdateMoveSpeed();
         };
 
         actions.Locomotion.Run.canceled += ctx =>
         {
             StopRun();
-
             UpdateMoveSpeed();
         };
-
 
         // Crouch
         actions.Locomotion.Crouch.started += ctx =>
         {
             Crouch();
-          
             UpdateMoveSpeed();
         };
 
         actions.Locomotion.Crouch.canceled += ctx =>
         {
             UnCrouch();
-          
             UpdateMoveSpeed();
         };
 
@@ -219,8 +200,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
             if (CanJump()) Jump();
         };
 
-
-        
+        actions.CameraControl.Aim.started += ctx => isAiming = true;
+        actions.CameraControl.Aim.canceled += ctx => isAiming = false;
 
         EnableLocomotion();
     }
@@ -232,33 +213,25 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     void Move()
     {
-        Vector3 moveDirection;
-        if (!playerScript.GetCameraControllerScript().IsLockedOnToATarget())
-        {
-            moveDirection = orientation.forward * inputMoveDirection.z + orientation.right * inputMoveDirection.x;
-        }
-        else
-        {
-            moveDirection = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z) * inputMoveDirection.z + 
-                new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z) * inputMoveDirection.x;
-        }
+        Vector3 cameraFwd = Camera.main.transform.forward;
+        Vector3 cameraRight = Camera.main.transform.right;
+        cameraFwd.y = 0f;
+        cameraRight.y = 0f;
+        moveDirection = cameraFwd * inputMoveDirection.z + cameraRight * inputMoveDirection.x;
 
+        // ignore the rest of this function if we are trying to move into an obstacle while jumping
+        if (Physics.Raycast(transform.position, moveDirection, 0.6f, LayerMask.NameToLayer("Everything"), QueryTriggerInteraction.Ignore) && 
+            !IsJumping() && !isGrounded) return;
 
+        // adjust move direction for slopes
+        if (OnSlope()) moveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal);
 
+        // rotate the body
+        if (!isAiming) body.forward = Vector3.Slerp(body.forward, moveDirection.normalized, Time.deltaTime * rotationSpeed);
 
-        if (!playerScript.isInCombat) body.forward = Vector3.Slerp(body.forward, moveDirection.normalized, Time.deltaTime * rotationSpeed);
-
-        if (OnSlope() && !isExitingSlope)
-        {
-            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * rb.mass * 20f, ForceMode.Force);
-
-            if (rb.velocity.y > 0f) rb.AddForce(Vector3.down * 80f * rb.mass, ForceMode.Force);
-        }
-
+        // move
         if (isGrounded) rb.AddForce(moveDirection * moveSpeed * rb.mass * 10f, ForceMode.Force);
         else rb.AddForce(moveDirection * moveSpeed * airMultiplier * rb.mass * 10f, ForceMode.Force);
-
-        rb.useGravity = !OnSlope();
     }
 
     void Run()
@@ -299,13 +272,12 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     {
         // prevent spamming
         readyToJump = false;
-        isExitingSlope = true;
 
         // stop any up/down movement
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
         // jump
         rb.AddForce(Vector3.up * jumpForce * rb.mass, ForceMode.Impulse);
-
     }
 
     private void ResetJump()
@@ -320,7 +292,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     private void SpeedControl()
     {
         // if on slope
-        if (OnSlope() && !isExitingSlope)
+        if (OnSlope())
         {
             if (rb.velocity.magnitude > moveSpeed) rb.velocity = rb.velocity.normalized * moveSpeed;
         }
@@ -335,7 +307,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
             }
         }
 
-
         if (isRunning)
         {
             runAccelTime += Time.deltaTime * runAccelMultiplier;
@@ -345,19 +316,13 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight, whatIsGround, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle < maxSlopeAngle && angle != 0;
+            return angle <= maxSlopeAngle && angle > 0;
         }
         return false;
     }
-
-    private Vector3 GetSlopeMoveDirection()
-    {
-        return Vector3.ProjectOnPlane(inputMoveDirection, slopeHit.normal).normalized;
-    }
-
 
     void UpdateMoveSpeed()
     {
@@ -383,17 +348,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
     Vector3 CalculateBodyRotation()
     {
-        Vector3 viewDir;
-        Vector3 cameraPosition = playerScript.GetCameraControllerScript().GetCameraTransform().position;
-
-        if (playerScript.isInCombat)
-        {
-            viewDir = combatLookAt.position - new Vector3(cameraPosition.x, combatLookAt.position.y, cameraPosition.z);
-            transform.forward = viewDir.normalized;
-            return viewDir.normalized;
-        }
-        
-        viewDir = transform.position - new Vector3(cameraPosition.x, transform.position.y, cameraPosition.z);
+        Vector3 cameraPosition = Camera.main.transform.position;
+        Vector3 viewDir = transform.position - new Vector3(cameraPosition.x, transform.position.y, cameraPosition.z);
         return viewDir.normalized;
     }
 
@@ -412,11 +368,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
 
         if (jumpCooldown > 0) Invoke(nameof(ResetJump), jumpCooldown);
         else ResetJump();
-
-        Debug.Log("air time = " + airTime);
-
         airTime = 0f;
-        velocity = Vector3.zero;
     }
 
     #endregion
@@ -440,6 +392,18 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
         moveSpeed = crouchSpeed;
     }
 
+    public void Disable()
+    {
+        ignoreStates = true;
+        DisableLocomotion();
+    }
+
+    public void Enable()
+    {
+        ignoreStates = false;
+        EnableLocomotion();
+    }
+
     #endregion
 
     #region Getters/Setters
@@ -450,30 +414,16 @@ public class PlayerMovement : MonoBehaviour, IInputExpander, IPlayerStateListene
     public bool IsCrouching() => isCrouching;
     public bool IsJumping() => readyToJump == false;
     public float GetMoveSpeed() => moveSpeed;
-    public Vector3 GetVelocity() => velocity;
     public float GetAirTime() => airTime;
     public Transform GetOrientation() => orientation;
+    public Rigidbody GetRigidbody() => rb;
+    public Transform GetBody() => body;
+    public Vector3 GetMoveDirection() => moveDirection;
 
     // Controls Toggles
     public void EnableLocomotion() => actions.Locomotion.Enable();
     public void DisableLocomotion() => actions.Locomotion.Disable();
     
-
-    #endregion
-
-
-    #region IPlayerStateListener
-
-    public void SetCombatState()
-    {
-        Debug.Log("Combat");
-        correctBodyRotation = true;
-    }
-
-    public void SetFreeLookState()
-    {
-        Debug.Log("freelok");
-    }
 
     #endregion
 }
