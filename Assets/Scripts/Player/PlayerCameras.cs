@@ -29,8 +29,19 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
         freeLookCamera.Follow = transform;
         freeLookCamera.m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Application.focusChanged += (bool isFocused) => 
+        { 
+            if (isFocused)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+        };
     }
 
     void LockOnFunction()
@@ -116,6 +127,13 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
         {
         };
 
+        actions.General.Escape.performed += ctx => 
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        };
+
+        actions.General.Escape.Enable();
 
         EnableCameraControl();
     }
