@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAbilities : NetworkBehaviour, IInputExpander
@@ -219,7 +220,7 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
             usingPortalAbility = true;
             chargePortals = true;
 
-            previewPortal = Instantiate(previewPortalPrefab, transform.position + GetCameraDir() * minTeleportDist, body.rotation).transform;
+            previewPortal = Instantiate(previewPortalPrefab, transform.position + GetCameraLook() * minTeleportDist, body.rotation).transform;
         };
         actions.Abilities.PortalAbility.canceled += ctx =>
         {
@@ -308,15 +309,30 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
     void SetPortalDistance(float time)
     {
         previewDist = Mathf.Clamp(time + minTeleportDist, minTeleportDist, maxTeleportDist);
+
+        Vector3 aimPoint = GetCameraLook() * previewDist;
+        
+        Vector3 newpos;
         RaycastHit hit;
-        if (Physics.Raycast(new Ray(transform.position, GetCameraDir()), out hit, previewDist))
+        if (Physics.Raycast(transform.position, GetCameraDir(), out hit, previewDist))
         {
-            previewPortal.position = new Vector3(hit.point.x, previewPortal.position.y, hit.point.z) - GetCameraDir();
+            newpos = new Vector3(hit.point.x, previewPortal.position.y, hit.point.z) - GetCameraDir();
         }
         else
         {
-            previewPortal.position = transform.position + GetCameraDir() * previewDist;
+            newpos = transform.position + GetCameraDir() * previewDist;
         }
+
+        if (Physics.Raycast(aimPoint, Vector3.down, out hit, 100))
+        {
+            newpos.y = hit.point.y + 1;
+        }
+        else
+        {
+            newpos.y = transform.position.y;
+        }
+
+        previewPortal.position = newpos;
     }
 
     void SetJumpFalloffPosition(float time)
@@ -436,6 +452,11 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
     Vector3 GetCameraDir()
     {
         return new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z);
+    }
+
+    Vector3 GetCameraLook()
+    {
+        return Camera.main.transform.forward;
     }
 
     public void EnableAllAbilities() => actions.Abilities.Enable();
