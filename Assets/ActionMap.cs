@@ -413,54 +413,36 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             ""id"": ""67f28106-a61a-4a94-b855-a47b15a52e64"",
             ""actions"": [
                 {
-                    ""name"": ""GrappleAbility"",
+                    ""name"": ""First"",
                     ""type"": ""Button"",
-                    ""id"": ""9f3c807d-a6e5-41e5-8568-d33f36b15a62"",
+                    ""id"": ""244bf505-5c4e-4a20-b9a2-33f4eba810b7"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""BuffAbility"",
+                    ""name"": ""Second"",
                     ""type"": ""Button"",
-                    ""id"": ""9e3b9161-d97c-4366-b296-04fd4d26f2d6"",
+                    ""id"": ""14e9e585-58c2-4a7f-8b00-64de24b478e6"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""DashAbility"",
+                    ""name"": ""Third"",
                     ""type"": ""Button"",
-                    ""id"": ""11389b02-2b13-4f7a-9544-27ac2f94c6c1"",
+                    ""id"": ""a907021f-0510-4275-85e0-2d6e91a81282"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ShieldAbility"",
+                    ""name"": ""Fourth"",
                     ""type"": ""Button"",
-                    ""id"": ""4530299a-12f2-40b7-87c4-6ab00f1e5ab4"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""PortalAbility"",
-                    ""type"": ""Button"",
-                    ""id"": ""5c1ce4cd-591e-4696-9831-d56552563e25"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""JumpAbility"",
-                    ""type"": ""Button"",
-                    ""id"": ""7568de2b-45f3-482a-bd26-414b5955f5f4"",
+                    ""id"": ""fe5e4477-1513-46c7-af8a-5d247e3654f5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -470,111 +452,45 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""5939ac66-746e-4701-bed1-c13332e1a31a"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""GrappleAbility"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7c9616c1-040f-4854-a2bc-721a209036d5"",
-                    ""path"": ""<Gamepad>/dpad/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""GrappleAbility"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c33b34ae-2373-4764-81dd-65789730013b"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""BuffAbility"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""58266a59-bcc5-49cb-a5e6-41085c917ccb"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""BuffAbility"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""699b1234-178f-46a8-8c0d-e59015358438"",
-                    ""path"": ""<Keyboard>/3"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DashAbility"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""73492789-3dea-4701-b5ca-b1ba1cb52d01"",
-                    ""path"": ""<Gamepad>/dpad/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DashAbility"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a3125358-9589-4001-a440-3acfa3e002e6"",
-                    ""path"": ""<Keyboard>/4"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ShieldAbility"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ce43c31a-fbeb-47fd-8446-a83840c9100d"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ShieldAbility"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""76504122-3f93-40c4-8050-9b572c57b0cb"",
+                    ""id"": ""81c2aae2-1087-401a-8cd8-b797de26d273"",
                     ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""PortalAbility"",
+                    ""action"": ""First"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""94fe46ea-0001-41a7-94e7-59d02f75ecfc"",
-                    ""path"": ""<Keyboard>/5"",
+                    ""id"": ""1eeed925-5f11-402e-8179-d1a03f1a9211"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""JumpAbility"",
+                    ""action"": ""Second"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e31c9d5f-cbf6-4455-9a0d-e3d1fedac05c"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Third"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""52659366-a41d-4556-8d31-c0f5d7b66b22"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fourth"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -685,12 +601,10 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_CameraControl_Look = m_CameraControl.FindAction("Look", throwIfNotFound: true);
         // Abilities
         m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
-        m_Abilities_GrappleAbility = m_Abilities.FindAction("GrappleAbility", throwIfNotFound: true);
-        m_Abilities_BuffAbility = m_Abilities.FindAction("BuffAbility", throwIfNotFound: true);
-        m_Abilities_DashAbility = m_Abilities.FindAction("DashAbility", throwIfNotFound: true);
-        m_Abilities_ShieldAbility = m_Abilities.FindAction("ShieldAbility", throwIfNotFound: true);
-        m_Abilities_PortalAbility = m_Abilities.FindAction("PortalAbility", throwIfNotFound: true);
-        m_Abilities_JumpAbility = m_Abilities.FindAction("JumpAbility", throwIfNotFound: true);
+        m_Abilities_First = m_Abilities.FindAction("First", throwIfNotFound: true);
+        m_Abilities_Second = m_Abilities.FindAction("Second", throwIfNotFound: true);
+        m_Abilities_Third = m_Abilities.FindAction("Third", throwIfNotFound: true);
+        m_Abilities_Fourth = m_Abilities.FindAction("Fourth", throwIfNotFound: true);
         // General
         m_General = asset.FindActionMap("General", throwIfNotFound: true);
         m_General_Escape = m_General.FindAction("Escape", throwIfNotFound: true);
@@ -898,22 +812,18 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     // Abilities
     private readonly InputActionMap m_Abilities;
     private List<IAbilitiesActions> m_AbilitiesActionsCallbackInterfaces = new List<IAbilitiesActions>();
-    private readonly InputAction m_Abilities_GrappleAbility;
-    private readonly InputAction m_Abilities_BuffAbility;
-    private readonly InputAction m_Abilities_DashAbility;
-    private readonly InputAction m_Abilities_ShieldAbility;
-    private readonly InputAction m_Abilities_PortalAbility;
-    private readonly InputAction m_Abilities_JumpAbility;
+    private readonly InputAction m_Abilities_First;
+    private readonly InputAction m_Abilities_Second;
+    private readonly InputAction m_Abilities_Third;
+    private readonly InputAction m_Abilities_Fourth;
     public struct AbilitiesActions
     {
         private @ActionMap m_Wrapper;
         public AbilitiesActions(@ActionMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @GrappleAbility => m_Wrapper.m_Abilities_GrappleAbility;
-        public InputAction @BuffAbility => m_Wrapper.m_Abilities_BuffAbility;
-        public InputAction @DashAbility => m_Wrapper.m_Abilities_DashAbility;
-        public InputAction @ShieldAbility => m_Wrapper.m_Abilities_ShieldAbility;
-        public InputAction @PortalAbility => m_Wrapper.m_Abilities_PortalAbility;
-        public InputAction @JumpAbility => m_Wrapper.m_Abilities_JumpAbility;
+        public InputAction @First => m_Wrapper.m_Abilities_First;
+        public InputAction @Second => m_Wrapper.m_Abilities_Second;
+        public InputAction @Third => m_Wrapper.m_Abilities_Third;
+        public InputAction @Fourth => m_Wrapper.m_Abilities_Fourth;
         public InputActionMap Get() { return m_Wrapper.m_Abilities; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -923,46 +833,34 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_AbilitiesActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_AbilitiesActionsCallbackInterfaces.Add(instance);
-            @GrappleAbility.started += instance.OnGrappleAbility;
-            @GrappleAbility.performed += instance.OnGrappleAbility;
-            @GrappleAbility.canceled += instance.OnGrappleAbility;
-            @BuffAbility.started += instance.OnBuffAbility;
-            @BuffAbility.performed += instance.OnBuffAbility;
-            @BuffAbility.canceled += instance.OnBuffAbility;
-            @DashAbility.started += instance.OnDashAbility;
-            @DashAbility.performed += instance.OnDashAbility;
-            @DashAbility.canceled += instance.OnDashAbility;
-            @ShieldAbility.started += instance.OnShieldAbility;
-            @ShieldAbility.performed += instance.OnShieldAbility;
-            @ShieldAbility.canceled += instance.OnShieldAbility;
-            @PortalAbility.started += instance.OnPortalAbility;
-            @PortalAbility.performed += instance.OnPortalAbility;
-            @PortalAbility.canceled += instance.OnPortalAbility;
-            @JumpAbility.started += instance.OnJumpAbility;
-            @JumpAbility.performed += instance.OnJumpAbility;
-            @JumpAbility.canceled += instance.OnJumpAbility;
+            @First.started += instance.OnFirst;
+            @First.performed += instance.OnFirst;
+            @First.canceled += instance.OnFirst;
+            @Second.started += instance.OnSecond;
+            @Second.performed += instance.OnSecond;
+            @Second.canceled += instance.OnSecond;
+            @Third.started += instance.OnThird;
+            @Third.performed += instance.OnThird;
+            @Third.canceled += instance.OnThird;
+            @Fourth.started += instance.OnFourth;
+            @Fourth.performed += instance.OnFourth;
+            @Fourth.canceled += instance.OnFourth;
         }
 
         private void UnregisterCallbacks(IAbilitiesActions instance)
         {
-            @GrappleAbility.started -= instance.OnGrappleAbility;
-            @GrappleAbility.performed -= instance.OnGrappleAbility;
-            @GrappleAbility.canceled -= instance.OnGrappleAbility;
-            @BuffAbility.started -= instance.OnBuffAbility;
-            @BuffAbility.performed -= instance.OnBuffAbility;
-            @BuffAbility.canceled -= instance.OnBuffAbility;
-            @DashAbility.started -= instance.OnDashAbility;
-            @DashAbility.performed -= instance.OnDashAbility;
-            @DashAbility.canceled -= instance.OnDashAbility;
-            @ShieldAbility.started -= instance.OnShieldAbility;
-            @ShieldAbility.performed -= instance.OnShieldAbility;
-            @ShieldAbility.canceled -= instance.OnShieldAbility;
-            @PortalAbility.started -= instance.OnPortalAbility;
-            @PortalAbility.performed -= instance.OnPortalAbility;
-            @PortalAbility.canceled -= instance.OnPortalAbility;
-            @JumpAbility.started -= instance.OnJumpAbility;
-            @JumpAbility.performed -= instance.OnJumpAbility;
-            @JumpAbility.canceled -= instance.OnJumpAbility;
+            @First.started -= instance.OnFirst;
+            @First.performed -= instance.OnFirst;
+            @First.canceled -= instance.OnFirst;
+            @Second.started -= instance.OnSecond;
+            @Second.performed -= instance.OnSecond;
+            @Second.canceled -= instance.OnSecond;
+            @Third.started -= instance.OnThird;
+            @Third.performed -= instance.OnThird;
+            @Third.canceled -= instance.OnThird;
+            @Fourth.started -= instance.OnFourth;
+            @Fourth.performed -= instance.OnFourth;
+            @Fourth.canceled -= instance.OnFourth;
         }
 
         public void RemoveCallbacks(IAbilitiesActions instance)
@@ -1066,12 +964,10 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     }
     public interface IAbilitiesActions
     {
-        void OnGrappleAbility(InputAction.CallbackContext context);
-        void OnBuffAbility(InputAction.CallbackContext context);
-        void OnDashAbility(InputAction.CallbackContext context);
-        void OnShieldAbility(InputAction.CallbackContext context);
-        void OnPortalAbility(InputAction.CallbackContext context);
-        void OnJumpAbility(InputAction.CallbackContext context);
+        void OnFirst(InputAction.CallbackContext context);
+        void OnSecond(InputAction.CallbackContext context);
+        void OnThird(InputAction.CallbackContext context);
+        void OnFourth(InputAction.CallbackContext context);
     }
     public interface IGeneralActions
     {

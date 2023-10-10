@@ -74,12 +74,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
     
     #region Unity Messages
 
-    private void Awake()
-    {
-        onPlayerLanded += OnLanded;
-        rb = GetComponent<Rigidbody>();
-    }
-
     public override void OnDestroy()
     {
         base.OnDestroy();
@@ -88,6 +82,9 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     private void Start()
     {
+        onPlayerLanded += OnLanded;
+        rb = GetComponent<Rigidbody>();
+
         rb.freezeRotation = true;
         readyToJump = true;
         normalYScale = transform.localScale.y;

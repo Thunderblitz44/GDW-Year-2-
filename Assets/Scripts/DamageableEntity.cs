@@ -10,9 +10,9 @@ public class DamageableEntity : NetworkBehaviour, IDamageable
     [SerializeField] bool enableDamageNumbers = true;
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
     HealthComponent hp;
-    public override void OnNetworkSpawn()
+
+    void Start()
     {
-        base.OnNetworkSpawn();
         hp = GetComponent<HealthComponent>();
         hp.onHealthZeroed += OnHealthZeroed;
     }
