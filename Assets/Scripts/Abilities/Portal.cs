@@ -10,6 +10,7 @@ public class Portal : MonoBehaviour
     SpriteRenderer sr;
     public float dissTime = 0.5f;
     public float dissDelay = 0.5f;
+    public float portalHeight = 1;
     float time;
 
     private void Awake()
