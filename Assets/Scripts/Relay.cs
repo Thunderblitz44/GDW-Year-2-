@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -10,24 +10,38 @@ using UnityEngine;
 
 public class Relay : MonoBehaviour
 {
+    [SerializeField] TMP_InputField inputField;
+    [SerializeField] TextMeshProUGUI joinCodeTxt;
+    [SerializeField] UnityTransport relayTransport;
+    [SerializeField] UnityTransport unityTransport;
+    
     async void Start()
     {
-        await UnityServices.InitializeAsync();
+        try
+        {
+            await UnityServices.InitializeAsync();
 
-        AuthenticationService.Instance.SignedIn += () => { };
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+        catch (AuthenticationException e)
+        {
+            Debug.LogError(e);
+        }
     }
 
     public async void CreateRelay()
     {
+        NetworkManager.Singleton.NetworkConfig.NetworkTransport = relayTransport;
+
         try
         {
             Allocation alloc = await RelayService.Instance.CreateAllocationAsync(1);
             RelayServerData relayServerData = new RelayServerData(alloc, "dtls");
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+            relayTransport.SetRelayServerData(relayServerData);
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(alloc.AllocationId);
-            DebugHUD.instance.SetJoinCode(joinCode);
             NetworkManager.Singleton.StartHost();
+
+            joinCodeTxt.text = "Join Code: " + joinCode;
         }
         catch (RelayServiceException e)
         {
@@ -35,18 +49,40 @@ public class Relay : MonoBehaviour
         }
     }
 
-    public async void JoinRelay(string joinCode)
+    public async void JoinRelay()
     {
+        NetworkManager.Singleton.NetworkConfig.NetworkTransport = relayTransport;
         try
         {
-            JoinAllocation joinAlloc = await RelayService.Instance.JoinAllocationAsync(joinCode);
+            JoinAllocation joinAlloc = await RelayService.Instance.JoinAllocationAsync(inputField.text);
             RelayServerData relayServerData = new RelayServerData(joinAlloc, "dtls");
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+            relayTransport.SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartClient();
         }
         catch (RelayServiceException e)
         {
             Debug.Log(e);
         }
+    }
+
+    public void StartLanHost()
+    {
+        NetworkManager.Singleton.NetworkConfig.NetworkTransport = unityTransport;
+        NetworkManager.Singleton.StartHost();
+    }
+
+    public void StartLanClient()
+    {
+        NetworkManager.Singleton.NetworkConfig.NetworkTransport = unityTransport;
+        NetworkManager.Singleton.StartClient();
+    }
+
+    public void StopRelay()
+    {
+
+    }
+
+    public void StopHostLan()
+    {
     }
 }

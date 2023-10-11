@@ -1407,7 +1407,7 @@ Transform:
   - {fileID: 790846576675867990}
   - {fileID: 3280778259178113587}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &6020391186298056736
 Rigidbody:
@@ -1533,7 +1533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a9c85f4ede5e934a9598bcdd430b54c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashDistance: 10
+  dashDistance: 20
   dashSpeed: 100
   maxDashes: 3
   timeLimitBetweenDashes: 1
@@ -1627,6 +1627,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 129
   grappleMeterPrefab: {fileID: 584547121494944393, guid: 978d7a20280b9e04ab2ab3e09c5946f7, type: 3}
+  minTeleportDist: 5
+  maxTeleportDist: 30
+  portalChargeSpeed: 2
+  maxUses: 2
+  portalPrefab: {fileID: 3322302593512922999, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
+  previewPortalPrefab: {fileID: 5343261354240463372, guid: aeb1b583ce44a444586b0c395f15684a, type: 3}
+  minJumpDist: 5
+  maxJumpDist: 15
+  jumpChargeSpeed: 7
+  height: 10
+  falloffMarker: {fileID: 419723686809461175, guid: e694e854b0ddfa24fa40d03359a03a4e, type: 3}
 --- !u!114 &466783373103644885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1640,6 +1651,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  height: 1.5
   hpBarPrefab: {fileID: 162320837041875948, guid: d504825856038184eb450c6b01f0336c, type: 3}
 --- !u!114 &2905314021853325563
 MonoBehaviour:

@@ -1,8 +1,10 @@
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-public class MultiplayerBTNs : MonoBehaviour
+public class MultiplayerButtons : MonoBehaviour
 {
+
     public void StartHost()
     {
         NetworkManager.Singleton.StartHost();

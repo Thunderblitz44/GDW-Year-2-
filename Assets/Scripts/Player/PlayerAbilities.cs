@@ -1,12 +1,14 @@
 using Cinemachine;
 using System;
 using System.Collections;
+using System.Threading;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerAbilities : NetworkBehaviour, IInputExpander
 {
-    // DASH
+    #region DashParams
     [Header("DASH"), Space(5f)]
     [SerializeField] float dashDistance = 20f;
     [SerializeField] float dashSpeed = 10f;
@@ -24,8 +26,9 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
     DashUI dashUI;
     bool isDashing = false;
     int dashes = 0;
+    #endregion
 
-
+    #region GrappleParams
     [Header("GRAPPLE"), Space(5f)]
     [SerializeField] float grappleDistance = 50f;
     [SerializeField] float lightWeightMaxMass = 1f;
@@ -37,19 +40,57 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
     [SerializeField] LayerMask whatIsGrapplable;
     [SerializeField] GameObject grappleMeterPrefab;
     bool isGrappling = false;
-    bool grappleCharged = true;
+    bool grappleReady = true;
     GrappleUI grappleUI;
+    bool chargeGrapple = false;
+    float grappleChargeTime;
+    #endregion
+
+    #region PortalParams
+    [Header("PORTAL"), Space(5f)]
+    [SerializeField] float minTeleportDist = 5f;
+    [SerializeField] float maxTeleportDist = 30f;
+    [SerializeField] float portalChargeSpeed = 2f;
+    [SerializeField] int maxUses = 2;
+    [SerializeField] GameObject portalPrefab;
+    [SerializeField] GameObject previewPortalPrefab;
+    Transform previewPortal;
+    Vector3 portalAPos;
+    Vector3 portalBPos;
+    Quaternion portalRotation;
+    bool chargePortals;
+    float previewDist;
+    Coroutine currentTeleportRoutine;
+    bool usingPortalAbility;
+    int uses;
+    float portalChargeTime;
+    #endregion
+
+    #region JumpParams
+    [Header("JUMP"), Space(5f)]
+    [SerializeField] float minJumpDist = 5f;
+    [SerializeField] float maxJumpDist = 15f;
+    [SerializeField] float jumpChargeSpeed = 7f;
+    [SerializeField] float height = 10f;
+    [SerializeField] GameObject falloffMarker;
+    Transform jumpFalloff;
+    bool chargeJump;
+    float jumpChargeTime;
+    float falloffDist;
+    #endregion
 
     Player playerScript;
     ActionMap actions;
     Rigidbody rb;
+    Transform body;
 
     private void Start()
     {
         if (!IsOwner) return;
 
         rb = GetComponent<Rigidbody>();
-        
+        body = playerScript.GetMovementScript().GetBody();
+
         dashUI = Instantiate(dashMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<DashUI>();
         dashUI.SetDashVisual(maxDashes);
         dashUI.onDashesRecharged += OnDashRecharged;
@@ -58,122 +99,42 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
         grappleUI.onGrappleRecharged += OnGrappleRecharged;
     }
 
+    private void Update()
+    {
+        if (chargePortals)
+        {
+            portalChargeTime += Time.deltaTime * portalChargeSpeed;
+            SetPortalDistance(portalChargeTime);
+            previewPortal.rotation = body.rotation;
+        }
+        if (chargeGrapple)
+        {
+            grappleChargeTime += Time.deltaTime;
+        }
+        if (chargeJump)
+        {
+            jumpChargeTime += Time.deltaTime * jumpChargeSpeed;
+            SetJumpFalloffPosition(jumpChargeTime);
+        }
+    }
+
     public void SetupInputEvents(object sender, ActionMap actions)
     {
         playerScript = (Player)sender;
         this.actions = actions;
 
-        actions.Abilities.GrappleAbility.performed += ctx =>
-        {
-            if (isGrappling || !grappleCharged) return;
+        // Abilities
+        actions.Abilities.First.started += ctx => { };
+        actions.Abilities.First.canceled += ctx => { };
+        
+        actions.Abilities.Second.started += ctx => { };
+        actions.Abilities.Second.canceled += ctx => { };
 
-            RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, grappleDistance, whatIsGrapplable))
-            {
-                grappleUI.SpendPoint();
-
-                Vector3 launchForce = Vector3.zero;
-                Transform target = hit.transform;
-                Vector3 dir = (target.position - transform.position).normalized;
-
-                // process the grapple target
-                if (!hit.rigidbody)
-                {
-                    // grapple point - we go to it
-                    float dist = Vector3.Distance(transform.position, target.position) - playerLandingSpace;
-                    Vector3 playerEndPoint = transform.position + dir * dist;
-                    launchForce = CalculateLaunchVelocity(transform.position, playerEndPoint);
-                }
-                else if (hit.rigidbody.mass > lightWeightMaxMass)
-                {
-                    // something heavy, meet in the middle
-                    float dist = Vector3.Distance(transform.position, target.position) / 2 - meetInTheMiddleSpacing;
-                    Vector3 playerEndPoint = transform.position + dir * dist;
-                    Vector3 targetEndPoint = target.position - dir * dist;
-
-                    launchForce = CalculateLaunchVelocity(transform.position, playerEndPoint);
-
-                    // tell the server to launch the target
-                    LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, CalculateLaunchVelocity(target.position, targetEndPoint) * hit.rigidbody.mass);
-                }
-                else
-                {
-                    // light object, it comes to us
-                    float dist = Vector3.Distance(transform.position, target.position) - itemLandingSpace;
-                    Vector3 targetEndPoint = target.position - dir * dist;
-                    
-                    // tell the server to launch the target
-                    LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, CalculateLaunchVelocity(target.position, targetEndPoint) * hit.rigidbody.mass);
-                    goto cooldown;
-                }
-
-                isGrappling = true;
-                playerScript.GetMovementScript().Disable();
-                rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-                rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
-
-            cooldown:
-                grappleCharged = false;
-                grappleUI.RechargePoint(grappleCooldown);
-            }
-        };
-        actions.Abilities.DashAbility.performed += ctx =>
-        {
-            if (isDashing || dashes >= maxDashes) return;
-            isDashing = true;
-            dashes++;
-            dashUI.SpendDash();
-            CancelInvoke(nameof(DashTimeout));
-
-            // raycast - make sure there are no obstacles in the way
-            float newDist = dashDistance;
-
-            Transform body = playerScript.GetMovementScript().GetBody();
-            Transform cam = Camera.main.transform;
-            Vector3 end;
-            
-            // calculate end for the raycast
-            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
-            else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
-
-            RaycastHit hit;
-            if (Physics.Raycast(body.position, (end - body.position).normalized, 
-                out hit, dashDistance, whatIsDashObstacle, QueryTriggerInteraction.Ignore))
-            {
-                newDist = Vector3.Distance(hit.point, body.position) - 0.5f;
-            }
-
-            // re-calculate end in case newDist changed
-            if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
-            else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
-
-            // lerp it
-            dashCurve.ClearKeys();
-            dashCurve.AddKey(0,0);
-            dashCurve.AddKey(newDist / dashSpeed, 1);
-
-            if (currentDashRoutine != null) StopCoroutine(currentDashRoutine);
-            currentDashRoutine = StartCoroutine(DashRoutine(end));
-        };
-        actions.Abilities.ShieldAbility.performed += ctx =>
-        {
-            // instantiate an object with a collider - in front of player
-            // follow player
-            // have a small amount of delay with movement (juice)
-            // stay in front of player
-            // have a small rotational delay (juice)
-            // hold it for x seconds or until released
-            // idea: cooldown is the held length
-            
-
-        };
-        actions.Abilities.BuffAbility.performed += ctx =>
-        {
-            // increase damage
-            // increase damage resistance
-            // last x seconds
-        };
-
+        actions.Abilities.Third.started += ctx => { };
+        actions.Abilities.Third.canceled += ctx => { };
+        
+        actions.Abilities.Fourth.started += ctx => { };
+        actions.Abilities.Fourth.canceled += ctx => { };
 
         // for testing
         actions.General.DamageSelf.performed += ctx => 
@@ -199,8 +160,50 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
         actions.General.DamageSelf.Enable();
         actions.General.HealSelf.Enable();
 
-
         EnableAllAbilities();
+    }
+
+    void SetPortalDistance(float time)
+    {
+        previewDist = Mathf.Clamp(time + minTeleportDist, minTeleportDist, maxTeleportDist);
+
+        Vector3 aimPoint = GetCameraLook() * previewDist;
+        
+        Vector3 newpos;
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, GetCameraDir(), out hit, previewDist))
+        {
+            newpos = new Vector3(hit.point.x, previewPortal.position.y, hit.point.z) - GetCameraDir();
+        }
+        else
+        {
+            newpos = transform.position + GetCameraDir() * previewDist;
+        }
+
+        if (Physics.Raycast(aimPoint, Vector3.down, out hit, 100))
+        {
+            newpos.y = hit.point.y + 1;
+        }
+        else
+        {
+            newpos.y = transform.position.y;
+        }
+
+        previewPortal.position = newpos;
+    }
+
+    void SetJumpFalloffPosition(float time)
+    {
+        falloffDist = Mathf.Clamp(time + minJumpDist, minJumpDist, maxJumpDist);
+        RaycastHit hit;
+        if (Physics.Raycast(new Ray(transform.position, GetCameraDir()), out hit, falloffDist))
+        {
+            jumpFalloff.position = new Vector3(hit.point.x, 0.01f, hit.point.z) - GetCameraDir();
+        }
+        else
+        {
+            jumpFalloff.position = new Vector3(transform.position.x, 0.01f, transform.position.z) + GetCameraDir() * falloffDist;
+        }
     }
 
 
@@ -276,7 +279,7 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
         dashUI.RechargeDashes(dashCooldown);
     }
 
-    Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint)
+    Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint, float overshoot)
     {
         float gravity = Physics.gravity.y;
         float displacementY = Math.Abs(endpoint.y - startpoint.y);
@@ -291,7 +294,7 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
 
     private void OnGrappleRecharged()
     {
-        grappleCharged = true;
+        grappleReady = true;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -303,18 +306,201 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
         }
     }
 
+    Vector3 GetCameraDir()
+    {
+        return new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z);
+    }
+
+    Vector3 GetCameraLook()
+    {
+        return Camera.main.transform.forward;
+    }
+
     public void EnableAllAbilities() => actions.Abilities.Enable();
     public void DisableAllAbilities() => actions.Abilities.Disable();
 
-    public void EnableGrappleAbility() => actions.Abilities.GrappleAbility.Enable();
-    public void DisableGrappleAbility() => actions.Abilities.GrappleAbility.Disable();
 
-    public void EnableDashAbility() => actions.Abilities.DashAbility.Enable();
-    public void DisableDashAbility() => actions.Abilities.DashAbility.Disable();
 
-    public void EnableShieldAbility() => actions.Abilities.ShieldAbility.Enable();
-    public void DisableShieldAbility() => actions.Abilities.ShieldAbility.Disable();
 
-    public void EnableBuffAbility() => actions.Abilities.BuffAbility.Enable();
-    public void DisableBuffAbility() => actions.Abilities.BuffAbility.Disable();
+
+
+
+
+
+    //*                                                      *//
+    //* ---------------------------------------------------- *//
+    //* ---------------------------------------------------- *//
+    //*                 abilities functions                  *//
+    //* ---------------------------------------------------- *//
+    //* ---------------------------------------------------- *//
+    //*                                                      *//
+
+
+
+
+    void Grapple()
+    {
+        if (isGrappling || !grappleReady) return;
+
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, grappleDistance, whatIsGrapplable))
+        {
+            grappleUI.SpendPoint();
+
+            Vector3 launchForce = Vector3.zero;
+            Transform target = hit.transform;
+            Vector3 dir = (target.position - transform.position).normalized;
+
+            // process the grapple target
+            if (!hit.rigidbody)
+            {
+                // grapple point - we go to it
+                float dist = Vector3.Distance(transform.position, target.position) - playerLandingSpace;
+                Vector3 playerEndPoint = transform.position + dir * dist;
+                launchForce = CalculateLaunchVelocity(transform.position, playerEndPoint, overshoot);
+            }
+            else if (hit.rigidbody.mass > lightWeightMaxMass)
+            {
+                // something heavy, meet in the middle
+                float dist = Vector3.Distance(transform.position, target.position) / 2 - meetInTheMiddleSpacing;
+                Vector3 playerEndPoint = transform.position + dir * dist;
+                Vector3 targetEndPoint = target.position - dir * dist;
+
+                launchForce = CalculateLaunchVelocity(transform.position, playerEndPoint, overshoot);
+
+                // tell the server to launch the target
+                LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, CalculateLaunchVelocity(target.position, targetEndPoint, overshoot) * hit.rigidbody.mass);
+            }
+            else
+            {
+                // light object, it comes to us
+                float dist = Vector3.Distance(transform.position, target.position) - itemLandingSpace;
+                Vector3 targetEndPoint = target.position - dir * dist;
+
+                // tell the server to launch the target
+                LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, CalculateLaunchVelocity(target.position, targetEndPoint, overshoot) * hit.rigidbody.mass);
+                goto cooldown;
+            }
+
+            isGrappling = true;
+            playerScript.GetMovementScript().Disable();
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
+
+        cooldown:
+            grappleReady = false;
+            grappleUI.RechargePoint(grappleCooldown);
+        }
+    }
+
+    void Dash()
+    {
+        if (isDashing || dashes >= maxDashes) return;
+        isDashing = true;
+        dashes++;
+        dashUI.SpendDash();
+        CancelInvoke(nameof(DashTimeout));
+
+        // raycast - make sure there are no obstacles in the way
+        float newDist = dashDistance;
+
+        Transform body = playerScript.GetMovementScript().GetBody();
+        Transform cam = Camera.main.transform;
+        Vector3 end;
+
+        // calculate end for the raycast
+        if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
+        else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
+
+        RaycastHit hit;
+        if (Physics.Raycast(body.position, (end - body.position).normalized,
+            out hit, dashDistance, whatIsDashObstacle, QueryTriggerInteraction.Ignore))
+        {
+            newDist = Vector3.Distance(hit.point, body.position) - 0.5f;
+        }
+
+        // re-calculate end in case newDist changed
+        if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
+        else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
+
+        // lerp it
+        dashCurve.ClearKeys();
+        dashCurve.AddKey(0, 0);
+        dashCurve.AddKey(newDist / dashSpeed, 1);
+
+        if (currentDashRoutine != null) StopCoroutine(currentDashRoutine);
+        currentDashRoutine = StartCoroutine(DashRoutine(end));
+    }
+
+    void PortalStart()
+    {
+        if (usingPortalAbility) return;
+
+        usingPortalAbility = true;
+        chargePortals = true;
+
+        previewPortal = Instantiate(previewPortalPrefab, transform.position + GetCameraLook() * minTeleportDist, body.rotation).transform;
+    }
+
+    void PortalEnd()
+    {
+        chargePortals = false;
+        portalChargeTime = 0f;
+
+        portalRotation = previewPortal.rotation;
+        portalAPos = body.position + body.forward * 1.5f;
+        portalBPos = previewPortal.position;
+
+        Destroy(previewPortal.gameObject);
+
+        // set up the portals
+        Transform entryPortal = Instantiate(portalPrefab, portalAPos, portalRotation).transform;
+        entryPortal.forward = -entryPortal.forward;
+        Transform exitPortal = Instantiate(portalPrefab, portalBPos, portalRotation).transform;
+        var f = entryPortal.GetComponent<Portal>();
+        var s = exitPortal.GetComponent<Portal>();
+        f.Init(maxUses, s);
+        s.Init(maxUses, f);
+
+        usingPortalAbility = false;
+    }
+
+    void JumpStart()
+    {
+        if (chargeJump) return;
+        chargeJump = true;
+
+        jumpFalloff = Instantiate(falloffMarker, transform.position, Quaternion.identity).transform;
+    }
+
+    void JumpEnd()
+    {
+        chargeJump = false;
+        jumpChargeTime = 0;
+        rb.AddForce(CalculateLaunchVelocity(transform.position, jumpFalloff.position, height) * rb.mass, ForceMode.Impulse);
+        Destroy(jumpFalloff.gameObject, 0.5f);
+    }
+ 
+    
+
+
+
+    abstract class Ability
+    {
+        public virtual void Start() { }
+
+        public virtual void End() { }
+    }
+
+    class GrappleAbility : Ability
+    {
+        public override void Start()
+        {
+            
+        }
+
+        public override void End() 
+        {
+        }
+    }
 }
