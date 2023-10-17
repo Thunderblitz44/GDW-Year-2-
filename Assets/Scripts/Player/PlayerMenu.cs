@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables;
+
 
 public class PlayerMenu : MonoBehaviour
 {
-
+    public GameObject overlayUiPrefab;
     private ActionMap actions;
     private Animator menuAnimator;
+    private Animator uiOverLayAnimator;
 
     private void Start()
     {
@@ -17,28 +18,41 @@ public class PlayerMenu : MonoBehaviour
         actions.General.Escape.performed += OnEscape;
       
         menuAnimator = GetComponentInChildren<Animator>();
-
+     
+        uiOverLayAnimator = overlayUiPrefab.GetComponent<Animator>();
         if (menuAnimator == null)
         {
             Debug.LogError("Menu Animator not found!");
         }
     }
-
-    private void OnEscape(InputAction.CallbackContext context)
+  
+    public void OnEscape(InputAction.CallbackContext context)
     {
+
+        
+      
         if (menuAnimator != null && context.performed)
         {
+            uiOverLayAnimator.SetTrigger("emberTrigger");
+            
+           
             menuAnimator.SetTrigger("pauseTrigger");
+            
         }
+
+      
+
     }
 
     private void OnDisable()
     {
+        
         actions.General.Escape.performed -= OnEscape;
     }
 
     public void ResumeButton()
     {
+        
         menuAnimator.SetTrigger("pauseTrigger");
 
     }
@@ -46,10 +60,10 @@ public class PlayerMenu : MonoBehaviour
 
     public void SettingsButton()
     {
-      
-        menuAnimator.SetTrigger("settingsTrigger");
-    
-     
+      menuAnimator.SetTrigger("settingsTrigger");
+       
+
+
     }
     
     public void ExitButton()
