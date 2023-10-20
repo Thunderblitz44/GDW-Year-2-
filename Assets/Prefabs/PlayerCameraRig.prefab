@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9011635139139876354}
+  - component: {fileID: 4272871512877840370}
   m_Layer: 0
   m_Name: PlayerCameraRig
   m_TagString: Untagged
@@ -34,6 +35,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4272871512877840370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438601978191268856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a121f8c82516e94458a056788b22167f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlayMenu: {fileID: 162320837041875948, guid: 2b57b95bd44a40940ab0607658934414, type: 3}
 --- !u!1 &2018300449321973025
 GameObject:
   m_ObjectHideFlags: 3
@@ -585,6 +599,7 @@ GameObject:
   - component: {fileID: 7612905050421154171}
   - component: {fileID: 5259300313376063400}
   - component: {fileID: 8233637900248895991}
+  - component: {fileID: 5861698626303020906}
   m_Layer: 0
   m_Name: FreeLook Camera
   m_TagString: Untagged
@@ -761,6 +776,19 @@ MonoBehaviour:
   AutoEnableInputs: 1
   XYAxis: {fileID: 9047818133336561711, guid: 3ec55436c76d46942bf0ac484586ee7b, type: 3}
   ZAxis: {fileID: 0}
+--- !u!114 &5861698626303020906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097496472323206057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 8097496472323206057}
 --- !u!1 &8161233682123610886
 GameObject:
   m_ObjectHideFlags: 3
@@ -853,6 +881,7 @@ GameObject:
   - component: {fileID: 521235240600373595}
   - component: {fileID: 5849527022760507082}
   - component: {fileID: 8024587691688483510}
+  - component: {fileID: 9017584230421464156}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -1013,6 +1042,19 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9017584230421464156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8316188277370876267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
 --- !u!1001 &6239491497291164448
 PrefabInstance:
   m_ObjectHideFlags: 0
