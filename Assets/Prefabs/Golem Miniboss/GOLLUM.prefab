@@ -188,7 +188,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 446741108393369757}
   m_LocalRotation: {x: 0.0071230102, y: 0.0000042913825, z: -0.0071145296, w: 0.99994934}
-  m_LocalPosition: {x: -0, y: 0.673561, z: 0}
+  m_LocalPosition: {x: -0.01, y: 0.59, z: -0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -214,8 +214,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.45678252
-  m_Center: {x: -0.33007595, y: -1.0619255, z: 0.0000002607078}
+  m_Radius: 1.605983
+  m_Center: {x: -1.1765513, y: -1.0619221, z: -0.12466489}
 --- !u!114 &6126893421075570914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,21 +231,21 @@ MonoBehaviour:
   CollisionTag: Ground Tag
   EventReference:
     Guid:
-      Data1: -619554390
-      Data2: 1123898343
-      Data3: 519960208
-      Data4: -276593017
-    Path: event:/Golem Footsteps
+      Data1: -1731825239
+      Data2: 1204342526
+      Data3: 749909686
+      Data4: 2116103429
+    Path: event:/New Event
   Event: 
   PlayEvent: 3
   StopEvent: 4
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
-  AllowNonRigidbodyDoppler: 0
+  AllowNonRigidbodyDoppler: 1
   Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
+  OverrideAttenuation: 1
+  OverrideMinDistance: 10.76
   OverrideMaxDistance: 20
 --- !u!1 &675250527851452112
 GameObject:
@@ -2605,6 +2605,7 @@ GameObject:
   - component: {fileID: 4728185122260356129}
   - component: {fileID: 6667298408721510827}
   - component: {fileID: 4190177971477063797}
+  - component: {fileID: 5506836407528225032}
   m_Layer: 2
   m_Name: 'NEW GOLEM '
   m_TagString: Untagged
@@ -2755,6 +2756,37 @@ MonoBehaviour:
   - {fileID: 8967759292181278643}
   - {fileID: 3715715312276195275}
   - {fileID: 3101528319181264604}
+--- !u!114 &5506836407528225032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6786712562452735076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1505862733
+      Data2: 1083296701
+      Data3: -1217628749
+      Data4: -423801944
+    Path: event:/Golem Core
+  Event: 
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 14.75
+  OverrideMaxDistance: 20
 --- !u!1 &7308959126225804553
 GameObject:
   m_ObjectHideFlags: 0

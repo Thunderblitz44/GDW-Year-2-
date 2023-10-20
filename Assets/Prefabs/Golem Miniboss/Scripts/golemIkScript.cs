@@ -123,6 +123,8 @@ public class golemIkScript : MonoBehaviour
   
         oldPosition = newPosition;
         oldNormal = newNormal;
+
+
         if (footDelay == true)
         {
             controllerScript.SetActiveScript();
