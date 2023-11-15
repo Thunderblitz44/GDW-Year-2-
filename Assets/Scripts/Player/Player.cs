@@ -21,6 +21,8 @@ public class Player : DamageableEntity
         {
             module.SetupInputEvents(this, actions);
         }
+
+        GameSettings.instance.DisableLobbyCamera();
     }
 
     public override void OnDestroy()

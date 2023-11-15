@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GrappleAbility : Ability
 {
@@ -17,6 +18,17 @@ public class GrappleAbility : Ability
     GrappleUI grappleUI;
     bool chargeGrapple = false;
     float grappleChargeTime;
+    Image grappleLockIcon;
+
+    [SerializeField] float lerpSpeed = 10f;
+    [SerializeField] AnimationCurve lerpCurve = AnimationCurve.EaseInOut(0,0,1,1);
+    float lerpTime;
+
+    float targetsCheckDelay = 0.1f;
+    float timer = 0f;
+
+    Transform lockedTarget;
+    Vector2 lockLerpStart;
 
     Player playerScript;
     Rigidbody rb;
@@ -28,7 +40,7 @@ public class GrappleAbility : Ability
 
         grappleUI = Instantiate(grappleMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<GrappleUI>();
         grappleUI.onGrappleRecharged += OnGrappleRecharged;
-
+        grappleLockIcon = GameSettings.instance.GetGrappleLockonIcon();
     }
 
     void Update()
@@ -38,6 +50,66 @@ public class GrappleAbility : Ability
         if (chargeGrapple)
         {
             grappleChargeTime += Time.deltaTime;
+        }
+
+
+
+        // slerp lock icon
+        if (lockedTarget)
+        {
+            Vector2 end = Camera.main.WorldToScreenPoint(lockedTarget.position);
+            grappleLockIcon.transform.position = Vector2.Lerp(lockLerpStart, end, lerpCurve.Evaluate(lerpTime+=Time.deltaTime*lerpSpeed));
+        }
+
+
+
+        timer += Time.deltaTime;
+        if (timer < targetsCheckDelay) return;
+        timer = 0f;
+
+        if (GameSettings.instance.renderedGrappleTargets.Count > 0)
+        {
+
+            GameSettings.instance.SortGrappleTargetsByDistance();
+
+            // sort by priority
+
+            // lock on to visible
+            /* foreach (var item in GameSettings.instance.renderedGrappleTargets)
+             {
+                 RaycastHit hit;
+                 if (Physics.Raycast(Camera.main.transform.position, (Camera.main.transform.position-item.position).normalized, out hit))
+                 {
+                     if (hit.transform.gameObject.layer != whatIsGrapplable)
+                     {
+                         Debug.Log("theres something in the way");
+                     }
+                     else
+                     {
+                         Debug.Log("all good");
+                         break;
+                     }
+                 }
+             }*/
+
+            if (lockedTarget && lockedTarget != GameSettings.instance.renderedGrappleTargets[0])
+            {
+                lerpTime = 0f;
+                lockLerpStart = Camera.main.WorldToScreenPoint(lockedTarget.position);
+            }
+            lockedTarget = GameSettings.instance.renderedGrappleTargets[0];
+
+            if (!lockedTarget) return;
+
+            Vector3 point = Camera.main.WorldToScreenPoint(lockedTarget.position);
+            point.z = 0;
+
+            grappleLockIcon.enabled = true;
+
+        }
+        else
+        {
+            grappleLockIcon.enabled = false;
         }
     }
 
@@ -60,57 +132,53 @@ public class GrappleAbility : Ability
 
     public override void Part1()
     {
-        if (isGrappling || !grappleReady) return;
+        if (isGrappling || !grappleReady || !lockedTarget) return;
 
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, grappleDistance, whatIsGrapplable))
+        grappleUI.SpendPoint();
+        Rigidbody targetRb = lockedTarget.GetComponent<Rigidbody>();
+
+        Vector3 launchForce = Vector3.zero;
+        Vector3 dir = (lockedTarget.position - transform.position).normalized;
+
+        // process the grapple target
+        if (!targetRb)
         {
-            grappleUI.SpendPoint();
-
-            Vector3 launchForce = Vector3.zero;
-            Transform target = hit.transform;
-            Vector3 dir = (target.position - transform.position).normalized;
-
-            // process the grapple target
-            if (!hit.rigidbody)
-            {
-                // grapple point - we go to it
-                float dist = Vector3.Distance(transform.position, target.position) - playerLandingSpace;
-                Vector3 playerEndPoint = transform.position + dir * dist;
-                launchForce = StaticUtilities.CalculateLaunchVelocity(transform.position, playerEndPoint, overshoot);
-            }
-            else if (hit.rigidbody.mass > lightWeightMaxMass)
-            {
-                // something heavy, meet in the middle
-                float dist = Vector3.Distance(transform.position, target.position) / 2 - meetInTheMiddleSpacing;
-                Vector3 playerEndPoint = transform.position + dir * dist;
-                Vector3 targetEndPoint = target.position - dir * dist;
-
-                launchForce = StaticUtilities.CalculateLaunchVelocity(transform.position, playerEndPoint, overshoot);
-
-                // tell the server to launch the target
-                LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, StaticUtilities.CalculateLaunchVelocity(target.position, targetEndPoint, overshoot) * hit.rigidbody.mass);
-            }
-            else
-            {
-                // light object, it comes to us
-                float dist = Vector3.Distance(transform.position, target.position) - itemLandingSpace;
-                Vector3 targetEndPoint = target.position - dir * dist;
-
-                // tell the server to launch the target
-                LaunchTargetServerRpc(target.GetComponent<NetworkObject>().NetworkObjectId, StaticUtilities.CalculateLaunchVelocity(target.position, targetEndPoint, overshoot) * hit.rigidbody.mass);
-                goto cooldown;
-            }
-
-            isGrappling = true;
-            playerScript.GetMovementScript().Disable();
-            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
-
-        cooldown:
-            grappleReady = false;
-            grappleUI.RechargePoint(grappleCooldown);
+            // grapple point - we go to it
+            float dist = Vector3.Distance(transform.position, lockedTarget.position) - playerLandingSpace;
+            Vector3 playerEndPoint = transform.position + dir * dist;
+            launchForce = StaticUtilities.CalculateLaunchVelocity(transform.position, playerEndPoint, overshoot);
         }
+        else if (targetRb.mass > lightWeightMaxMass)
+        {
+            // something heavy, meet in the middle
+            float dist = Vector3.Distance(transform.position, lockedTarget.position) / 2 - meetInTheMiddleSpacing;
+            Vector3 playerEndPoint = transform.position + dir * dist;
+            Vector3 targetEndPoint = lockedTarget.position - dir * dist;
+
+            launchForce = StaticUtilities.CalculateLaunchVelocity(transform.position, playerEndPoint, overshoot);
+
+            // tell the server to launch the target
+            LaunchTargetServerRpc(lockedTarget.GetComponent<NetworkObject>().NetworkObjectId, StaticUtilities.CalculateLaunchVelocity(lockedTarget.position, targetEndPoint, overshoot) * targetRb.mass);
+        }
+        else
+        {
+            // light object, it comes to us
+            float dist = Vector3.Distance(transform.position, lockedTarget.position) - itemLandingSpace;
+            Vector3 targetEndPoint = lockedTarget.position - dir * dist;
+
+            // tell the server to launch the target
+            LaunchTargetServerRpc(lockedTarget.GetComponent<NetworkObject>().NetworkObjectId, StaticUtilities.CalculateLaunchVelocity(lockedTarget.position, targetEndPoint, overshoot) * targetRb.mass);
+            goto cooldown;
+        }
+
+        isGrappling = true;
+        playerScript.GetMovementScript().Disable();
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
+
+    cooldown:
+        grappleReady = false;
+        grappleUI.RechargePoint(grappleCooldown);
     }
     
     public override void Part2()

@@ -55,8 +55,8 @@ public class PortalAbility : Ability
         {
             newpos = new Vector3(hit.point.x, previewPortal.position.y, hit.point.z) - StaticUtilities.GetCameraDir();
             // set charge for that distance
+            if (!hitWall) portalChargeTime = hit.distance - minTeleportDist; 
             hitWall = true;
-            //portalChargeTime = hit.distance - minTeleportDist - (Time.deltaTime * portalChargeSpeed); 
         }
         else
         {
