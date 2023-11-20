@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class PlayerCameras : NetworkBehaviour, IInputExpander
 {
-    [SerializeField] GameObject cameraRig;
     CinemachineFreeLook freeLookCamera;
     [SerializeField] Transform aim;
     [SerializeField] LayerMask lockOnLayers;
@@ -24,11 +23,6 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
     {
         if (!IsOwner) return;
         
-        freeLookCamera = Instantiate(cameraRig).transform.GetChild(1).GetComponent<CinemachineFreeLook>();
-        freeLookCamera.LookAt = transform;
-        freeLookCamera.Follow = transform;
-        freeLookCamera.m_Lens.FieldOfView = StaticUtilities.defaultFOV;
-
         Application.focusChanged += (bool isFocused) => 
         { 
             if (isFocused)
