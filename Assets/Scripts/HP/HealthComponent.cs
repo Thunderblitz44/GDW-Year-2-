@@ -20,14 +20,14 @@ public class HealthComponent : NetworkBehaviour
 
         if (hpBarPrefab.GetComponent<EntityHPBar>())
         {
-            entityHPBar = Instantiate(hpBarPrefab, GameManager.instance.GetWorldCanvas()).GetComponent<EntityHPBar>();
+            entityHPBar = Instantiate(hpBarPrefab, GameManager.Instance.worldCanvas).GetComponent<EntityHPBar>();
             entityHPBar.transform.position = transform.position + Vector3.up * height;
             entityHPBar.maxHP = maxHealth;
             entityHPBar.SetHPValue(health.Value);
         }
         else if (IsOwner && hpBarPrefab.GetComponent<HPBar>())
         {
-            hpbar = Instantiate(hpBarPrefab, GameManager.instance.GetCanvas()).GetComponent<HPBar>();
+            hpbar = Instantiate(hpBarPrefab, GameManager.Instance.canvas).GetComponent<HPBar>();
             hpbar.maxHP = maxHealth;
             hpbar.SetHPValue(health.Value);
         }

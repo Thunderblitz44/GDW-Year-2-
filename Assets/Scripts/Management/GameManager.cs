@@ -1,36 +1,35 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager Instance;
 
-    [SerializeField] Transform canvas;
-    [SerializeField] Transform worldCanvas;
-    [SerializeField] Camera lobbyCamera;
+    [SerializeField] Transform _canvas;
+    [SerializeField] Transform _worldCanvas;
+    [SerializeField] Camera _lobbyCamera;
     public List<Transform> renderedGrappleTargets = new();
+
+    public Camera lobbyCamera { get { return _lobbyCamera; } }
+    public Transform worldCanvas { get { return _worldCanvas; } } 
+    public Transform canvas { get { return _canvas; } }
+    public bool isGamePaused { get; private set; } = false;
 
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(this);
         }
         else
         {
-            instance = this;
+            Instance = this;
         }
     }
 
     public void DisableLobbyCamera()
     {
-        lobbyCamera.gameObject.SetActive(false);
+        _lobbyCamera.gameObject.SetActive(false);
     }
-
-    public Transform GetCanvas() => canvas;
-    public Transform GetWorldCanvas() => worldCanvas;
-    public Camera GetLobbyCamera() => lobbyCamera;
 }

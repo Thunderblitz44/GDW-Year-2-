@@ -17,11 +17,17 @@ public class PortalAbility : Ability
     bool usingPortalAbility;
     float portalChargeTime;
     bool hitWall;
+    bool hitGround;
+    Vector3 previewPortalNewPos;
+    Vector3 aimPoint;
 
     Vector3 lastPortalPos;
 
     Player playerScript;
     Transform body;
+
+    float slowUpdateTime;
+    float slowUpdateInterval = 0.1f;
 
     void Start()
     {
@@ -31,29 +37,40 @@ public class PortalAbility : Ability
 
     void Update()
     {
-        if (chargePortals)
-        {
-            SetPortalDistance();
-            previewPortal.rotation = body.rotation;
-        }
+        if (!chargePortals) return;
+        MovePreviewPortal();
+        SlowUpdate();
     }
 
+    void SlowUpdate()
+    {
+        slowUpdateTime += Time.deltaTime;
+        if (slowUpdateTime < slowUpdateInterval) return;
+        slowUpdateTime = 0;
 
-    void SetPortalDistance()
+        CheckPortalPlacement();
+    }
+
+    void MovePreviewPortal()
     {
         // increase charge
         if (!hitWall) portalChargeTime += Time.deltaTime * portalChargeSpeed;
 
+        aimPoint = transform.position + StaticUtilities.GetCameraDir() * previewDist;
+
         // set the new distance
         previewDist = Mathf.Clamp(portalChargeTime + minTeleportDist, minTeleportDist, maxTeleportDist);
 
-        Vector3 aimPoint = transform.position + StaticUtilities.GetCameraLook() * previewDist;
+        previewPortal.position = aimPoint;
+        previewPortal.rotation = body.rotation;
+    }
 
-        Vector3 newpos;
+    void CheckPortalPlacement()
+    {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, StaticUtilities.GetCameraDir(), out hit, previewDist))
+        if (Physics.Raycast(transform.position, StaticUtilities.GetCameraLook(), out hit, previewDist))
         {
-            newpos = new Vector3(hit.point.x, previewPortal.position.y, hit.point.z) - StaticUtilities.GetCameraDir();
+            previewPortalNewPos = new Vector3(hit.point.x, previewPortal.position.y, hit.point.z) - StaticUtilities.GetCameraDir();
             // set charge for that distance
             if (!hitWall) portalChargeTime = hit.distance - minTeleportDist; 
             hitWall = true;
@@ -61,20 +78,18 @@ public class PortalAbility : Ability
         else
         {
             hitWall = false;
-            newpos = transform.position + StaticUtilities.GetCameraDir() * previewDist;
         }
 
         if (Physics.Raycast(aimPoint, Vector3.down, out hit, previewDist))
         {
-            newpos.y = hit.point.y + 1;
+            previewPortalNewPos.y = hit.point.y + 1;
+            hitGround = true;
         }
         else
         {
-            newpos.y = transform.position.y;
+            previewPortalNewPos.y = transform.position.y;
+            hitGround = false;
         }
-
-        previewPortal.position = newpos;
-        //lastPortalPos = newpos;
     }
 
     public override void Part1()

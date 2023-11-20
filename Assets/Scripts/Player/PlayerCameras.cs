@@ -119,22 +119,6 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
             if (i >= targets.Length) i = 0;
         };
 
-        // toggle cameras
-        actions.CameraControl.Aim.started += ctx =>
-        {
-        };
-        actions.CameraControl.Aim.canceled += ctx =>
-        {
-        };
-
-        actions.General.Escape.performed += ctx => 
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        };
-
-        actions.General.Escape.Enable();
-
         EnableCameraControl();
     }
 

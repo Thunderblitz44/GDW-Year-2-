@@ -6,6 +6,7 @@ public class Player : DamageableEntity
     public PlayerCameras cameraScript { get; private set; }
     public PlayerAbilities abilitiesScript { get; private set; }
     public PlayerAnimator animatorScript { get; private set; }
+    public PlayerMenuController pauseScript { get; private set; }
     public HUD hud { get; private set; }
     [SerializeField] private HUD _hud;
 
@@ -15,12 +16,13 @@ public class Player : DamageableEntity
     private void Start()
     {
         if (!IsOwner) return;
-
         movementScript = GetComponent<PlayerMovement>();
         cameraScript = GetComponent<PlayerCameras>();
         abilitiesScript = GetComponent<PlayerAbilities>();
         animatorScript = GetComponent<PlayerAnimator>();
+        pauseScript = GetComponent<PlayerMenuController>();
         hud = _hud;
+        hud.pauseMenu.AddResumeListener(UnPausePlayer);
 
         actions = new ActionMap();
 
@@ -30,7 +32,16 @@ public class Player : DamageableEntity
             module.SetupInputEvents(this, actions);
         }
 
-        GameManager.instance.DisableLobbyCamera();
+        actions.General.Escape.performed += ctx =>
+        {
+            PausePlayer();
+            hud.pauseMenu.Pause();
+        };
+        actions.General.Enable();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        GameManager.Instance.DisableLobbyCamera();
     }
 
     public override void OnDestroy()
@@ -39,4 +50,23 @@ public class Player : DamageableEntity
         actions.Dispose();
         base.OnDestroy();
     }
+
+    public void PausePlayer()
+    {
+        actions.General.Disable();
+        actions.Locomotion.Disable();
+        actions.CameraControl.Disable();
+        actions.Abilities.Disable();
+        actions.Menus.Enable();
+    }
+
+    public void UnPausePlayer()
+    {
+        actions.General.Enable();
+        actions.Locomotion.Enable();
+        actions.CameraControl.Enable();
+        actions.Abilities.Enable();
+        actions.Menus.Disable();
+    }
+
 }

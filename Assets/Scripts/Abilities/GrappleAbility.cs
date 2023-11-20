@@ -38,7 +38,7 @@ public class GrappleAbility : Ability
         playerScript = GetComponent<Player>();
         rb = GetComponent<Rigidbody>();
 
-        grappleUI = Instantiate(grappleMeterPrefab, GameManager.instance.GetCanvas()).GetComponent<GrappleUI>();
+        grappleUI = Instantiate(grappleMeterPrefab, GameManager.Instance.canvas).GetComponent<GrappleUI>();
         grappleUI.onGrappleRecharged += OnGrappleRecharged;
         grappleLockIcon = playerScript.hud?.grappleLockIcon;
     }
@@ -67,10 +67,10 @@ public class GrappleAbility : Ability
         if (timer < targetsCheckDelay) return;
         timer = 0f;
 
-        if (GameManager.instance.renderedGrappleTargets.Count > 0)
+        if (GameManager.Instance.renderedGrappleTargets.Count > 0)
         {
 
-            StaticUtilities.SortByDistanceToScreenCenter(GameManager.instance.renderedGrappleTargets);
+            StaticUtilities.SortByDistanceToScreenCenter(GameManager.Instance.renderedGrappleTargets);
 
             // sort by priority
 
@@ -92,12 +92,12 @@ public class GrappleAbility : Ability
                  }
              }*/
 
-            if (lockedTarget && lockedTarget != GameManager.instance.renderedGrappleTargets[0])
+            if (lockedTarget && lockedTarget != GameManager.Instance.renderedGrappleTargets[0])
             {
                 lerpTime = 0f;
                 lockLerpStart = Camera.main.WorldToScreenPoint(lockedTarget.position);
             }
-            lockedTarget = GameManager.instance.renderedGrappleTargets[0];
+            lockedTarget = GameManager.Instance.renderedGrappleTargets[0];
 
             if (!lockedTarget) return;
 

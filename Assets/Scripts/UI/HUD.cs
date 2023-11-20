@@ -7,6 +7,5 @@ public class HUD : MonoBehaviour
 {
     public Image grappleLockIcon;
     public Image girlsLockIcon;
-
-    
+    public PauseMenu pauseMenu;
 }

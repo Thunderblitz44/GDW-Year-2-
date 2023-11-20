@@ -31,7 +31,7 @@ public class DashAbility : Ability
         rb = GetComponent<Rigidbody>();
         body = playerScript.movementScript.GetBody();
 
-        dashUI = Instantiate(dashMeterPrefab, GameManager.instance.GetCanvas()).GetComponent<DashUI>();
+        dashUI = Instantiate(dashMeterPrefab, GameManager.Instance.canvas).GetComponent<DashUI>();
         dashUI.SetDashVisual(maxDashes);
         dashUI.onDashesRecharged += OnDashRecharged;
     }

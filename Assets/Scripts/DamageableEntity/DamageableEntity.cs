@@ -54,7 +54,7 @@ public class DamageableEntity : NetworkBehaviour, IDamageable
         Transform t = Instantiate(floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
         t.GetComponent<TextMeshProUGUI>().text = message;
-        t.SetParent(GameManager.instance.GetWorldCanvas(), true);
+        t.SetParent(GameManager.Instance.worldCanvas, true);
     }
 
     [ServerRpc(RequireOwnership = false)]

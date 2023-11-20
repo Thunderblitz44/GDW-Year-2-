@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GrappleTarget : MonoBehaviour
@@ -38,7 +36,7 @@ public class GrappleTarget : MonoBehaviour
         }
         else
         {
-            point = GameManager.instance.GetLobbyCamera().WorldToScreenPoint(transform.position);
+            point = GameManager.Instance.lobbyCamera.WorldToScreenPoint(transform.position);
         }
         point.z = 0;
 
@@ -51,19 +49,19 @@ public class GrappleTarget : MonoBehaviour
         }
 
         // visible
-        if (GameManager.instance.renderedGrappleTargets.Contains(transform)) return;
+        if (GameManager.Instance.renderedGrappleTargets.Contains(transform)) return;
 
         //Debug.Log(name + " is visible");
-        GameManager.instance.renderedGrappleTargets.Add(transform);
+        GameManager.Instance.renderedGrappleTargets.Add(transform);
     }
 
     void SetInvisible()
     {
         // not visible
-        if (!GameManager.instance.renderedGrappleTargets.Contains(transform)) return;
+        if (!GameManager.Instance.renderedGrappleTargets.Contains(transform)) return;
 
         //Debug.Log(name + " is not visible");
-        GameManager.instance.renderedGrappleTargets.Add(transform);
+        GameManager.Instance.renderedGrappleTargets.Add(transform);
     }
 
     public int GetPriorityLevel() => priority;
