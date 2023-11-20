@@ -36,10 +36,10 @@ public class DamageableEntity : NetworkBehaviour, IDamageable
     {
         for (float i = 0, n = 0; i < duration; i += Time.deltaTime, n += Time.deltaTime)
         {
-            if (n > GameSettings.instance.damageOverTimeInterval)
+            if (n > StaticUtilities.damageOverTimeInterval)
             {
                 n = 0;
-                ApplyDamage(dps * GameSettings.instance.damageOverTimeInterval, type);
+                ApplyDamage(dps * StaticUtilities.damageOverTimeInterval, type);
             }
             yield return null;
         }
@@ -54,7 +54,7 @@ public class DamageableEntity : NetworkBehaviour, IDamageable
         Transform t = Instantiate(floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
         t.GetComponent<TextMeshProUGUI>().text = message;
-        t.SetParent(GameSettings.instance.GetWorldCanvas(), true);
+        t.SetParent(GameManager.instance.GetWorldCanvas(), true);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -65,7 +65,7 @@ public class DamageableEntity : NetworkBehaviour, IDamageable
         ApplyDamageClientRpc(damage);
 
         if (!enableDamageNumbers) return;
-        string msg = $"<color=#{(type == DamageTypes.physical ? GameSettings.instance.physicalDamageColor.ToHexString() : GameSettings.instance.magicDamageColor.ToHexString())}>{damage}</color>";
+        string msg = $"<color=#{(type == DamageTypes.physical ? StaticUtilities.physicalDamageColor.ToHexString() : StaticUtilities.magicDamageColor.ToHexString())}>{damage}</color>";
         SpawnFloatingTextClientRpc(msg);
     }
 

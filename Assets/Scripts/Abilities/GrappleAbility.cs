@@ -13,12 +13,12 @@ public class GrappleAbility : Ability
     [SerializeField] float grappleCooldown = 3f;
     [SerializeField] LayerMask whatIsGrapplable;
     [SerializeField] GameObject grappleMeterPrefab;
+    [SerializeField] Image grappleLockIcon;
     bool isGrappling = false;
     bool grappleReady = true;
     GrappleUI grappleUI;
     bool chargeGrapple = false;
     float grappleChargeTime;
-    Image grappleLockIcon;
 
     [SerializeField] float lerpSpeed = 10f;
     [SerializeField] AnimationCurve lerpCurve = AnimationCurve.EaseInOut(0,0,1,1);
@@ -38,9 +38,8 @@ public class GrappleAbility : Ability
         playerScript = GetComponent<Player>();
         rb = GetComponent<Rigidbody>();
 
-        grappleUI = Instantiate(grappleMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<GrappleUI>();
+        grappleUI = Instantiate(grappleMeterPrefab, GameManager.instance.GetCanvas()).GetComponent<GrappleUI>();
         grappleUI.onGrappleRecharged += OnGrappleRecharged;
-        grappleLockIcon = GameSettings.instance.GetGrappleLockonIcon();
     }
 
     void Update()
@@ -67,10 +66,10 @@ public class GrappleAbility : Ability
         if (timer < targetsCheckDelay) return;
         timer = 0f;
 
-        if (GameSettings.instance.renderedGrappleTargets.Count > 0)
+        if (GameManager.instance.renderedGrappleTargets.Count > 0)
         {
 
-            GameSettings.instance.SortGrappleTargetsByDistance();
+            StaticUtilities.SortByDistanceToScreenCenter(GameManager.instance.renderedGrappleTargets);
 
             // sort by priority
 
@@ -92,12 +91,12 @@ public class GrappleAbility : Ability
                  }
              }*/
 
-            if (lockedTarget && lockedTarget != GameSettings.instance.renderedGrappleTargets[0])
+            if (lockedTarget && lockedTarget != GameManager.instance.renderedGrappleTargets[0])
             {
                 lerpTime = 0f;
                 lockLerpStart = Camera.main.WorldToScreenPoint(lockedTarget.position);
             }
-            lockedTarget = GameSettings.instance.renderedGrappleTargets[0];
+            lockedTarget = GameManager.instance.renderedGrappleTargets[0];
 
             if (!lockedTarget) return;
 

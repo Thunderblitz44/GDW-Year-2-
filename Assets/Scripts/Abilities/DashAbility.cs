@@ -31,7 +31,7 @@ public class DashAbility : Ability
         rb = GetComponent<Rigidbody>();
         body = playerScript.GetMovementScript().GetBody();
 
-        dashUI = Instantiate(dashMeterPrefab, GameSettings.instance.GetCanvas()).GetComponent<DashUI>();
+        dashUI = Instantiate(dashMeterPrefab, GameManager.instance.GetCanvas()).GetComponent<DashUI>();
         dashUI.SetDashVisual(maxDashes);
         dashUI.onDashesRecharged += OnDashRecharged;
     }
@@ -83,7 +83,7 @@ public class DashAbility : Ability
         float dashTime = dashCurve.keys[1].time;
         CinemachineFreeLook camera = playerScript.GetCameraControllerScript().GetFreeLookCamera();
         float startFOV = camera.m_Lens.FieldOfView;
-        float targetFOV = GameSettings.instance.defaultFOV + dashFovIncrease;
+        float targetFOV = StaticUtilities.defaultFOV + dashFovIncrease;
         while (time < dashTime)
         {
             transform.position = Vector3.Lerp(startPos, endPos, dashCurve.Evaluate(time += Time.deltaTime));
@@ -114,7 +114,7 @@ public class DashAbility : Ability
         // restore fov
         time = 0f;
         startFOV = camera.m_Lens.FieldOfView;
-        targetFOV = GameSettings.instance.defaultFOV;
+        targetFOV = StaticUtilities.defaultFOV;
         while (time < 1)
         {
             // "lerp" back to default fov
@@ -126,7 +126,7 @@ public class DashAbility : Ability
             time += Time.deltaTime * fovRestoreSpeed;
             yield return null;
         }
-        camera.m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
+        camera.m_Lens.FieldOfView = StaticUtilities.defaultFOV;
     }
 
     void OnDashRecharged()

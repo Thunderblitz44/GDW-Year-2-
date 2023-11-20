@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class JoinCodeInput : MonoBehaviour
 {
-    [SerializeField] Relay relay;
+    //[SerializeField] Relay relay;
 
     private void Start()
     {

@@ -27,7 +27,7 @@ public class PlayerCameras : NetworkBehaviour, IInputExpander
         freeLookCamera = Instantiate(cameraRig).transform.GetChild(1).GetComponent<CinemachineFreeLook>();
         freeLookCamera.LookAt = transform;
         freeLookCamera.Follow = transform;
-        freeLookCamera.m_Lens.FieldOfView = GameSettings.instance.defaultFOV;
+        freeLookCamera.m_Lens.FieldOfView = StaticUtilities.defaultFOV;
 
         Application.focusChanged += (bool isFocused) => 
         { 
