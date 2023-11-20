@@ -13,7 +13,7 @@ public class GrappleAbility : Ability
     [SerializeField] float grappleCooldown = 3f;
     [SerializeField] LayerMask whatIsGrapplable;
     [SerializeField] GameObject grappleMeterPrefab;
-    [SerializeField] Image grappleLockIcon;
+    Image grappleLockIcon;
     bool isGrappling = false;
     bool grappleReady = true;
     GrappleUI grappleUI;
@@ -40,6 +40,7 @@ public class GrappleAbility : Ability
 
         grappleUI = Instantiate(grappleMeterPrefab, GameManager.instance.GetCanvas()).GetComponent<GrappleUI>();
         grappleUI.onGrappleRecharged += OnGrappleRecharged;
+        grappleLockIcon = playerScript.hud?.grappleLockIcon;
     }
 
     void Update()
@@ -117,7 +118,7 @@ public class GrappleAbility : Ability
         if (isGrappling)
         {
             isGrappling = false;
-            playerScript.GetMovementScript().Enable();
+            playerScript.movementScript.Enable();
         }
     }
 
@@ -171,7 +172,7 @@ public class GrappleAbility : Ability
         }
 
         isGrappling = true;
-        playerScript.GetMovementScript().Disable();
+        playerScript.movementScript.Disable();
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
 

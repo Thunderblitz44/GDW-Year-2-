@@ -1,8 +1,13 @@
+using UnityEngine;
 
 public class Player : DamageableEntity
 {
-    PlayerMovement movementScript;
-    PlayerCameras playerCamerasScript;
+    public PlayerMovement movementScript { get; private set; }
+    public PlayerCameras cameraScript { get; private set; }
+    public PlayerAbilities abilitiesScript { get; private set; }
+    public PlayerAnimator animatorScript { get; private set; }
+    public HUD hud { get; private set; }
+    [SerializeField] private HUD _hud;
 
     // INPUT
     ActionMap actions;
@@ -12,7 +17,10 @@ public class Player : DamageableEntity
         if (!IsOwner) return;
 
         movementScript = GetComponent<PlayerMovement>();
-        playerCamerasScript = GetComponent<PlayerCameras>();
+        cameraScript = GetComponent<PlayerCameras>();
+        abilitiesScript = GetComponent<PlayerAbilities>();
+        animatorScript = GetComponent<PlayerAnimator>();
+        hud = _hud;
 
         actions = new ActionMap();
 
@@ -31,7 +39,4 @@ public class Player : DamageableEntity
         actions.Dispose();
         base.OnDestroy();
     }
-
-    public PlayerCameras GetCameraControllerScript() => playerCamerasScript;
-    public PlayerMovement GetMovementScript() => movementScript;
 }

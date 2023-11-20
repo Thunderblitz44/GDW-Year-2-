@@ -26,7 +26,7 @@ public class PortalAbility : Ability
     void Start()
     {
         playerScript = GetComponent<Player>();
-        body = playerScript.GetMovementScript().GetBody();
+        body = playerScript.movementScript.GetBody();
     }
 
     void Update()

@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+
+
+    Player player;
+    // all of the ui the player needs
+
+
     // Start is called before the first frame update
     void Start()
     {

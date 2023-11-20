@@ -29,7 +29,7 @@ public class DashAbility : Ability
     {
         playerScript = GetComponent<Player>();
         rb = GetComponent<Rigidbody>();
-        body = playerScript.GetMovementScript().GetBody();
+        body = playerScript.movementScript.GetBody();
 
         dashUI = Instantiate(dashMeterPrefab, GameManager.instance.GetCanvas()).GetComponent<DashUI>();
         dashUI.SetDashVisual(maxDashes);
@@ -47,12 +47,12 @@ public class DashAbility : Ability
         // raycast - make sure there are no obstacles in the way
         float newDist = dashDistance;
 
-        Transform body = playerScript.GetMovementScript().GetBody();
+        Transform body = playerScript.movementScript.GetBody();
         Transform cam = Camera.main.transform;
         Vector3 end;
 
         // calculate end for the raycast
-        if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
+        if (playerScript.movementScript.IsMoving()) end = body.position + playerScript.movementScript.GetMoveDirection() * newDist;
         else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
         RaycastHit hit;
@@ -63,7 +63,7 @@ public class DashAbility : Ability
         }
 
         // re-calculate end in case newDist changed
-        if (playerScript.GetMovementScript().IsMoving()) end = body.position + playerScript.GetMovementScript().GetMoveDirection() * newDist;
+        if (playerScript.movementScript.IsMoving()) end = body.position + playerScript.movementScript.GetMoveDirection() * newDist;
         else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
         // lerp it
@@ -77,11 +77,11 @@ public class DashAbility : Ability
 
     IEnumerator DashRoutine(Vector3 endPos)
     {
-        playerScript.GetMovementScript().Disable();
+        playerScript.movementScript.Disable();
         Vector3 startPos = transform.position;
         float time = 0;
         float dashTime = dashCurve.keys[1].time;
-        CinemachineFreeLook camera = playerScript.GetCameraControllerScript().GetFreeLookCamera();
+        CinemachineFreeLook camera = playerScript.cameraScript.GetFreeLookCamera();
         float startFOV = camera.m_Lens.FieldOfView;
         float targetFOV = StaticUtilities.defaultFOV + dashFovIncrease;
         while (time < dashTime)
@@ -98,7 +98,7 @@ public class DashAbility : Ability
         }
 
         // dash end
-        playerScript.GetMovementScript().Enable();
+        playerScript.movementScript.Enable();
         isDashing = false;
 
         // cooldown
