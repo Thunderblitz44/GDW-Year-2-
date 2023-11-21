@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour, IInputExpander
 {
+    [SerializeField] bool isSimple = false;
+    [SerializeField] float simpleMoveSpeed = 5f;
+
     // MOVEMENT
     [Header("Movement")]
     [SerializeField] float walkSpeed = 5f;
@@ -82,10 +85,12 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     private void Start()
     {
-        onPlayerLanded += OnLanded;
         rb = GetComponent<Rigidbody>();
-
         rb.freezeRotation = true;
+
+        if (isSimple) return;
+        
+        onPlayerLanded += OnLanded;
         readyToJump = true;
         normalYScale = transform.localScale.y;
         moveSpeed = walkSpeed;
@@ -93,7 +98,7 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     private void Update()
     {
-        if (ignoreStates || !IsOwner) return;
+        if (ignoreStates || !IsOwner || isSimple) return;
 
         GroundCheck();
         SpeedControl();
@@ -137,7 +142,8 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
     {
         if (!IsOwner) return;
 
-        Move();
+        if (!isSimple) Move();
+        else SimpleMove();
     }
 
 
@@ -163,6 +169,12 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
         {
             inputMoveDirection = Vector3.zero;
         };
+
+        if (isSimple)
+        {
+            EnableLocomotion();
+            return;
+        }
 
         // Run
         actions.Locomotion.Run.started += ctx =>
@@ -229,6 +241,16 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
         // move
         if (isGrounded) rb.AddForce(moveDirection * moveSpeed * rb.mass * 10f, ForceMode.Force);
         else rb.AddForce(moveDirection * moveSpeed * airMultiplier * rb.mass * 10f, ForceMode.Force);
+    }
+
+    void SimpleMove()
+    {
+        Vector3 cameraFwd = Camera.main.transform.forward;
+        Vector3 cameraRight = Camera.main.transform.right;
+        cameraFwd.y = 0f;
+        cameraRight.y = 0f;
+        moveDirection = cameraFwd * inputMoveDirection.z + cameraRight * inputMoveDirection.x;
+        rb.AddForce(moveDirection * simpleMoveSpeed, ForceMode.Force);
     }
 
     void Run()

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Transform _worldCanvas;
     [SerializeField] Camera _lobbyCamera;
     public List<Transform> renderedGrappleTargets = new();
+    public List<LevelManager> levels = new();
 
     public Camera lobbyCamera { get { return _lobbyCamera; } }
     public Transform worldCanvas { get { return _worldCanvas; } } 
