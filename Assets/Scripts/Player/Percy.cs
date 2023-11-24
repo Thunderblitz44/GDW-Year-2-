@@ -183,16 +183,21 @@ public class Percy : Player
 
     private void CheckGrappleTargets()
     {
-        if (GameManager.Instance.renderedGrappleTargets.Count > 0)
-        {
-            // sort by visible
-            StaticUtilities.SortByVisible(ref GameManager.Instance.renderedGrappleTargets, "Interactable");
+        List<Transform> targets = GameManager.Instance.renderedGrappleTargets;
 
-            // sort by distance
-            StaticUtilities.SortByDistanceToScreenCenter(ref GameManager.Instance.renderedGrappleTargets);
+        if (targets.Count > 0)
+        {
+            SortTargets(ref targets);
+
+            //if (StaticUtilities.visibleTargets == 0)
+            //{
+            //    lockedTarget = null;
+            //    grappleLockIcon.enabled = false;
+            //    return;
+            //}
 
             // is it the same?
-            if (lockedTarget == GameManager.Instance.renderedGrappleTargets[0]) return;
+            if (lockedTarget == targets[0]) return;
             // are we switching?
             else if (lockedTarget)
             {
@@ -201,12 +206,21 @@ public class Percy : Player
             }
 
             // if its the first / change
-            lockedTarget = GameManager.Instance.renderedGrappleTargets[0];
+            lockedTarget = targets[0];
             grappleLockIcon.enabled = true;
         }
         else
         {
             grappleLockIcon.enabled = false;
         }
+    }
+
+    public void SortTargets(ref List<Transform> targets)
+    {
+        // sort by distance
+        targets = StaticUtilities.SortByDistanceToScreenCenter(targets);
+
+        // sort by visible
+        targets = StaticUtilities.SortByVisible(targets, 7); // Interactable layer == 7
     }
 }

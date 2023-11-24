@@ -21,15 +21,19 @@ public class EnemyMovement : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         attackHandler = GetComponent<EnemyAttack>();
+        agent.stoppingDistance = attackHandler.GetRange() / 2;
     }
 
     private void OnDestroy()
     {
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!agent) return;
+
         // timer to recalculate navmesh agent
         updateTimer += Time.deltaTime;
         if (updateTimer < destinationRecalculationInterval)
@@ -54,7 +58,6 @@ public class EnemyMovement : MonoBehaviour
         if (distance < (attackHandler ? attackHandler.GetRange() : 2) && !targetReached)
         {
             targetReached = true;
-            agent.isStopped = true;
             onAttackDistanceReached?.Invoke();
         }
         // target is fleeing. Can we attack? Is the target outside of our range?
@@ -63,7 +66,6 @@ public class EnemyMovement : MonoBehaviour
             distance >= (attackHandler ? attackHandler.GetRange() : 2))
         {
             targetReached = false;
-            agent.isStopped = false;
             onTargetFled?.Invoke();
         }
     }
