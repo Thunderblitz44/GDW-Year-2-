@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Zombie))]
-public class ZombieDetection : MonoBehaviour
+[RequireComponent(typeof(Enemy))]
+public class EnemyDetection : MonoBehaviour
 {
     public EventHandler<Transform> onPlayerDetected;
-    public Action onPlayerLost;
+    public EventHandler<Transform> onPlayerLost;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -21,7 +19,7 @@ public class ZombieDetection : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            onPlayerLost?.Invoke();
+            onPlayerLost?.Invoke(this, other.transform);
         }
     }
 }

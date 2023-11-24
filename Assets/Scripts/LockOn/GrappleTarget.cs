@@ -55,13 +55,14 @@ public class GrappleTarget : MonoBehaviour
         GameManager.Instance.renderedGrappleTargets.Add(transform);
     }
 
+
     void SetInvisible()
     {
         // not visible
         if (!GameManager.Instance.renderedGrappleTargets.Contains(transform)) return;
 
         //Debug.Log(name + " is not visible");
-        GameManager.Instance.renderedGrappleTargets.Add(transform);
+        GameManager.Instance.renderedGrappleTargets.Remove(transform);
     }
 
     public int GetPriorityLevel() => priority;
