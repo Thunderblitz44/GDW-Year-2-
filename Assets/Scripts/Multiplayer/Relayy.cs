@@ -8,7 +8,7 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 
-public class Relay : MonoBehaviour
+public class Relayy : MonoBehaviour
 {
     [SerializeField] TMP_InputField inputField;
     [SerializeField] TextMeshProUGUI joinCodeTxt;

@@ -371,15 +371,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2947857840393330109}
   - component: {fileID: 7036208878613473240}
-  - component: {fileID: 8654564424173767094}
   - component: {fileID: 2333083021413494550}
   - component: {fileID: 3702519542577021899}
-  - component: {fileID: 1967368418998534983}
   - component: {fileID: 5451511454418991616}
   - component: {fileID: 7380965925753356306}
-  - component: {fileID: 5742725105406025337}
-  - component: {fileID: 6147882240341307977}
   - component: {fileID: 4021086256036897579}
+  - component: {fileID: 1382890133062850511}
   m_Layer: 8
   m_Name: Warrior
   m_TagString: Player
@@ -432,22 +429,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 1
---- !u!114 &8654564424173767094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887668146483392176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7daf4f8bb7e23154c8b96801fdd2942f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floatingTextPrefab: {fileID: 144886900167941923, guid: 55652b8c6a95fec4c8cf0a4c1acb9422, type: 3}
-  enableDamageNumbers: 0
-  damageNumberSpawnHeight: 1.5
-  _hud: {fileID: 2035686840774950980}
 --- !u!114 &2333083021413494550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,6 +441,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9a67c866d32d044f81bf8857f70b4e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSimple: 0
+  simpleMoveSpeed: 5
   walkSpeed: 5
   runSpeed: 10
   runSpeedCurve:
@@ -517,23 +500,6 @@ MonoBehaviour:
   lockOnLayers:
     serializedVersion: 2
     m_Bits: 128
---- !u!114 &1967368418998534983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887668146483392176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a9c85f4ede5e934a9598bcdd430b54c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  abilities:
-  - {fileID: 5742725105406025337}
-  - {fileID: 6147882240341307977}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &5451511454418991616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -576,71 +542,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5742725105406025337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887668146483392176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2428a7558e5322a4193d9ff740be4c0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grappleDistance: 50
-  lightWeightMaxMass: 1
-  overshoot: 5
-  playerLandingSpace: 1
-  meetInTheMiddleSpacing: 0.5
-  itemLandingSpace: 1
-  grappleCooldown: 3
-  whatIsGrapplable:
-    serializedVersion: 2
-    m_Bits: 128
-  grappleMeterPrefab: {fileID: 584547121494944393, guid: 978d7a20280b9e04ab2ab3e09c5946f7, type: 3}
-  lerpSpeed: 10
-  lerpCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &6147882240341307977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887668146483392176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3027011e9993ba4d804b72eeee2ed06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minJumpDist: 5
-  maxJumpDist: 15
-  jumpChargeSpeed: 7
-  height: 10
-  falloffMarker: {fileID: 419723686809461175, guid: e694e854b0ddfa24fa40d03359a03a4e, type: 3}
 --- !u!114 &4021086256036897579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -653,6 +554,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd4b46f69ab1c64e93cb3b0dc16473e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1382890133062850511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887668146483392176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc3a2cd79d59e304f86ae875db119d39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 0}
+  enableDamageNumbers: 0
+  damageNumberSpawnHeight: 1.5
+  _hud: {fileID: 2035686840774950980}
+  grappleDistance: 50
+  lightWeightMaxMass: 1
+  overshoot: 5
+  playerLandingSpace: 1
+  meetInTheMiddleSpacing: 0.5
+  itemLandingSpace: 1
+  grappleCooldown: 3
+  whatIsGrapplable:
+    serializedVersion: 2
+    m_Bits: 128
+  grappleMeterPrefab: {fileID: 584547121494944393, guid: 978d7a20280b9e04ab2ab3e09c5946f7, type: 3}
+  grappleLockIcon: {fileID: 689828801463700624}
+  lerpSpeed: 4
 --- !u!1 &1196649634423203180
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,7 +1147,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2510758024716110402}
-  m_LocalRotation: {x: 0.13046108, y: 0.8332742, z: -0.22225727, w: 0.4891173}
+  m_LocalRotation: {x: 0.13046111, y: 0.8332742, z: -0.22225727, w: 0.4891173}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

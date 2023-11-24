@@ -1,16 +1,15 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Zombie))]
-public class ZombieBehaviours : MonoBehaviour
+[RequireComponent(typeof(Enemy))]
+public class EnemyBehaviours : MonoBehaviour
 {
     public enum Behaviour
     {
         passive,
         following,
         aggressive_chase,
+        attacking,
         dying
     }
 

@@ -11,9 +11,9 @@ public class Player : DamageableEntity
     [SerializeField] private HUD _hud;
 
     // INPUT
-    ActionMap actions;
+    internal ActionMap actions;
 
-    private void Start()
+    internal virtual void Start()
     {
         if (!IsOwner) return;
         movementScript = GetComponent<PlayerMovement>();
@@ -32,12 +32,7 @@ public class Player : DamageableEntity
             module.SetupInputEvents(this, actions);
         }
 
-        actions.General.Escape.performed += ctx =>
-        {
-            PausePlayer();
-            hud.pauseMenu.Pause();
-        };
-        actions.General.Enable();
+        SetupInputEvents();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -49,6 +44,17 @@ public class Player : DamageableEntity
         if (!IsOwner) return; 
         actions.Dispose();
         base.OnDestroy();
+    }
+
+    public virtual void SetupInputEvents()
+    {
+        actions.General.Escape.performed += ctx =>
+        {
+            PausePlayer();
+            hud.pauseMenu.Pause();
+        };
+
+        actions.General.Enable();
     }
 
     public void PausePlayer()

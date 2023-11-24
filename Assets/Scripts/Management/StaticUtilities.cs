@@ -5,23 +5,50 @@ using System.Linq;
 
 public static class StaticUtilities
 {
-    public static float defaultFOV = 50f;
-    public static float damageOverTimeInterval = 0.25f;
-    public static Color physicalDamageColor = Color.white;
-    public static Color magicDamageColor = Color.magenta;
-    public static Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
+    public const float defaultFOV = 50f;
+    public const float damageOverTimeInterval = 0.25f;
+    public static readonly Color physicalDamageColor = Color.white;
+    public static readonly Color magicDamageColor = Color.magenta;
+    public static readonly Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
 
-    public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
+    // ZOMBIE ANIMATION KEYWORDS
+    public const string ZOMBIE_IDLE = "Zombie Idle";
+    public const string ZOMBIE_WALK = "Zombie Walk";
+    public const string ZOMBIE_RUN = "Zombie Run";
+    public const string ZOMBIE_CRAWL = "Zombie Crawl";
+    public const string ZOMBIE_ATTACK = "Zombie Attack";
+
+    public static void SortByDistanceToScreenCenter(ref List<Transform> objects)
     {
-        return objects.OrderBy(x => Vector2.Distance(centerOfScreen, (Vector2)Camera.main.WorldToScreenPoint(x.transform.position))).ToList();
+        objects.OrderBy(x => Vector2.Distance(centerOfScreen, (Vector2)Camera.main.WorldToScreenPoint(x.transform.position))).ToList();
+    }
+
+    public static void SortByVisible(ref List<Transform> objects, string checklayer)
+    {
+        objects.OrderBy(x=> IsVisible(x, checklayer)).ToList();
+    }
+
+    public static bool IsVisible(Transform obj, string layer)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, (Camera.main.transform.position - obj.position).normalized, out hit))
+        {
+            if (hit.transform.gameObject.layer != LayerMask.NameToLayer(layer))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static Vector3 GetCameraDir()
     {
-        Vector3 dir = Vector3.zero;
-        dir.x = Camera.main.transform.forward.x;
-        dir.z = Camera.main.transform.forward.z;
-        return dir;
+        return Vector3.right * Camera.main.transform.forward.x +
+            Vector3.forward * Camera.main.transform.forward.z;
     }
 
     public static Vector3 GetCameraLook()

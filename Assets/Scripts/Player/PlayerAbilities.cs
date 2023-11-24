@@ -19,6 +19,9 @@ public class PlayerAbilities : NetworkBehaviour, IInputExpander
         playerScript = (Player)sender;
         this.actions = actions;
 
+        
+
+
         // Abilities
         actions.Abilities.First.started += ctx => abilities[0]?.Part1();
         actions.Abilities.First.canceled += ctx => abilities[0]?.Part2();

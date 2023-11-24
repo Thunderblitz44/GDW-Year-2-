@@ -91,7 +91,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 357472947703000960}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.9558516, y: 0, z: 0.4179051}
+  m_LocalPosition: {x: -1.090473, y: 1.7999288, z: -0.5547115}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -141,7 +141,7 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_YAxis:
-    Value: 0.5
+    Value: 0.86462426
     m_SpeedMode: 1
     m_MaxSpeed: 0.0005
     m_AccelTime: 0.1
@@ -165,7 +165,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 102.060974
+    Value: 63.03807
     m_SpeedMode: 1
     m_MaxSpeed: 0.1
     m_AccelTime: 0.1
@@ -1124,7 +1124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 0, z: -2}
+  m_FollowOffset: {x: 0, y: 1.7999288, z: -1.2234527}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -1144,7 +1144,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 102.060974
+    Value: 63.03807
     m_SpeedMode: 0
     m_MaxSpeed: 300
     m_AccelTime: 0.1
@@ -1216,7 +1216,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3425531092986436731}
-  m_LocalRotation: {x: 0.047248755, y: 0.8586413, z: -0.08049436, w: 0.5040073}
+  m_LocalRotation: {x: 0.3773741, y: 0.5600665, z: -0.31751245, w: 0.66565764}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1771,7 +1771,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5466714264201696672}
-  m_LocalRotation: {x: -0.035398997, y: 0.8602949, z: 0.060306735, w: 0.504978}
+  m_LocalRotation: {x: 0.2879438, y: 0.5964854, z: -0.24226819, w: 0.7089427}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2056,15 +2056,11 @@ GameObject:
   m_Component:
   - component: {fileID: 387064961278014476}
   - component: {fileID: 5748980221791771560}
-  - component: {fileID: 3720520447508122480}
   - component: {fileID: 4605083347066939109}
-  - component: {fileID: 5500339186449939620}
-  - component: {fileID: 6196496520582018649}
   - component: {fileID: 3753043690672767859}
   - component: {fileID: 8189055354040365586}
-  - component: {fileID: 5944335279164211386}
-  - component: {fileID: 8768873299996488835}
   - component: {fileID: 1751076012156172487}
+  - component: {fileID: 4166452640238489749}
   m_Layer: 8
   m_Name: Girl
   m_TagString: Player
@@ -2117,22 +2113,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 1
---- !u!114 &3720520447508122480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5868809365960397335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7daf4f8bb7e23154c8b96801fdd2942f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floatingTextPrefab: {fileID: 144886900167941923, guid: 55652b8c6a95fec4c8cf0a4c1acb9422, type: 3}
-  enableDamageNumbers: 0
-  damageNumberSpawnHeight: 1.5
-  _hud: {fileID: 2035686840774950980}
 --- !u!114 &4605083347066939109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2145,6 +2125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9a67c866d32d044f81bf8857f70b4e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSimple: 0
+  simpleMoveSpeed: 5
   walkSpeed: 5
   runSpeed: 10
   runSpeedCurve:
@@ -2186,39 +2168,6 @@ MonoBehaviour:
   isGrounded: 0
   orientation: {fileID: 1638575974910813918}
   body: {fileID: 3294396875176164672}
---- !u!114 &5500339186449939620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5868809365960397335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0efcaeb5cc0e4844096bfa6d198e635c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aim: {fileID: 1271461423133245013}
-  lockOnLayers:
-    serializedVersion: 2
-    m_Bits: 128
---- !u!114 &6196496520582018649
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5868809365960397335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a9c85f4ede5e934a9598bcdd430b54c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  abilities:
-  - {fileID: 5944335279164211386}
-  - {fileID: 8768873299996488835}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &3753043690672767859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2261,119 +2210,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5944335279164211386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5868809365960397335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db4394373c1ec6c4196eee3d5d184dae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minTeleportDist: 5
-  maxTeleportDist: 30
-  portalChargeSpeed: 2
-  maxUses: 2
-  portalPrefab: {fileID: 3322302593512922999, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
-  previewPortalPrefab: {fileID: 5343261354240463372, guid: aeb1b583ce44a444586b0c395f15684a, type: 3}
---- !u!114 &8768873299996488835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5868809365960397335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 911a86b9c294a55489b7b37f63620779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dashDistance: 20
-  dashSpeed: 10
-  maxDashes: 3
-  timeLimitBetweenDashes: 1
-  dashCooldown: 5
-  dashCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  dashFovIntensityCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -0.019607842
-      outSlope: -0.019607842
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.32484055
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  dashFovIncrease: 10
-  fovRestoreCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  fovRestoreSpeed: 5
-  whatIsDashObstacle:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  dashMeterPrefab: {fileID: 3716428700116357348, guid: 2028562b395f7654a92ee0cb67329858, type: 3}
 --- !u!114 &1751076012156172487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2386,6 +2222,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd4b46f69ab1c64e93cb3b0dc16473e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4166452640238489749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5868809365960397335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e8c1feac61949a409c5ff3bec2ba41d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 0}
+  enableDamageNumbers: 0
+  damageNumberSpawnHeight: 1.5
+  _hud: {fileID: 2035686840774950980}
+  portalRange: 30
+  portalChargeSpeed: 2
+  portalPrefab: {fileID: 3322302593512922999, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
+  previewPortalPrefab: {fileID: 5343261354240463372, guid: aeb1b583ce44a444586b0c395f15684a, type: 3}
+  portalPlacableSurfaces:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &5930732787410253678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2445,7 +2304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 0, z: -2}
+  m_FollowOffset: {x: 0, y: 1.7999288, z: -1.2234527}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -2465,7 +2324,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 102.060974
+    Value: 63.03807
     m_SpeedMode: 0
     m_MaxSpeed: 300
     m_AccelTime: 0.1
@@ -3042,8 +2901,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7205208087816201677}
-  m_LocalRotation: {x: -0.020921385, y: 0.86166924, z: 0.035642274, w: 0.50578463}
-  m_LocalPosition: {x: -1.563714, y: 0.26, z: 0.3341174}
+  m_LocalRotation: {x: 0.3596462, y: 0.568264, z: -0.30259672, w: 0.67540056}
+  m_LocalPosition: {x: -1.090473, y: 1.7999288, z: -0.5547115}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3513,7 +3372,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8112918121850245619}
-  m_LocalRotation: {x: -0.020921381, y: 0.8616692, z: 0.035642266, w: 0.50578475}
+  m_LocalRotation: {x: 0.3081306, y: 0.5893019, z: -0.25925282, w: 0.7004048}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3820,7 +3679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 0, z: -2}
+  m_FollowOffset: {x: 0, y: 1.7999288, z: -1.2234527}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -3840,7 +3699,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 102.060974
+    Value: 63.03807
     m_SpeedMode: 0
     m_MaxSpeed: 300
     m_AccelTime: 0.1
