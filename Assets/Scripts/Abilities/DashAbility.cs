@@ -2,7 +2,7 @@ using Cinemachine;
 using System.Collections;
 using UnityEngine;
 
-public class DashAbility : Ability
+public class DashAbility : MonoBehaviour
 {
     [SerializeField] float dashDistance = 20f;
     [SerializeField] float dashSpeed = 10f;
@@ -36,7 +36,7 @@ public class DashAbility : Ability
         dashUI.onDashesRecharged += OnDashRecharged;
     }
 
-    public override void Part1()
+    public  void Part1()
     {
         if (isDashing || dashes >= maxDashes) return;
         isDashing = true;
@@ -81,7 +81,7 @@ public class DashAbility : Ability
         Vector3 startPos = transform.position;
         float time = 0;
         float dashTime = dashCurve.keys[1].time;
-        CinemachineFreeLook camera = playerScript.cameraScript.GetFreeLookCamera();
+        CinemachineFreeLook camera = playerScript.freeLookCam;
         float startFOV = camera.m_Lens.FieldOfView;
         float targetFOV = StaticUtilities.defaultFOV + dashFovIncrease;
         while (time < dashTime)
@@ -138,9 +138,5 @@ public class DashAbility : Ability
     {
         dashes = maxDashes;
         dashUI.RechargeDashes(dashCooldown);
-    }
-
-    public override void Part2()
-    {
     }
 }

@@ -21,11 +21,15 @@ public class Percy : Player
     bool isGrappling = false;
     bool grappleReady = true;
     GrappleUI grappleUI;
-
     Transform lockedTarget;
     Vector3 lockLerpStart;
     AnimationCurve lerpCurve = AnimationCurve.EaseInOut(0,0,1,1);
 
+
+    [Header("Jump")]
+    [SerializeField] float jumpBoost = 3;
+    [SerializeField] float duration = 3;
+    float jumpBufftime;
 
 
     float lerpTime;
@@ -49,14 +53,19 @@ public class Percy : Player
     {
         if (!IsOwner) return;
 
-        // slerp lock icon
+        //...  Grapple  ...//
         SetLockonIconPosition();
-
+        
         timer += Time.deltaTime;
-        if (timer < targetsCheckDelay) return;
-        timer = 0f;
+        if (timer > targetsCheckDelay)
+        {
+            timer = 0f;
+            CheckGrappleTargets();
+        } 
 
-        CheckGrappleTargets();
+
+        //...  Jump  ...//
+
     }
 
     public override void SetupInputEvents()

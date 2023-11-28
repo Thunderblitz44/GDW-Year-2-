@@ -1852,7 +1852,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 835692556}
-    PlayerPrefab: {fileID: 1497200480809033595, guid: de17adb0da3b6b04bbac0bcd3b7fdc75, type: 3}
+    PlayerPrefab: {fileID: 1497200480809033595, guid: cab9acd83e1f4b547a64279743463d4f, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 4cb24caf3d5128b4c950d20edc3092e7, type: 2}
@@ -2493,7 +2493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!136 &524629971
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2784,7 +2784,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524629970}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ba3b2e9e29e9384eb299ac3eeb7804a, type: 3}
   m_Name: 
@@ -2842,16 +2842,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524629970}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d4d5b14b62e2ee41b20c5918c640530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0
   range: 2
-  angle: 90
-  rate: 1
   attackDelay: 1
+  projectilePrefab: {fileID: 0}
 --- !u!1 &564161777
 GameObject:
   m_ObjectHideFlags: 0
@@ -3416,7 +3415,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &673920367
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3452,9 +3451,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 0
   range: 20
-  angle: 90
-  rate: 1
   attackDelay: 1
+  projectilePrefab: {fileID: 0}
 --- !u!114 &673920369
 MonoBehaviour:
   m_ObjectHideFlags: 0
