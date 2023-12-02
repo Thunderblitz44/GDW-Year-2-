@@ -372,7 +372,6 @@ GameObject:
   - component: {fileID: 2947857840393330109}
   - component: {fileID: 7036208878613473240}
   - component: {fileID: 2333083021413494550}
-  - component: {fileID: 3702519542577021899}
   - component: {fileID: 5451511454418991616}
   - component: {fileID: 7380965925753356306}
   - component: {fileID: 4021086256036897579}
@@ -484,22 +483,6 @@ MonoBehaviour:
   isGrounded: 0
   orientation: {fileID: 1756968749614542712}
   body: {fileID: 6100666374386466769}
---- !u!114 &3702519542577021899
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887668146483392176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0efcaeb5cc0e4844096bfa6d198e635c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aim: {fileID: 8903155820636043882}
-  lockOnLayers:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!114 &5451511454418991616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,6 +553,7 @@ MonoBehaviour:
   enableDamageNumbers: 0
   damageNumberSpawnHeight: 1.5
   _hud: {fileID: 2035686840774950980}
+  freeLookCam: {fileID: 4293984878753594149}
   grappleDistance: 50
   lightWeightMaxMass: 1
   overshoot: 5
@@ -583,6 +567,8 @@ MonoBehaviour:
   grappleMeterPrefab: {fileID: 584547121494944393, guid: 978d7a20280b9e04ab2ab3e09c5946f7, type: 3}
   grappleLockIcon: {fileID: 689828801463700624}
   lerpSpeed: 4
+  jumpBoost: 3
+  duration: 3
 --- !u!1 &1196649634423203180
 GameObject:
   m_ObjectHideFlags: 0

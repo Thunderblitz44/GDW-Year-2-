@@ -37,13 +37,12 @@ public class Percy : Player
 
     float targetsCheckDelay = 0.1f;
 
-    Player playerScript;
     Rigidbody rb;
 
     internal override void Start()
     {
         base.Start();
-        rb = GetComponent<Rigidbody>();
+        rb = movementScript.GetRigidbody();
 
         grappleUI = Instantiate(grappleMeterPrefab, GameManager.Instance.canvas).GetComponent<GrappleUI>();
         grappleUI.onGrappleRecharged += OnGrappleRecharged;
@@ -130,7 +129,7 @@ public class Percy : Player
             }
 
             isGrappling = true;
-            playerScript.movementScript.Disable();
+            movementScript.Disable();
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
 
@@ -163,7 +162,7 @@ public class Percy : Player
         if (isGrappling)
         {
             isGrappling = false;
-            playerScript.movementScript.Enable();
+            movementScript.Enable();
         }
     }
 
