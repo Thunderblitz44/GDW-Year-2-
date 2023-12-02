@@ -10,6 +10,7 @@ public static class StaticUtilities
     public static readonly Color physicalDamageColor = Color.white;
     public static readonly Color magicDamageColor = Color.magenta;
     public static readonly Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
+    public static int visibleTargets;
 
     // ZOMBIE ANIMATION KEYWORDS
     public const string ZOMBIE_IDLE = "Zombie Idle";
@@ -18,27 +19,30 @@ public static class StaticUtilities
     public const string ZOMBIE_CRAWL = "Zombie Crawl";
     public const string ZOMBIE_ATTACK = "Zombie Attack";
 
-    public static void SortByDistanceToScreenCenter(ref List<Transform> objects)
+
+    // RANGED GOLEM ANIMATION KEYWORDS
+    public const string GOLEM_RANGER_ATTACK = "Golem Ranger Shooting";
+
+
+    public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
     {
-        objects.OrderBy(x => Vector2.Distance(centerOfScreen, (Vector2)Camera.main.WorldToScreenPoint(x.transform.position))).ToList();
+        return objects.OrderBy(x => Vector2.Distance(centerOfScreen, (Vector2)Camera.main.WorldToScreenPoint(x.transform.position))).ToList();
     }
 
-    public static void SortByVisible(ref List<Transform> objects, string checklayer)
+    public static List<Transform> SortByVisible(List<Transform> objects, int checklayer)
     {
-        objects.OrderBy(x=> IsVisible(x, checklayer)).ToList();
+        visibleTargets = 0;
+        return objects.OrderBy(x => IsVisible(x, checklayer)).ToList();
     }
 
-    public static bool IsVisible(Transform obj, string layer)
+    public static bool IsVisible(Transform obj, int layer)
     {
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, (Camera.main.transform.position - obj.position).normalized, out hit))
+        if (Physics.Raycast(Camera.main.transform.position, obj.position - Camera.main.transform.position, out hit))
         {
-            if (hit.transform.gameObject.layer != LayerMask.NameToLayer(layer))
+            if (hit.transform.gameObject.layer == layer)
             {
-                return false;
-            }
-            else
-            {
+                visibleTargets++; 
                 return true;
             }
         }

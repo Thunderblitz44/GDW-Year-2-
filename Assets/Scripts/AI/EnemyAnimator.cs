@@ -1,26 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Enemy))]
 public class EnemyAnimator : MonoBehaviour
 {
-    Animator animator;
+    [SerializeField] Animator animator;
 
     string currentAnimation;
 
-    private void Awake()
+    public bool isAnimationPlaying(int layer)
     {
-        animator = GetComponent<Animator>();
+        return animator.GetCurrentAnimatorStateInfo(layer).normalizedTime < 1;
     }
 
     public void ChangeAnimation(string newAnimation)
     {
+        if (!animator) return;
+
         if (newAnimation == currentAnimation) return;
         PlayAnimation(newAnimation);
     }
 
-    void PlayAnimation(string animation)
+    public void PlayAnimation(string animation)
     {
         if (!animator) return;
 

@@ -1,14 +1,15 @@
 using UnityEngine;
+using Cinemachine;
 
 public class Player : DamageableEntity
 {
     public PlayerMovement movementScript { get; private set; }
-    public PlayerCameras cameraScript { get; private set; }
-    public PlayerAbilities abilitiesScript { get; private set; }
     public PlayerAnimator animatorScript { get; private set; }
     public PlayerMenuController pauseScript { get; private set; }
     public HUD hud { get; private set; }
     [SerializeField] private HUD _hud;
+
+    public CinemachineFreeLook freeLookCam;
 
     // INPUT
     internal ActionMap actions;
@@ -17,8 +18,6 @@ public class Player : DamageableEntity
     {
         if (!IsOwner) return;
         movementScript = GetComponent<PlayerMovement>();
-        cameraScript = GetComponent<PlayerCameras>();
-        abilitiesScript = GetComponent<PlayerAbilities>();
         animatorScript = GetComponent<PlayerAnimator>();
         pauseScript = GetComponent<PlayerMenuController>();
         hud = _hud;

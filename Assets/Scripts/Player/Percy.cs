@@ -21,11 +21,15 @@ public class Percy : Player
     bool isGrappling = false;
     bool grappleReady = true;
     GrappleUI grappleUI;
-
     Transform lockedTarget;
     Vector3 lockLerpStart;
     AnimationCurve lerpCurve = AnimationCurve.EaseInOut(0,0,1,1);
 
+
+    [Header("Jump")]
+    [SerializeField] float jumpBoost = 3;
+    [SerializeField] float duration = 3;
+    float jumpBufftime;
 
 
     float lerpTime;
@@ -33,13 +37,12 @@ public class Percy : Player
 
     float targetsCheckDelay = 0.1f;
 
-    Player playerScript;
     Rigidbody rb;
 
     internal override void Start()
     {
         base.Start();
-        rb = GetComponent<Rigidbody>();
+        rb = movementScript.GetRigidbody();
 
         grappleUI = Instantiate(grappleMeterPrefab, GameManager.Instance.canvas).GetComponent<GrappleUI>();
         grappleUI.onGrappleRecharged += OnGrappleRecharged;
@@ -49,14 +52,19 @@ public class Percy : Player
     {
         if (!IsOwner) return;
 
-        // slerp lock icon
+        //...  Grapple  ...//
         SetLockonIconPosition();
-
+        
         timer += Time.deltaTime;
-        if (timer < targetsCheckDelay) return;
-        timer = 0f;
+        if (timer > targetsCheckDelay)
+        {
+            timer = 0f;
+            CheckGrappleTargets();
+        } 
 
-        CheckGrappleTargets();
+
+        //...  Jump  ...//
+
     }
 
     public override void SetupInputEvents()
@@ -121,7 +129,7 @@ public class Percy : Player
             }
 
             isGrappling = true;
-            playerScript.movementScript.Disable();
+            movementScript.Disable();
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(launchForce * rb.mass, ForceMode.Impulse);
 
@@ -154,7 +162,7 @@ public class Percy : Player
         if (isGrappling)
         {
             isGrappling = false;
-            playerScript.movementScript.Enable();
+            movementScript.Enable();
         }
     }
 
@@ -183,16 +191,21 @@ public class Percy : Player
 
     private void CheckGrappleTargets()
     {
-        if (GameManager.Instance.renderedGrappleTargets.Count > 0)
-        {
-            // sort by visible
-            StaticUtilities.SortByVisible(ref GameManager.Instance.renderedGrappleTargets, "Interactable");
+        List<Transform> targets = GameManager.Instance.renderedGrappleTargets;
 
-            // sort by distance
-            StaticUtilities.SortByDistanceToScreenCenter(ref GameManager.Instance.renderedGrappleTargets);
+        if (targets.Count > 0)
+        {
+            SortTargets(ref targets);
+
+            //if (StaticUtilities.visibleTargets == 0)
+            //{
+            //    lockedTarget = null;
+            //    grappleLockIcon.enabled = false;
+            //    return;
+            //}
 
             // is it the same?
-            if (lockedTarget == GameManager.Instance.renderedGrappleTargets[0]) return;
+            if (lockedTarget == targets[0]) return;
             // are we switching?
             else if (lockedTarget)
             {
@@ -201,12 +214,21 @@ public class Percy : Player
             }
 
             // if its the first / change
-            lockedTarget = GameManager.Instance.renderedGrappleTargets[0];
+            lockedTarget = targets[0];
             grappleLockIcon.enabled = true;
         }
         else
         {
             grappleLockIcon.enabled = false;
         }
+    }
+
+    public void SortTargets(ref List<Transform> targets)
+    {
+        // sort by distance
+        targets = StaticUtilities.SortByDistanceToScreenCenter(targets);
+
+        // sort by visible
+        targets = StaticUtilities.SortByVisible(targets, 7); // Interactable layer == 7
     }
 }
