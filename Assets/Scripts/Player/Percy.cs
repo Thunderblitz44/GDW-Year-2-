@@ -41,6 +41,7 @@ public class Percy : Player
 
     internal override void Start()
     {
+        if (!IsOwner) return;
         base.Start();
         rb = movementScript.GetRigidbody();
 
@@ -229,6 +230,6 @@ public class Percy : Player
         targets = StaticUtilities.SortByDistanceToScreenCenter(targets);
 
         // sort by visible
-        targets = StaticUtilities.SortByVisible(targets, 7); // Interactable layer == 7
+        //targets = StaticUtilities.SortByVisible(targets, 7); // Interactable layer == 7
     }
 }

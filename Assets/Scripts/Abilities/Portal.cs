@@ -14,18 +14,9 @@ public class Portal : NetworkBehaviour
     public float portalHeight = 1;
     float time;
 
-    private void Awake()
-    {
-        SpawnServerRPC();
-    }
+    
 
-    [ServerRpc(RequireOwnership = false)]
-    void SpawnServerRPC()
-    {
-        NetworkObject.Spawn(true);
-    }
-
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         sr = GetComponent<SpriteRenderer>();
     }
@@ -48,7 +39,7 @@ public class Portal : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        collision.transform.position = otherPortal.transform.position + otherPortal.transform.forward;
+        collision.transform.position = otherPortal.transform.position - otherPortal.transform.forward;
 
         otherPortal.uses++;
         if (++uses == maxUses) 

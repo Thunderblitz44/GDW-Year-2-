@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Elana : Player
@@ -53,12 +54,14 @@ public class Elana : Player
 
     void FixedUpdate()
     {
+        if (!IsOwner) return;
+
         if (usingPortalAbility)
         {
             RaycastHit hit;
             if (Physics.Raycast(transform.position, StaticUtilities.GetCameraLook(), out hit, portalRange, portalPlacableSurfaces, QueryTriggerInteraction.Ignore))
             {
-                previewPortal.position = hit.point + Vector3.up;
+                previewPortal.position = hit.point + Vector3.up + previewPortal.forward;
                 previewPortal.LookAt(transform.position);
             }
             else
@@ -113,7 +116,12 @@ public class Elana : Player
             f.Init(maxUses, s);
             s.Init(maxUses, f);
 
-           NetworkObject.Spawn();
+            if (IsServer)
+            {
+                entryPortal.GetComponent<NetworkObject>().Spawn(true);
+                exitPortal.GetComponent<NetworkObject>().Spawn(true);
+            }
+
         };
 
         // DASH (TEMPORARY - WILL BE IMPLEMENTED INTO THE PORTAL ABILITY)
@@ -223,5 +231,11 @@ public class Elana : Player
     {
         dashes = maxDashes;
         dashUI.RechargeDashes(dashCooldown);
+    }
+
+    [ServerRpc(RequireOwnership= false)]
+    void SpawnServerRPC()
+    {
+        
     }
 }

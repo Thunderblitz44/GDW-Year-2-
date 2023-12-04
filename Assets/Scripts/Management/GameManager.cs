@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
 
@@ -12,6 +13,8 @@ public class GameManager : MonoBehaviour
     public List<LevelManager> levels = new();
 
     public List<Transform> renderedGrappleTargets = new();
+
+    public List<GameObject> playerPrefabs;
 
 
     public Camera lobbyCamera { get { return _lobbyCamera; } }
