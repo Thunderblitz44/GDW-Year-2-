@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Portal : MonoBehaviour
+public class Portal : NetworkBehaviour
 {
     int maxUses;
     int uses;
@@ -14,6 +15,17 @@ public class Portal : MonoBehaviour
     float time;
 
     private void Awake()
+    {
+        SpawnServerRPC();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void SpawnServerRPC()
+    {
+        NetworkObject.Spawn(true);
+    }
+
+    private void Start()
     {
         sr = GetComponent<SpriteRenderer>();
     }
@@ -61,7 +73,7 @@ public class Portal : MonoBehaviour
             sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 1 - (i / dissTime));
             yield return null;
         }
-
+        
         Destroy(gameObject);
     }
 }

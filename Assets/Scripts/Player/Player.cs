@@ -9,7 +9,8 @@ public class Player : DamageableEntity
     public HUD hud { get; private set; }
     [SerializeField] private HUD _hud;
 
-    public CinemachineFreeLook freeLookCam;
+    public GameObject cameraRigPrefab;
+    internal CinemachineFreeLook freeLookCam;
 
     // INPUT
     internal ActionMap actions;
@@ -17,6 +18,11 @@ public class Player : DamageableEntity
     internal virtual void Start()
     {
         if (!IsOwner) return;
+
+        freeLookCam = Instantiate(cameraRigPrefab, transform).transform.GetChild(0).GetComponent<CinemachineFreeLook>(); ;
+        freeLookCam.LookAt = transform;
+        freeLookCam.Follow = transform;
+
         movementScript = GetComponent<PlayerMovement>();
         animatorScript = GetComponent<PlayerAnimator>();
         pauseScript = GetComponent<PlayerMenuController>();

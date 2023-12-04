@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor.MPE;
 using UnityEngine;
 
 public class Elana : Player
@@ -42,6 +41,7 @@ public class Elana : Player
 
     internal override void Start()
     {
+        if (!IsOwner) return;
         base.Start();
         body = movementScript.GetBody();
         rb = movementScript.GetRigidbody();
@@ -63,7 +63,7 @@ public class Elana : Player
             }
             else
             {
-                previewPortal.position = transform.position + body.forward * portalRange;
+                previewPortal.position = transform.position + StaticUtilities.GetCameraDir() * portalRange;
                 previewPortal.LookAt(transform.position);
             }
         }
@@ -99,7 +99,7 @@ public class Elana : Player
             usingPortalAbility = false;
 
             portalRotation = previewPortal.rotation;
-            portalAPos = body.position + body.forward * 1.5f;
+            portalAPos = body.position + StaticUtilities.GetCameraDir() * 1.5f;
             portalBPos = previewPortal.position;
 
             Destroy(previewPortal.gameObject);
@@ -112,6 +112,8 @@ public class Elana : Player
             var s = exitPortal.GetComponent<Portal>();
             f.Init(maxUses, s);
             s.Init(maxUses, f);
+
+           NetworkObject.Spawn();
         };
 
         // DASH (TEMPORARY - WILL BE IMPLEMENTED INTO THE PORTAL ABILITY)
