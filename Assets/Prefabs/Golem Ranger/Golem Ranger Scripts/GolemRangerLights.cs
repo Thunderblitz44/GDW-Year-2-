@@ -19,9 +19,10 @@ public class GolemRangerLights : MonoBehaviour
 
         lineRenderers = new LineRenderer[bonesToDraw.Length - 1];
 
+        // Create the line renderers as children of the current GameObject (prefab)
         for (int i = 0; i < lineRenderers.Length; i++)
         {
-            lineRenderers[i] = CreateLineRenderer();
+            lineRenderers[i] = CreateLineRenderer(transform); // Pass the prefab's transform as the parent
         }
     }
 
@@ -37,9 +38,10 @@ public class GolemRangerLights : MonoBehaviour
         }
     }
 
-    LineRenderer CreateLineRenderer()
+    LineRenderer CreateLineRenderer(Transform parent)
     {
         GameObject lineObj = new GameObject("Line");
+        lineObj.transform.SetParent(parent); // Set the prefab as the parent of the line object
         LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
         lineRenderer.material = lineMaterial;
         lineRenderer.startWidth = 0.05f;
