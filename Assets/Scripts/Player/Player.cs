@@ -1,23 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
-public class Player : MonoBehaviour, IPlayerStateListener
+public class Player : DamageableEntity
 {
-    [Header("Objects")]
-    [SerializeField] PlayerMovement movementScript;
-    [SerializeField] PlayerInteraction interactionScript;
-    [SerializeField] PlayerCameras playerCamerasScript;
-    [SerializeField] PlayerAbilities abilitiesScript;
-    [SerializeField] HUD hudScript;
+    public PlayerMovement movementScript { get; private set; }
+    public PlayerAnimator animatorScript { get; private set; }
+    public PlayerMenuController pauseScript { get; private set; }
 
-    public bool isInCombat { get; private set; }
+    
+
+    public GameObject cameraRigPrefab;
+    internal CinemachineFreeLook freeLookCam;
 
     // INPUT
-    ActionMap actions;
+    internal ActionMap actions;
 
-    private void Awake()
+    void Awake()
     {
+        freeLookCam = Instantiate(cameraRigPrefab, transform).transform.GetChild(0).GetComponent<CinemachineFreeLook>(); ;
+        freeLookCam.LookAt = transform;
+        freeLookCam.Follow = transform;
+
+        movementScript = GetComponent<PlayerMovement>();
+        animatorScript = GetComponent<PlayerAnimator>();
+        pauseScript = GetComponent<PlayerMenuController>();
+
         actions = new ActionMap();
 
         // All modules attached to this gameobject
@@ -25,41 +32,46 @@ public class Player : MonoBehaviour, IPlayerStateListener
         {
             module.SetupInputEvents(this, actions);
         }
+
+        SetupInputEvents();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        //GameManager.Instance.DisableLobbyCamera();
     }
 
-    private void OnDestroy()
+    public void OnDestroy()
     {
         actions.Dispose();
     }
 
-    public void SetIsInCombat(bool isInCombat)
+    public virtual void SetupInputEvents()
     {
-        foreach (IPlayerStateListener listener in GetComponents<IPlayerStateListener>())
+        actions.General.Escape.performed += ctx =>
         {
-            if (isInCombat)
-            {
-                listener.SetCombatState();
-            }
-            else
-            {
-                listener.SetFreeLookState();
-            }
-        }
+            PausePlayer();
+            //pauseScript.Pause();
+        };
+
+        actions.General.Enable();
     }
 
-    public PlayerCameras GetCameraControllerScript() => playerCamerasScript;
-    public PlayerMovement GetMovementScript() => movementScript;
-    public PlayerInteraction GetInteractionScript() => interactionScript;
-    public HUD GetHUDScript() => hudScript;
-    public ActionMap GetActionMap() => actions;
-
-    public void SetCombatState()
+    public void PausePlayer()
     {
-        isInCombat = true;
+        actions.General.Disable();
+        actions.Locomotion.Disable();
+        actions.CameraControl.Disable();
+        actions.Abilities.Disable();
+        actions.Menus.Enable();
     }
 
-    public void SetFreeLookState()
+    public void UnPausePlayer()
     {
-        isInCombat = false;
+        actions.General.Enable();
+        actions.Locomotion.Enable();
+        actions.CameraControl.Enable();
+        actions.Abilities.Enable();
+        actions.Menus.Disable();
     }
+
 }

@@ -1,0 +1,525 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7640918123170792053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4534176905352094183}
+  - component: {fileID: 8125917088771666061}
+  - component: {fileID: 1196883161676345173}
+  - component: {fileID: 3239875275728635811}
+  - component: {fileID: 3214527541242822784}
+  - component: {fileID: 8038630065700380870}
+  - component: {fileID: 7863156530523778451}
+  - component: {fileID: 8452944219991147716}
+  - component: {fileID: 2311719193299085900}
+  - component: {fileID: 949336851684542395}
+  - component: {fileID: 8695326115555524170}
+  - component: {fileID: 7163534274790344798}
+  - component: {fileID: 8613086743793415090}
+  - component: {fileID: 8319835638252630220}
+  - component: {fileID: 4040543755315483718}
+  - component: {fileID: 5650242870489599411}
+  - component: {fileID: 6953436038761336437}
+  m_Layer: 0
+  m_Name: LIGHT EFFECT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4534176905352094183
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_LocalRotation: {x: 0.000000059604645, y: -0.00000011920929, z: 0.0000000745058,
+    w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &8125917088771666061
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: dc68d76d9e09a2b4aafe92ede25d1fed, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_AllowInstancing: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 100
+        m_Name: Orb Effect Spawn Rate
+        m_Overridden: 1
+      - m_Value: 0.87
+        m_Name: Orb Radius
+        m_Overridden: 1
+      - m_Value: 4.52
+        m_Name: Lifetime
+        m_Overridden: 1
+      - m_Value: 5.41
+        m_Name: Orb Effect Spawn Rate 1
+        m_Overridden: 1
+      - m_Value: 0.29
+        m_Name: Lifetime 1
+        m_Overridden: 1
+      - m_Value: 0.09
+        m_Name: Orb Radius 1
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 270.01978, y: -0.000048296715, z: 0}
+        m_Name: Transform_angles
+        m_Overridden: 1
+      - m_Value: {x: -1.1219242, y: 6.6654086, z: -1.7463583}
+        m_Name: Transform_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: Transform_scale
+        m_Overridden: 1
+      - m_Value: {x: 38.101234, y: 134.99982, z: 44.99992}
+        m_Name: Transform 2_angles
+        m_Overridden: 1
+      - m_Value: {x: -0.33469415, y: 7.2162037, z: -2.3510313}
+        m_Name: Transform 2_position
+        m_Overridden: 1
+      - m_Value: {x: -0.34266716, y: -0.3426671, z: -0.34266722}
+        m_Name: Transform 2_scale
+        m_Overridden: 1
+      - m_Value: {x: 271.15317, y: 134.96904, z: 45.030743}
+        m_Name: Front Left Crystal Pos 1_angles
+        m_Overridden: 1
+      - m_Value: {x: 6.5379357, y: -0.16976023, z: 16.718113}
+        m_Name: Front Left Crystal Pos 1_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: Front Left Crystal Pos 1_scale
+        m_Overridden: 1
+      - m_Value: {x: 30.6471, y: 134.63445, z: 59.851254}
+        m_Name: Front Left Crystal Pos 2_angles
+        m_Overridden: 1
+      - m_Value: {x: 8.358209, y: 0.48369455, z: 14.992486}
+        m_Name: Front Left Crystal Pos 2_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: Front Left Crystal Pos 2_scale
+        m_Overridden: 1
+      - m_Value: {x: 270, y: 180, z: 0}
+        m_Name: Front Left Thigh_angles
+        m_Overridden: 1
+      - m_Value: {x: 11, y: -2.0199995, z: 12.15}
+        m_Name: Front Left Thigh_position
+        m_Overridden: 1
+      - m_Value: {x: 45, y: 45, z: 45}
+        m_Name: Front Left Thigh_scale
+        m_Overridden: 1
+      - m_Value: {x: 270, y: 180, z: 0}
+        m_Name: Back Left Thigh_angles
+        m_Overridden: 1
+      - m_Value: {x: 11, y: -2.0199995, z: 12.15}
+        m_Name: Back Left Thigh_position
+        m_Overridden: 1
+      - m_Value: {x: 45, y: 45, z: 45}
+        m_Name: Back Left Thigh_scale
+        m_Overridden: 1
+      - m_Value: {x: 273.40845, y: 44.906796, z: 45.102726}
+        m_Name: Back Left Crystal Pos 1_angles
+        m_Overridden: 1
+      - m_Value: {x: 8.120613, y: 0.4789014, z: 9.618922}
+        m_Name: Back Left Crystal Pos 1_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: Back Left Crystal Pos 1_scale
+        m_Overridden: 1
+      - m_Value: {x: 271.15216, y: 44.554546, z: 45.453617}
+        m_Name: Back Left Crystal Pos 2_angles
+        m_Overridden: 1
+      - m_Value: {x: 6.3948946, y: -0.17149973, z: 7.7989073}
+        m_Name: Back Left Crystal Pos 2_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: Back Left Crystal Pos 2_scale
+        m_Overridden: 1
+      - m_Value: {x: 270, y: 180, z: 0}
+        m_Name: Front Right Thigh_angles
+        m_Overridden: 1
+      - m_Value: {x: 11, y: -2.0199995, z: 12.15}
+        m_Name: Front Right Thigh_position
+        m_Overridden: 1
+      - m_Value: {x: 45, y: 45, z: 45}
+        m_Name: Front Right Thigh_scale
+        m_Overridden: 1
+      - m_Value: {x: 21.071184, y: 214.2946, z: 36.385002}
+        m_Name: Front Right Crystal Pos 1_angles
+        m_Overridden: 1
+      - m_Value: {x: 13.828336, y: 0.48002195, z: 14.722294}
+        m_Name: Front Right Crystal Pos 1_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: Front Right Crystal Pos 1_scale
+        m_Overridden: 1
+      - m_Value: {x: 271.14978, y: 225.17938, z: 44.81815}
+        m_Name: Front Right Crystal Pos 2_angles
+        m_Overridden: 1
+      - m_Value: {x: 15.553799, y: -0.17129278, z: 16.542542}
+        m_Name: Front Right Crystal Pos 2_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: Front Right Crystal Pos 2_scale
+        m_Overridden: 1
+      - m_Value: {x: 270, y: 180, z: 0}
+        m_Name: Back Right Thigh_angles
+        m_Overridden: 1
+      - m_Value: {x: 11, y: -2.0199995, z: 12.15}
+        m_Name: Back Right Thigh_position
+        m_Overridden: 1
+      - m_Value: {x: 45, y: 45, z: 45}
+        m_Name: Back Right Thigh_scale
+        m_Overridden: 1
+      - m_Value: {x: 271.16132, y: 315.34177, z: 44.65154}
+        m_Name: Back Right Crystal Pos 2_angles
+        m_Overridden: 1
+      - m_Value: {x: 15.546467, y: -0.16716242, z: 7.4918566}
+        m_Name: Back Right Crystal Pos 2_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: Back Right Crystal Pos 2_scale
+        m_Overridden: 1
+      - m_Value: {x: 273.417, y: 315.077, z: 44.91572}
+        m_Name: Back Right Crystal Pos 1_angles
+        m_Overridden: 1
+      - m_Value: {x: 13.725886, y: 0.48977804, z: 9.217508}
+        m_Name: Back Right Crystal Pos 1_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: Back Right Crystal Pos 1_scale
+        m_Overridden: 1
+      - m_Value: {x: 270.01978, y: -0, z: 0}
+        m_Name: ember Location_angles
+        m_Overridden: 1
+      - m_Value: {x: 23.94, y: -1.6499996, z: 7.25}
+        m_Name: ember Location_position
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1}
+        m_Name: ember Location_scale
+        m_Overridden: 1
+      - m_Value: {x: 270, y: 180, z: 0}
+        m_Name: Orb Position_angles
+        m_Overridden: 1
+      - m_Value: {x: 11, y: -2.0199995, z: 12.15}
+        m_Name: Orb Position_position
+        m_Overridden: 1
+      - m_Value: {x: 45, y: 45, z: 45}
+        m_Name: Orb Position_scale
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: 0}
+        m_Name: Orb Position 1_position
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 14.435652, y: 9.715597, z: 0, w: 0}
+        m_Name: Orb Effect Color
+        m_Overridden: 1
+      - m_Value: {x: 14.435652, y: 9.715597, z: 0, w: 0.5411765}
+        m_Name: New Color
+        m_Overridden: 1
+      - m_Value: {x: 4.2870936, y: 3.2935376, z: 0, w: 1}
+        m_Name: Orb Effect Color 1
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array: []
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &1196883161676345173
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!114 &3239875275728635811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 3214527541242822784}
+  - {fileID: 8038630065700380870}
+  - {fileID: 7863156530523778451}
+  - {fileID: 8452944219991147716}
+  - {fileID: 2311719193299085900}
+  - {fileID: 949336851684542395}
+  - {fileID: 8695326115555524170}
+  - {fileID: 7163534274790344798}
+  - {fileID: 8613086743793415090}
+  - {fileID: 8319835638252630220}
+  - {fileID: 4040543755315483718}
+  - {fileID: 5650242870489599411}
+  - {fileID: 6953436038761336437}
+  m_VisualEffect: {fileID: 8125917088771666061}
+--- !u!114 &3214527541242822784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Front Left Crystal Pos 1
+  Target: {fileID: 0}
+--- !u!114 &8038630065700380870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Front Left Crystal Pos 2
+  Target: {fileID: 0}
+--- !u!114 &7863156530523778451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Front Left Thigh
+  Target: {fileID: 0}
+--- !u!114 &8452944219991147716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Back Left Thigh
+  Target: {fileID: 0}
+--- !u!114 &2311719193299085900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Back Left Crystal Pos 1
+  Target: {fileID: 0}
+--- !u!114 &949336851684542395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Back Left Crystal Pos 2
+  Target: {fileID: 0}
+--- !u!114 &8695326115555524170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Back Right Thigh
+  Target: {fileID: 0}
+--- !u!114 &7163534274790344798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Front Right Thigh
+  Target: {fileID: 0}
+--- !u!114 &8613086743793415090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Front Right Crystal Pos 1
+  Target: {fileID: 0}
+--- !u!114 &8319835638252630220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Front Right Crystal Pos 2
+  Target: {fileID: 0}
+--- !u!114 &4040543755315483718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Back Right Crystal Pos 1
+  Target: {fileID: 0}
+--- !u!114 &5650242870489599411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Back Right Crystal Pos 2
+  Target: {fileID: 0}
+--- !u!114 &6953436038761336437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640918123170792053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Orb Position
+  Target: {fileID: 0}
