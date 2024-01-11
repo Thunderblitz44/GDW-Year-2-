@@ -10,10 +10,10 @@ public class DamageableEntity : MonoBehaviour, IDamageable
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
     HealthComponent hp;
 
-    void Start()
+    internal virtual void Awake()
     {
         hp = GetComponent<HealthComponent>();
-        hp.onHealthZeroed += OnHealthZeroed;
+        if (hp) hp.onHealthZeroed += OnHealthZeroed;
     }
 
     internal virtual void OnHealthZeroed()
@@ -23,6 +23,9 @@ public class DamageableEntity : MonoBehaviour, IDamageable
 
     public void ApplyDamage(float damage, DamageTypes type)
     {
+        if (!hp) return;
+        hp.DeductHealth(damage);
+
         if (!enableDamageNumbers) return;
         string msg = $"<color=#{(type == DamageTypes.physical ? StaticUtilities.physicalDamageColor.ToHexString() : StaticUtilities.magicDamageColor.ToHexString())}>{damage}</color>";
 
