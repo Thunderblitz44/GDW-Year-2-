@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
-public class Enemy : NetworkBehaviour
+public class Enemy : MonoBehaviour
 {
     EnemyAnimator animationHandler;
     EnemyBehaviours behaviourHandler;
@@ -40,7 +39,7 @@ public class Enemy : NetworkBehaviour
         }
     }
 
-    public override void OnDestroy()
+    void OnDestroy()
     {
         if (behaviourHandler)
         {
@@ -58,7 +57,6 @@ public class Enemy : NetworkBehaviour
             movementHandler.onAttackDistanceReached -= OnAttackDistanceReached;
             movementHandler.onTargetFled -= OnTargetFled;
         }
-        base.OnDestroy();
     }
 
     void OnPlayerDetected(object sender, Transform player)

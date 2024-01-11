@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
-public class Portal : NetworkBehaviour
+public class Portal : MonoBehaviour
 {
     int maxUses;
     int uses;
@@ -14,9 +12,9 @@ public class Portal : NetworkBehaviour
     public float portalHeight = 1;
     float time;
 
-    
+  
 
-    public override void OnNetworkSpawn()
+    void Awake()   
     {
         sr = GetComponent<SpriteRenderer>();
     }
@@ -39,14 +37,14 @@ public class Portal : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        collision.transform.position = otherPortal.transform.position - otherPortal.transform.forward;
-
         otherPortal.uses++;
-        if (++uses == maxUses) 
+        if (++uses == maxUses)
         {
             Die();
             otherPortal.Die();
         }
+
+        collision.transform.position = otherPortal.transform.position - otherPortal.transform.forward;
     }
 
     public void Die()

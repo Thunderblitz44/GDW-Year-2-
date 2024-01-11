@@ -15,10 +15,8 @@ public class Player : DamageableEntity
     // INPUT
     internal ActionMap actions;
 
-    internal virtual void Start()
+    void Awake()
     {
-        if (!IsOwner) return;
-
         freeLookCam = Instantiate(cameraRigPrefab, transform).transform.GetChild(0).GetComponent<CinemachineFreeLook>(); ;
         freeLookCam.LookAt = transform;
         freeLookCam.Follow = transform;
@@ -41,14 +39,12 @@ public class Player : DamageableEntity
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        GameManager.Instance.DisableLobbyCamera();
+        //GameManager.Instance.DisableLobbyCamera();
     }
 
-    public override void OnDestroy()
+    public void OnDestroy()
     {
-        if (!IsOwner) return; 
         actions.Dispose();
-        base.OnDestroy();
     }
 
     public virtual void SetupInputEvents()

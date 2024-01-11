@@ -12,13 +12,6 @@ public static class StaticUtilities
     public static readonly Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
     public static int visibleTargets;
 
-    // ZOMBIE ANIMATION KEYWORDS
-    public const string ZOMBIE_IDLE = "Zombie Idle";
-    public const string ZOMBIE_WALK = "Zombie Walk";
-    public const string ZOMBIE_RUN = "Zombie Run";
-    public const string ZOMBIE_CRAWL = "Zombie Crawl";
-    public const string ZOMBIE_ATTACK = "Zombie Attack";
-
 
     // RANGED GOLEM ANIMATION KEYWORDS
     public const string GOLEM_RANGER_ATTACK = "Golem Ranger Shooting";

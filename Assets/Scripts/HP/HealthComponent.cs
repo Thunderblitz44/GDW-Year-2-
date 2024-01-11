@@ -1,35 +1,33 @@
 using System;
-using Unity.Netcode;
 using UnityEngine;
 
-public class HealthComponent : NetworkBehaviour
+public class HealthComponent : MonoBehaviour
 {
-    [SerializeField] float maxHealth;
+    [SerializeField] float maxHealth = 10f;
     [SerializeField] float height = 1.5f;
     [SerializeField] GameObject hpBarPrefab;
     HPBar hpbar;
     EntityHPBar entityHPBar;
-
-    NetworkVariable<float> health = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    float health;
 
     public Action onHealthZeroed;
 
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
-        if (IsOwner) health.Value = maxHealth;
+        health = maxHealth;
 
         if (hpBarPrefab.GetComponent<EntityHPBar>())
         {
             entityHPBar = Instantiate(hpBarPrefab, GameManager.Instance.worldCanvas).GetComponent<EntityHPBar>();
             entityHPBar.transform.position = transform.position + Vector3.up * height;
             entityHPBar.maxHP = maxHealth;
-            entityHPBar.SetHPValue(health.Value);
+            entityHPBar.SetHPValue(health);
         }
-        else if (IsOwner && hpBarPrefab.GetComponent<HPBar>())
+        else if (hpBarPrefab.GetComponent<HPBar>())
         {
             hpbar = Instantiate(hpBarPrefab, GameManager.Instance.canvas).GetComponent<HPBar>();
             hpbar.maxHP = maxHealth;
-            hpbar.SetHPValue(health.Value);
+            hpbar.SetHPValue(health);
         }
     }
 
@@ -42,11 +40,8 @@ public class HealthComponent : NetworkBehaviour
 
     public void DeductHealth(float value)
     {
-        if (IsOwner && hpbar) hpbar.ChangeHPByAmount(-value);
+        if (hpbar) hpbar.ChangeHPByAmount(-value);
         else if (entityHPBar) entityHPBar.ChangeHPByAmount(-value);
-
-        if (!IsOwner) return;
-        if ((health.Value = GetHealth()) == 0) onHealthZeroed?.Invoke();
     }
 
     public float GetHealth() => hpbar == null ? entityHPBar == null ? 0 : entityHPBar.GetHP() : hpbar.GetHP();

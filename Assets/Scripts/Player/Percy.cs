@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,7 @@ public class Percy : Player
 {
     [Space(10), Header("ABILITIES"), Space(10)]
     [Header("Grapple")]
-    [SerializeField] float grappleDistance = 50f;
+    //[SerializeField] float grappleDistance = 50f;
     [SerializeField] float lightWeightMaxMass = 1f;
     [SerializeField] float overshoot = 5f;
     [SerializeField] float playerLandingSpace = 1f;
@@ -27,9 +26,9 @@ public class Percy : Player
 
 
     [Header("Jump")]
-    [SerializeField] float jumpBoost = 3;
-    [SerializeField] float duration = 3;
-    float jumpBufftime;
+    //[SerializeField] float jumpBoost = 3;
+    //[SerializeField] float duration = 3;
+    //float jumpBufftime;
 
 
     float lerpTime;
@@ -39,10 +38,8 @@ public class Percy : Player
 
     Rigidbody rb;
 
-    internal override void Start()
+    private void Awake()
     {
-        if (!IsOwner) return;
-        base.Start();
         rb = movementScript.GetRigidbody();
 
         grappleUI = Instantiate(grappleMeterPrefab, GameManager.Instance.canvas).GetComponent<GrappleUI>();
@@ -51,8 +48,6 @@ public class Percy : Player
 
     private void Update()
     {
-        if (!IsOwner) return;
-
         //...  Grapple  ...//
         SetLockonIconPosition();
         
@@ -116,7 +111,7 @@ public class Percy : Player
                 launchForce = StaticUtilities.CalculateLaunchVelocity(transform.position, playerEndPoint, overshoot);
 
                 // tell the server to launch the target
-                LaunchTargetServerRpc(lockedTarget.GetComponent<NetworkObject>().NetworkObjectId, StaticUtilities.CalculateLaunchVelocity(lockedTarget.position, targetEndPoint, overshoot) * targetRb.mass);
+                //LaunchTargetServerRpc(lockedTarget.GetComponent<NetworkObject>().NetworkObjectId, StaticUtilities.CalculateLaunchVelocity(lockedTarget.position, targetEndPoint, overshoot) * targetRb.mass);
             }
             else
             {
@@ -125,7 +120,7 @@ public class Percy : Player
                 Vector3 targetEndPoint = lockedTarget.position - dir * dist;
 
                 // tell the server to launch the target
-                LaunchTargetServerRpc(lockedTarget.GetComponent<NetworkObject>().NetworkObjectId, StaticUtilities.CalculateLaunchVelocity(lockedTarget.position, targetEndPoint, overshoot) * targetRb.mass);
+                //LaunchTargetServerRpc(lockedTarget.GetComponent<NetworkObject>().NetworkObjectId, StaticUtilities.CalculateLaunchVelocity(lockedTarget.position, targetEndPoint, overshoot) * targetRb.mass);
                 goto cooldown;
             }
 
@@ -151,11 +146,11 @@ public class Percy : Player
         actions.Abilities.Enable();
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    //[ServerRpc(RequireOwnership = false)]
     void LaunchTargetServerRpc(ulong networkObjectId, Vector3 force)
     {
-        NetworkObject no = NetworkManager.SpawnManager.SpawnedObjects[networkObjectId];
-        no.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+        //NetworkObject no = NetworkManager.SpawnManager.SpawnedObjects[networkObjectId];
+        //no.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
     }
 
     private void OnCollisionEnter(Collision collision)

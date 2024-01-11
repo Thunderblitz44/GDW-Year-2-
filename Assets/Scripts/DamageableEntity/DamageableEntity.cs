@@ -1,10 +1,9 @@
 using System.Collections;
 using TMPro;
-using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class DamageableEntity : NetworkBehaviour, IDamageable
+public class DamageableEntity : MonoBehaviour, IDamageable
 {
     [SerializeField] GameObject floatingTextPrefab;
     [SerializeField] bool enableDamageNumbers = true;
@@ -24,7 +23,13 @@ public class DamageableEntity : NetworkBehaviour, IDamageable
 
     public void ApplyDamage(float damage, DamageTypes type)
     {
-        ApplyDamageServerRpc(damage, type);
+        if (!enableDamageNumbers) return;
+        string msg = $"<color=#{(type == DamageTypes.physical ? StaticUtilities.physicalDamageColor.ToHexString() : StaticUtilities.magicDamageColor.ToHexString())}>{damage}</color>";
+
+        Transform t = Instantiate(floatingTextPrefab).transform;
+        t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
+        t.GetComponent<TextMeshProUGUI>().text = msg;
+        t.SetParent(GameManager.Instance.worldCanvas, true);
     }
 
     public void ApplyDamageOverTime(float dps, DamageTypes type, float duration)
@@ -43,35 +48,5 @@ public class DamageableEntity : NetworkBehaviour, IDamageable
             }
             yield return null;
         }
-    }
-
-
-    [ClientRpc]
-    void SpawnFloatingTextClientRpc(string message)
-    {
-        if (!IsClient) return;
-
-        Transform t = Instantiate(floatingTextPrefab).transform;
-        t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
-        t.GetComponent<TextMeshProUGUI>().text = message;
-        t.SetParent(GameManager.Instance.worldCanvas, true);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void ApplyDamageServerRpc(float damage, DamageTypes type)
-    {
-        if (!IsServer) return;
-
-        ApplyDamageClientRpc(damage);
-
-        if (!enableDamageNumbers) return;
-        string msg = $"<color=#{(type == DamageTypes.physical ? StaticUtilities.physicalDamageColor.ToHexString() : StaticUtilities.magicDamageColor.ToHexString())}>{damage}</color>";
-        SpawnFloatingTextClientRpc(msg);
-    }
-
-    [ClientRpc]
-    void ApplyDamageClientRpc(float damage)
-    {
-        hp.DeductHealth(damage);
     }
 }

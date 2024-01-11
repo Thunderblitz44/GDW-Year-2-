@@ -7,7 +7,6 @@ public class DebugHUD : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI speedTxt;
     [SerializeField] TextMeshProUGUI airtimeTxt;
-    [SerializeField] TextMeshProUGUI joinCodeTxt;
 
     private void Awake()
     {
@@ -19,12 +18,6 @@ public class DebugHUD : MonoBehaviour
         {
             instance = this;
         }
-    }
-
-    public void SetJoinCode(string value)
-    {
-        if (!joinCodeTxt) return;
-        joinCodeTxt.text = value;
     }
 
     public void SetSpeed(float value)

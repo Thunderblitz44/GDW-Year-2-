@@ -1,12 +1,8 @@
 using System;
-using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerMovement : NetworkBehaviour, IInputExpander
+public class PlayerMovement : MonoBehaviour, IInputExpander
 {
-    [SerializeField] bool isSimple = false;
-    [SerializeField] float simpleMoveSpeed = 5f;
-
     // MOVEMENT
     [Header("Movement")]
     [SerializeField] float walkSpeed = 5f;
@@ -77,9 +73,8 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
     
     #region Unity Messages
 
-    public override void OnDestroy()
+    public void OnDestroy()
     {
-        base.OnDestroy();
         onPlayerLanded -= OnLanded;
     }
 
@@ -88,8 +83,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-        if (isSimple) return;
-        
         onPlayerLanded += OnLanded;
         readyToJump = true;
         normalYScale = transform.localScale.y;
@@ -98,7 +91,7 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     private void Update()
     {
-        if (ignoreStates || !IsOwner || isSimple) return;
+        if (ignoreStates) return;
 
         GroundCheck();
         SpeedControl();
@@ -140,10 +133,7 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
 
     private void FixedUpdate()
     {
-        if (!IsOwner) return;
-
-        if (!isSimple) Move();
-        else SimpleMove();
+        Move();
     }
 
 
@@ -169,12 +159,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
         {
             inputMoveDirection = Vector3.zero;
         };
-
-        if (isSimple)
-        {
-            EnableLocomotion();
-            return;
-        }
 
         // Run
         actions.Locomotion.Run.started += ctx =>
@@ -241,16 +225,6 @@ public class PlayerMovement : NetworkBehaviour, IInputExpander
         // move
         if (isGrounded) rb.AddForce(moveDirection * moveSpeed * rb.mass * 10f, ForceMode.Force);
         else rb.AddForce(moveDirection * moveSpeed * airMultiplier * rb.mass * 10f, ForceMode.Force);
-    }
-
-    void SimpleMove()
-    {
-        Vector3 cameraFwd = Camera.main.transform.forward;
-        Vector3 cameraRight = Camera.main.transform.right;
-        cameraFwd.y = 0f;
-        cameraRight.y = 0f;
-        moveDirection = cameraFwd * inputMoveDirection.z + cameraRight * inputMoveDirection.x;
-        rb.AddForce(moveDirection * simpleMoveSpeed, ForceMode.Force);
     }
 
     void Run()

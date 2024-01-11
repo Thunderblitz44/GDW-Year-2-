@@ -1,13 +1,12 @@
 using System.Collections;
-using Unity.Netcode;
 using UnityEngine;
 
 public class Elana : Player
 {
-    [Space(10),Header("ABILITIES"),Space(10)]
+    [Space(10), Header("ABILITIES"), Space(10)]
     [Header("Portal")]
     [SerializeField] float portalRange = 30f;
-    [SerializeField] float portalChargeSpeed = 2f;
+    //[SerializeField] float portalChargeSpeed = 2f;
     [SerializeField] GameObject portalPrefab;
     [SerializeField] GameObject previewPortalPrefab;
     [SerializeField] LayerMask portalPlacableSurfaces;
@@ -40,10 +39,8 @@ public class Elana : Player
     Rigidbody rb;
     Transform body;
 
-    internal override void Start()
+    private void Start()
     {
-        if (!IsOwner) return;
-        base.Start();
         body = movementScript.GetBody();
         rb = movementScript.GetRigidbody();
 
@@ -54,8 +51,6 @@ public class Elana : Player
 
     void FixedUpdate()
     {
-        if (!IsOwner) return;
-
         if (usingPortalAbility)
         {
             RaycastHit hit;
@@ -81,23 +76,23 @@ public class Elana : Player
         // BASIC
         actions.General.Attack.performed += ctx =>
         {
-            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical);
+            //GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical);
         };
         actions.CameraControl.Aim.performed += ctx =>
         {
-            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.magic);
+            //GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.magic);
         };
 
 
         // Abilities
 
         // PORTAL ABILITY
-        actions.Abilities.First.started += ctx => 
+        actions.Abilities.First.started += ctx =>
         {
             usingPortalAbility = true;
             previewPortal = Instantiate(previewPortalPrefab).transform;
         };
-        actions.Abilities.First.canceled += ctx => 
+        actions.Abilities.First.canceled += ctx =>
         {
             usingPortalAbility = false;
 
@@ -107,7 +102,6 @@ public class Elana : Player
 
             Destroy(previewPortal.gameObject);
 
-            // set up the portals
             Transform entryPortal = Instantiate(portalPrefab, portalAPos, portalRotation).transform;
             entryPortal.forward = -entryPortal.forward;
             Transform exitPortal = Instantiate(portalPrefab, portalBPos, portalRotation).transform;
@@ -115,17 +109,10 @@ public class Elana : Player
             var s = exitPortal.GetComponent<Portal>();
             f.Init(maxUses, s);
             s.Init(maxUses, f);
-
-            if (IsServer)
-            {
-                entryPortal.GetComponent<NetworkObject>().Spawn(true);
-                exitPortal.GetComponent<NetworkObject>().Spawn(true);
-            }
-
         };
 
         // DASH (TEMPORARY - WILL BE IMPLEMENTED INTO THE PORTAL ABILITY)
-        actions.Abilities.Second.started += ctx => 
+        actions.Abilities.Second.started += ctx =>
         {
             if (isDashing || dashes >= maxDashes) return;
             isDashing = true;
@@ -233,9 +220,4 @@ public class Elana : Player
         dashUI.RechargeDashes(dashCooldown);
     }
 
-    [ServerRpc(RequireOwnership= false)]
-    void SpawnServerRPC()
-    {
-        
-    }
 }
