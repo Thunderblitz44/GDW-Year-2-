@@ -6,8 +6,8 @@ public class Player : DamageableEntity
     public PlayerMovement movementScript { get; private set; }
     public PlayerAnimator animatorScript { get; private set; }
     public PlayerMenuController pauseScript { get; private set; }
-    public HUD hud { get; private set; }
-    [SerializeField] private HUD _hud;
+
+    
 
     public GameObject cameraRigPrefab;
     internal CinemachineFreeLook freeLookCam;
@@ -24,8 +24,6 @@ public class Player : DamageableEntity
         movementScript = GetComponent<PlayerMovement>();
         animatorScript = GetComponent<PlayerAnimator>();
         pauseScript = GetComponent<PlayerMenuController>();
-        hud = _hud;
-        hud.pauseMenu.AddResumeListener(UnPausePlayer);
 
         actions = new ActionMap();
 
@@ -52,7 +50,7 @@ public class Player : DamageableEntity
         actions.General.Escape.performed += ctx =>
         {
             PausePlayer();
-            hud.pauseMenu.Pause();
+            //pauseScript.Pause();
         };
 
         actions.General.Enable();

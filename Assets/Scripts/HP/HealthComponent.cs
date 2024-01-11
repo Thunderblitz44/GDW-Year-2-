@@ -12,7 +12,7 @@ public class HealthComponent : MonoBehaviour
 
     public Action onHealthZeroed;
 
-    private void Awake()
+    private void Start()
     {
         health = maxHealth;
 

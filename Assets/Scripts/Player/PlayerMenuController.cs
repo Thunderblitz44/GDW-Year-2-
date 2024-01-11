@@ -7,23 +7,22 @@ public class PlayerMenuController : MonoBehaviour, IInputExpander
     Player playerScript;
     ActionMap actions;
 
-    PauseMenu menu;
+    [SerializeField] private PauseMenu pauseMenu;
 
     public void SetupInputEvents(object sender, ActionMap actions)
     {
         playerScript = (Player)sender;
         this.actions = actions;
 
-        menu = playerScript.hud.pauseMenu;
-
         actions.Menus.Resume.performed += ctx => 
         {
-            menu.Resume(); 
+            pauseMenu.Resume(); 
             playerScript.UnPausePlayer();
         };
         actions.Menus.Select.performed += ctx => { };
         actions.Menus.Confirm.performed += ctx => { };
 
+        pauseMenu.AddResumeListener(playerScript.UnPausePlayer);
         actions.Menus.Disable();
     }
 }

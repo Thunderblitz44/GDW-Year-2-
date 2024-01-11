@@ -76,11 +76,11 @@ public class Elana : Player
         // BASIC
         actions.General.Attack.performed += ctx =>
         {
-            //GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical);
+            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical);
         };
         actions.CameraControl.Aim.performed += ctx =>
         {
-            //GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.magic);
+            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.magic);
         };
 
 
