@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 
@@ -6,6 +7,7 @@ public class PlayerAnimator : MonoBehaviour
     public Animator animator;
     public Rigidbody cc;
     public PlayerMovement playerMovement;
+  
    
     private void Awake()
     {
@@ -19,9 +21,9 @@ public class PlayerAnimator : MonoBehaviour
         //Moving Around
 
         // Get the current velocity components
-        float xSpeed = transform.InverseTransformVector(cc.velocity).x;
-        float zSpeed = transform.InverseTransformVector(cc.velocity).z;
-        float ySpeed = transform.InverseTransformVector(cc.velocity).y;
+        float xSpeed = transform.InverseTransformDirection(cc.velocity).x;
+        float zSpeed = transform.InverseTransformDirection(cc.velocity).z;
+        float ySpeed = transform.InverseTransformDirection(cc.velocity).y;
 
         // Set the velocity values in the animator
         animator.SetFloat("XSpeed", xSpeed);
@@ -35,6 +37,13 @@ public class PlayerAnimator : MonoBehaviour
         // Matches isGrounded with Groundcheck bool in animator
         bool isGrounded = playerMovement.isGrounded;
         animator.SetBool("GroundCheck", isGrounded);
+
+     
+        }
+    
+
+    private void FixedUpdate()
+    {
       
     }
 }

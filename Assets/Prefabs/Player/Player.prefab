@@ -2180,6 +2180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd4b46f69ab1c64e93cb3b0dc16473e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenu: {fileID: 0}
 --- !u!114 &2623836176609678327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2195,8 +2196,12 @@ MonoBehaviour:
   floatingTextPrefab: {fileID: 0}
   enableDamageNumbers: 0
   damageNumberSpawnHeight: 1.5
-  _hud: {fileID: 6959945207081360715}
-  cameraRigPrefab: {fileID: 2275666174603956261, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
+  bulletDamage: 1
+  bulletSpeed: 20
+  bulletLifetime: 1
+  bulletCooldown: 0.25
+  projectilePrefab: {fileID: 0}
+  shootOrigin: {fileID: 0}
   portalRange: 30
   portalPrefab: {fileID: 5136089227381563992, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
   previewPortalPrefab: {fileID: 8618935630039126293, guid: aeb1b583ce44a444586b0c395f15684a, type: 3}
@@ -2793,6 +2798,9 @@ MonoBehaviour:
   animator: {fileID: 7987535125817499183}
   cc: {fileID: 588047259881450318}
   playerMovement: {fileID: 4454435300263863930}
+  spineBone: {fileID: 0}
+  target: {fileID: 0}
+  overrideController: {fileID: 0}
 --- !u!1 &8962590540221229326
 GameObject:
   m_ObjectHideFlags: 0
