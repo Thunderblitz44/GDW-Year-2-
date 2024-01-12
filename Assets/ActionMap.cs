@@ -244,171 +244,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""CameraControl"",
-            ""id"": ""20b2cb7d-b37e-4108-b0cf-c554537bedbb"",
-            ""actions"": [
-                {
-                    ""name"": ""LockOnToTarget"",
-                    ""type"": ""Button"",
-                    ""id"": ""cfc2f0d9-3def-40e4-a3f6-bdbe7f7d897d"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""CycleTargets"",
-                    ""type"": ""Button"",
-                    ""id"": ""de9a90db-890e-4372-ace2-f5dcf5ebd80a"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Aim"",
-                    ""type"": ""Button"",
-                    ""id"": ""a555938b-472a-4676-ba43-13c09c6ac675"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Look"",
-                    ""type"": ""Value"",
-                    ""id"": ""b10125f1-20e3-4220-a923-7d33c2ce964c"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""686dea2d-f0aa-4914-9746-a5ee940eef32"",
-                    ""path"": ""<Mouse>/middleButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LockOnToTarget"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""17c97f84-1a89-4470-81af-a8433880dc16"",
-                    ""path"": ""<Gamepad>/rightStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LockOnToTarget"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""61df7e55-88c9-4b5a-b7ab-5655f9eabae2"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CycleTargets"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""38bd829f-495e-4ee5-9de3-a984cf342fed"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Aim"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bc38065f-fb9a-4834-b34c-3d3c402bda16"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Aim"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""9d256245-29d9-499a-ada8-ffc3e8b5f608"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""Controller"",
-                    ""id"": ""301244f1-97a9-45a0-8e66-77f9b0c13fda"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""370129bb-e467-46b6-88c9-d0a78e5ac71d"",
-                    ""path"": ""<Gamepad>/rightStick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""d5e3a90a-0743-47a1-a541-db07d95a4ebf"",
-                    ""path"": ""<Gamepad>/rightStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""d8ea3fa7-85e0-4ff0-afe7-4d9aad9bc6a8"",
-                    ""path"": ""<Gamepad>/rightStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""6e8fbe84-e5cb-436b-847a-4c63eca94e5e"",
-                    ""path"": ""<Gamepad>/rightStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                }
-            ]
-        },
-        {
             ""name"": ""Abilities"",
             ""id"": ""67f28106-a61a-4a94-b855-a47b15a52e64"",
             ""actions"": [
@@ -443,6 +278,24 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""name"": ""Fourth"",
                     ""type"": ""Button"",
                     ""id"": ""fe5e4477-1513-46c7-af8a-5d247e3654f5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PrimaryAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""c9cdedc7-3950-406d-8ba0-33d6ea409be0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondaryAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""0cc79e3c-1e80-4392-9eb4-0cf8ac078c7c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -493,6 +346,28 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""action"": ""Fourth"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""abcc4c7a-e14e-40ea-ba33-65b124e23919"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrimaryAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""06b10c03-e617-4957-bd69-dfceb0e7e937"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SecondaryAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -522,15 +397,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""name"": ""HealSelf"",
                     ""type"": ""Button"",
                     ""id"": ""bef8065f-2f8d-47a5-b6c4-6f112a22c95b"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Attack"",
-                    ""type"": ""Button"",
-                    ""id"": ""88754d92-0249-466f-b0d8-80fea8afdeb0"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -568,17 +434,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""HealSelf"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""cf6abe54-c14d-4d54-905d-61ea0f2a1478"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -761,6 +616,34 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""CameraControl"",
+            ""id"": ""54452422-ea5a-4f9a-a4ec-762c1368b490"",
+            ""actions"": [
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Button"",
+                    ""id"": ""8bebe14c-4f73-4852-b220-cd24b7655656"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""ca061cb5-ed8a-4358-895f-859d89dc93ea"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -771,29 +654,27 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_Locomotion_Jump = m_Locomotion.FindAction("Jump", throwIfNotFound: true);
         m_Locomotion_Run = m_Locomotion.FindAction("Run", throwIfNotFound: true);
         m_Locomotion_Crouch = m_Locomotion.FindAction("Crouch", throwIfNotFound: true);
-        // CameraControl
-        m_CameraControl = asset.FindActionMap("CameraControl", throwIfNotFound: true);
-        m_CameraControl_LockOnToTarget = m_CameraControl.FindAction("LockOnToTarget", throwIfNotFound: true);
-        m_CameraControl_CycleTargets = m_CameraControl.FindAction("CycleTargets", throwIfNotFound: true);
-        m_CameraControl_Aim = m_CameraControl.FindAction("Aim", throwIfNotFound: true);
-        m_CameraControl_Look = m_CameraControl.FindAction("Look", throwIfNotFound: true);
         // Abilities
         m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
         m_Abilities_First = m_Abilities.FindAction("First", throwIfNotFound: true);
         m_Abilities_Second = m_Abilities.FindAction("Second", throwIfNotFound: true);
         m_Abilities_Third = m_Abilities.FindAction("Third", throwIfNotFound: true);
         m_Abilities_Fourth = m_Abilities.FindAction("Fourth", throwIfNotFound: true);
+        m_Abilities_PrimaryAttack = m_Abilities.FindAction("PrimaryAttack", throwIfNotFound: true);
+        m_Abilities_SecondaryAttack = m_Abilities.FindAction("SecondaryAttack", throwIfNotFound: true);
         // General
         m_General = asset.FindActionMap("General", throwIfNotFound: true);
         m_General_Escape = m_General.FindAction("Escape", throwIfNotFound: true);
         m_General_DamageSelf = m_General.FindAction("DamageSelf", throwIfNotFound: true);
         m_General_HealSelf = m_General.FindAction("HealSelf", throwIfNotFound: true);
-        m_General_Attack = m_General.FindAction("Attack", throwIfNotFound: true);
         // Menus
         m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
         m_Menus_Resume = m_Menus.FindAction("Resume", throwIfNotFound: true);
         m_Menus_Select = m_Menus.FindAction("Select", throwIfNotFound: true);
         m_Menus_Confirm = m_Menus.FindAction("Confirm", throwIfNotFound: true);
+        // CameraControl
+        m_CameraControl = asset.FindActionMap("CameraControl", throwIfNotFound: true);
+        m_CameraControl_Look = m_CameraControl.FindAction("Look", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -922,76 +803,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     }
     public LocomotionActions @Locomotion => new LocomotionActions(this);
 
-    // CameraControl
-    private readonly InputActionMap m_CameraControl;
-    private List<ICameraControlActions> m_CameraControlActionsCallbackInterfaces = new List<ICameraControlActions>();
-    private readonly InputAction m_CameraControl_LockOnToTarget;
-    private readonly InputAction m_CameraControl_CycleTargets;
-    private readonly InputAction m_CameraControl_Aim;
-    private readonly InputAction m_CameraControl_Look;
-    public struct CameraControlActions
-    {
-        private @ActionMap m_Wrapper;
-        public CameraControlActions(@ActionMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @LockOnToTarget => m_Wrapper.m_CameraControl_LockOnToTarget;
-        public InputAction @CycleTargets => m_Wrapper.m_CameraControl_CycleTargets;
-        public InputAction @Aim => m_Wrapper.m_CameraControl_Aim;
-        public InputAction @Look => m_Wrapper.m_CameraControl_Look;
-        public InputActionMap Get() { return m_Wrapper.m_CameraControl; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(CameraControlActions set) { return set.Get(); }
-        public void AddCallbacks(ICameraControlActions instance)
-        {
-            if (instance == null || m_Wrapper.m_CameraControlActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_CameraControlActionsCallbackInterfaces.Add(instance);
-            @LockOnToTarget.started += instance.OnLockOnToTarget;
-            @LockOnToTarget.performed += instance.OnLockOnToTarget;
-            @LockOnToTarget.canceled += instance.OnLockOnToTarget;
-            @CycleTargets.started += instance.OnCycleTargets;
-            @CycleTargets.performed += instance.OnCycleTargets;
-            @CycleTargets.canceled += instance.OnCycleTargets;
-            @Aim.started += instance.OnAim;
-            @Aim.performed += instance.OnAim;
-            @Aim.canceled += instance.OnAim;
-            @Look.started += instance.OnLook;
-            @Look.performed += instance.OnLook;
-            @Look.canceled += instance.OnLook;
-        }
-
-        private void UnregisterCallbacks(ICameraControlActions instance)
-        {
-            @LockOnToTarget.started -= instance.OnLockOnToTarget;
-            @LockOnToTarget.performed -= instance.OnLockOnToTarget;
-            @LockOnToTarget.canceled -= instance.OnLockOnToTarget;
-            @CycleTargets.started -= instance.OnCycleTargets;
-            @CycleTargets.performed -= instance.OnCycleTargets;
-            @CycleTargets.canceled -= instance.OnCycleTargets;
-            @Aim.started -= instance.OnAim;
-            @Aim.performed -= instance.OnAim;
-            @Aim.canceled -= instance.OnAim;
-            @Look.started -= instance.OnLook;
-            @Look.performed -= instance.OnLook;
-            @Look.canceled -= instance.OnLook;
-        }
-
-        public void RemoveCallbacks(ICameraControlActions instance)
-        {
-            if (m_Wrapper.m_CameraControlActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(ICameraControlActions instance)
-        {
-            foreach (var item in m_Wrapper.m_CameraControlActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_CameraControlActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public CameraControlActions @CameraControl => new CameraControlActions(this);
-
     // Abilities
     private readonly InputActionMap m_Abilities;
     private List<IAbilitiesActions> m_AbilitiesActionsCallbackInterfaces = new List<IAbilitiesActions>();
@@ -999,6 +810,8 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_Abilities_Second;
     private readonly InputAction m_Abilities_Third;
     private readonly InputAction m_Abilities_Fourth;
+    private readonly InputAction m_Abilities_PrimaryAttack;
+    private readonly InputAction m_Abilities_SecondaryAttack;
     public struct AbilitiesActions
     {
         private @ActionMap m_Wrapper;
@@ -1007,6 +820,8 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @Second => m_Wrapper.m_Abilities_Second;
         public InputAction @Third => m_Wrapper.m_Abilities_Third;
         public InputAction @Fourth => m_Wrapper.m_Abilities_Fourth;
+        public InputAction @PrimaryAttack => m_Wrapper.m_Abilities_PrimaryAttack;
+        public InputAction @SecondaryAttack => m_Wrapper.m_Abilities_SecondaryAttack;
         public InputActionMap Get() { return m_Wrapper.m_Abilities; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1028,6 +843,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Fourth.started += instance.OnFourth;
             @Fourth.performed += instance.OnFourth;
             @Fourth.canceled += instance.OnFourth;
+            @PrimaryAttack.started += instance.OnPrimaryAttack;
+            @PrimaryAttack.performed += instance.OnPrimaryAttack;
+            @PrimaryAttack.canceled += instance.OnPrimaryAttack;
+            @SecondaryAttack.started += instance.OnSecondaryAttack;
+            @SecondaryAttack.performed += instance.OnSecondaryAttack;
+            @SecondaryAttack.canceled += instance.OnSecondaryAttack;
         }
 
         private void UnregisterCallbacks(IAbilitiesActions instance)
@@ -1044,6 +865,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Fourth.started -= instance.OnFourth;
             @Fourth.performed -= instance.OnFourth;
             @Fourth.canceled -= instance.OnFourth;
+            @PrimaryAttack.started -= instance.OnPrimaryAttack;
+            @PrimaryAttack.performed -= instance.OnPrimaryAttack;
+            @PrimaryAttack.canceled -= instance.OnPrimaryAttack;
+            @SecondaryAttack.started -= instance.OnSecondaryAttack;
+            @SecondaryAttack.performed -= instance.OnSecondaryAttack;
+            @SecondaryAttack.canceled -= instance.OnSecondaryAttack;
         }
 
         public void RemoveCallbacks(IAbilitiesActions instance)
@@ -1068,7 +895,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_General_Escape;
     private readonly InputAction m_General_DamageSelf;
     private readonly InputAction m_General_HealSelf;
-    private readonly InputAction m_General_Attack;
     public struct GeneralActions
     {
         private @ActionMap m_Wrapper;
@@ -1076,7 +902,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @Escape => m_Wrapper.m_General_Escape;
         public InputAction @DamageSelf => m_Wrapper.m_General_DamageSelf;
         public InputAction @HealSelf => m_Wrapper.m_General_HealSelf;
-        public InputAction @Attack => m_Wrapper.m_General_Attack;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1095,9 +920,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @HealSelf.started += instance.OnHealSelf;
             @HealSelf.performed += instance.OnHealSelf;
             @HealSelf.canceled += instance.OnHealSelf;
-            @Attack.started += instance.OnAttack;
-            @Attack.performed += instance.OnAttack;
-            @Attack.canceled += instance.OnAttack;
         }
 
         private void UnregisterCallbacks(IGeneralActions instance)
@@ -1111,9 +933,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @HealSelf.started -= instance.OnHealSelf;
             @HealSelf.performed -= instance.OnHealSelf;
             @HealSelf.canceled -= instance.OnHealSelf;
-            @Attack.started -= instance.OnAttack;
-            @Attack.performed -= instance.OnAttack;
-            @Attack.canceled -= instance.OnAttack;
         }
 
         public void RemoveCallbacks(IGeneralActions instance)
@@ -1193,6 +1012,52 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         }
     }
     public MenusActions @Menus => new MenusActions(this);
+
+    // CameraControl
+    private readonly InputActionMap m_CameraControl;
+    private List<ICameraControlActions> m_CameraControlActionsCallbackInterfaces = new List<ICameraControlActions>();
+    private readonly InputAction m_CameraControl_Look;
+    public struct CameraControlActions
+    {
+        private @ActionMap m_Wrapper;
+        public CameraControlActions(@ActionMap wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Look => m_Wrapper.m_CameraControl_Look;
+        public InputActionMap Get() { return m_Wrapper.m_CameraControl; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CameraControlActions set) { return set.Get(); }
+        public void AddCallbacks(ICameraControlActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CameraControlActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CameraControlActionsCallbackInterfaces.Add(instance);
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
+        }
+
+        private void UnregisterCallbacks(ICameraControlActions instance)
+        {
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
+        }
+
+        public void RemoveCallbacks(ICameraControlActions instance)
+        {
+            if (m_Wrapper.m_CameraControlActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICameraControlActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CameraControlActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CameraControlActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CameraControlActions @CameraControl => new CameraControlActions(this);
     public interface ILocomotionActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -1200,31 +1065,29 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
     }
-    public interface ICameraControlActions
-    {
-        void OnLockOnToTarget(InputAction.CallbackContext context);
-        void OnCycleTargets(InputAction.CallbackContext context);
-        void OnAim(InputAction.CallbackContext context);
-        void OnLook(InputAction.CallbackContext context);
-    }
     public interface IAbilitiesActions
     {
         void OnFirst(InputAction.CallbackContext context);
         void OnSecond(InputAction.CallbackContext context);
         void OnThird(InputAction.CallbackContext context);
         void OnFourth(InputAction.CallbackContext context);
+        void OnPrimaryAttack(InputAction.CallbackContext context);
+        void OnSecondaryAttack(InputAction.CallbackContext context);
     }
     public interface IGeneralActions
     {
         void OnEscape(InputAction.CallbackContext context);
         void OnDamageSelf(InputAction.CallbackContext context);
         void OnHealSelf(InputAction.CallbackContext context);
-        void OnAttack(InputAction.CallbackContext context);
     }
     public interface IMenusActions
     {
         void OnResume(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
         void OnConfirm(InputAction.CallbackContext context);
+    }
+    public interface ICameraControlActions
+    {
+        void OnLook(InputAction.CallbackContext context);
     }
 }

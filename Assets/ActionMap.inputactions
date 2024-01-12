@@ -222,171 +222,6 @@
             ]
         },
         {
-            "name": "CameraControl",
-            "id": "20b2cb7d-b37e-4108-b0cf-c554537bedbb",
-            "actions": [
-                {
-                    "name": "LockOnToTarget",
-                    "type": "Button",
-                    "id": "cfc2f0d9-3def-40e4-a3f6-bdbe7f7d897d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "CycleTargets",
-                    "type": "Button",
-                    "id": "de9a90db-890e-4372-ace2-f5dcf5ebd80a",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Aim",
-                    "type": "Button",
-                    "id": "a555938b-472a-4676-ba43-13c09c6ac675",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Look",
-                    "type": "Value",
-                    "id": "b10125f1-20e3-4220-a923-7d33c2ce964c",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "686dea2d-f0aa-4914-9746-a5ee940eef32",
-                    "path": "<Mouse>/middleButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "LockOnToTarget",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "17c97f84-1a89-4470-81af-a8433880dc16",
-                    "path": "<Gamepad>/rightStick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "LockOnToTarget",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "61df7e55-88c9-4b5a-b7ab-5655f9eabae2",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CycleTargets",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "38bd829f-495e-4ee5-9de3-a984cf342fed",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "bc38065f-fb9a-4834-b34c-3d3c402bda16",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9d256245-29d9-499a-ada8-ffc3e8b5f608",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "Controller",
-                    "id": "301244f1-97a9-45a0-8e66-77f9b0c13fda",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "370129bb-e467-46b6-88c9-d0a78e5ac71d",
-                    "path": "<Gamepad>/rightStick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "d5e3a90a-0743-47a1-a541-db07d95a4ebf",
-                    "path": "<Gamepad>/rightStick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "d8ea3fa7-85e0-4ff0-afe7-4d9aad9bc6a8",
-                    "path": "<Gamepad>/rightStick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "6e8fbe84-e5cb-436b-847a-4c63eca94e5e",
-                    "path": "<Gamepad>/rightStick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                }
-            ]
-        },
-        {
             "name": "Abilities",
             "id": "67f28106-a61a-4a94-b855-a47b15a52e64",
             "actions": [
@@ -421,6 +256,24 @@
                     "name": "Fourth",
                     "type": "Button",
                     "id": "fe5e4477-1513-46c7-af8a-5d247e3654f5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PrimaryAttack",
+                    "type": "Button",
+                    "id": "c9cdedc7-3950-406d-8ba0-33d6ea409be0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryAttack",
+                    "type": "Button",
+                    "id": "0cc79e3c-1e80-4392-9eb4-0cf8ac078c7c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -471,6 +324,28 @@
                     "action": "Fourth",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "abcc4c7a-e14e-40ea-ba33-65b124e23919",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "06b10c03-e617-4957-bd69-dfceb0e7e937",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -500,15 +375,6 @@
                     "name": "HealSelf",
                     "type": "Button",
                     "id": "bef8065f-2f8d-47a5-b6c4-6f112a22c95b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Attack",
-                    "type": "Button",
-                    "id": "88754d92-0249-466f-b0d8-80fea8afdeb0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -546,17 +412,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "HealSelf",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cf6abe54-c14d-4d54-905d-61ea0f2a1478",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -735,6 +590,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "Confirm",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "CameraControl",
+            "id": "54452422-ea5a-4f9a-a4ec-762c1368b490",
+            "actions": [
+                {
+                    "name": "Look",
+                    "type": "Button",
+                    "id": "8bebe14c-4f73-4852-b220-cd24b7655656",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ca061cb5-ed8a-4358-895f-859d89dc93ea",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
