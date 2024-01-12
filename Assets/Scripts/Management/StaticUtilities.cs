@@ -11,11 +11,11 @@ public static class StaticUtilities
     public static readonly Color magicDamageColor = Color.magenta;
     public static readonly Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
     public static int visibleTargets;
-
+    public static Transform playerTransform;
+    public const float encounterStartDelay = 1f;
 
     // RANGED GOLEM ANIMATION KEYWORDS
     public const string GOLEM_RANGER_ATTACK = "Golem Ranger Shooting";
-
 
     public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
     {

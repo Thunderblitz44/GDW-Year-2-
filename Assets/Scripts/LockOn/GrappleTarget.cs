@@ -36,17 +36,17 @@ public class GrappleTarget : MonoBehaviour
         }
         else
         {
-            point = GameManager.Instance.lobbyCamera.WorldToScreenPoint(transform.position);
+            //point = GameManager.Instance.lobbyCamera.WorldToScreenPoint(transform.position);
         }
         point.z = 0;
 
         // check if within screen bounds
-        if (point.y < 0 || point.y > Screen.height || point.x < 0 || point.x > Screen.width)
+        /*if (point.y < 0 || point.y > Screen.height || point.x < 0 || point.x > Screen.width)
         {
             // not visible
             SetInvisible();
             return;
-        }
+        }*/
 
         // visible
         if (GameManager.Instance.renderedGrappleTargets.Contains(transform)) return;
