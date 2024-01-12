@@ -23,6 +23,8 @@ public class Player : DamageableEntity
 
         actions = new ActionMap();
 
+        StaticUtilities.playerTransform = transform;
+
         // All modules attached to this gameobject
         foreach (IInputExpander module in GetComponents<IInputExpander>())
         {
