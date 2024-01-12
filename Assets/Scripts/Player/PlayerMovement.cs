@@ -117,7 +117,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // double check in case we are still grounded after jumping (it can happen)
         if (isGrounded && !CanJump()) onPlayerLanded();
 
-        DebugHUD.instance.SetSpeed(rb.velocity.magnitude);
+       DebugHUD.instance.SetSpeed(rb.velocity.magnitude);
     }
 
     void GroundCheck()
