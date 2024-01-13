@@ -6,7 +6,13 @@ using UnityEngine;
 public class Elana : Player
 {
     [Space(10), Header("ABILITIES"), Space(10)]
-    [Header("Primary Attack")]
+    [Header("Secondary Attack")]
+    [SerializeField] float meleeDamage = 1f;
+    [SerializeField] Vector2 knockback;
+    [SerializeField] float cooldown = 1f;
+    [SerializeField] MeleeHitBox mhb;
+
+    [Header("Secondary Attack")]
     [SerializeField] float shootStartDelay = 0.5f;
     [SerializeField] float bulletDamage = 1f;
     [SerializeField] float bulletSpeed = 20f;
@@ -74,6 +80,9 @@ public class Elana : Player
             mb.owner = this;
             pooledProjectiles.Add(mb.gameObject);
         }
+
+        mhb.damage = meleeDamage;
+        mhb.knockback = knockback;
     }
 
     private void Update()
@@ -114,7 +123,7 @@ public class Elana : Player
         actions.Abilities.PrimaryAttack.performed += ctx =>
         {
             // melee
-
+            mhb.gameObject.SetActive(true);
 
         };
         actions.Abilities.SecondaryAttack.started += ctx =>

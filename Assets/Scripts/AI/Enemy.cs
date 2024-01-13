@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
 
     List<Transform> detectedPlayers = new();
 
-    private void Start()
+    private void Awake()
     {
         animationHandler = GetComponent<EnemyAnimator>();
         behaviourHandler = GetComponent<EnemyBehaviours>();
