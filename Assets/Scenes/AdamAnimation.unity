@@ -448,6 +448,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab814d67eba9ec04b813ff76accfb993, type: 3}
+--- !u!4 &1039480316 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6968892360960128351, guid: cab9acd83e1f4b547a64279743463d4f, type: 3}
+  m_PrefabInstance: {fileID: 1909331291}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1052556836 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4951465114753020272, guid: cab9acd83e1f4b547a64279743463d4f, type: 3}
+  m_PrefabInstance: {fileID: 1909331291}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1592598952
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,6 +767,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7530698535374897380, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
+      propertyPath: m_Cameras.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9213530166221108238, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 949.2901
@@ -782,6 +796,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4729831054644312399, guid: cab9acd83e1f4b547a64279743463d4f, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1052556836}
+    - target: {fileID: 4729831054644312399, guid: cab9acd83e1f4b547a64279743463d4f, type: 3}
+      propertyPath: spineBone
+      value: 
+      objectReference: {fileID: 1039480316}
     - target: {fileID: 6795317024244391247, guid: cab9acd83e1f4b547a64279743463d4f, type: 3}
       propertyPath: m_Name
       value: Player
