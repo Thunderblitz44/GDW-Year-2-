@@ -7,9 +7,6 @@ public class Player : DamageableEntity
     public PlayerAnimator animatorScript { get; private set; }
     public PlayerMenuController pauseScript { get; private set; }
 
-    
-    internal CinemachineFreeLook freeLookCam;
-
     // INPUT
     internal ActionMap actions;
 

@@ -16,12 +16,12 @@ public class MagicBullet : MonoBehaviour
         Invoke(nameof(Die), lifetime);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerStay(Collider other)
     {
-        if (collision.gameObject == owner.gameObject) return;
+        if (other.gameObject == owner.gameObject) return;
 
         IDamageable d;
-        if (collision.gameObject.TryGetComponent(out d))
+        if (other.gameObject.TryGetComponent(out d))
         {
             d.ApplyDamage(damage, DamageTypes.magic);
         }

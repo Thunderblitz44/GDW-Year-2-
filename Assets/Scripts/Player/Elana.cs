@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,14 @@ using UnityEngine;
 public class Elana : Player
 {
     [Space(10), Header("ABILITIES"), Space(10)]
-    [Header("Primary Attack")]
+    [Header("Secondary Attack")]
+    [SerializeField] float meleeDamage = 1f;
+    [SerializeField] Vector2 knockback;
+    [SerializeField] float cooldown = 1f;
+    [SerializeField] MeleeHitBox mhb;
+
+    [Header("Secondary Attack")]
+    [SerializeField] float shootStartDelay = 0.5f;
     [SerializeField] float bulletDamage = 1f;
     [SerializeField] float bulletSpeed = 20f;
     [SerializeField] float bulletLifetime = 1f;
@@ -15,6 +23,7 @@ public class Elana : Player
     readonly List<GameObject> pooledProjectiles = new List<GameObject>(20);
     bool shooting = false;
     float shootingCooldownTimer;
+    float shootStartTimer;
 
     [Header("Portal")]
     [SerializeField] float portalRange = 30f;
@@ -50,6 +59,8 @@ public class Elana : Player
 
     Rigidbody rb;
     Transform body;
+    [SerializeField] CinemachineFreeLook freeLookCam;
+    [SerializeField] CinemachineFreeLook aimCam;
 
     internal override void Awake()
     {
@@ -69,12 +80,15 @@ public class Elana : Player
             mb.owner = this;
             pooledProjectiles.Add(mb.gameObject);
         }
+
+        mhb.damage = meleeDamage;
+        mhb.knockback = knockback;
     }
 
     private void Update()
     {
         shootingCooldownTimer += Time.deltaTime;
-        if (shooting && shootingCooldownTimer > bulletCooldown)
+        if (shooting && (shootStartTimer += Time.deltaTime) > shootStartDelay && shootingCooldownTimer > bulletCooldown)
         {
             ShootMagicBullet();
         }
@@ -106,19 +120,28 @@ public class Elana : Player
 
 
         // BASIC
-        actions.General.Attack.started += ctx =>
+        actions.Abilities.PrimaryAttack.performed += ctx =>
+        {
+            // melee
+            mhb.gameObject.SetActive(true);
+
+        };
+        actions.Abilities.SecondaryAttack.started += ctx =>
         {
             shooting = true;
+            // aim
+
+            //freeLookCam.gameObject.SetActive(false);
+            //aimCam.gameObject.SetActive(true);
         };
-        actions.General.Attack.canceled += ctx =>
+        actions.Abilities.SecondaryAttack.canceled += ctx =>
         {
             shooting = false;
-        };
-        actions.CameraControl.Aim.performed += ctx =>
-        {
+            //freeLookCam.gameObject.SetActive(true);
+            //aimCam.gameObject.SetActive(false);
+            shootStartTimer = 0;
         };
 
-        actions.CameraControl.Enable();
 
         // Abilities
 
@@ -266,7 +289,7 @@ public class Elana : Player
 
             bullet.SetActive(true);
             bullet.transform.position = shootOrigin.position;
-            bullet.GetComponent<Rigidbody>().AddForce(StaticUtilities.GetCameraLook() * bulletSpeed, ForceMode.Impulse);
+            bullet.GetComponent<Rigidbody>().AddForce(StaticUtilities.GetCameraLook() * bulletSpeed + Camera.main.transform.right/2, ForceMode.Impulse);
             break;
         }
     }

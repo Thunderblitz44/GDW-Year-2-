@@ -1,144 +1,141 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : DamageableEntity
 {
-    EnemyAnimator animationHandler;
-    EnemyBehaviours behaviourHandler;
-    EnemyDetection detectionHandler;
-    EnemyMovement movementHandler;
-    EnemyAttack attackHandler;
+    [Header("Movement")]
+    Transform target;
+    NavMeshAgent agent;
+    [SerializeField] float destinationRecalculationInterval = 0.2f;
+    float updateTimer;
+    bool targetReached;
 
-    List<Transform> detectedPlayers = new();
+    [Header("Behaviour")]
+    [SerializeField] float detectionRange = 20f;
+    [SerializeField] float endChaseDistance = 5f;
+    bool playerDetected = false;
 
-    private void Start()
+    /*[Header("Attack")]
+    [SerializeField] float damage = 0f;
+    [SerializeField] float attackDelay = 1;
+    [SerializeField] GameObject projectilePrefab;
+    float time;
+    bool isAttacking;
+    bool canAttack;*/
+
+    [Header("Animations")]
+    [SerializeField] Animator animator;
+    string currentAnimation;
+    //const string attackAnimation = StaticUtilities.GOLEM_RANGER_ATTACK;
+
+
+    internal override void Awake()
     {
-        animationHandler = GetComponent<EnemyAnimator>();
-        behaviourHandler = GetComponent<EnemyBehaviours>();
-        detectionHandler = GetComponent<EnemyDetection>();
-        movementHandler = GetComponent<EnemyMovement>();
-        attackHandler = GetComponent<EnemyAttack>();
-
-
-        if (behaviourHandler)
-        {
-            behaviourHandler.onBehaviourChanged += OnBehaviourChanged;
-        }
-
-        if (detectionHandler)
-        {
-            detectionHandler.onPlayerDetected += OnPlayerDetected;
-            detectionHandler.onPlayerLost += OnPlayerLost;
-        }
-
-        if (movementHandler)
-        {
-            movementHandler.onAttackDistanceReached += OnAttackDistanceReached;
-            movementHandler.onTargetFled += OnTargetFled;
-        }
+        base.Awake();
+        agent = GetComponent<NavMeshAgent>();
+        //agent.stoppingDistance = range / 2;
     }
 
-    void OnDestroy()
+    void Update()
     {
-        if (behaviourHandler)
+        if (!agent) return;
+
+
+        /*time += Time.deltaTime;
+        if (time < attackDelay) return;
+
+        if (canAttack && !IsAnimationPlaying(1))
         {
-            behaviourHandler.onBehaviourChanged -= OnBehaviourChanged;
+            AttackLoop();
+        }
+        else if (isAttacking)
+        {
+            time = 0;
+            isAttacking = false;
+        }*/
+
+
+        // timer to recalculate navmesh agent
+        updateTimer += Time.deltaTime;
+        if (updateTimer < destinationRecalculationInterval)
+        {
+            return;
         }
 
-        if (detectionHandler)
-        {
-            detectionHandler.onPlayerDetected -= OnPlayerDetected;
-            detectionHandler.onPlayerLost -= OnPlayerLost;
-        }
-
-        if (movementHandler)
-        {
-            movementHandler.onAttackDistanceReached -= OnAttackDistanceReached;
-            movementHandler.onTargetFled -= OnTargetFled;
-        }
+        SlowUpdate();
     }
 
-    void OnPlayerDetected(object sender, Transform player)
+    private void OnTriggerEnter(Collider other)
     {
-        detectedPlayers.Add(player);
-
-        behaviourHandler?.ChangeBehaviour(EnemyBehaviours.Behaviour.following);
-    }
-
-    void OnPlayerLost(object sender, Transform player)
-    {
-        detectedPlayers.Remove(player);
-
-        behaviourHandler?.ChangeBehaviour(EnemyBehaviours.Behaviour.passive);
-    }
-
-    void OnBehaviourChanged(object sender, EnemyBehaviours.Behaviour behaviour)
-    {
-        switch (behaviour)
+        if (other.tag == "Player")
         {
-            case EnemyBehaviours.Behaviour.passive:
-                SetPassive();
-                break;
-            case EnemyBehaviours.Behaviour.following:
-                SetFollowing();
-                break;
-            case EnemyBehaviours.Behaviour.aggressive_chase:
-                SetAggressiveChase();
-                break;
-            case EnemyBehaviours.Behaviour.attacking:
-                SetAttacking();
-                break;
-            case EnemyBehaviours.Behaviour.dying:
-                SetDying();
-                break;
-            default:
-                break;
+            playerDetected = true;
+            target = other.transform;
         }
     }
 
-    void SetPassive()
+    private void OnTriggerExit(Collider other)
     {
-        // passive commands
-        //animationHandler?.ChangeAnimation(StaticUtilities.ZOMBIE_IDLE);
-
-        //movementHandler?.SetFollowTarget(detectedPlayers[0]);
+        if (other.tag == "Player")
+        {
+            playerDetected = false;
+            target = null;
+        }
     }
 
-    void SetFollowing()
+    internal virtual void SlowUpdate()
     {
-        //animationHandler?.ChangeAnimation(StaticUtilities.ZOMBIE_WALK);
+        updateTimer = 0;
+        if (!target) return;
 
-        movementHandler?.SetFollowTarget(detectedPlayers[0]);
+        // go to target
+        agent.SetDestination(target.position);
+
+        float distance = Vector3.Distance(transform.position, target.position);
+
+        // reached attacking distance
+        if (distance < endChaseDistance && !targetReached)
+        {
+            targetReached = true;
+        }
+        // target is fleeing. Can we attack? Is the target outside of our range?
+        else if (agent.isStopped && targetReached && distance >= endChaseDistance)
+        {
+            targetReached = false;
+        }
     }
 
-    void SetAggressiveChase()
+    public virtual void SetFollowTarget(Transform target)
     {
+        this.target = target;
     }
 
-    void SetAttacking()
+    /*internal virtual void AttackLoop()
     {
+        isAttacking = true;
+        PlayAnimation(attackAnimation);
+    }*/
 
+    public bool IsAnimationPlaying(int layer)
+    {
+        return animator.GetCurrentAnimatorStateInfo(layer).normalizedTime < 1;
     }
 
-    void SetDying()
+    internal void ChangeAnimation(string newAnimation)
     {
+        if (!animator) return;
 
+        if (newAnimation == currentAnimation) return;
+        PlayAnimation(newAnimation);
     }
 
-
-    void OnAttackDistanceReached()
+    internal void PlayAnimation(string animation)
     {
-        attackHandler?.Attack();
-        //behaviourHandler?.ChangeBehaviour(EnemyBehaviours.Behaviour.attacking);
-        //animationHandler?.ChangeAnimation(StaticUtilities.ZOMBIE_ATTACK);
-    }
+        if (!animator) return;
 
-    void OnTargetFled()
-    {
-        attackHandler?.StopAttack();
-        //behaviourHandler?.ChangeBehaviour(EnemyBehaviours.Behaviour.attacking);
+        animator.Play(animation);
+        currentAnimation = animation;
     }
-
-    public List<Transform> GetDetectedPlayers() => detectedPlayers;
 }
