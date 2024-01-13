@@ -7,25 +7,20 @@ public class Player : DamageableEntity
     public PlayerAnimator animatorScript { get; private set; }
     public PlayerMenuController pauseScript { get; private set; }
 
-    
-
-    public GameObject cameraRigPrefab;
-    internal CinemachineFreeLook freeLookCam;
-
     // INPUT
     internal ActionMap actions;
 
-    void Awake()
+    internal override void Awake()
     {
-        freeLookCam = Instantiate(cameraRigPrefab, transform).transform.GetChild(0).GetComponent<CinemachineFreeLook>(); ;
-        freeLookCam.LookAt = transform;
-        freeLookCam.Follow = transform;
+        base.Awake();
 
         movementScript = GetComponent<PlayerMovement>();
         animatorScript = GetComponent<PlayerAnimator>();
         pauseScript = GetComponent<PlayerMenuController>();
 
         actions = new ActionMap();
+
+        StaticUtilities.playerTransform = transform;
 
         // All modules attached to this gameobject
         foreach (IInputExpander module in GetComponents<IInputExpander>())
@@ -37,7 +32,6 @@ public class Player : DamageableEntity
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        //GameManager.Instance.DisableLobbyCamera();
     }
 
     public void OnDestroy()
@@ -49,8 +43,7 @@ public class Player : DamageableEntity
     {
         actions.General.Escape.performed += ctx =>
         {
-            PausePlayer();
-            //pauseScript.Pause();
+            //PausePlayer();
         };
 
         actions.General.Enable();

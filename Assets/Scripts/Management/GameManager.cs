@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Transform _canvas;
     [SerializeField] Transform _worldCanvas;
-    [SerializeField] Camera _lobbyCamera;
     public List<LevelManager> levels = new();
 
     public List<Transform> renderedGrappleTargets = new();
@@ -16,7 +15,6 @@ public class GameManager : MonoBehaviour
     public List<GameObject> playerPrefabs;
 
 
-    public Camera lobbyCamera { get { return _lobbyCamera; } }
     public Transform worldCanvas { get { return _worldCanvas; } } 
     public Transform canvas { get { return _canvas; } }
     public bool isGamePaused { get; private set; } = false;
@@ -33,8 +31,4 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void DisableLobbyCamera()
-    {
-        _lobbyCamera.gameObject.SetActive(false);
-    }
 }

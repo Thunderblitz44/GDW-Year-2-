@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
@@ -40,8 +41,16 @@ public class HealthComponent : MonoBehaviour
 
     public void DeductHealth(float value)
     {
+        health = Mathf.Clamp(health - value, 0, maxHealth);
+
         if (hpbar) hpbar.ChangeHPByAmount(-value);
         else if (entityHPBar) entityHPBar.ChangeHPByAmount(-value);
+
+        if (health == 0)
+        {
+            if (entityHPBar) Destroy(entityHPBar.gameObject);
+            onHealthZeroed?.Invoke();
+        }
     }
 
     public float GetHealth() => hpbar == null ? entityHPBar == null ? 0 : entityHPBar.GetHP() : hpbar.GetHP();

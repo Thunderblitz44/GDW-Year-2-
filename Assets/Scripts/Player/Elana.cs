@@ -1,9 +1,30 @@
+using Cinemachine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Elana : Player
 {
     [Space(10), Header("ABILITIES"), Space(10)]
+    [Header("Secondary Attack")]
+    [SerializeField] float meleeDamage = 1f;
+    [SerializeField] Vector2 knockback;
+    [SerializeField] float cooldown = 1f;
+    [SerializeField] MeleeHitBox mhb;
+
+    [Header("Secondary Attack")]
+    [SerializeField] float shootStartDelay = 0.5f;
+    [SerializeField] float bulletDamage = 1f;
+    [SerializeField] float bulletSpeed = 20f;
+    [SerializeField] float bulletLifetime = 1f;
+    [SerializeField] float bulletCooldown = 0.25f;
+    [SerializeField] GameObject projectilePrefab;
+    [SerializeField] Transform shootOrigin;
+    readonly List<GameObject> pooledProjectiles = new List<GameObject>(20);
+    bool shooting = false;
+    float shootingCooldownTimer;
+    float shootStartTimer;
+
     [Header("Portal")]
     [SerializeField] float portalRange = 30f;
     //[SerializeField] float portalChargeSpeed = 2f;
@@ -38,15 +59,40 @@ public class Elana : Player
 
     Rigidbody rb;
     Transform body;
+    [SerializeField] CinemachineFreeLook freeLookCam;
+    [SerializeField] CinemachineFreeLook aimCam;
 
-    private void Start()
+    internal override void Awake()
     {
+        base.Awake();
         body = movementScript.GetBody();
         rb = movementScript.GetRigidbody();
 
         dashUI = Instantiate(dashMeterPrefab, GameManager.Instance.canvas).GetComponent<DashUI>();
         dashUI.SetDashVisual(maxDashes);
         dashUI.onDashesRecharged += () => { dashes = 0; };
+
+        for (int i = 0; i < pooledProjectiles.Capacity; i++)
+        {
+            MagicBullet mb = Instantiate(projectilePrefab).GetComponent<MagicBullet>();
+            mb.damage = bulletDamage;
+            mb.lifetime = bulletLifetime;
+            mb.owner = this;
+            pooledProjectiles.Add(mb.gameObject);
+        }
+
+        mhb.damage = meleeDamage;
+        mhb.knockback = knockback;
+    }
+
+    private void Update()
+    {
+        shootingCooldownTimer += Time.deltaTime;
+        if (shooting && (shootStartTimer += Time.deltaTime) > shootStartDelay && shootingCooldownTimer > bulletCooldown)
+        {
+            ShootMagicBullet();
+        }
+
     }
 
     void FixedUpdate()
@@ -74,13 +120,26 @@ public class Elana : Player
 
 
         // BASIC
-        actions.General.Attack.performed += ctx =>
+        actions.Abilities.PrimaryAttack.performed += ctx =>
         {
-            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(1f, DamageTypes.physical);
+            // melee
+            mhb.gameObject.SetActive(true);
+
         };
-        actions.CameraControl.Aim.performed += ctx =>
+        actions.Abilities.SecondaryAttack.started += ctx =>
         {
-            GameObject.Find("TestDummy").GetComponent<IDamageable>().ApplyDamage(-1f, DamageTypes.magic);
+            shooting = true;
+            // aim
+
+            //freeLookCam.gameObject.SetActive(false);
+            //aimCam.gameObject.SetActive(true);
+        };
+        actions.Abilities.SecondaryAttack.canceled += ctx =>
+        {
+            shooting = false;
+            //freeLookCam.gameObject.SetActive(true);
+            //aimCam.gameObject.SetActive(false);
+            shootStartTimer = 0;
         };
 
 
@@ -220,4 +279,18 @@ public class Elana : Player
         dashUI.RechargeDashes(dashCooldown);
     }
 
+    void ShootMagicBullet()
+    {
+        shootingCooldownTimer = 0f;
+        // start shooting
+        foreach (var bullet in pooledProjectiles)
+        {
+            if (bullet.activeSelf) continue;
+
+            bullet.SetActive(true);
+            bullet.transform.position = shootOrigin.position;
+            bullet.GetComponent<Rigidbody>().AddForce(StaticUtilities.GetCameraLook() * bulletSpeed + Camera.main.transform.right/2, ForceMode.Impulse);
+            break;
+        }
+    }
 }

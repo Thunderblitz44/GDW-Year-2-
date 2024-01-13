@@ -63,7 +63,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     // PLAYER STATES
     bool isRunning;
     bool isCrouching;
-    bool isAiming;
     bool ignoreStates;
 
     [Header("Important")]
@@ -109,10 +108,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             DebugHUD.instance.SetAirTime(airTime);
         }
 
-        if (isAiming)
-        {
-            body.rotation = new Quaternion(0, Camera.main.transform.rotation.y, 0, Camera.main.transform.rotation.w).normalized;
-        }
+        body.rotation = new Quaternion(0, Camera.main.transform.rotation.y, 0, Camera.main.transform.rotation.w).normalized;
 
         // double check in case we are still grounded after jumping (it can happen)
         if (isGrounded && !CanJump()) onPlayerLanded();
@@ -149,7 +145,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // Movement
         actions.Locomotion.Move.performed += ctx =>
         {
-            if (!isAiming) orientation.forward = CalculateBodyRotation();
             Vector2 input = ctx.ReadValue<Vector2>();
             inputMoveDirection = new Vector3(input.x, 0, input.y);
             UpdateMoveSpeed();
@@ -193,9 +188,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (CanJump()) Jump();
         };
 
-        actions.CameraControl.Aim.started += ctx => isAiming = true;
-        actions.CameraControl.Aim.canceled += ctx => isAiming = false;
-
         EnableLocomotion();
     }
 
@@ -218,9 +210,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
         // adjust move direction for slopes
         if (OnSlope()) moveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal);
-
-        // rotate the body
-        if (!isAiming) body.forward = Vector3.Slerp(body.forward, moveDirection.normalized, Time.deltaTime * rotationSpeed);
 
         // move
         if (isGrounded) rb.AddForce(moveDirection * moveSpeed * rb.mass * 10f, ForceMode.Force);

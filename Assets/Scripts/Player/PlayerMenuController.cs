@@ -16,8 +16,8 @@ public class PlayerMenuController : MonoBehaviour, IInputExpander
 
         actions.Menus.Resume.performed += ctx => 
         {
-            pauseMenu.Resume(); 
-            playerScript.UnPausePlayer();
+            //pauseMenu.Resume(); 
+            //playerScript.UnPausePlayer();
         };
         actions.Menus.Select.performed += ctx => { };
         actions.Menus.Confirm.performed += ctx => { };
