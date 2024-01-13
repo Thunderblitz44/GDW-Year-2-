@@ -122,14 +122,14 @@ public class Elana : Player
             shooting = true;
             // aim
 
-            freeLookCam.gameObject.SetActive(false);
-            aimCam.gameObject.SetActive(true);
+            //freeLookCam.gameObject.SetActive(false);
+            //aimCam.gameObject.SetActive(true);
         };
         actions.Abilities.SecondaryAttack.canceled += ctx =>
         {
             shooting = false;
-            freeLookCam.gameObject.SetActive(true);
-            aimCam.gameObject.SetActive(false);
+            //freeLookCam.gameObject.SetActive(true);
+            //aimCam.gameObject.SetActive(false);
             shootStartTimer = 0;
         };
 
