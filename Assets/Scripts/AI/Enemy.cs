@@ -12,40 +12,38 @@ public class Enemy : DamageableEntity
     float updateTimer;
     bool targetReached;
 
-    [Header("Attack")]
+    [Header("Behaviour")]
+    [SerializeField] float detectionRange = 20f;
+    [SerializeField] float endChaseDistance = 5f;
+    bool playerDetected = false;
+
+    /*[Header("Attack")]
     [SerializeField] float damage = 0f;
-    [SerializeField] float range = 2f;
     [SerializeField] float attackDelay = 1;
     [SerializeField] GameObject projectilePrefab;
     float time;
     bool isAttacking;
-    bool canAttack;
+    bool canAttack;*/
 
     [Header("Animations")]
     [SerializeField] Animator animator;
     string currentAnimation;
-    const string attackAnimation = StaticUtilities.GOLEM_RANGER_ATTACK;
+    //const string attackAnimation = StaticUtilities.GOLEM_RANGER_ATTACK;
 
 
     internal override void Awake()
     {
         base.Awake();
         agent = GetComponent<NavMeshAgent>();
-        agent.stoppingDistance = range / 2;
+        //agent.stoppingDistance = range / 2;
     }
 
     void Update()
     {
         if (!agent) return;
 
-        // timer to recalculate navmesh agent
-        updateTimer += Time.deltaTime;
-        if (updateTimer < destinationRecalculationInterval)
-        {
-            return;
-        }
 
-        time += Time.deltaTime;
+        /*time += Time.deltaTime;
         if (time < attackDelay) return;
 
         if (canAttack && !IsAnimationPlaying(1))
@@ -56,8 +54,15 @@ public class Enemy : DamageableEntity
         {
             time = 0;
             isAttacking = false;
-        }
+        }*/
 
+
+        // timer to recalculate navmesh agent
+        updateTimer += Time.deltaTime;
+        if (updateTimer < destinationRecalculationInterval)
+        {
+            return;
+        }
 
         SlowUpdate();
     }
@@ -66,6 +71,8 @@ public class Enemy : DamageableEntity
     {
         if (other.tag == "Player")
         {
+            playerDetected = true;
+            target = other.transform;
         }
     }
 
@@ -73,6 +80,8 @@ public class Enemy : DamageableEntity
     {
         if (other.tag == "Player")
         {
+            playerDetected = false;
+            target = null;
         }
     }
 
@@ -87,12 +96,12 @@ public class Enemy : DamageableEntity
         float distance = Vector3.Distance(transform.position, target.position);
 
         // reached attacking distance
-        if (distance < range && !targetReached)
+        if (distance < endChaseDistance && !targetReached)
         {
             targetReached = true;
         }
         // target is fleeing. Can we attack? Is the target outside of our range?
-        else if (agent.isStopped && targetReached && isAttacking && distance >= range)
+        else if (agent.isStopped && targetReached && distance >= endChaseDistance)
         {
             targetReached = false;
         }
@@ -103,11 +112,11 @@ public class Enemy : DamageableEntity
         this.target = target;
     }
 
-    internal virtual void AttackLoop()
+    /*internal virtual void AttackLoop()
     {
         isAttacking = true;
         PlayAnimation(attackAnimation);
-    }
+    }*/
 
     public bool IsAnimationPlaying(int layer)
     {
