@@ -1909,25 +1909,25 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 1528.1249
-      outSlope: 1528.1249
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
-      weightedMode: 2
+      weightedMode: 0
       inWeight: 0
-      outWeight: 0.00064809574
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: -0.00012885375
-      outSlope: -0.00012885375
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
-      weightedMode: 1
-      inWeight: 0.68091184
+      weightedMode: 0
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  runAccelMultiplier: 1
+  runAccelMultiplier: 0.5
   rotationSpeed: 10
   jumpForce: 10
   airMultiplier: 0.1
@@ -1970,6 +1970,11 @@ MonoBehaviour:
   floatingTextPrefab: {fileID: 144886900167941923, guid: 55652b8c6a95fec4c8cf0a4c1acb9422, type: 3}
   enableDamageNumbers: 0
   damageNumberSpawnHeight: 1.5
+  meleeDamage: 1
+  knockback: {x: 0, y: 0}
+  cooldown: 1
+  mhb: {fileID: 0}
+  shootStartDelay: 0.5
   bulletDamage: 1
   bulletSpeed: 20
   bulletLifetime: 1
@@ -2065,6 +2070,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   dashMeterPrefab: {fileID: 3716428700116357348, guid: 2028562b395f7654a92ee0cb67329858, type: 3}
+  freeLookCam: {fileID: 0}
+  aimCam: {fileID: 0}
 --- !u!114 &824550920274686567
 MonoBehaviour:
   m_ObjectHideFlags: 0
