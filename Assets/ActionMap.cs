@@ -62,6 +62,15 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""2938bdd3-084a-42ae-ba4c-814fffc64ee0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -240,6 +249,17 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a5c3ae40-8bb1-473d-8dfe-c70947d8ec58"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -248,7 +268,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             ""id"": ""67f28106-a61a-4a94-b855-a47b15a52e64"",
             ""actions"": [
                 {
-                    ""name"": ""First"",
+                    ""name"": ""Portal"",
                     ""type"": ""Button"",
                     ""id"": ""244bf505-5c4e-4a20-b9a2-33f4eba810b7"",
                     ""expectedControlType"": ""Button"",
@@ -257,27 +277,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Second"",
+                    ""name"": ""FireTornado"",
                     ""type"": ""Button"",
                     ""id"": ""14e9e585-58c2-4a7f-8b00-64de24b478e6"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Third"",
-                    ""type"": ""Button"",
-                    ""id"": ""a907021f-0510-4275-85e0-2d6e91a81282"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Fourth"",
-                    ""type"": ""Button"",
-                    ""id"": ""fe5e4477-1513-46c7-af8a-5d247e3654f5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -310,7 +312,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""First"",
+                    ""action"": ""Portal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -321,29 +323,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Second"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e31c9d5f-cbf6-4455-9a0d-e3d1fedac05c"",
-                    ""path"": ""<Keyboard>/r"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Third"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""52659366-a41d-4556-8d31-c0f5d7b66b22"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Fourth"",
+                    ""action"": ""FireTornado"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -654,12 +634,11 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_Locomotion_Jump = m_Locomotion.FindAction("Jump", throwIfNotFound: true);
         m_Locomotion_Run = m_Locomotion.FindAction("Run", throwIfNotFound: true);
         m_Locomotion_Crouch = m_Locomotion.FindAction("Crouch", throwIfNotFound: true);
+        m_Locomotion_Dodge = m_Locomotion.FindAction("Dodge", throwIfNotFound: true);
         // Abilities
         m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
-        m_Abilities_First = m_Abilities.FindAction("First", throwIfNotFound: true);
-        m_Abilities_Second = m_Abilities.FindAction("Second", throwIfNotFound: true);
-        m_Abilities_Third = m_Abilities.FindAction("Third", throwIfNotFound: true);
-        m_Abilities_Fourth = m_Abilities.FindAction("Fourth", throwIfNotFound: true);
+        m_Abilities_Portal = m_Abilities.FindAction("Portal", throwIfNotFound: true);
+        m_Abilities_FireTornado = m_Abilities.FindAction("FireTornado", throwIfNotFound: true);
         m_Abilities_PrimaryAttack = m_Abilities.FindAction("PrimaryAttack", throwIfNotFound: true);
         m_Abilities_SecondaryAttack = m_Abilities.FindAction("SecondaryAttack", throwIfNotFound: true);
         // General
@@ -740,6 +719,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_Locomotion_Jump;
     private readonly InputAction m_Locomotion_Run;
     private readonly InputAction m_Locomotion_Crouch;
+    private readonly InputAction m_Locomotion_Dodge;
     public struct LocomotionActions
     {
         private @ActionMap m_Wrapper;
@@ -748,6 +728,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Locomotion_Jump;
         public InputAction @Run => m_Wrapper.m_Locomotion_Run;
         public InputAction @Crouch => m_Wrapper.m_Locomotion_Crouch;
+        public InputAction @Dodge => m_Wrapper.m_Locomotion_Dodge;
         public InputActionMap Get() { return m_Wrapper.m_Locomotion; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -769,6 +750,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Crouch.started += instance.OnCrouch;
             @Crouch.performed += instance.OnCrouch;
             @Crouch.canceled += instance.OnCrouch;
+            @Dodge.started += instance.OnDodge;
+            @Dodge.performed += instance.OnDodge;
+            @Dodge.canceled += instance.OnDodge;
         }
 
         private void UnregisterCallbacks(ILocomotionActions instance)
@@ -785,6 +769,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Crouch.started -= instance.OnCrouch;
             @Crouch.performed -= instance.OnCrouch;
             @Crouch.canceled -= instance.OnCrouch;
+            @Dodge.started -= instance.OnDodge;
+            @Dodge.performed -= instance.OnDodge;
+            @Dodge.canceled -= instance.OnDodge;
         }
 
         public void RemoveCallbacks(ILocomotionActions instance)
@@ -806,20 +793,16 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     // Abilities
     private readonly InputActionMap m_Abilities;
     private List<IAbilitiesActions> m_AbilitiesActionsCallbackInterfaces = new List<IAbilitiesActions>();
-    private readonly InputAction m_Abilities_First;
-    private readonly InputAction m_Abilities_Second;
-    private readonly InputAction m_Abilities_Third;
-    private readonly InputAction m_Abilities_Fourth;
+    private readonly InputAction m_Abilities_Portal;
+    private readonly InputAction m_Abilities_FireTornado;
     private readonly InputAction m_Abilities_PrimaryAttack;
     private readonly InputAction m_Abilities_SecondaryAttack;
     public struct AbilitiesActions
     {
         private @ActionMap m_Wrapper;
         public AbilitiesActions(@ActionMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @First => m_Wrapper.m_Abilities_First;
-        public InputAction @Second => m_Wrapper.m_Abilities_Second;
-        public InputAction @Third => m_Wrapper.m_Abilities_Third;
-        public InputAction @Fourth => m_Wrapper.m_Abilities_Fourth;
+        public InputAction @Portal => m_Wrapper.m_Abilities_Portal;
+        public InputAction @FireTornado => m_Wrapper.m_Abilities_FireTornado;
         public InputAction @PrimaryAttack => m_Wrapper.m_Abilities_PrimaryAttack;
         public InputAction @SecondaryAttack => m_Wrapper.m_Abilities_SecondaryAttack;
         public InputActionMap Get() { return m_Wrapper.m_Abilities; }
@@ -831,18 +814,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_AbilitiesActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_AbilitiesActionsCallbackInterfaces.Add(instance);
-            @First.started += instance.OnFirst;
-            @First.performed += instance.OnFirst;
-            @First.canceled += instance.OnFirst;
-            @Second.started += instance.OnSecond;
-            @Second.performed += instance.OnSecond;
-            @Second.canceled += instance.OnSecond;
-            @Third.started += instance.OnThird;
-            @Third.performed += instance.OnThird;
-            @Third.canceled += instance.OnThird;
-            @Fourth.started += instance.OnFourth;
-            @Fourth.performed += instance.OnFourth;
-            @Fourth.canceled += instance.OnFourth;
+            @Portal.started += instance.OnPortal;
+            @Portal.performed += instance.OnPortal;
+            @Portal.canceled += instance.OnPortal;
+            @FireTornado.started += instance.OnFireTornado;
+            @FireTornado.performed += instance.OnFireTornado;
+            @FireTornado.canceled += instance.OnFireTornado;
             @PrimaryAttack.started += instance.OnPrimaryAttack;
             @PrimaryAttack.performed += instance.OnPrimaryAttack;
             @PrimaryAttack.canceled += instance.OnPrimaryAttack;
@@ -853,18 +830,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
 
         private void UnregisterCallbacks(IAbilitiesActions instance)
         {
-            @First.started -= instance.OnFirst;
-            @First.performed -= instance.OnFirst;
-            @First.canceled -= instance.OnFirst;
-            @Second.started -= instance.OnSecond;
-            @Second.performed -= instance.OnSecond;
-            @Second.canceled -= instance.OnSecond;
-            @Third.started -= instance.OnThird;
-            @Third.performed -= instance.OnThird;
-            @Third.canceled -= instance.OnThird;
-            @Fourth.started -= instance.OnFourth;
-            @Fourth.performed -= instance.OnFourth;
-            @Fourth.canceled -= instance.OnFourth;
+            @Portal.started -= instance.OnPortal;
+            @Portal.performed -= instance.OnPortal;
+            @Portal.canceled -= instance.OnPortal;
+            @FireTornado.started -= instance.OnFireTornado;
+            @FireTornado.performed -= instance.OnFireTornado;
+            @FireTornado.canceled -= instance.OnFireTornado;
             @PrimaryAttack.started -= instance.OnPrimaryAttack;
             @PrimaryAttack.performed -= instance.OnPrimaryAttack;
             @PrimaryAttack.canceled -= instance.OnPrimaryAttack;
@@ -1064,13 +1035,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
     }
     public interface IAbilitiesActions
     {
-        void OnFirst(InputAction.CallbackContext context);
-        void OnSecond(InputAction.CallbackContext context);
-        void OnThird(InputAction.CallbackContext context);
-        void OnFourth(InputAction.CallbackContext context);
+        void OnPortal(InputAction.CallbackContext context);
+        void OnFireTornado(InputAction.CallbackContext context);
         void OnPrimaryAttack(InputAction.CallbackContext context);
         void OnSecondaryAttack(InputAction.CallbackContext context);
     }
