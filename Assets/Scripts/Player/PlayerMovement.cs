@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     ActionMap actions;
 
     // SOME UNORGANIZED DATA
-    Rigidbody rb;
+  public Rigidbody rb;
 
     // DELEGATES
     public Action onPlayerLanded;
@@ -76,6 +76,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     {
         onPlayerLanded -= OnLanded;
     }
+
+
 
     private void Start()
     {
@@ -391,6 +393,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     #region Getters/Setters
 
     public bool IsMoving() => inputMoveDirection != Vector3.zero;
+    
     public bool IsRunning() => isRunning;
     public bool IsGrounded() => isGrounded;
     public bool IsCrouching() => isCrouching;
