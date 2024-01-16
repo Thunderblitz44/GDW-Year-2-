@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     ActionMap actions;
 
     // SOME UNORGANIZED DATA
-    Rigidbody rb;
+  public Rigidbody rb;
 
     // DELEGATES
     public Action onPlayerLanded;
@@ -71,6 +71,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     {
         onPlayerLanded -= OnLanded;
     }
+
+
 
     private void Start()
     {
@@ -108,7 +110,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // double check in case we are still grounded after jumping (it can happen)
         if (isGrounded && !CanJump()) onPlayerLanded();
 
-        DebugHUD.instance.SetSpeed(rb.velocity.magnitude);
+       DebugHUD.instance.SetSpeed(rb.velocity.magnitude);
     }
 
     void GroundCheck()
@@ -386,6 +388,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     #region Getters/Setters
 
     public bool IsMoving() => inputMoveDirection != Vector3.zero;
+    
     public bool IsRunning() => isRunning;
     public bool IsGrounded() => isGrounded;
     public bool IsCrouching() => isCrouching;

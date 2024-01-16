@@ -1,27 +1,27 @@
+using System;
 using UnityEngine;
 
 
 public class PlayerAnimator : MonoBehaviour
 {
-    public Animator animator;
-    public Rigidbody cc;
-    public PlayerMovement playerMovement;
-   
-    private void Awake()
+    private Animator animator;
+   public PlayerMovement playerMovement;
+    private void Start()
     {
-       // cc = GetComponent<Rigidbody>();
-      //  playerMovement = GetComponent<PlayerMovement>();
+       
+animator = GetComponent<Animator>();
 
+playerMovement = playerMovement.GetComponent<PlayerMovement>(); 
     }
 
-    private void Update()
-    {
-        //Moving Around
-
+  
+    private void FixedUpdate()
+    { 
+      
         // Get the current velocity components
-        float xSpeed = transform.InverseTransformVector(cc.velocity).x;
-        float zSpeed = transform.InverseTransformVector(cc.velocity).z;
-        float ySpeed = transform.InverseTransformVector(cc.velocity).y;
+        float xSpeed = transform.InverseTransformDirection(playerMovement.rb.velocity).x;
+        float zSpeed = transform.InverseTransformDirection(playerMovement.rb.velocity).z;
+        float ySpeed = transform.InverseTransformDirection(playerMovement.rb.velocity).y;
 
         // Set the velocity values in the animator
         animator.SetFloat("XSpeed", xSpeed);
@@ -29,12 +29,13 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetFloat("YSpeed", ySpeed);
 
 
-
-        //Jumping/Falling
-
         // Matches isGrounded with Groundcheck bool in animator
-        bool isGrounded = playerMovement.isGrounded;
-        animator.SetBool("GroundCheck", isGrounded);
-      
-    }
+        
+        animator.SetBool("GroundCheck", playerMovement.isGrounded);
+
+     
+        }
+
+
+ 
 }
