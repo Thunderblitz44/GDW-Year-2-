@@ -8708,9 +8708,10 @@ MonoBehaviour:
   floatingTextPrefab: {fileID: 0}
   enableDamageNumbers: 0
   damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+  abilityHud: {fileID: 0}
   meleeDamage: 1
   knockback: {x: 10, y: 4}
-  cooldown: 1
   mhb: {fileID: 464895320}
   shootStartDelay: 0.25
   bulletDamage: 1
@@ -8721,64 +8722,23 @@ MonoBehaviour:
   shootOrigin: {fileID: 2136155165745739361}
   portalRange: 30
   portalPrefab: {fileID: 5136089227381563992, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
-  previewPortalPrefab: {fileID: 8618935630039126293, guid: aeb1b583ce44a444586b0c395f15684a, type: 3}
-  portalPlacableSurfaces:
+  portalLink: {fileID: 0}
+  dodgeDistance: 5
+  dodgeSpeed: 10
+  dodgeCooldown: 1
+  dodgeCurve:
     serializedVersion: 2
-    m_Bits: 4294967295
-  dashDistance: 20
-  dashSpeed: 80
-  maxDashes: 3
-  timeLimitBetweenDashes: 1
-  dashCooldown: 5
-  dashCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  dashFovIntensityCurve:
+  dodgeFovIntensityCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  dashFovIncrease: 15
+  dodgeFovIncrease: 10
   fovRestoreCurve:
     serializedVersion: 2
     m_Curve:
@@ -8804,10 +8764,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   fovRestoreSpeed: 5
-  whatIsDashObstacle:
+  whatIsdodgeObstacle:
     serializedVersion: 2
-    m_Bits: 4294967295
-  dashMeterPrefab: {fileID: 3716428700116357348, guid: 2028562b395f7654a92ee0cb67329858, type: 3}
+    m_Bits: 0
   freeLookCam: {fileID: 324495787}
   aimCam: {fileID: 1342577310}
 --- !u!1 &616721151520916221
@@ -12683,7 +12642,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   runAccelMultiplier: 1
-  rotationSpeed: 10
   jumpForce: 10
   airMultiplier: 0.15
   jumpCooldown: 0.25
@@ -13736,6 +13694,7 @@ MonoBehaviour:
   floatingTextPrefab: {fileID: 0}
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
+  isInvincible: 0
   destinationRecalculationInterval: 0.2
   detectionRange: 20
   endChaseDistance: 5
