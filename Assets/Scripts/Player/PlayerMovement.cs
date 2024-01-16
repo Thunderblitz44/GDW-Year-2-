@@ -13,11 +13,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     float runAccelTime;
     [Space(10f)]
 
-    // 3RD PERSON
-    [Header("3rd Person")]
-    [SerializeField] float rotationSpeed = 10f;
-    [Space(10f)]
-
     // JUMPING
     [Header("Jumping")]
     [SerializeField] float jumpForce = 12;

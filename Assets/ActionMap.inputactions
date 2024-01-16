@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Dodge",
+                    "type": "Button",
+                    "id": "2938bdd3-084a-42ae-ba4c-814fffc64ee0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -218,6 +227,17 @@
                     "action": "Crouch",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5c3ae40-8bb1-473d-8dfe-c70947d8ec58",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -226,7 +246,7 @@
             "id": "67f28106-a61a-4a94-b855-a47b15a52e64",
             "actions": [
                 {
-                    "name": "First",
+                    "name": "Portal",
                     "type": "Button",
                     "id": "244bf505-5c4e-4a20-b9a2-33f4eba810b7",
                     "expectedControlType": "Button",
@@ -235,27 +255,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Second",
+                    "name": "FireTornado",
                     "type": "Button",
                     "id": "14e9e585-58c2-4a7f-8b00-64de24b478e6",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Third",
-                    "type": "Button",
-                    "id": "a907021f-0510-4275-85e0-2d6e91a81282",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Fourth",
-                    "type": "Button",
-                    "id": "fe5e4477-1513-46c7-af8a-5d247e3654f5",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -288,7 +290,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "First",
+                    "action": "Portal",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -299,29 +301,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Second",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e31c9d5f-cbf6-4455-9a0d-e3d1fedac05c",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Third",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "52659366-a41d-4556-8d31-c0f5d7b66b22",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Fourth",
+                    "action": "FireTornado",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
