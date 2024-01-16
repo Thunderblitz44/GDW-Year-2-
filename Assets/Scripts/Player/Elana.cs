@@ -31,7 +31,7 @@ public class Elana : Player
     [SerializeField] float teleportSpeed = 40f;
     [SerializeField] float portalCoolown = 1f;
     [SerializeField] GameObject recallPointIndicatorPrefab;
-    [SerializeField] GameObject portalPrefab;
+    //[SerializeField] GameObject portalPrefab;
     [SerializeField] LineRenderer portalLink;
     [SerializeField] SkinnedMeshRenderer meshRenderer;
     GameObject instantiatedPortal;
@@ -49,8 +49,10 @@ public class Elana : Player
     [SerializeField] float tornadoForce = 2f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
-
-
+    Transform aoeIndicator;
+    bool aimingFireTornado = false;
+    bool canUseFireTornado = true;
+    const int fireTornadoId = 1;
 
     [Header("Dodge")]
     [SerializeField] float dodgeDistance = 5f;
@@ -82,9 +84,9 @@ public class Elana : Player
             {
 
             }
-            else if (i == 1)
+            else if (i == fireTornadoId)
             {
-
+                canUseFireTornado = true;
             }
             else if (i == portalId)
             {
@@ -130,6 +132,16 @@ public class Elana : Player
                 portalLink.SetPosition(0, recallPos);
                 portalLink.SetPosition(1, transform.position);
                 instantiatedPortal.transform.rotation = Quaternion.LookRotation(StaticUtilities.GetCameraDir(),Vector3.up);
+            }
+        }
+
+        if (aimingFireTornado)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.main.transform.position, StaticUtilities.GetCameraLook(), out hit))
+            {
+                if (Vector3.Angle(Vector3.right, hit.normal) < 45)
+                aoeIndicator.position = hit.point;
             }
         }
     }
@@ -212,6 +224,16 @@ public class Elana : Player
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
             Dodge(transform.position, end, dodgeSpeed);
+        };
+
+        actions.Abilities.FireTornado.started += ctx =>
+        {
+            aimingFireTornado = true;
+            aoeIndicator = Instantiate(aoeIndicatorPrefab).transform;
+        };
+        actions.Abilities.FireTornado.canceled += ctx =>
+        {
+            // cast it
         };
 
         actions.Abilities.Enable();
