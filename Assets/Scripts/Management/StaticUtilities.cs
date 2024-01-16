@@ -6,18 +6,19 @@ using System.Linq;
 public static class StaticUtilities
 {
     public const float defaultFOV = 50f;
-    public const float damageOverTimeInterval = 0.25f;
+    public const float damageOverTimeInterval = 0.5f;
     public static readonly Color physicalDamageColor = Color.white;
     public static readonly Color magicDamageColor = Color.magenta;
     public static readonly Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
     public static int visibleTargets;
     public static Transform playerTransform;
     public const float encounterStartDelay = 1f;
+    //public static readonly Portal[] elanaPortals = new Portal[2];
 
     // RANGED GOLEM ANIMATION KEYWORDS
     public const string GOLEM_RANGER_ATTACK = "Golem Ranger Shooting";
 
-    public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
+    /*public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
     {
         return objects.OrderBy(x => Vector2.Distance(centerOfScreen, (Vector2)Camera.main.WorldToScreenPoint(x.transform.position))).ToList();
     }
@@ -40,7 +41,7 @@ public static class StaticUtilities
             }
         }
         return false;
-    }
+    }*/
 
     public static Vector3 GetCameraDir()
     {
@@ -69,5 +70,10 @@ public static class StaticUtilities
     public static float FastDistance(Vector3 first, Vector3 second)
     {
         return (first - second).sqrMagnitude;
+    }
+
+    public static Quaternion LookRotationYOnly(Vector3 first, Vector3 second, Vector3 worldUp)
+    {
+        return Quaternion.LookRotation(first - (Vector3.right * second.x + Vector3.up * first.y + Vector3.forward * second.z), worldUp);
     }
 }
