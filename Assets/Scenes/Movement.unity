@@ -9033,7 +9033,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989635139153675250}
   m_LocalRotation: {x: -0, y: 0.7156843, z: -0, w: 0.69842404}
-  m_LocalPosition: {x: 32.085884, y: -0.15831852, z: -7.0350723}
+  m_LocalPosition: {x: 33.00066, y: -0.15831852, z: 31.000622}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10042,8 +10042,32 @@ PrefabInstance:
       value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.834879
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.5252302
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.1393669
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.08767704
       objectReference: {fileID: 0}
     - target: {fileID: 4495033614909230112, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_Follow
@@ -10646,11 +10670,12 @@ MonoBehaviour:
   burnDamage: 1
   burnTime: 3
   rainTime: 5
-  tornadoTime: 5
+  tornadoTime: 8
   tornadoDamageMultiplier: 2
   tornadoForce: 2
-  aoeIndicatorPrefab: {fileID: 419723686809461175, guid: e694e854b0ddfa24fa40d03359a03a4e, type: 3}
-  abilityPrefab: {fileID: 0}
+  tornadoCooldown: 3
+  aoeIndicatorPrefab: {fileID: 2087975701165528923, guid: db9c5e5418d7a4749abf809a7c0940b8, type: 3}
+  abilityPrefab: {fileID: 530393498296675620, guid: 34e552d0ebef514489df7ef52977ed53, type: 3}
   dodgeDistance: 5
   dodgeSpeed: 40
   dodgeCooldown: 0.5

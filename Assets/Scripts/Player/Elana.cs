@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Elana : Player
 {
@@ -47,11 +48,14 @@ public class Elana : Player
     [SerializeField] float tornadoTime = 5f;
     [SerializeField] float tornadoDamageMultiplier = 2f;
     [SerializeField] float tornadoForce = 2f;
+    [SerializeField] float tornadoCooldown = 2f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
     Transform aoeIndicator;
+    GameObject fireTornado;
     bool aimingFireTornado = false;
     bool canUseFireTornado = true;
+    bool invalidPlacement = false;
     const int fireTornadoId = 1;
 
     [Header("Dodge")]
@@ -140,8 +144,18 @@ public class Elana : Player
             RaycastHit hit;
             if (Physics.Raycast(Camera.main.transform.position, StaticUtilities.GetCameraLook(), out hit))
             {
-                if (Vector3.Angle(Vector3.right, hit.normal) < 45)
-                aoeIndicator.position = hit.point;
+                if (Vector3.Angle(Vector3.up, hit.normal) < 45)
+                {
+                    if (!aoeIndicator.gameObject.activeSelf) aoeIndicator.gameObject.SetActive(true);
+                    aoeIndicator.position = hit.point;
+                    invalidPlacement = false;
+                }
+                else
+                {
+                    // block
+                    if (aoeIndicator.gameObject.activeSelf) aoeIndicator.gameObject.SetActive(false);
+                    invalidPlacement = true;
+                }
             }
         }
     }
@@ -228,12 +242,27 @@ public class Elana : Player
 
         actions.Abilities.FireTornado.started += ctx =>
         {
+            if (!canUseFireTornado) return;
+
             aimingFireTornado = true;
             aoeIndicator = Instantiate(aoeIndicatorPrefab).transform;
         };
         actions.Abilities.FireTornado.canceled += ctx =>
         {
+            if (!canUseFireTornado) return;
+
+            aimingFireTornado = false;
+            if (invalidPlacement)
+            {
+                Destroy(aoeIndicator.gameObject);
+                return;
+            }
+
             // cast it
+            canUseFireTornado = false;
+            abilityHud.SpendPoint(fireTornadoId, tornadoTime + tornadoCooldown);
+            fireTornado = Instantiate(abilityPrefab, aoeIndicator.position, Quaternion.identity);
+            Invoke(nameof(EndTornado), tornadoTime);
         };
 
         actions.Abilities.Enable();
@@ -300,7 +329,6 @@ public class Elana : Player
         isInvincible = false;
         isDodgeing = false;
 
-
         if (canPortal) return;
 
         portalLink.enabled = false;
@@ -323,6 +351,18 @@ public class Elana : Player
             bullet.GetComponent<Rigidbody>().AddForce(StaticUtilities.GetCameraLook() * bulletSpeed + Camera.main.transform.right/2, ForceMode.Impulse);
             break;
         }
+    }
+
+    void EndTornado()
+    {
+        fireTornado.GetComponent<VisualEffect>().Stop();
+        Invoke(nameof(KillTornado), tornadoCooldown > 0.5f ? tornadoCooldown - 0.5f : 0);
+    }
+
+    void KillTornado()
+    {
+        Destroy(fireTornado);
+        Destroy(aoeIndicator.gameObject);
     }
 
     /*IEnumerator PortalRoutine()

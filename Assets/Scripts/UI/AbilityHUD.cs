@@ -12,7 +12,7 @@ public class AbilityHUD : MonoBehaviour
         for (int i = 0; i < points.Count; i++)
         {
             points[i].id = i;
-            points[i].onAbilityPointCharged += onPointRecharged;
+            points[i].onAbilityPointCharged += OnPointRecharged;
         }
     }
 
@@ -22,4 +22,8 @@ public class AbilityHUD : MonoBehaviour
         StartCoroutine(points[id].Recharge(rechargeTime));
     }
 
+    void OnPointRecharged(int i)
+    {
+        onPointRecharged?.Invoke(i);
+    }
 }
