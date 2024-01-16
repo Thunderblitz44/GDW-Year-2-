@@ -1,16 +1,14 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
-    int maxUses;
-    int uses;
-    Portal otherPortal;
+    public Portal otherPortal;
     SpriteRenderer sr;
-    public float dissTime = 0.5f;
-    public float dissDelay = 0.5f;
-    public float portalHeight = 1;
-    float time;
+    [SerializeField] float dissTime = 0.5f;
+    [SerializeField] float dissDelay = 0.5f;
+    Action onPortalContact;
 
   
 
@@ -19,32 +17,9 @@ public class Portal : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
-    {
-        if (uses != 0)
-        {
-            time += Time.deltaTime;
-            float f = 0.1f * Mathf.Sin(uses * 5f * time) + 0.9f;
-            sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, f);
-        }
-    }
-
-    public void Init(int maxUses, Portal otherPortal)
-    {
-        this.otherPortal = otherPortal;
-        this.maxUses = maxUses;
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
-        otherPortal.uses++;
-        if (++uses == maxUses)
-        {
-            Die();
-            otherPortal.Die();
-        }
-
-        collision.transform.position = otherPortal.transform.position - otherPortal.transform.forward;
+        onPortalContact?.Invoke();
     }
 
     public void Die()

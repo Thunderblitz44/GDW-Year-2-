@@ -29,7 +29,7 @@ public class MeleeHitBox : MonoBehaviour
         Rigidbody rb;
         if (other.gameObject.TryGetComponent(out rb))
         {
-            rb.AddForce(transform.forward * knockback.x + Vector3.up * knockback.y, ForceMode.Impulse);
+            rb.AddForce((transform.forward * knockback.x + Vector3.up * knockback.y) * rb.mass, ForceMode.Impulse);
         }
 
         CancelInvoke(nameof(Hide));

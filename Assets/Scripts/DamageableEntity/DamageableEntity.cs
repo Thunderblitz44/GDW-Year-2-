@@ -19,7 +19,6 @@ public class DamageableEntity : MonoBehaviour, IDamageable
 
     internal virtual void OnHealthZeroed()
     {
-        Debug.Log(name + " died");
         Destroy(gameObject);
     }
 

@@ -5757,7 +5757,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 227.73041, y: 38.695496}
+  m_AnchoredPosition: {x: 227.73047, y: 38.695557}
   m_SizeDelta: {x: 455.4608, y: 77.391}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1452714779
@@ -9285,6 +9285,8 @@ MonoBehaviour:
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
   abilityHud: {fileID: 8898539724482278880}
+  freeLookCam: {fileID: 324495787}
+  aimCam: {fileID: 1342577310}
   meleeDamage: 1
   knockback: {x: 10, y: 4}
   mhb: {fileID: 464895320}
@@ -9295,26 +9297,26 @@ MonoBehaviour:
   bulletCooldown: 0.15
   projectilePrefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
   shootOrigin: {fileID: 2136155165745739361}
-  portalRange: 30
-  portalPrefab: {fileID: 8618935630039126293, guid: aeb1b583ce44a444586b0c395f15684a, type: 3}
+  portalRange: 50
+  teleportSpeed: 100
+  portalCoolown: 1
+  recallPointIndicatorPrefab: {fileID: 8618935630039126293, guid: aeb1b583ce44a444586b0c395f15684a, type: 3}
+  portalPrefab: {fileID: 5136089227381563992, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
   portalLink: {fileID: 1882419859}
+  meshRenderer: {fileID: 7742533376032788556}
+  maxRange: 15
+  burnDamage: 1
+  burnTime: 3
+  rainTime: 5
+  tornadoTime: 5
+  tornadoDamageMultiplier: 2
+  tornadoForce: 2
+  aoeIndicatorPrefab: {fileID: 419723686809461175, guid: e694e854b0ddfa24fa40d03359a03a4e, type: 3}
+  abilityPrefab: {fileID: 0}
   dodgeDistance: 5
-  dodgeSpeed: 10
-  dodgeCooldown: 1
+  dodgeSpeed: 40
+  dodgeCooldown: 0.5
   dodgeCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  dodgeFovIntensityCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  dodgeFovIncrease: 10
-  fovRestoreCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -9338,12 +9340,59 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  fovRestoreSpeed: 5
-  whatIsdodgeObstacle:
+  dodgeFovIntensityCurve:
     serializedVersion: 2
-    m_Bits: 0
-  freeLookCam: {fileID: 324495787}
-  aimCam: {fileID: 1342577310}
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  dodgeFovIncrease: 5
+  fovRestoreCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fovRestoreSpeed: 10
+  whatIsDodgeObstacle:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &616721151520916221
 GameObject:
   m_ObjectHideFlags: 0
@@ -9624,7 +9673,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1883594850342248349, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.016668601
+      value: -0.01666861
       objectReference: {fileID: 0}
     - target: {fileID: 1883594850342248349, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -9632,7 +9681,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1883594850342248349, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0027824938
+      value: -0.0027824952
       objectReference: {fileID: 0}
     - target: {fileID: 2188207525050448641, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_IsActive
@@ -9664,7 +9713,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2352767033468916339, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.016668601
+      value: -0.01666861
       objectReference: {fileID: 0}
     - target: {fileID: 2352767033468916339, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -9672,7 +9721,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2352767033468916339, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0027824938
+      value: -0.0027824952
       objectReference: {fileID: 0}
     - target: {fileID: 2548233800219570359, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -9780,31 +9829,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.0051879883
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.06686306
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.008014679
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.98633647
+      value: 0.9862109
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0054862276
+      value: -0.016668608
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.16464953
+      value: -0.16462843
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00091581803
+      value: -0.0027824948
       objectReference: {fileID: 0}
     - target: {fileID: 4495033614909230112, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_Follow
@@ -9928,7 +9977,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6307245278257763218, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.016668601
+      value: -0.01666861
       objectReference: {fileID: 0}
     - target: {fileID: 6307245278257763218, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -9936,7 +9985,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6307245278257763218, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0027824938
+      value: -0.0027824952
       objectReference: {fileID: 0}
     - target: {fileID: 6519926075064711140, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_XAxis.Value
@@ -10227,6 +10276,7 @@ GameObject:
   - component: {fileID: 5410062437504025398}
   - component: {fileID: 3351480009390309054}
   - component: {fileID: 5410062437504025402}
+  - component: {fileID: 5410062437504025403}
   m_Layer: 0
   m_Name: GOLLUM
   m_TagString: Untagged
@@ -11445,9 +11495,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989635139153675250}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 1000
+  m_Drag: 1
+  m_AngularDrag: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -12727,16 +12777,16 @@ NavMeshAgent:
   m_GameObject: {fileID: 989635139153675250}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 7.01
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 8
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -13979,8 +14029,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9a67c866d32d044f81bf8857f70b4e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  runSpeed: 10
+  walkSpeed: 4
+  runSpeed: 8
   runSpeedCurve:
     serializedVersion: 2
     m_Curve:
@@ -14006,7 +14056,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   runAccelMultiplier: 1
-  jumpForce: 10
+  jumpForce: 8
   airMultiplier: 0.15
   jumpCooldown: 0.25
   crouchSpeed: 3
@@ -14014,7 +14064,7 @@ MonoBehaviour:
   maxSlopeAngle: 40
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 64
   playerHeight: 2
   isGrounded: 0
   orientation: {fileID: 5441492245111000396}
@@ -15219,8 +15269,28 @@ MonoBehaviour:
   isInvincible: 0
   destinationRecalculationInterval: 0.2
   detectionRange: 20
-  endChaseDistance: 5
   animator: {fileID: 0}
+--- !u!135 &5410062437504025403
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989635139153675250}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 20
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5437389231948904765
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,7 +14,6 @@ public class Enemy : DamageableEntity
 
     [Header("Behaviour")]
     [SerializeField] float detectionRange = 20f;
-    [SerializeField] float endChaseDistance = 5f;
     bool playerDetected = false;
 
     /*[Header("Attack")]
@@ -28,14 +27,12 @@ public class Enemy : DamageableEntity
     [Header("Animations")]
     [SerializeField] Animator animator;
     string currentAnimation;
-    //const string attackAnimation = StaticUtilities.GOLEM_RANGER_ATTACK;
 
 
     internal override void Awake()
     {
         base.Awake();
         agent = GetComponent<NavMeshAgent>();
-        //agent.stoppingDistance = range / 2;
     }
 
     void Update()
@@ -96,12 +93,12 @@ public class Enemy : DamageableEntity
         float distance = Vector3.Distance(transform.position, target.position);
 
         // reached attacking distance
-        if (distance < endChaseDistance && !targetReached)
+        if (distance < agent.stoppingDistance && !targetReached)
         {
             targetReached = true;
         }
         // target is fleeing. Can we attack? Is the target outside of our range?
-        else if (agent.isStopped && targetReached && distance >= endChaseDistance)
+        else if (agent.isStopped && targetReached && distance >= agent.stoppingDistance)
         {
             targetReached = false;
         }
