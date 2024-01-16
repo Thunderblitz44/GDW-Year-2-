@@ -8,6 +8,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
     [SerializeField] GameObject floatingTextPrefab;
     [SerializeField] bool enableDamageNumbers = true;
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
+    public bool isInvincible;
     HealthComponent hp;
 
     internal virtual void Awake()
@@ -24,7 +25,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
 
     public void ApplyDamage(float damage, DamageTypes type)
     {
-        if (!hp) return;
+        if (!hp || isInvincible) return;
         hp.DeductHealth(damage);
 
         if (!enableDamageNumbers) return;

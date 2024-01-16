@@ -8,7 +8,7 @@ public class GrappleUI : MonoBehaviour
 
     private void Awake()
     {
-        point.onAbilityPointCharged += OnGrappleCharged;
+        //point.onAbilityPointCharged += OnGrappleCharged;
     }
 
     public void SpendPoint()

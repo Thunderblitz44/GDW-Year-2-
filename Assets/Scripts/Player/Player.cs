@@ -6,6 +6,7 @@ public class Player : DamageableEntity
     public PlayerMovement movementScript { get; private set; }
     public PlayerAnimator animatorScript { get; private set; }
     public PlayerMenuController pauseScript { get; private set; }
+    public AbilityHUD abilityHud;
 
     // INPUT
     internal ActionMap actions;

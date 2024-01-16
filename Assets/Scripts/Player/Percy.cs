@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -75,7 +75,7 @@ public class Percy : Player
         // Abilities
 
         // GRAPPLE
-        actions.Abilities.First.started += ctx => 
+        *//*actions.Abilities.First.started += ctx => 
         {
             if (isGrappling || !grappleReady || !lockedTarget) return;
 
@@ -125,15 +125,7 @@ public class Percy : Player
             grappleReady = false;
             grappleUI.RechargePoint(grappleCooldown);
         };
-
-        actions.Abilities.Second.started += ctx => { };
-        actions.Abilities.Second.canceled += ctx => { };
-
-        actions.Abilities.Third.started += ctx => { };
-        actions.Abilities.Third.canceled += ctx => { };
-
-        actions.Abilities.Fourth.started += ctx => { };
-        actions.Abilities.Fourth.canceled += ctx => { };
+*//*
         
         actions.Abilities.Enable();
     }
@@ -220,3 +212,4 @@ public class Percy : Player
         //targets = StaticUtilities.SortByVisible(targets, 7); // Interactable layer == 7
     }
 }
+*/

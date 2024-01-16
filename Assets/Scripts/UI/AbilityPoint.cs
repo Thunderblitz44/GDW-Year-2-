@@ -6,8 +6,9 @@ using UnityEngine.UI;
 public class AbilityPoint : MonoBehaviour
 {
     Image img;
-    public Action onAbilityPointCharged;
+    public Action<int> onAbilityPointCharged;
     public bool isSpent { get; private set; }
+    [HideInInspector] public int id;
 
     private void Awake()
     {
@@ -30,6 +31,6 @@ public class AbilityPoint : MonoBehaviour
         img.fillAmount = 1f;
 
         isSpent = false;
-        onAbilityPointCharged?.Invoke();
+        onAbilityPointCharged?.Invoke(id);
     }
 }

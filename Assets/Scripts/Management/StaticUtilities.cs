@@ -65,4 +65,9 @@ public static class StaticUtilities
             + Mathf.Sqrt(2 * (displacementY - h) / gravity));
         return velocityXZ + velocityY;
     }
+
+    public static float FastDistance(Vector3 first, Vector3 second)
+    {
+        return (first - second).sqrMagnitude;
+    }
 }
