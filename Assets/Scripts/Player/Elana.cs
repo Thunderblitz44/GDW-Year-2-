@@ -14,6 +14,7 @@ public class Elana : Player
     [SerializeField] Vector2 knockback;
     //[SerializeField] float cooldown = 1f;
     [SerializeField] MeleeHitBox mhb;
+   public static bool isPrimaryAttacking;
     
     [Header("Secondary Attack")]
     [SerializeField] float shootStartDelay = 0.5f;
@@ -168,11 +169,20 @@ public class Elana : Player
 
 
         // BASIC
-        actions.Abilities.PrimaryAttack.performed += ctx =>
+        actions.Abilities.PrimaryAttack.started += ctx =>
         {
             // melee
-            mhb.gameObject.SetActive(true);
+            //mhb.gameObject.SetActive(true);
+            
+            
+            //Animate player/wolf attacking in sync
+            isPrimaryAttacking = true;
+        };
+        actions.Abilities.PrimaryAttack.canceled += ctx =>
+        {
+          
 
+            isPrimaryAttacking = false;
         };
         actions.Abilities.SecondaryAttack.started += ctx =>
         {

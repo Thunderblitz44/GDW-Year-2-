@@ -13,25 +13,34 @@ public class GolemKnightAnimatorController : MonoBehaviour
     public float minSpeed = 1f; // Minimum speed the AI can have
     public float minDistance = 2f; // Minimum distance at which the AI starts reducing speed
 
+    public Transform HeadTarget;
     // Start is called before the first frame update
     void Start()
     {
         GolemKnightAnimator = GetComponent<Animator>();
         GolemKnightAgent = GetComponentInParent<NavMeshAgent>();
+        HeadTarget = HeadTarget.GetComponent<Transform>();
         GolemKnightAgent.enabled = false;
     }
 
     
     // Update is called once per frame
-    void Update()
+    public void Update()
     { 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject lockOn = GameObject.FindGameObjectWithTag("HeadTag");
+        Vector3 headPosition = lockOn.transform.position;
         Vector3 targetPosition = player.transform.position;
+        HeadTarget.transform.position = headPosition;
+        
+    //    GameObject playerHead = GameObject.FindGameObjectWithTag("HeadTag");
+        
         if (isEnabled)
         {
             GolemKnightAgent.SetDestination(targetPosition);
-        }
         
+        }
+     
 
         // Calculate distance between AI and target
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
@@ -56,6 +65,9 @@ public class GolemKnightAnimatorController : MonoBehaviour
     {
         GolemKnightAgent.enabled = true;
         isEnabled = true;
+      
+        
+
     }
 }
 
