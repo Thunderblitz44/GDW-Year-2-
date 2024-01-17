@@ -12,7 +12,7 @@ public class GolemKnightAnimatorController : MonoBehaviour
     public float maxSpeed = 5f; // Maximum speed of the AI
     public float minSpeed = 1f; // Minimum speed the AI can have
     public float minDistance = 2f; // Minimum distance at which the AI starts reducing speed
-
+    private CapsuleCollider attackTrigger;
     public Transform HeadTarget;
     // Start is called before the first frame update
     void Start()
@@ -21,6 +21,7 @@ public class GolemKnightAnimatorController : MonoBehaviour
         GolemKnightAgent = GetComponentInParent<NavMeshAgent>();
         HeadTarget = HeadTarget.GetComponent<Transform>();
         GolemKnightAgent.enabled = false;
+        attackTrigger = GetComponentInChildren<CapsuleCollider>();
     }
 
     
