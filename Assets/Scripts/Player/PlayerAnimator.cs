@@ -6,12 +6,15 @@ public class PlayerAnimator : MonoBehaviour
 {
     private Animator animator;
    public PlayerMovement playerMovement;
+ 
     private void Start()
     {
        
 animator = GetComponent<Animator>();
 
-playerMovement = playerMovement.GetComponent<PlayerMovement>(); 
+playerMovement = playerMovement.GetComponent<PlayerMovement>();
+
+
     }
 
   
@@ -28,7 +31,8 @@ playerMovement = playerMovement.GetComponent<PlayerMovement>();
         animator.SetFloat("ZSpeed", zSpeed);
         animator.SetFloat("YSpeed", ySpeed);
 
-
+        animator.SetBool("PrimaryAttackBool", Elana.isPrimaryAttacking);
+        
         // Matches isGrounded with Groundcheck bool in animator
         
         animator.SetBool("GroundCheck", playerMovement.isGrounded);

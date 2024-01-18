@@ -8,25 +8,40 @@ public class GolemKnightAnimatorController : MonoBehaviour
 {
     private NavMeshAgent GolemKnightAgent;
     private Animator GolemKnightAnimator;
-
+    private bool isEnabled = false;
     public float maxSpeed = 5f; // Maximum speed of the AI
     public float minSpeed = 1f; // Minimum speed the AI can have
     public float minDistance = 2f; // Minimum distance at which the AI starts reducing speed
-
+    private CapsuleCollider attackTrigger;
+    public Transform HeadTarget;
     // Start is called before the first frame update
     void Start()
     {
         GolemKnightAnimator = GetComponent<Animator>();
         GolemKnightAgent = GetComponentInParent<NavMeshAgent>();
+        HeadTarget = HeadTarget.GetComponent<Transform>();
+        GolemKnightAgent.enabled = false;
+        attackTrigger = GetComponentInChildren<CapsuleCollider>();
     }
 
+    
     // Update is called once per frame
-    void Update()
+    public void Update()
     { 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject lockOn = GameObject.FindGameObjectWithTag("HeadTag");
+        Vector3 headPosition = lockOn.transform.position;
         Vector3 targetPosition = player.transform.position;
-
-        GolemKnightAgent.SetDestination(targetPosition);
+        HeadTarget.transform.position = headPosition;
+        
+    //    GameObject playerHead = GameObject.FindGameObjectWithTag("HeadTag");
+        
+        if (isEnabled)
+        {
+            GolemKnightAgent.SetDestination(targetPosition);
+        
+        }
+     
 
         // Calculate distance between AI and target
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
@@ -45,6 +60,15 @@ public class GolemKnightAnimatorController : MonoBehaviour
 
         // Update animator with normalized speed
         GolemKnightAnimator.SetFloat("ZSpeed", GolemKnightAgent.velocity.magnitude);
+    }
+//Enables the ai on a delay
+    private void EnableAI()
+    {
+        GolemKnightAgent.enabled = true;
+        isEnabled = true;
+      
+        
+
     }
 }
 
