@@ -36,11 +36,7 @@ public class SharkController : MonoBehaviour
         if (isEnabled)
         {
             // Lerp the y position of SharkObject towards the y position of HeadTarget
-            SharkObject.position = new Vector3(
-                SharkObject.position.x,
-                Mathf.Lerp(SharkObject.position.y, headPosition.y, Time.deltaTime * lerpSpeed),
-                SharkObject.position.z
-            );
+         
             HeadTarget.transform.position = headPosition;
             SharkAgent.SetDestination(headPosition);
             
@@ -54,5 +50,25 @@ public class SharkController : MonoBehaviour
       
         HeadTarget.SetActive(true);
 
+    }
+
+    public System.Collections.IEnumerator LockOnCoroutine()
+    {
+        float elapsedTime = 0f;
+        float duration = 3f; // Set the duration of the lock-on effect
+
+        while (elapsedTime < duration)
+        {
+            SharkObject.position = new Vector3(
+                SharkObject.position.x,
+                Mathf.Lerp(SharkObject.position.y, HeadTarget.transform.position.y, Time.deltaTime * lerpSpeed),
+                SharkObject.position.z
+            );
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Reset or do any other cleanup after the lock-on effect
     }
 }
