@@ -42,10 +42,10 @@ MonoBehaviour:
   Path: Assets/Fmod/Alacrium/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638405804302612809
+  lastModified: 638412932502747073
   FileSizes:
   - Name: Desktop
-    Value: 295136
+    Value: 379776
   Exists: 1
 --- !u!114 &-3993510842431232375
 MonoBehaviour:
@@ -101,6 +101,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1201
+--- !u!114 &-2825590320739543771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Sand Footstep Placeholder
+  m_EditorClassIdentifier: 
+  Path: event:/Sand Footstep Placeholder
+  Guid:
+    Data1: 512370138
+    Data2: 1292523963
+    Data3: 2079720845
+    Data4: -778463998
+  Banks:
+  - {fileID: -4122969150140142887}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-1801261761565268912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Fire Tornado Placeholder
+  m_EditorClassIdentifier: 
+  Path: event:/Fire Tornado Placeholder
+  Guid:
+    Data1: -959837658
+    Data2: 1252135882
+    Data3: -316518511
+    Data4: -203160879
+  Banks:
+  - {fileID: -4122969150140142887}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-1329226732423740829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,12 +204,16 @@ MonoBehaviour:
   - {fileID: 3198722820802795181}
   - {fileID: -1329226732423740829}
   - {fileID: -3945358528248700810}
+  - {fileID: -1801261761565268912}
+  - {fileID: 6137291848538168430}
+  - {fileID: 1771204282199972265}
+  - {fileID: -2825590320739543771}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4122969150140142887}
   StringsBanks:
   - {fileID: 2418798394066217192}
-  cacheTime: 638405804302632887
+  cacheTime: 638412932502816850
   cacheVersion: 131608
 --- !u!114 &757518291404010504
 MonoBehaviour:
@@ -184,6 +242,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &1771204282199972265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Elana Footstep Placeholder
+  m_EditorClassIdentifier: 
+  Path: event:/Elana Footstep Placeholder
+  Guid:
+    Data1: 197094853
+    Data2: 1206511648
+    Data3: 1597003190
+    Data4: 294186256
+  Banks:
+  - {fileID: -4122969150140142887}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &2418798394066217192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,10 +284,10 @@ MonoBehaviour:
   Path: Assets/Fmod/Alacrium/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638405804302632887
+  lastModified: 638412932502816850
   FileSizes:
   - Name: Desktop
-    Value: 1000
+    Value: 1230
   Exists: 1
 --- !u!114 &3198722820802795181
 MonoBehaviour:
@@ -231,3 +316,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1000
+--- !u!114 &6137291848538168430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Placeholder Collectible Pickup
+  m_EditorClassIdentifier: 
+  Path: event:/Placeholder Collectible Pickup
+  Guid:
+    Data1: 1249667009
+    Data2: 1087456354
+    Data3: -1049819748
+    Data4: 70724352
+  Banks:
+  - {fileID: -4122969150140142887}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
