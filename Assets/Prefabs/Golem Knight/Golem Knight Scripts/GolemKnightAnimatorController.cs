@@ -30,10 +30,10 @@ public class GolemKnightAnimatorController : MonoBehaviour
     // Update is called once per frame
     public void Update()
     { 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+       
         GameObject lockOn = GameObject.FindGameObjectWithTag("HeadTag");
         Vector3 headPosition = lockOn.transform.position;
-        Vector3 targetPosition = player.transform.position;
+       
       
         
     //    GameObject playerHead = GameObject.FindGameObjectWithTag("HeadTag");
@@ -41,13 +41,13 @@ public class GolemKnightAnimatorController : MonoBehaviour
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
-            GolemKnightAgent.SetDestination(targetPosition);
+            GolemKnightAgent.SetDestination(headPosition);
         GolemKnightAnimator.SetBool("IsAttacking", inAttackRange);
         }
      
 
         // Calculate distance between AI and target
-        float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+        float distanceToTarget = Vector3.Distance(transform.position, headPosition);
 
         // Gradually decrease speed based on distance
         if (distanceToTarget < minDistance)
