@@ -5,134 +5,152 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 {
     // MOVEMENT
     [Header("Movement")]
-    [SerializeField] float walkSpeed = 5f;
-    [SerializeField] float runSpeed = 12f;
-    [SerializeField] AnimationCurve runSpeedCurve;
-    [SerializeField] float runAccelMultiplier = 1f;
-    float moveSpeed;
+    [SerializeField] float walkForce = 3f;
+    [SerializeField] float walkSpeed = 3f;
+    [SerializeField] float runForce = 3f;
+    [SerializeField] float runSpeed = 6f;
+    [SerializeField] float runSpeedLR = 5f;
+    [SerializeField] float airborneForce = 0.5f;
+    [SerializeField] float airborneXYSpeed = 1f;
+    //[SerializeField] AnimationCurve walkToRunCurve;
+    //[SerializeField] float walkToRunSpeed = 1f;
+    //[SerializeField] AnimationCurve runToWalkCurve;
+    //[SerializeField] float runToWalkSpeed = 1f;
+    float moveForce;
     float runAccelTime;
+    bool isRunning;
+    bool wasRunning;
+    bool ignoreMovement;
+    float oldDrag;
+    float temp;
     [Space(10f)]
 
     // JUMPING
     [Header("Jumping")]
     [SerializeField] float jumpForce = 12;
-    [SerializeField] float airMultiplier = 0.1f;
     [SerializeField] float jumpCooldown = 0.25f;
-    bool readyToJump;
+    bool readyToJump = true;
     [Space(10f)]
-
-    // CROUCHING
-    [Header("Crouching")]
-    [SerializeField] float crouchSpeed = 3f;
-    [SerializeField] float crouchYScale = .5f;
-    float normalYScale;
-
-    // SLOPE
-    [Header("Slope Movement")]
-    [SerializeField] float maxSlopeAngle = 45f;
-    RaycastHit slopeHit;
 
     // GROUND CHECK
     [Header("Ground Check")]
     [SerializeField] LayerMask whatIsGround;
     [SerializeField] float playerHeight = 2;
+    [SerializeField] float maxSlopeAngle = 45f;
+    RaycastHit ground;
     float airTime;
-    public bool isGrounded;
-    bool wasGrounded;
+    public bool isGrounded = true;
+    bool wasGrounded = true;
+    float groundAngle;
     [Space(10f)]
 
     // INPUT
-    Vector3 inputMoveDirection;
+    Vector3 input;
+    Vector3 oldInput;
     Vector3 moveDirection;
     ActionMap actions;
 
     // SOME UNORGANIZED DATA
     [HideInInspector] public Rigidbody rb;
 
-    // DELEGATES
-    public Action onPlayerLanded;
-
     // PLAYER
     Player playerScript;
 
-    // PLAYER STATES
-    bool isRunning;
-    bool isCrouching;
-    bool ignoreStates;
 
     [Header("Important")]
     [SerializeField] Transform orientation;
     [SerializeField] Transform body;
-
-    
-    #region Unity Messages
-
-    public void OnDestroy()
-    {
-        onPlayerLanded -= OnLanded;
-    }
-
-
+    [SerializeField] PlayerCollisions playerCollisions;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-        onPlayerLanded += OnLanded;
+        playerCollisions.onCollisionStay += OnCollisionStay;
+        playerCollisions.onCollisionExit += OnCollisionExit;
+
         readyToJump = true;
-        normalYScale = transform.localScale.y;
-        moveSpeed = walkSpeed;
+        moveForce = walkSpeed;
     }
 
     private void Update()
     {
-        if (ignoreStates) return;
-
         GroundCheck();
         SpeedControl();
 
-        if (isGrounded)
-        {
-            // onLanded
-            if (!wasGrounded) onPlayerLanded?.Invoke();
-        }
-        else
-        {
-            if (wasGrounded) wasGrounded = false;
+        if (isGrounded && airTime > 0f) OnLanded();
 
+        if (!isGrounded)
+        {
             airTime += Time.deltaTime;
-            DebugHUD.instance.SetAirTime(airTime);
         }
+
+        wasGrounded = airTime < 0.01f;
 
         body.rotation = new Quaternion(0, Camera.main.transform.rotation.y, 0, Camera.main.transform.rotation.w).normalized;
 
-        // double check in case we are still grounded after jumping (it can happen)
-        if (isGrounded && !CanJump()) onPlayerLanded();
 
         DebugHUD.instance.SetSpeed(rb.velocity.magnitude);
     }
 
     void GroundCheck()
     {
-        RaycastHit hit;
-        if (Physics.SphereCast(transform.position,0.3f,Vector3.down, out hit, playerHeight * 0.5f + 0.05f, whatIsGround, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(transform.position,0.1f,Vector3.down, out ground, playerHeight * 0.5f, whatIsGround, QueryTriggerInteraction.Ignore))
         {
-            isGrounded = true; 
+            groundAngle = Vector3.Angle(Vector3.up, ground.normal);
+            DebugHUD.instance.SetDebugText("ground angle : " + groundAngle.ToString("0.0"));
+
+            if (!isGrounded) rb.drag = oldDrag;
+            isGrounded = true;
             return;
         }
+        if (isGrounded) oldDrag = rb.drag;
         isGrounded = false;
+        rb.drag = 0;
     }
 
     private void FixedUpdate()
     {
         Move();
+
     }
 
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == StaticUtilities.groundLayer)
+        {
+            /*float dot = Vector3.Dot(collision.contacts[0].normal, StaticUtilities.GetCameraDir());
+            Debug.Log(collision.contacts[0].normal);
 
-    #endregion
+            if (Vector3.Dot(collision.contacts[0].normal, moveDirection) < -0.9f)
+            {
+                airborneForce = temp;
+                temp = 0;
+            }*/
+        }
 
-    #region Inputs
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        // if we are colliding with something vertical
+        if (collision.gameObject.layer == StaticUtilities.groundLayer && IsJumping())
+        {
+            foreach (var c in collision.contacts)
+            {
+                if (Vector3.Dot(c.normal, moveDirection) < -0.9f)
+                {
+                    if (temp == 0)
+                    {
+                        temp = airborneForce;
+                        airborneForce = 0;
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
     public void SetupInputEvents(object sender, ActionMap actions)
     {
@@ -143,41 +161,27 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         actions.Locomotion.Move.performed += ctx =>
         {
             Vector2 input = ctx.ReadValue<Vector2>();
-            inputMoveDirection = new Vector3(input.x, 0, input.y);
+            this.input = Vector3.right * input.x + Vector3.forward * input.y;
             UpdateMoveSpeed();
         };
 
         actions.Locomotion.Move.canceled += ctx => 
         {
-            inputMoveDirection = Vector3.zero;
+            input = Vector3.zero;
         };
 
         // Run
         actions.Locomotion.Run.started += ctx =>
         {
-            Run();
+            isRunning = true;
             UpdateMoveSpeed();
         };
 
         actions.Locomotion.Run.canceled += ctx =>
         {
-            StopRun();
+            isRunning = false;
             UpdateMoveSpeed();
         };
-
-        // Crouch
-        actions.Locomotion.Crouch.started += ctx =>
-        {
-            Crouch();
-            UpdateMoveSpeed();
-        };
-
-        actions.Locomotion.Crouch.canceled += ctx =>
-        {
-            UnCrouch();
-            UpdateMoveSpeed();
-        };
-
 
         // Jump
         actions.Locomotion.Jump.started += ctx =>
@@ -188,63 +192,32 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         EnableLocomotion();
     }
 
-
-    #endregion
-
-    #region Locomotion
-
     void Move()
     {
-        Vector3 cameraFwd = Camera.main.transform.forward;
+        if (ignoreMovement) return;
+
+        if (groundAngle > maxSlopeAngle)
+        {
+            // slide down
+            moveDirection = Vector3.ProjectOnPlane(Vector3.down, ground.normal);
+            rb.AddForce(moveDirection * rb.mass * 10f, ForceMode.Force);
+            return;
+        }
+
         Vector3 cameraRight = Camera.main.transform.right;
-        cameraFwd.y = 0f;
         cameraRight.y = 0f;
-        moveDirection = cameraFwd * inputMoveDirection.z + cameraRight * inputMoveDirection.x;
-
-        // ignore the rest of this function if we are trying to move into an obstacle while jumping
-        if (Physics.Raycast(transform.position, moveDirection, 0.6f, LayerMask.NameToLayer("Everything"), QueryTriggerInteraction.Ignore) && 
-            !IsJumping() && !isGrounded) return;
-
-        // adjust move direction for slopes
-        if (OnSlope()) moveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal);
+        
+        moveDirection = StaticUtilities.GetCameraDir() * input.z + cameraRight * input.x;
+        moveDirection = Vector3.ProjectOnPlane(moveDirection, ground.normal);
 
         // move
-        if (isGrounded) rb.AddForce(moveDirection * moveSpeed * rb.mass * 10f, ForceMode.Force);
-        else rb.AddForce(moveDirection * moveSpeed * airMultiplier * rb.mass * 10f, ForceMode.Force);
-    }
-
-    void Run()
-    {
-        // override crouching
-        if (isCrouching) UnCrouch();
-
-        isRunning = true;
-    }
-
-    void StopRun()
-    {
-        isRunning = false;
-    }
-
-    void Crouch()
-    {
-        // override run
-        if (isRunning) StopRun();
-
-        isCrouching = true;
-        transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-        if (isGrounded) rb.AddForce(Vector3.down * 5f * rb.mass, ForceMode.Impulse);
-    }
-
-    void UnCrouch()
-    {
-        isCrouching = false;
-        transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
+        if (isGrounded) rb.AddForce(moveDirection * moveForce * rb.mass * 10f, ForceMode.Force);
+        else rb.AddForce(moveDirection * moveForce * rb.mass * 10f, ForceMode.Force);
     }
 
     public bool CanJump()
     {
-        return isGrounded && readyToJump;
+        return (isGrounded || wasGrounded) && readyToJump;
     }
 
     void Jump()
@@ -253,7 +226,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         readyToJump = false;
 
         // stop any up/down movement
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.velocity = Vector3.right * rb.velocity.x + Vector3.forward * rb.velocity.z;
 
         // jump
         rb.AddForce(Vector3.up * jumpForce * rb.mass, ForceMode.Impulse);
@@ -264,71 +237,41 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         readyToJump = true;
     }
 
-    #endregion
-
-    #region Locomotion Management
-
     private void SpeedControl()
     {
-        // if on slope
-        if (OnSlope())
+        float moveSpeed = isRunning ? input.z == 1 ? runSpeed : runSpeedLR : walkSpeed;
+        if (isGrounded)
         {
-            if (rb.velocity.magnitude > moveSpeed) rb.velocity = rb.velocity.normalized * moveSpeed;
+            if (rb.velocity.sqrMagnitude > (moveSpeed * moveSpeed))
+            {
+                ignoreMovement = true;
+                return;
+            }
         }
         else
         {
-            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-            if (flatVel.magnitude > moveSpeed)
+            Vector3 xyVel = Vector3.right * rb.velocity.x + Vector3.forward * rb.velocity.z;
+            if (xyVel.sqrMagnitude > (airborneXYSpeed * airborneXYSpeed))
             {
-                Vector3 limitedVel = flatVel.normalized * moveSpeed;
-                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+                ignoreMovement = true;
+                return;
             }
         }
 
-        if (isRunning)
-        {
-            runAccelTime += Time.deltaTime * runAccelMultiplier;
-            moveSpeed = Mathf.Lerp(walkSpeed, runSpeed, runSpeedCurve.Evaluate(runAccelTime));
-        }
-    }
-
-    private bool OnSlope()
-    {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight, whatIsGround, QueryTriggerInteraction.Ignore))
-        {
-            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle <= maxSlopeAngle && angle > 0;
-        }
-        return false;
+        ignoreMovement = false;
     }
 
     void UpdateMoveSpeed()
     {
-        if (isGrounded)
-        {
-            if (!isRunning)
-            {
-                if (isCrouching)
-                {
-                    SetToCrouch();
-                }
-                else
-                {
-                    SetToWalk();
-                }
-            }
-            else
-            {
-                SetToRun();
-            }
-        }
+        if (isGrounded && !isRunning) moveForce = walkForce;
+        else if (isGrounded && isRunning) moveForce = runForce;
+        else if (!isGrounded) moveForce = airborneForce;
     }
 
     Vector3 CalculateBodyRotation()
     {
         Vector3 cameraPosition = Camera.main.transform.position;
-        Vector3 viewDir = transform.position - new Vector3(cameraPosition.x, transform.position.y, cameraPosition.z);
+        Vector3 viewDir = transform.position - Vector3.right * cameraPosition.x + Vector3.up * transform.position.y + Vector3.forward * cameraPosition.z;
         return viewDir.normalized;
     }
 
@@ -337,63 +280,21 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         orientation.forward = CalculateBodyRotation();
     }
 
-    #endregion
-
-    #region Events
-
     void OnLanded()
     {
         wasGrounded = true;
-
         if (jumpCooldown > 0) Invoke(nameof(ResetJump), jumpCooldown);
         else ResetJump();
-        airTime = 0f;
+        Debug.Log("landed");
+        airTime = 0;
     }
 
-    #endregion
-
-    #region Player Locomotion States
-
-    void SetToWalk()
-    {
-        moveSpeed = walkSpeed;
-
-    }
-
-    void SetToRun()
-    {
-        //moveSpeed = runSpeedCurve.Evaluate(0);
-        runAccelTime = 0f;
-    }
-
-    void SetToCrouch()
-    {
-        moveSpeed = crouchSpeed;
-    }
-
-    public void Disable()
-    {
-        ignoreStates = true;
-        DisableLocomotion();
-    }
-
-    public void Enable()
-    {
-        ignoreStates = false;
-        EnableLocomotion();
-    }
-
-    #endregion
-
-    #region Getters/Setters
-
-    public bool IsMoving() => inputMoveDirection != Vector3.zero;
+    public bool IsMoving() => input != Vector3.zero;
     
     public bool IsRunning() => isRunning;
     public bool IsGrounded() => isGrounded;
-    public bool IsCrouching() => isCrouching;
     public bool IsJumping() => readyToJump == false;
-    public float GetMoveSpeed() => moveSpeed;
+    public float GetMoveSpeed() => moveForce;
     public float GetAirTime() => airTime;
     public Transform GetOrientation() => orientation;
     public Rigidbody GetRigidbody() => rb;
@@ -403,7 +304,4 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     // Controls Toggles
     public void EnableLocomotion() => actions.Locomotion.Enable();
     public void DisableLocomotion() => actions.Locomotion.Disable();
-    
-
-    #endregion
 }

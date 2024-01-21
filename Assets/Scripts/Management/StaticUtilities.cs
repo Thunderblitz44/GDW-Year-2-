@@ -5,18 +5,19 @@ using System.Linq;
 
 public static class StaticUtilities
 {
-    public const float defaultFOV = 50f;
-    public const float damageOverTimeInterval = 0.5f;
+    public static readonly float defaultFOV = 50f;
+    public static readonly float damageOverTimeInterval = 0.5f;
     public static readonly Color physicalDamageColor = Color.white;
     public static readonly Color magicDamageColor = Color.magenta;
     public static readonly Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
+    public static readonly float encounterStartDelay = 1f;
+    public static readonly int groundLayer = 6;
     public static int visibleTargets;
     public static Transform playerTransform;
-    public const float encounterStartDelay = 1f;
     //public static readonly Portal[] elanaPortals = new Portal[2];
 
     // RANGED GOLEM ANIMATION KEYWORDS
-    public const string GOLEM_RANGER_ATTACK = "Golem Ranger Shooting";
+    public static readonly string GOLEM_RANGER_ATTACK = "Golem Ranger Shooting";
 
     /*public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
     {

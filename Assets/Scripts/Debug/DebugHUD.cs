@@ -41,9 +41,9 @@ public class DebugHUD : MonoBehaviour
         airtimeTxt.text = $"Air time : 0.000s";
     }
 
-    public void SetTimer(float value)
+    public void SetDebugText(string value)
     {
         if (!timerTxt) return;
-        timerTxt.text = $"Timer : {value.ToString("0.000")}s";
+        timerTxt.text = value;
     }
 }

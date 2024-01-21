@@ -18,7 +18,7 @@ public class MeleeHitBox : MonoBehaviour
         Invoke(nameof(Hide), 0.1f);
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         IDamageable d;
         if (other.gameObject.TryGetComponent(out d))
