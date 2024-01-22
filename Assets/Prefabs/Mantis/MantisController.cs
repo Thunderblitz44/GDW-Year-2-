@@ -1,79 +1,60 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
-public class GolemKnightAnimatorController : MonoBehaviour
+public class MantisController : MonoBehaviour
 {
-    private NavMeshAgent GolemKnightAgent;
-    private Animator GolemKnightAnimator;
+    
+    private NavMeshAgent MantisAgent;
+    private Animator MantisAnimator;
     private bool isEnabled = false;
     public float maxSpeed = 5f; // Maximum speed of the AI
     public float minSpeed = 1f; // Minimum speed the AI can have
     public float minDistance = 2f; // Minimum distance at which the AI starts reducing speed
     public CapsuleCollider attackTrigger;
     public GameObject HeadTarget;
-
+    
     private bool inAttackRange;
     // Start is called before the first frame update
     void Start()
     {
-        GolemKnightAnimator = GetComponent<Animator>();
-        GolemKnightAgent = GetComponentInParent<NavMeshAgent>();
-       
-        GolemKnightAgent.enabled = false;
-        attackTrigger = GetComponent<CapsuleCollider>();
+        MantisAnimator = GetComponent<Animator>();
+        MantisAgent = GetComponent<NavMeshAgent>();
+        
+         //  MantisAgent.enabled = false;
+         EnableAI();
     }
 
-    
     // Update is called once per frame
-    public void Update()
-    { 
-       //change this to passing the players position to the ai from a reference if lagging
+    void Update()
+    {
+             
         GameObject lockOn = GameObject.FindGameObjectWithTag("HeadTag");
         Vector3 headPosition = lockOn.transform.position;
-       
-      
         
-    //    GameObject playerHead = GameObject.FindGameObjectWithTag("HeadTag");
         
+        
+            
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
-            GolemKnightAgent.SetDestination(headPosition);
-        GolemKnightAnimator.SetBool("IsAttacking", inAttackRange);
-        }
-     
-
-        // Calculate distance between AI and target
-        float distanceToTarget = Vector3.Distance(transform.position, headPosition);
-
-        // Gradually decrease speed based on distance
-        if (distanceToTarget < minDistance)
-        {
-            float reducedSpeed = Mathf.Lerp(maxSpeed, minSpeed, distanceToTarget / minDistance);
-            GolemKnightAgent.speed = reducedSpeed;
-           
-        }
-        else
-        {
-            GolemKnightAgent.speed = maxSpeed; // Maintain maximum speed if far from the target
+            MantisAgent.SetDestination(headPosition);
+            MantisAnimator.SetBool("IsAttacking", inAttackRange);
         }
 
-        // Update animator with normalized speed
-        GolemKnightAnimator.SetFloat("ZSpeed", GolemKnightAgent.velocity.magnitude);
+        
+        
+        
     }
-//Enables the ai on a delay
+    
     private void EnableAI()
     {
-        GolemKnightAgent.enabled = true;
+        MantisAgent.enabled = true;
         isEnabled = true;
       
         HeadTarget.SetActive(true);
 
     }
-    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -95,5 +76,3 @@ public class GolemKnightAnimatorController : MonoBehaviour
         }
     }
 }
-
-
