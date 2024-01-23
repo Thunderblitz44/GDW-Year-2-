@@ -30,7 +30,7 @@ public class golemIkScript : MonoBehaviour
 
     private void InitializeGolem()
     {
-        
+        body = transform.parent.parent.parent;
         footSpacing = transform.localPosition.x;
         currentPosition = newPosition = oldPosition = transform.position;
         currentNormal = newNormal = oldNormal = transform.up;

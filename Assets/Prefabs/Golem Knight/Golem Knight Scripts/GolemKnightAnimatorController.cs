@@ -38,7 +38,7 @@ public class GolemKnightAnimatorController : MonoBehaviour
         
     //    GameObject playerHead = GameObject.FindGameObjectWithTag("HeadTag");
         
-        if (isEnabled)
+        if (isEnabled && GolemKnightAgent)
         {
             HeadTarget.transform.position = headPosition;
             GolemKnightAgent.SetDestination(headPosition);
