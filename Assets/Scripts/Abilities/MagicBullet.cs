@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class MagicBullet : MonoBehaviour
 {
-    [HideInInspector]public float damage = 1;
-    [HideInInspector]public float lifetime = 1;
-    [HideInInspector]public DamageableEntity owner;
+    public float damage = 1;
+    public float lifetime = 1;
+    public DamageableEntity owner;
     Rigidbody rb;
 
     private void Awake()
