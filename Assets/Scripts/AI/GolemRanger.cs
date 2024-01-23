@@ -70,7 +70,7 @@ public class GolemRanger : Enemy
 
     void Attack()
     {
-        foreach (var bullet in pooledProjectiles)
+        /*foreach (var bullet in pooledProjectiles)
         {
             if (bullet.activeSelf) continue;
 
@@ -78,8 +78,8 @@ public class GolemRanger : Enemy
             bullet.transform.position = shootOrigin.position;
             bullet.GetComponent<Rigidbody>().AddForce((shootOrigin.position - StaticUtilities.playerTransform.position).normalized * projectileSpeed, ForceMode.Impulse);
             break;
-        }
+        }*/
 
-        Debug.Log("shoot");
+        animator.SetTrigger("Attack");
     }
 }
