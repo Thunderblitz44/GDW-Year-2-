@@ -79,7 +79,7 @@ public class GolemRanger : Enemy
             bullet.GetComponent<Rigidbody>().AddForce((shootOrigin.position - StaticUtilities.playerTransform.position).normalized * projectileSpeed, ForceMode.Impulse);
             break;
         }
-
+        animator.SetTrigger("Attack");
         Debug.Log("shoot");
     }
 }

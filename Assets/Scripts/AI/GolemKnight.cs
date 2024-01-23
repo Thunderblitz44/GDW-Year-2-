@@ -29,12 +29,14 @@ public class GolemKnight : Enemy
     internal override void OnTriggerEnter(Collider other)
     {
         attack = true;
+        animator.SetBool("CanAttack", true);
     }
 
     internal override void OnTriggerExit(Collider other)
     {
         attack = false;
         attackTimer = 0f;
+        animator.SetBool("CanAttack", false);
     }
 
     public void EnableAI()
@@ -45,6 +47,6 @@ public class GolemKnight : Enemy
 
     void Attack()
     {
-        Debug.Log("Attack");
+        animator.SetTrigger("Attack");
     }
 }
