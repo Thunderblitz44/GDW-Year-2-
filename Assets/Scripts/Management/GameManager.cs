@@ -1,13 +1,13 @@
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
-
 
 public class GameManager : MonoBehaviour 
 {
     public static GameManager Instance;
 
-    [SerializeField] Transform _canvas;
-    [SerializeField] Transform _worldCanvas;
+    Transform _canvas;
+    Transform _worldCanvas;
     public List<LevelManager> levels = new();
 
     public List<Transform> renderedGrappleTargets = new();
@@ -23,12 +23,12 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
+            Debug.LogWarning("There were 2 GameManager scripts!");
             Destroy(this);
+            return;
         }
-        else
-        {
-            Instance = this;
-        }
+        Instance = this;
+        _canvas = GameObject.FindGameObjectWithTag("MainCanvas").transform;
+        _worldCanvas = GameObject.FindGameObjectWithTag("WorldCanvas").transform;
     }
-
 }

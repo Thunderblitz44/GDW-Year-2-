@@ -12,39 +12,42 @@ public class GolemKnightAnimatorController : MonoBehaviour
     public float maxSpeed = 5f; // Maximum speed of the AI
     public float minSpeed = 1f; // Minimum speed the AI can have
     public float minDistance = 2f; // Minimum distance at which the AI starts reducing speed
-    private CapsuleCollider attackTrigger;
-    public Transform HeadTarget;
+    public CapsuleCollider attackTrigger;
+    public GameObject HeadTarget;
+
+    private bool inAttackRange;
     // Start is called before the first frame update
     void Start()
     {
         GolemKnightAnimator = GetComponent<Animator>();
         GolemKnightAgent = GetComponentInParent<NavMeshAgent>();
-        HeadTarget = HeadTarget.GetComponent<Transform>();
+       
         GolemKnightAgent.enabled = false;
-        attackTrigger = GetComponentInChildren<CapsuleCollider>();
+        attackTrigger = GetComponent<CapsuleCollider>();
     }
 
     
     // Update is called once per frame
     public void Update()
     { 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+       //change this to passing the players position to the ai from a reference if lagging
         GameObject lockOn = GameObject.FindGameObjectWithTag("HeadTag");
         Vector3 headPosition = lockOn.transform.position;
-        Vector3 targetPosition = player.transform.position;
-        HeadTarget.transform.position = headPosition;
+       
+      
         
     //    GameObject playerHead = GameObject.FindGameObjectWithTag("HeadTag");
         
-        if (isEnabled)
+        if (isEnabled && GolemKnightAgent)
         {
-            GolemKnightAgent.SetDestination(targetPosition);
-        
+            HeadTarget.transform.position = headPosition;
+            GolemKnightAgent.SetDestination(headPosition);
+        GolemKnightAnimator.SetBool("IsAttacking", inAttackRange);
         }
      
 
         // Calculate distance between AI and target
-        float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+        float distanceToTarget = Vector3.Distance(transform.position, headPosition);
 
         // Gradually decrease speed based on distance
         if (distanceToTarget < minDistance)
@@ -67,8 +70,29 @@ public class GolemKnightAnimatorController : MonoBehaviour
         GolemKnightAgent.enabled = true;
         isEnabled = true;
       
-        
+        HeadTarget.SetActive(true);
 
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            // Player entered the attack trigger, set inAttackRange to true
+            inAttackRange = true;
+            // You can also trigger an attack animation here if needed
+            // GolemKnightAnimator.SetTrigger("AttackTrigger");
+        }
+    }
+
+    // Called when another collider exits the trigger
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            // Player exited the attack trigger, set inAttackRange to false
+            inAttackRange = false;
+        }
     }
 }
 

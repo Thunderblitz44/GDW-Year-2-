@@ -1,5 +1,3 @@
-using Cinemachine;
-using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -295,7 +293,7 @@ public class Elana : Player
 
     IEnumerator DodgeRoutine(Vector3 startPos, Vector3 endPos)
     {
-        movementScript.Disable();
+        movementScript.DisableLocomotion();
         float time = 0;
         float dodgeTime = dodgeCurve.keys[1].time;
         float startFOV = freeLookCam.m_Lens.FieldOfView;
@@ -336,7 +334,7 @@ public class Elana : Player
     void OnDodgeEnded()
     {
         // dodge end
-        movementScript.Enable();
+        movementScript.EnableLocomotion();
         isInvincible = false;
         isDodgeing = false;
 

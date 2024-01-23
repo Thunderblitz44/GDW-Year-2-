@@ -1,24 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    public static LevelManager Instance;
+
+    public NavMeshSurface navMesh { get; private set; }
     [SerializeField] List<EncounterVolume> encounterVolumes;
     [SerializeField] List<GameObject> enemies;
     readonly List<DamageableEntity> spawnedEnemies = new();
 
-    [SerializeField] LayerMask groundMask;
+    [SerializeField] LayerMask groundLayer;
 
     EncounterVolume currentEncounter;
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning("There were 2 LevelManager scripts!");
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+
         for (int i = 0; i < encounterVolumes.Count; i++)
         {
             encounterVolumes[i].id = i;
             encounterVolumes[i].onEncounterStarted += StartEncounter;
         }
+
+        navMesh = FindFirstObjectByType<NavMeshSurface>();
     }
 
     void StartEncounter(Bounds volumeBounds, int id)
@@ -61,7 +75,7 @@ public class LevelManager : MonoBehaviour
         Start:
         Vector3 spawnPoint = Vector3.right * Random.Range(volumeBounds.min.x, volumeBounds.max.x) + Vector3.up * volumeBounds.max.y + Vector3.forward * Random.Range(volumeBounds.min.z, volumeBounds.max.z);
         RaycastHit hit;
-        if (Physics.Raycast(spawnPoint, Vector3.down, out hit, 100f, groundMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(spawnPoint, Vector3.down, out hit, 100f, groundLayer, QueryTriggerInteraction.Ignore))
         {
             if (Vector3.Distance(hit.point, StaticUtilities.playerTransform.position) < 3) goto Start;
 

@@ -10,7 +10,7 @@ public class FireTornado : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Rigidbody rb;
-        if (TryGetComponent(out rb))
+        if (other.gameObject.TryGetComponent(out rb))
         {
             bodies.Add(rb);
         }
@@ -19,7 +19,7 @@ public class FireTornado : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         Rigidbody rb;
-        if (TryGetComponent(out rb))
+        if (other.gameObject.TryGetComponent(out rb))
         {
             bodies.Remove(rb);
         }
