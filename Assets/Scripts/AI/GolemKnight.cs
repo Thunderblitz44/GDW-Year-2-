@@ -12,9 +12,14 @@ public class GolemKnight : Enemy
     float attackCooldownTimer;
     bool attack;
 
+    [SerializeField] GameObject HeadTarget;
+
+
     internal override void Update()
     {
         base.Update();
+
+        HeadTarget.transform.position = StaticUtilities.playerTransform.position;
 
         // attack cooldown + delay
         attackCooldownTimer += Time.deltaTime;
@@ -43,6 +48,7 @@ public class GolemKnight : Enemy
     {
         agent.enabled = true;
         target = StaticUtilities.playerTransform;
+        HeadTarget.SetActive(true);
     }
 
     void Attack()
