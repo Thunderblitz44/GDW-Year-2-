@@ -11,7 +11,9 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: ada99842a2101fe408e4f30125fabd4c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - MAIN_LIGHT_CALCULATE_SHADOWS
+  - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -79,8 +81,20 @@ Material:
         m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_2186fe748e844696a2d466ed7ee9e64b_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_55958b01eb5144ecb9d3f01f154c2a75_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: d6b17496cff30a74f9a04a248e7e77cd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_618c2b70810e48b1b9c5a735529e7c68_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_6df66dc262534ce99ea83d5d3df9233a_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: d6b17496cff30a74f9a04a248e7e77cd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_97f511e05f2b43d7be4e303da83c2a73_Texture_1_Texture2D:
@@ -88,6 +102,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_b3b6a5ef96f44c4ea09f6c713dbf3231_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_c1810d6161c44202bbbbdcfa4247c099_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -121,6 +139,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - MAIN_LIGHT_CALCULATE_SHADOWS: 1
     - _Albedo_Noise: 1
     - _Albedo_Scale: 1.78
     - _AlphaClip: 0
@@ -140,27 +159,36 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _Distance_Atten: 0
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HeightBlend: 1
-    - _Height_Blend: 25.8
-    - _Height_Gradient: -1.59
+    - _HeightBlend: 0.712
+    - _Height_Blend: 18.57
+    - _Height_Gradient: 1.33
+    - _Light_Intensity: 0
+    - _Lighting_Noise: 0.5
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 0
     - _Metallic: 0
-    - _NoiseStrength: 1
-    - _Noise_Multiply: 1
+    - _NoiseStrength: 0.82
+    - _Noise_Multiply: 0.76
+    - _Normal_Noise: 0
     - _Normal_Value: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Scale: 1.8
-    - _Smoothness: 0.5
+    - _SHADOWS_SOFT: 1
+    - _Scale: 2.98
+    - _Shadow_Atten: 0
+    - _Shadow_Strength: 0.5
+    - _Smoothness: 1.77
     - _SmoothnessTextureChannel: 0
+    - _Smoothness_1: 1
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
@@ -170,9 +198,11 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Border_Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.6981132, g: 0.60920256, b: 0.60920256, a: 1}
+    - _Color: {r: 1.3962264, g: 1.2184051, b: 1.2184051, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Outline_Color: {r: 0.17924526, g: 0.12597898, b: 0.12597898, a: 0}
+    - _Shadow_Color: {r: 0.15755162, g: 0.18092497, b: 0.45754716, a: 0}
+    - _Smoothness_Color: {r: 2.670157, g: 2.043174, b: 1.0202016, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &9042356397811627987
