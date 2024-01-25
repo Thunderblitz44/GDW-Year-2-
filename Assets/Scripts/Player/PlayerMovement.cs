@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     [SerializeField] float jumpForce = 12;
     [SerializeField] float jumpCooldown = 0.25f;
     bool readyToJump = true;
+    bool isJumping = false;
+    GameObject wallobj;
     [Space(10f)]
 
     // GROUND CHECK
@@ -68,6 +70,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         rb.freezeRotation = true;
 
         playerCollisions.onCollisionStay += OnCollisionStay;
+        //playerCollisions.onCollisionEnter += OnCollisionEnter;
         playerCollisions.onCollisionExit += OnCollisionExit;
 
         readyToJump = true;
@@ -118,35 +121,30 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.layer == StaticUtilities.groundLayer)
+        if (collision.gameObject == wallobj)
         {
-            /*float dot = Vector3.Dot(collision.contacts[0].normal, StaticUtilities.GetCameraDir());
-            Debug.Log(collision.contacts[0].normal);
-
-            if (Vector3.Dot(collision.contacts[0].normal, moveDirection) < -0.9f)
-            {
-                airborneForce = temp;
-                temp = 0;
-            }*/
+            wallobj = null;
+            ignoreMovement = false;
+            Debug.Log("e");
         }
-
     }
 
     private void OnCollisionStay(Collision collision)
     {
         // if we are colliding with something vertical
-        if (collision.gameObject.layer == StaticUtilities.groundLayer && IsJumping())
+        if (collision.gameObject.layer == StaticUtilities.groundLayer)
         {
             foreach (var c in collision.contacts)
             {
                 if (Vector3.Dot(c.normal, moveDirection) < -0.9f)
                 {
-                    if (temp == 0)
-                    {
-                        temp = airborneForce;
-                        airborneForce = 0;
-                    }
+                    Debug.Log(Vector3.Dot(c.normal, moveDirection));
+                    wallobj = collision.gameObject;
                     break;
+                }
+                else
+                {
+                    wallobj = null;
                 }
             }
         }
@@ -194,7 +192,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     void Move()
     {
-        if (ignoreMovement) return;
 
         if (groundAngle > maxSlopeAngle)
         {
@@ -208,11 +205,10 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         cameraRight.y = 0f;
         
         moveDirection = StaticUtilities.GetCameraDir() * input.z + cameraRight * input.x;
-        moveDirection = Vector3.ProjectOnPlane(moveDirection, ground.normal);
+        if (isGrounded) moveDirection = Vector3.ProjectOnPlane(moveDirection, ground.normal);
 
         // move
-        if (isGrounded) rb.AddForce(moveDirection * moveForce * rb.mass * 10f, ForceMode.Force);
-        else rb.AddForce(moveDirection * moveForce * rb.mass * 10f, ForceMode.Force);
+        if (!ignoreMovement) rb.AddForce(moveDirection * moveForce * rb.mass * 10f, ForceMode.Force);
     }
 
     public bool CanJump()
@@ -224,12 +220,19 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     {
         // prevent spamming
         readyToJump = false;
+        isJumping = true;
 
         // stop any up/down movement
         rb.velocity = Vector3.right * rb.velocity.x + Vector3.forward * rb.velocity.z;
 
         // jump
         rb.AddForce(Vector3.up * jumpForce * rb.mass, ForceMode.Impulse);
+
+        if (wallobj)
+        {
+            Debug.Log("j");
+            ignoreMovement = true;
+        }
     }
 
     private void ResetJump()
@@ -258,7 +261,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             }
         }
 
-        ignoreMovement = false;
+        if (!wallobj && !isJumping) ignoreMovement = false;
     }
 
     void UpdateMoveSpeed()
@@ -283,9 +286,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     void OnLanded()
     {
         wasGrounded = true;
+        isJumping = false;
+        //ignoreMovement = false;
         if (jumpCooldown > 0) Invoke(nameof(ResetJump), jumpCooldown);
         else ResetJump();
-        Debug.Log("landed");
+        //Debug.Log("landed");
         airTime = 0;
     }
 
@@ -293,7 +298,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     
     public bool IsRunning() => isRunning;
     public bool IsGrounded() => isGrounded;
-    public bool IsJumping() => readyToJump == false;
     public float GetMoveSpeed() => moveForce;
     public float GetAirTime() => airTime;
     public Transform GetOrientation() => orientation;
