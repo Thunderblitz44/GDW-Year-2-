@@ -44,7 +44,7 @@ public class Enemy : DamageableEntity
     internal virtual void SlowUpdate()
     {
         updateTimer = 0;
-        if (!target || !agent || !LevelManager.Instance.navMesh.isActiveAndEnabled) return;
+        if (!target || !agent || !LevelManager.Instance.NavMesh.isActiveAndEnabled) return;
         agent.SetDestination(target.position);
     }
 

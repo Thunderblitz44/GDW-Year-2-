@@ -65,7 +65,7 @@ public class GolemRanger : Enemy
     public void EnableAI()
     {
         agent.enabled = true;
-        target = StaticUtilities.playerTransform;
+        target = LevelManager.Instance.PlayerTransform;
     }
 
     void Attack()
@@ -76,7 +76,7 @@ public class GolemRanger : Enemy
 
             bullet.SetActive(true);
             bullet.transform.position = shootOrigin.position;
-            bullet.GetComponent<Rigidbody>().AddForce((shootOrigin.position - StaticUtilities.playerTransform.position).normalized * projectileSpeed, ForceMode.Impulse);
+            bullet.GetComponent<Rigidbody>().AddForce((shootOrigin.position - LevelManager.Instance.PlayerTransform.position).normalized * projectileSpeed, ForceMode.Impulse);
             break;
         }
         animator.SetTrigger("Attack");

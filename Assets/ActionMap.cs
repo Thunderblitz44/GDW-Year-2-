@@ -381,6 +381,24 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""respawnTest"",
+                    ""type"": ""Button"",
+                    ""id"": ""29c7b194-e0ab-426c-a9e1-206da6e1321d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""resetProgressTest"",
+                    ""type"": ""Button"",
+                    ""id"": ""a42da374-17f0-49a8-911b-39878345ca7a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -414,6 +432,28 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""HealSelf"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""883afb58-9a4d-461c-a51f-10ed3ade5977"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""respawnTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d76220de-a9c1-4d61-98e6-05e0e905fb7b"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""resetProgressTest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -646,6 +686,8 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_General_Escape = m_General.FindAction("Escape", throwIfNotFound: true);
         m_General_DamageSelf = m_General.FindAction("DamageSelf", throwIfNotFound: true);
         m_General_HealSelf = m_General.FindAction("HealSelf", throwIfNotFound: true);
+        m_General_respawnTest = m_General.FindAction("respawnTest", throwIfNotFound: true);
+        m_General_resetProgressTest = m_General.FindAction("resetProgressTest", throwIfNotFound: true);
         // Menus
         m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
         m_Menus_Resume = m_Menus.FindAction("Resume", throwIfNotFound: true);
@@ -866,6 +908,8 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_General_Escape;
     private readonly InputAction m_General_DamageSelf;
     private readonly InputAction m_General_HealSelf;
+    private readonly InputAction m_General_respawnTest;
+    private readonly InputAction m_General_resetProgressTest;
     public struct GeneralActions
     {
         private @ActionMap m_Wrapper;
@@ -873,6 +917,8 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @Escape => m_Wrapper.m_General_Escape;
         public InputAction @DamageSelf => m_Wrapper.m_General_DamageSelf;
         public InputAction @HealSelf => m_Wrapper.m_General_HealSelf;
+        public InputAction @respawnTest => m_Wrapper.m_General_respawnTest;
+        public InputAction @resetProgressTest => m_Wrapper.m_General_resetProgressTest;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -891,6 +937,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @HealSelf.started += instance.OnHealSelf;
             @HealSelf.performed += instance.OnHealSelf;
             @HealSelf.canceled += instance.OnHealSelf;
+            @respawnTest.started += instance.OnRespawnTest;
+            @respawnTest.performed += instance.OnRespawnTest;
+            @respawnTest.canceled += instance.OnRespawnTest;
+            @resetProgressTest.started += instance.OnResetProgressTest;
+            @resetProgressTest.performed += instance.OnResetProgressTest;
+            @resetProgressTest.canceled += instance.OnResetProgressTest;
         }
 
         private void UnregisterCallbacks(IGeneralActions instance)
@@ -904,6 +956,12 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @HealSelf.started -= instance.OnHealSelf;
             @HealSelf.performed -= instance.OnHealSelf;
             @HealSelf.canceled -= instance.OnHealSelf;
+            @respawnTest.started -= instance.OnRespawnTest;
+            @respawnTest.performed -= instance.OnRespawnTest;
+            @respawnTest.canceled -= instance.OnRespawnTest;
+            @resetProgressTest.started -= instance.OnResetProgressTest;
+            @resetProgressTest.performed -= instance.OnResetProgressTest;
+            @resetProgressTest.canceled -= instance.OnResetProgressTest;
         }
 
         public void RemoveCallbacks(IGeneralActions instance)
@@ -1049,6 +1107,8 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         void OnEscape(InputAction.CallbackContext context);
         void OnDamageSelf(InputAction.CallbackContext context);
         void OnHealSelf(InputAction.CallbackContext context);
+        void OnRespawnTest(InputAction.CallbackContext context);
+        void OnResetProgressTest(InputAction.CallbackContext context);
     }
     public interface IMenusActions
     {

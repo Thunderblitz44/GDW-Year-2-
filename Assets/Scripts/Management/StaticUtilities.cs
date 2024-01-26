@@ -11,13 +11,11 @@ public static class StaticUtilities
     public static readonly Color magicDamageColor = Color.magenta;
     public static readonly Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
     public static readonly float encounterStartDelay = 1f;
-    public static readonly int groundLayer = 6;
+    public static readonly int groundLayer = 64;
     public static int visibleTargets;
-    public static Transform playerTransform;
-    //public static readonly Portal[] elanaPortals = new Portal[2];
-
-    // RANGED GOLEM ANIMATION KEYWORDS
-    public static readonly string GOLEM_RANGER_ATTACK = "Golem Ranger Shooting";
+    public static readonly string CURRENT_LEVEL = "level";
+    public static readonly string CURRENT_CHECKPOINT = "checkpoint";
+    public static readonly string LAST_ENCOUNTER = "encounter";
 
     /*public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
     {

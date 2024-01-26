@@ -359,6 +359,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "respawnTest",
+                    "type": "Button",
+                    "id": "29c7b194-e0ab-426c-a9e1-206da6e1321d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "resetProgressTest",
+                    "type": "Button",
+                    "id": "a42da374-17f0-49a8-911b-39878345ca7a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -392,6 +410,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "HealSelf",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "883afb58-9a4d-461c-a51f-10ed3ade5977",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "respawnTest",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d76220de-a9c1-4d61-98e6-05e0e905fb7b",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "resetProgressTest",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

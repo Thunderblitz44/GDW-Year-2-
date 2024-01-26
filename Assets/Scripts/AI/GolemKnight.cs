@@ -19,7 +19,7 @@ public class GolemKnight : Enemy
     {
         base.Update();
 
-        HeadTarget.transform.position = StaticUtilities.playerTransform.position;
+        HeadTarget.transform.position = LevelManager.Instance.PlayerTransform.position;
 
         // attack cooldown + delay
         attackCooldownTimer += Time.deltaTime;
@@ -47,7 +47,7 @@ public class GolemKnight : Enemy
     public void EnableAI()
     {
         agent.enabled = true;
-        target = StaticUtilities.playerTransform;
+        target = LevelManager.Instance.PlayerTransform;
         HeadTarget.SetActive(true);
     }
 

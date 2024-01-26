@@ -12,10 +12,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     [SerializeField] float runSpeedLR = 5f;
     [SerializeField] float airborneForce = 0.5f;
     [SerializeField] float airborneXYSpeed = 1f;
-    //[SerializeField] AnimationCurve walkToRunCurve;
-    //[SerializeField] float walkToRunSpeed = 1f;
-    //[SerializeField] AnimationCurve runToWalkCurve;
-    //[SerializeField] float runToWalkSpeed = 1f;
     float moveForce;
     float runAccelTime;
     bool isRunning;
@@ -99,7 +95,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     void GroundCheck()
     {
-        if (Physics.SphereCast(transform.position,0.1f,Vector3.down, out ground, playerHeight * 0.5f, whatIsGround, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(transform.position,0.1f,Vector3.down, out ground, playerHeight * 0.5f, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
         {
             groundAngle = Vector3.Angle(Vector3.up, ground.normal);
             DebugHUD.instance.SetDebugText("ground angle : " + groundAngle.ToString("0.0"));
@@ -125,7 +121,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         {
             wallobj = null;
             ignoreMovement = false;
-            Debug.Log("e");
         }
     }
 
@@ -230,7 +225,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
         if (wallobj)
         {
-            Debug.Log("j");
             ignoreMovement = true;
         }
     }
@@ -290,18 +284,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         //ignoreMovement = false;
         if (jumpCooldown > 0) Invoke(nameof(ResetJump), jumpCooldown);
         else ResetJump();
-        //Debug.Log("landed");
         airTime = 0;
     }
 
     public bool IsMoving() => input != Vector3.zero;
     
-    public bool IsRunning() => isRunning;
-    public bool IsGrounded() => isGrounded;
-    public float GetMoveSpeed() => moveForce;
-    public float GetAirTime() => airTime;
-    public Transform GetOrientation() => orientation;
-    public Rigidbody GetRigidbody() => rb;
     public Transform GetBody() => body;
     public Vector3 GetMoveDirection() => moveDirection;
 
