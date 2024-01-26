@@ -13,6 +13,7 @@ public class Player : DamageableEntity
     internal ActionMap actions;
 
     [SerializeField] internal CinemachineFreeLook freeLookCam;
+   
 
     internal override void Awake()
     {
@@ -34,7 +35,14 @@ public class Player : DamageableEntity
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
     }
+
+    private void Start()
+    {
+        DebugHUD.instance.DisplayControls(actions);
+    }
+
 
     public void OnDestroy()
     {
@@ -43,7 +51,7 @@ public class Player : DamageableEntity
 
     public virtual void SetupInputEvents()
     {
-        actions.General.Escape.performed += ctx =>
+        actions.General.Pause.performed += ctx =>
         {
             //PausePlayer();
         };
@@ -77,5 +85,4 @@ public class Player : DamageableEntity
         actions.Abilities.Enable();
         actions.Menus.Disable();
     }
-
 }

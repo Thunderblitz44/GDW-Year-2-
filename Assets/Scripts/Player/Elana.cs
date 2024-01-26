@@ -109,7 +109,7 @@ public class Elana : Player
         mhb.knockback = knockback;
     }
 
-    private void Update()
+    void Update()
     {
         shootingCooldownTimer += Time.deltaTime;
         if (shooting && (shootStartTimer += Time.deltaTime) > shootStartDelay && shootingCooldownTimer > bulletCooldown)
@@ -165,7 +165,6 @@ public class Elana : Player
         {
             // melee
             //mhb.gameObject.SetActive(true);
-            
             
             //Animate player/wolf attacking in sync
             isPrimaryAttacking = true;
