@@ -55,15 +55,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Crouch"",
-                    ""type"": ""Button"",
-                    ""id"": ""2d7b5492-034c-45b7-af29-0995ffdd1a4b"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Dodge"",
                     ""type"": ""Button"",
                     ""id"": ""2938bdd3-084a-42ae-ba4c-814fffc64ee0"",
@@ -230,28 +221,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e25b2a87-583a-42de-9deb-5e744963b136"",
-                    ""path"": ""<Keyboard>/ctrl"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Crouch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""74e74577-f2a0-48b8-b367-5ae72e4c2325"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Crouch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""a5c3ae40-8bb1-473d-8dfe-c70947d8ec58"",
                     ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
@@ -356,7 +325,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             ""id"": ""78997225-4526-4f61-bdfc-a712a3ec25f6"",
             ""actions"": [
                 {
-                    ""name"": ""Escape"",
+                    ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""f14356dc-7924-4465-a04a-320b0ff48c5e"",
                     ""expectedControlType"": ""Button"",
@@ -365,18 +334,18 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""DamageSelf"",
+                    ""name"": ""respawnTest"",
                     ""type"": ""Button"",
-                    ""id"": ""615a93eb-8ea6-4054-b2fd-cf1376d12467"",
+                    ""id"": ""29c7b194-e0ab-426c-a9e1-206da6e1321d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""HealSelf"",
+                    ""name"": ""resetProgressTest"",
                     ""type"": ""Button"",
-                    ""id"": ""bef8065f-2f8d-47a5-b6c4-6f112a22c95b"",
+                    ""id"": ""a42da374-17f0-49a8-911b-39878345ca7a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -391,29 +360,29 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Escape"",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""4275636f-3072-451b-81c2-a533da81a796"",
-                    ""path"": ""<Keyboard>/h"",
+                    ""id"": ""883afb58-9a4d-461c-a51f-10ed3ade5977"",
+                    ""path"": ""<Keyboard>/l"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""DamageSelf"",
+                    ""action"": ""respawnTest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""91d33e2a-e8b9-426d-96ba-ff71a2fdd33d"",
-                    ""path"": ""<Keyboard>/g"",
+                    ""id"": ""d76220de-a9c1-4d61-98e6-05e0e905fb7b"",
+                    ""path"": ""<Keyboard>/k"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""HealSelf"",
+                    ""action"": ""resetProgressTest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -633,7 +602,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_Locomotion_Move = m_Locomotion.FindAction("Move", throwIfNotFound: true);
         m_Locomotion_Jump = m_Locomotion.FindAction("Jump", throwIfNotFound: true);
         m_Locomotion_Run = m_Locomotion.FindAction("Run", throwIfNotFound: true);
-        m_Locomotion_Crouch = m_Locomotion.FindAction("Crouch", throwIfNotFound: true);
         m_Locomotion_Dodge = m_Locomotion.FindAction("Dodge", throwIfNotFound: true);
         // Abilities
         m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
@@ -643,9 +611,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_Abilities_SecondaryAttack = m_Abilities.FindAction("SecondaryAttack", throwIfNotFound: true);
         // General
         m_General = asset.FindActionMap("General", throwIfNotFound: true);
-        m_General_Escape = m_General.FindAction("Escape", throwIfNotFound: true);
-        m_General_DamageSelf = m_General.FindAction("DamageSelf", throwIfNotFound: true);
-        m_General_HealSelf = m_General.FindAction("HealSelf", throwIfNotFound: true);
+        m_General_Pause = m_General.FindAction("Pause", throwIfNotFound: true);
+        m_General_respawnTest = m_General.FindAction("respawnTest", throwIfNotFound: true);
+        m_General_resetProgressTest = m_General.FindAction("resetProgressTest", throwIfNotFound: true);
         // Menus
         m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
         m_Menus_Resume = m_Menus.FindAction("Resume", throwIfNotFound: true);
@@ -718,7 +686,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_Locomotion_Move;
     private readonly InputAction m_Locomotion_Jump;
     private readonly InputAction m_Locomotion_Run;
-    private readonly InputAction m_Locomotion_Crouch;
     private readonly InputAction m_Locomotion_Dodge;
     public struct LocomotionActions
     {
@@ -727,7 +694,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Locomotion_Move;
         public InputAction @Jump => m_Wrapper.m_Locomotion_Jump;
         public InputAction @Run => m_Wrapper.m_Locomotion_Run;
-        public InputAction @Crouch => m_Wrapper.m_Locomotion_Crouch;
         public InputAction @Dodge => m_Wrapper.m_Locomotion_Dodge;
         public InputActionMap Get() { return m_Wrapper.m_Locomotion; }
         public void Enable() { Get().Enable(); }
@@ -747,9 +713,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
-            @Crouch.started += instance.OnCrouch;
-            @Crouch.performed += instance.OnCrouch;
-            @Crouch.canceled += instance.OnCrouch;
             @Dodge.started += instance.OnDodge;
             @Dodge.performed += instance.OnDodge;
             @Dodge.canceled += instance.OnDodge;
@@ -766,9 +729,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
-            @Crouch.started -= instance.OnCrouch;
-            @Crouch.performed -= instance.OnCrouch;
-            @Crouch.canceled -= instance.OnCrouch;
             @Dodge.started -= instance.OnDodge;
             @Dodge.performed -= instance.OnDodge;
             @Dodge.canceled -= instance.OnDodge;
@@ -863,16 +823,16 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     // General
     private readonly InputActionMap m_General;
     private List<IGeneralActions> m_GeneralActionsCallbackInterfaces = new List<IGeneralActions>();
-    private readonly InputAction m_General_Escape;
-    private readonly InputAction m_General_DamageSelf;
-    private readonly InputAction m_General_HealSelf;
+    private readonly InputAction m_General_Pause;
+    private readonly InputAction m_General_respawnTest;
+    private readonly InputAction m_General_resetProgressTest;
     public struct GeneralActions
     {
         private @ActionMap m_Wrapper;
         public GeneralActions(@ActionMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Escape => m_Wrapper.m_General_Escape;
-        public InputAction @DamageSelf => m_Wrapper.m_General_DamageSelf;
-        public InputAction @HealSelf => m_Wrapper.m_General_HealSelf;
+        public InputAction @Pause => m_Wrapper.m_General_Pause;
+        public InputAction @respawnTest => m_Wrapper.m_General_respawnTest;
+        public InputAction @resetProgressTest => m_Wrapper.m_General_resetProgressTest;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -882,28 +842,28 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_GeneralActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_GeneralActionsCallbackInterfaces.Add(instance);
-            @Escape.started += instance.OnEscape;
-            @Escape.performed += instance.OnEscape;
-            @Escape.canceled += instance.OnEscape;
-            @DamageSelf.started += instance.OnDamageSelf;
-            @DamageSelf.performed += instance.OnDamageSelf;
-            @DamageSelf.canceled += instance.OnDamageSelf;
-            @HealSelf.started += instance.OnHealSelf;
-            @HealSelf.performed += instance.OnHealSelf;
-            @HealSelf.canceled += instance.OnHealSelf;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+            @respawnTest.started += instance.OnRespawnTest;
+            @respawnTest.performed += instance.OnRespawnTest;
+            @respawnTest.canceled += instance.OnRespawnTest;
+            @resetProgressTest.started += instance.OnResetProgressTest;
+            @resetProgressTest.performed += instance.OnResetProgressTest;
+            @resetProgressTest.canceled += instance.OnResetProgressTest;
         }
 
         private void UnregisterCallbacks(IGeneralActions instance)
         {
-            @Escape.started -= instance.OnEscape;
-            @Escape.performed -= instance.OnEscape;
-            @Escape.canceled -= instance.OnEscape;
-            @DamageSelf.started -= instance.OnDamageSelf;
-            @DamageSelf.performed -= instance.OnDamageSelf;
-            @DamageSelf.canceled -= instance.OnDamageSelf;
-            @HealSelf.started -= instance.OnHealSelf;
-            @HealSelf.performed -= instance.OnHealSelf;
-            @HealSelf.canceled -= instance.OnHealSelf;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+            @respawnTest.started -= instance.OnRespawnTest;
+            @respawnTest.performed -= instance.OnRespawnTest;
+            @respawnTest.canceled -= instance.OnRespawnTest;
+            @resetProgressTest.started -= instance.OnResetProgressTest;
+            @resetProgressTest.performed -= instance.OnResetProgressTest;
+            @resetProgressTest.canceled -= instance.OnResetProgressTest;
         }
 
         public void RemoveCallbacks(IGeneralActions instance)
@@ -1034,7 +994,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
-        void OnCrouch(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
     }
     public interface IAbilitiesActions
@@ -1046,9 +1005,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     }
     public interface IGeneralActions
     {
-        void OnEscape(InputAction.CallbackContext context);
-        void OnDamageSelf(InputAction.CallbackContext context);
-        void OnHealSelf(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
+        void OnRespawnTest(InputAction.CallbackContext context);
+        void OnResetProgressTest(InputAction.CallbackContext context);
     }
     public interface IMenusActions
     {

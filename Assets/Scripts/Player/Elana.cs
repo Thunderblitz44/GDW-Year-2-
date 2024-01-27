@@ -22,7 +22,7 @@ public class Elana : Player
     [SerializeField] float bulletCooldown = 0.25f;
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] Transform shootOrigin;
-    readonly List<GameObject> pooledProjectiles = new List<GameObject>(20);
+    readonly List<GameObject> pooledProjectiles = new(20);
     bool shooting = false;
     float shootingCooldownTimer;
     float shootStartTimer;
@@ -32,7 +32,6 @@ public class Elana : Player
     [SerializeField] float teleportSpeed = 40f;
     [SerializeField] float portalCoolown = 1f;
     [SerializeField] GameObject recallPointIndicatorPrefab;
-    //[SerializeField] GameObject portalPrefab;
     [SerializeField] LineRenderer portalLink;
     [SerializeField] SkinnedMeshRenderer meshRenderer;
     GameObject instantiatedPortal;
@@ -73,14 +72,9 @@ public class Elana : Player
     bool canDodge = true;
     const int dodgeId = 3;
 
-    //Rigidbody rb;
-    //Transform body;
-
     internal override void Awake()
     {
         base.Awake();
-        //body = movementScript.GetBody();
-        //rb = GetComponent<Rigidbody>();
 
         abilityHud.onPointRecharged += (i) => 
         { 
@@ -115,7 +109,7 @@ public class Elana : Player
         mhb.knockback = knockback;
     }
 
-    private void Update()
+    void Update()
     {
         shootingCooldownTimer += Time.deltaTime;
         if (shooting && (shootStartTimer += Time.deltaTime) > shootStartDelay && shootingCooldownTimer > bulletCooldown)
@@ -172,7 +166,6 @@ public class Elana : Player
             // melee
             //mhb.gameObject.SetActive(true);
             
-            
             //Animate player/wolf attacking in sync
             isPrimaryAttacking = true;
         };
@@ -206,7 +199,6 @@ public class Elana : Player
             {
                 // lerp to portal
                 canPortal = false;
-                //StartCoroutine(PortalRoutine());
                 meshRenderer.enabled = false;
                 Dodge(transform.position, recallPos, teleportSpeed);
                 return;
@@ -227,12 +219,12 @@ public class Elana : Player
             // raycast - make sure there are no obstacles in the way
             float newDist = dodgeDistance;
 
-            Transform body = movementScript.GetBody();
+            Transform body = MovementScript.GetBody();
             Transform cam = Camera.main.transform;
             Vector3 end;
 
             // calculate end for the raycast
-            if (movementScript.IsMoving()) end = body.position + movementScript.GetMoveDirection() * newDist;
+            if (MovementScript.IsMoving()) end = body.position + MovementScript.GetMoveDirection() * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
             RaycastHit hit;
@@ -243,7 +235,7 @@ public class Elana : Player
             }
 
             // re-calculate end in case newDist changed
-            if (movementScript.IsMoving()) end = body.position + movementScript.GetMoveDirection() * newDist;
+            if (MovementScript.IsMoving()) end = body.position + MovementScript.GetMoveDirection() * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
             Dodge(transform.position, end, dodgeSpeed);
@@ -293,7 +285,7 @@ public class Elana : Player
 
     IEnumerator DodgeRoutine(Vector3 startPos, Vector3 endPos)
     {
-        movementScript.DisableLocomotion();
+        MovementScript.DisableLocomotion();
         float time = 0;
         float dodgeTime = dodgeCurve.keys[1].time;
         float startFOV = freeLookCam.m_Lens.FieldOfView;
@@ -334,7 +326,7 @@ public class Elana : Player
     void OnDodgeEnded()
     {
         // dodge end
-        movementScript.EnableLocomotion();
+        MovementScript.EnableLocomotion();
         isInvincible = false;
         isDodgeing = false;
 
@@ -344,7 +336,6 @@ public class Elana : Player
         Destroy(instantiatedPortal);
         abilityHud.SpendPoint(portalId, portalCoolown);
         meshRenderer.enabled = true;
-        //foreach (var portal in StaticUtilities.elanaPortals) portal.Die();
     }
 
     void ShootMagicBullet()
@@ -373,35 +364,4 @@ public class Elana : Player
         Destroy(fireTornado);
         Destroy(aoeIndicator.gameObject);
     }
-
-    /*IEnumerator PortalRoutine()
-    {
-        movementScript.Disable();
-
-        // play animation
-        yield return new WaitForSeconds(0.25f);
-        Vector3 p1SpawnPos;
-        Quaternion p1SpawnRot;
-        Debug.Log(rb.velocity);
-        if (rb.velocity != Vector3.zero)
-        {
-            Vector3 normVel = rb.velocity.normalized;
-            p1SpawnPos = body.position + normVel;
-            p1SpawnRot = Quaternion.LookRotation(body.position - normVel, Vector3.up);
-        }
-        else
-        {
-            p1SpawnPos = body.position + transform.forward;
-            p1SpawnRot = Quaternion.LookRotation(StaticUtilities.GetCameraDir(), Vector3.up);
-        }
-        StaticUtilities.elanaPortals[0] = Instantiate(portalPrefab, p1SpawnPos, p1SpawnRot).GetComponent<Portal>();
-        StaticUtilities.elanaPortals[1] = Instantiate(portalPrefab, instantiatedPortal.transform.position, instantiatedPortal.transform.rotation).GetComponent<Portal>();
-        Destroy(instantiatedPortal);
-
-        // HERE - MAKING THE FIRST PORTAL FACE THE PLAYER WHEN IT SPAWNS
-
-        yield return new WaitForSeconds(0.25f);
-
-        Dodge(transform.position, recallPos, teleportSpeed);
-    }*/
 }
