@@ -33,7 +33,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         Transform t = Instantiate(floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
         t.GetComponent<TextMeshProUGUI>().text = msg;
-        t.SetParent(GameManager.Instance.worldCanvas, true);
+        t.SetParent(LevelManager.Instance.WorldCanvas, true);
     }
 
     public void ApplyDamageOverTime(float dps, DamageTypes type, float duration)

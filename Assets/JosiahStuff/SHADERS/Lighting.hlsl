@@ -52,4 +52,4 @@ void AddAdditionalLights_float(float Smoothness, float3 WorldPosition, float3 Wo
     Color = total <= 0 ? MainColor : Color / total;
 }
 
-#endif
+#endif 

@@ -1,30 +1,29 @@
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.SceneManagement;
 
 public class Player : DamageableEntity
 {
-    public PlayerMovement movementScript { get; private set; }
-    public PlayerAnimator animatorScript { get; private set; }
-    public PlayerMenuController pauseScript { get; private set; }
+    public PlayerMovement MovementScript { get; private set; }
+    public PlayerAnimator AnimatorScript { get; private set; }
+    public PlayerMenuController PauseScript { get; private set; }
     public AbilityHUD abilityHud;
 
     // INPUT
     internal ActionMap actions;
 
     [SerializeField] internal CinemachineFreeLook freeLookCam;
-    //[SerializeField] internal CinemachineFreeLook aimCam;
+   
 
     internal override void Awake()
     {
         base.Awake();
 
-        movementScript = GetComponent<PlayerMovement>();
-        animatorScript = GetComponent<PlayerAnimator>();
-        pauseScript = GetComponent<PlayerMenuController>();
+        MovementScript = GetComponent<PlayerMovement>();
+        AnimatorScript = GetComponent<PlayerAnimator>();
+        PauseScript = GetComponent<PlayerMenuController>();
 
         actions = new ActionMap();
-
-        StaticUtilities.playerTransform = transform;
 
         // All modules attached to this gameobject
         foreach (IInputExpander module in GetComponents<IInputExpander>())
@@ -36,7 +35,14 @@ public class Player : DamageableEntity
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
     }
+
+    private void Start()
+    {
+        DebugHUD.instance.DisplayControls(actions);
+    }
+
 
     public void OnDestroy()
     {
@@ -45,9 +51,18 @@ public class Player : DamageableEntity
 
     public virtual void SetupInputEvents()
     {
-        actions.General.Escape.performed += ctx =>
+        actions.General.Pause.performed += ctx =>
         {
             //PausePlayer();
+        };
+        actions.General.respawnTest.performed += ctx =>
+        {
+            LevelManager.Instance.Respawn();
+        };
+        actions.General.resetProgressTest.performed += ctx =>
+        {
+            PlayerPrefs.DeleteAll();
+            SceneManager.LoadScene(LevelManager.Id);
         };
 
         actions.General.Enable();
@@ -70,5 +85,4 @@ public class Player : DamageableEntity
         actions.Abilities.Enable();
         actions.Menus.Disable();
     }
-
 }

@@ -1,19 +1,21 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EncounterVolume : MonoBehaviour
 {
     [SerializeField] List<GameObject> barriers;
-    public Action<Bounds, int> onEncounterStarted;
     BoxCollider bc;
     bool startEncounter = false;
     float startTimer;
-    [HideInInspector] public int id;
+    Checkpoint cp;
+
+    public int Id { get; set; }
 
     private void Awake()
     {
         bc = GetComponent<BoxCollider>();
+        cp = GetComponent<Checkpoint>();
+        cp.SetOnTriggerEnter = false;
     }
 
     private void Update()
@@ -21,7 +23,7 @@ public class EncounterVolume : MonoBehaviour
         if (startEncounter && (startTimer+=Time.deltaTime) > StaticUtilities.encounterStartDelay)
         {
             startEncounter = false;
-            onEncounterStarted?.Invoke(bc.bounds, id);
+            LevelManager.Instance.StartEncounter(bc.bounds, Id);
             foreach (var barrier in barriers)
             {
                 barrier.SetActive(true);
@@ -49,6 +51,7 @@ public class EncounterVolume : MonoBehaviour
             barrier.SetActive(false);
         }
 
+        LevelManager.Instance.SetCheckpoint(cp.Id);
         gameObject.SetActive(false);
     }
 }
