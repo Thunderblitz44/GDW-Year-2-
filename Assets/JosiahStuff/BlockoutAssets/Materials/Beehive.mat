@@ -67,7 +67,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Gradient_Texture:
-        m_Texture: {fileID: 2800000, guid: 7fe341e097df0ac4db5960e03ea63700, type: 3}
+        m_Texture: {fileID: 2800000, guid: d6b17496cff30a74f9a04a248e7e77cd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -172,6 +172,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - ADDITIONAL_LIGHTS_CALCULATE_SHADOWS: 0
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
     - _Albedo_Scale: 1
     - _AlphaClip: 0
@@ -181,11 +182,11 @@ Material:
     - _Border: 0
     - _Border_Effect: 1
     - _BumpScale: 1
-    - _Cell_Location: 0
-    - _Cell_Strength: 0
+    - _Cell_Location: 0.18
+    - _Cell_Strength: 1.1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Contrast: 1
+    - _Contrast: 0
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -201,7 +202,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HeightBlend: 0
+    - _HeightBlend: 0.058
     - _Height_Blend: 3
     - _Height_Gradient: -2
     - _Lighting_Noise: 0.5
@@ -220,10 +221,10 @@ Material:
     - _ReflectionProbe: 0.5
     - _SHADOWS_SOFT: 1
     - _Shadow_Atten: 0
-    - _Shadow_Strength: 0.5
-    - _Smoothness: 0
+    - _Shadow_Strength: 0.752
+    - _Smoothness: 62.97
     - _SmoothnessTextureChannel: 0
-    - _Smoothness_1: 0
+    - _Smoothness_1: 0.485
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
@@ -234,7 +235,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.85882354, g: 0.5683088, b: 0.20784311, a: 1}
     - _Border_Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.4811321, g: 0.2757568, b: 0.020425411, a: 1}
+    - _Color: {r: 0.9622642, g: 0.5515136, b: 0.040850822, a: 1}
     - _EmissionColor: {r: 1, g: 0.15684955, b: 0, a: 1}
     - _Shadow_Color: {r: 0.4616857, g: 0.5431947, b: 0.7830189, a: 0}
     - _Smoothness_Color: {r: 21.361256, g: 12.072296, b: 8.276088, a: 0}
