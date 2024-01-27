@@ -675,8 +675,8 @@ GameObject:
   - component: {fileID: 4223308464630147859}
   - component: {fileID: 1657866747848276770}
   - component: {fileID: 1184711242842850659}
-  - component: {fileID: 8995375292729412621}
   - component: {fileID: 1132869811329933156}
+  - component: {fileID: 8190510028615444845}
   m_Layer: 12
   m_Name: Golem Knight Prefab
   m_TagString: Untagged
@@ -810,21 +810,6 @@ NavMeshAgent:
   m_BaseOffset: 0.51
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 3
---- !u!114 &8995375292729412621
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2830368260468603158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86e727f382cba874393d53ffe47968fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10
-  height: 1.5
-  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
 --- !u!114 &1132869811329933156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -848,6 +833,21 @@ MonoBehaviour:
   attackCooldown: 1.5
   attackDelay: 0.5
   HeadTarget: {fileID: 6535942080977790750}
+--- !u!114 &8190510028615444845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2830368260468603158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
 --- !u!1 &3137070404703969553
 GameObject:
   m_ObjectHideFlags: 0

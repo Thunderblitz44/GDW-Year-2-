@@ -33,15 +33,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Crouch",
-                    "type": "Button",
-                    "id": "2d7b5492-034c-45b7-af29-0995ffdd1a4b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Dodge",
                     "type": "Button",
                     "id": "2938bdd3-084a-42ae-ba4c-814fffc64ee0",
@@ -208,28 +199,6 @@
                 },
                 {
                     "name": "",
-                    "id": "e25b2a87-583a-42de-9deb-5e744963b136",
-                    "path": "<Keyboard>/ctrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Crouch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "74e74577-f2a0-48b8-b367-5ae72e4c2325",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Crouch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "a5c3ae40-8bb1-473d-8dfe-c70947d8ec58",
                     "path": "<Keyboard>/f",
                     "interactions": "",
@@ -334,7 +303,7 @@
             "id": "78997225-4526-4f61-bdfc-a712a3ec25f6",
             "actions": [
                 {
-                    "name": "Escape",
+                    "name": "Pause",
                     "type": "Button",
                     "id": "f14356dc-7924-4465-a04a-320b0ff48c5e",
                     "expectedControlType": "Button",
@@ -343,18 +312,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "DamageSelf",
+                    "name": "respawnTest",
                     "type": "Button",
-                    "id": "615a93eb-8ea6-4054-b2fd-cf1376d12467",
+                    "id": "29c7b194-e0ab-426c-a9e1-206da6e1321d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "HealSelf",
+                    "name": "resetProgressTest",
                     "type": "Button",
-                    "id": "bef8065f-2f8d-47a5-b6c4-6f112a22c95b",
+                    "id": "a42da374-17f0-49a8-911b-39878345ca7a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -369,29 +338,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Escape",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "4275636f-3072-451b-81c2-a533da81a796",
-                    "path": "<Keyboard>/h",
+                    "id": "883afb58-9a4d-461c-a51f-10ed3ade5977",
+                    "path": "<Keyboard>/l",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DamageSelf",
+                    "action": "respawnTest",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "91d33e2a-e8b9-426d-96ba-ff71a2fdd33d",
-                    "path": "<Keyboard>/g",
+                    "id": "d76220de-a9c1-4d61-98e6-05e0e905fb7b",
+                    "path": "<Keyboard>/k",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "HealSelf",
+                    "action": "resetProgressTest",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
