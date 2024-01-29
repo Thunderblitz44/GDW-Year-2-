@@ -105,10 +105,12 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator BossRoutine()
     {
-        HealthComponent bossHp = boss.GetComponent<HealthComponent>();
+        BossHealthComponent bossHp = boss.GetComponent<BossHealthComponent>();
         // delay?
+        yield return new WaitForSeconds(1);
         // boss entrance animation?
         // boss hpbar appears
+        bossHp.Show();
         // start fight
 
 
