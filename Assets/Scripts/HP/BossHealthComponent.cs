@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine;
 public class BossHealthComponent : HealthComponent
 {
     [SerializeField] Animator animator;
+
+    public Action nextPhase;
 
     public void Show()
     {

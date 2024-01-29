@@ -70,16 +70,9 @@ public class GolemRanger : Enemy
 
     void Attack()
     {
-        foreach (var bullet in pooledProjectiles)
-        {
-            if (bullet.activeSelf) continue;
-
-            bullet.SetActive(true);
-            bullet.transform.position = shootOrigin.position;
-            bullet.GetComponent<Rigidbody>().AddForce((shootOrigin.position - LevelManager.Instance.PlayerTransform.position).normalized * projectileSpeed, ForceMode.Impulse);
-            break;
-        }
+        Vector3 force = (shootOrigin.position - LevelManager.Instance.PlayerTransform.position).normalized * projectileSpeed;
+        StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
+        
         animator.SetTrigger("Attack");
-        Debug.Log("shoot");
     }
 }

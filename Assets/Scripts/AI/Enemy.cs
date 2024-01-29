@@ -33,12 +33,10 @@ public class Enemy : DamageableEntity
 
     internal virtual void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other); 
     }
 
     internal virtual void OnTriggerExit(Collider other)
     {
-        Debug.Log(other);
     }
 
     internal virtual void SlowUpdate()

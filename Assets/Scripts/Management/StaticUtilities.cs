@@ -76,4 +76,17 @@ public static class StaticUtilities
     {
         return Quaternion.LookRotation(first - (Vector3.right * second.x + Vector3.up * first.y + Vector3.forward * second.z), worldUp);
     }
+
+    public static void ShootProjectile(List<GameObject> projectilePool, Vector3 origin, Vector3 force)
+    {
+        foreach (var projectile in projectilePool)
+        {
+            if (projectile.activeSelf) continue;
+
+            projectile.SetActive(true);
+            projectile.transform.position = origin;
+            projectile.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+            break;
+        }
+    }
 }

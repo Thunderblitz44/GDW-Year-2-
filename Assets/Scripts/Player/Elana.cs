@@ -342,15 +342,8 @@ public class Elana : Player
     {
         shootingCooldownTimer = 0f;
         // start shooting
-        foreach (var bullet in pooledProjectiles)
-        {
-            if (bullet.activeSelf) continue;
-
-            bullet.SetActive(true);
-            bullet.transform.position = shootOrigin.position;
-            bullet.GetComponent<Rigidbody>().AddForce(StaticUtilities.GetCameraLook() * bulletSpeed + Camera.main.transform.right/2, ForceMode.Impulse);
-            break;
-        }
+        Vector3 force = StaticUtilities.GetCameraLook() * bulletSpeed + Camera.main.transform.right / 2;
+        StaticUtilities.ShootProjectile(pooledProjectiles,shootOrigin.position, force);
     }
 
     void EndTornado()
