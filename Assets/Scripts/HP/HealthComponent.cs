@@ -30,4 +30,10 @@ public class HealthComponent : MonoBehaviour
             onHealthZeroed?.Invoke();
         }
     }
+
+    public void SetHealth(float value)
+    {
+        health = value;
+        hpbar.SetHPValue(health);
+    }
 }

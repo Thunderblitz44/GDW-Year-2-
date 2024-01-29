@@ -350,6 +350,15 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""harmSelfTest"",
+                    ""type"": ""Button"",
+                    ""id"": ""c7585759-2d59-40af-8ef8-e8c993fa32c9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -383,6 +392,17 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""resetProgressTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35e76d88-96bb-49f9-a4ed-1f4be4d1a653"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""harmSelfTest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -614,6 +634,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_General_Pause = m_General.FindAction("Pause", throwIfNotFound: true);
         m_General_respawnTest = m_General.FindAction("respawnTest", throwIfNotFound: true);
         m_General_resetProgressTest = m_General.FindAction("resetProgressTest", throwIfNotFound: true);
+        m_General_harmSelfTest = m_General.FindAction("harmSelfTest", throwIfNotFound: true);
         // Menus
         m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
         m_Menus_Resume = m_Menus.FindAction("Resume", throwIfNotFound: true);
@@ -826,6 +847,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_General_Pause;
     private readonly InputAction m_General_respawnTest;
     private readonly InputAction m_General_resetProgressTest;
+    private readonly InputAction m_General_harmSelfTest;
     public struct GeneralActions
     {
         private @ActionMap m_Wrapper;
@@ -833,6 +855,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @Pause => m_Wrapper.m_General_Pause;
         public InputAction @respawnTest => m_Wrapper.m_General_respawnTest;
         public InputAction @resetProgressTest => m_Wrapper.m_General_resetProgressTest;
+        public InputAction @harmSelfTest => m_Wrapper.m_General_harmSelfTest;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -851,6 +874,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @resetProgressTest.started += instance.OnResetProgressTest;
             @resetProgressTest.performed += instance.OnResetProgressTest;
             @resetProgressTest.canceled += instance.OnResetProgressTest;
+            @harmSelfTest.started += instance.OnHarmSelfTest;
+            @harmSelfTest.performed += instance.OnHarmSelfTest;
+            @harmSelfTest.canceled += instance.OnHarmSelfTest;
         }
 
         private void UnregisterCallbacks(IGeneralActions instance)
@@ -864,6 +890,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @resetProgressTest.started -= instance.OnResetProgressTest;
             @resetProgressTest.performed -= instance.OnResetProgressTest;
             @resetProgressTest.canceled -= instance.OnResetProgressTest;
+            @harmSelfTest.started -= instance.OnHarmSelfTest;
+            @harmSelfTest.performed -= instance.OnHarmSelfTest;
+            @harmSelfTest.canceled -= instance.OnHarmSelfTest;
         }
 
         public void RemoveCallbacks(IGeneralActions instance)
@@ -1008,6 +1037,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnRespawnTest(InputAction.CallbackContext context);
         void OnResetProgressTest(InputAction.CallbackContext context);
+        void OnHarmSelfTest(InputAction.CallbackContext context);
     }
     public interface IMenusActions
     {

@@ -10,22 +10,23 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance;
     public static int Id { get; private set; }
     public Transform PlayerTransform { get; private set; }
+    public Player PlayerScript { get; private set; }
+    public static bool isGamePaused = false;
+    public static bool isPlayerDead = false;
 
-    Transform canvas;
-    Transform worldCanvas;
 
     public NavMeshSurface NavMesh { get; private set; }
     [SerializeField] List<EncounterVolume> encounterVolumes;
-    [SerializeField] List<GameObject> enemies;
     [SerializeField] List<Checkpoint> checkpoints = new();
+    [SerializeField] List<GameObject> enemies;
+    [SerializeField] GameObject boss;
     readonly List<DamageableEntity> spawnedEnemies = new();
 
-    public Transform WorldCanvas { get { return worldCanvas; } }
-    public Transform Canvas { get { return canvas; } }
-    public bool IsGamePaused { get; private set; } = false;
+    public Transform WorldCanvas { get; private set; }
+    public Transform Canvas { get; private set; }
 
+    public Checkpoint CurrentCheckpoint { get; private set; }
     EncounterVolume currentEncounter;
-    Checkpoint currentCheckpoint;
     Transitioner transitioner;
 
     private void Awake()
@@ -52,19 +53,26 @@ public class LevelManager : MonoBehaviour
 
         Id = SceneManager.GetActiveScene().buildIndex;
         NavMesh = FindFirstObjectByType<NavMeshSurface>();
-        canvas = GameObject.FindGameObjectWithTag("MainCanvas").transform;
-        worldCanvas = GameObject.FindGameObjectWithTag("WorldCanvas").transform;
+        Canvas = GameObject.FindGameObjectWithTag("MainCanvas").transform;
+        WorldCanvas = GameObject.FindGameObjectWithTag("WorldCanvas").transform;
         PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        transitioner = canvas.GetChild(canvas.childCount - 1).GetComponent<Transitioner>();
+        PlayerScript = PlayerTransform.GetComponent<Player>();
+        transitioner = Canvas.GetChild(Canvas.childCount - 1).GetComponent<Transitioner>();
         if (!transitioner) Debug.LogWarning("The transitioner needs to be the last child of canvas!");
-        else transitioner.onFadedToBlack += ScreenIsBlack;
+        else
+        {
+            transitioner.onFadedToBlack += ScreenIsBlack;
+            transitioner.onFadedToClear += ScreenIsClear;
+        }
+
         LoadProgress();
     }
 
     public void StartEncounter(Bounds volumeBounds, int id)
     {
         currentEncounter = encounterVolumes[id];
-        StartCoroutine(EncounterRoutine(volumeBounds));
+        if (id == encounterVolumes.Count - 1) StartCoroutine(BossRoutine());
+        else StartCoroutine(EncounterRoutine(volumeBounds));
     }
 
     IEnumerator EncounterRoutine(Bounds volumeBounds)
@@ -91,6 +99,24 @@ public class LevelManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
+        // end
+        currentEncounter.EndEncounter();
+    }
+
+    IEnumerator BossRoutine()
+    {
+        HealthComponent bossHp = boss.GetComponent<HealthComponent>();
+        // delay?
+        // boss entrance animation?
+        // boss hpbar appears
+        // start fight
+
+
+        //wait till boss dies
+        while (bossHp.health > 0)
+        {
+            yield return new WaitForSeconds(1);
+        }
         // end
         currentEncounter.EndEncounter();
     }
@@ -123,20 +149,23 @@ public class LevelManager : MonoBehaviour
     public void SetCheckpoint(int id)
     {
         Debug.Log("Checkpoint set");
-        currentCheckpoint = checkpoints[id];
+        CurrentCheckpoint = checkpoints[id];
         SaveProgress();
     }
 
-    public void Respawn()
+    public void Respawn(float delay = 0)
     {
-        if (!currentCheckpoint) return;
-        transitioner.FadeToBlack();
+        if (!CurrentCheckpoint) return;
+        PlayerScript.MovementScript.DisableLocomotion();
+        //PlayerScript.PausePlayer();
+        transitioner.FadeToBlack(delay);
     }
 
     void SaveProgress()
     {
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_LEVEL, Id);
-        PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, currentCheckpoint.Id);
+        PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, CurrentCheckpoint.Id);
+        PlayerPrefs.SetFloat(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().health);
         if (currentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, currentEncounter.Id);
     }
 
@@ -149,40 +178,40 @@ public class LevelManager : MonoBehaviour
         // if this is the first time playing this level
         if (Id == cl)
         {
-            currentCheckpoint = checkpoints[cc];
+            CurrentCheckpoint = checkpoints[cc];
             if (le >= 0) currentEncounter = encounterVolumes[le];
 
             // disable old encounters
             foreach (var volume in encounterVolumes)
             {
-                if (volume.Id <= le) volume.gameObject.SetActive(false);
+                if (volume.Id <= le) volume.Disable();
             }
 
             // disable old checkpoints
             foreach (var checkpoint in checkpoints)
             {
                 if (!checkpoint.isActiveAndEnabled) continue;
-                if (checkpoint.Id < cc) checkpoint.gameObject.SetActive(false); 
+                if (checkpoint.Id < cc) checkpoint.Disable(); 
             }
         }
         
         // if we already beat this level
         else if (Id < cl)
         {
-            currentCheckpoint = checkpoints.Last();
+            CurrentCheckpoint = checkpoints.Last();
             currentEncounter = encounterVolumes.Last();
 
             // disble all encounters
             foreach (var volume in encounterVolumes)
             {
-                volume.gameObject.SetActive(false);
+                volume.Disable();
             }
 
             // disable old checkpoints
             foreach (var checkpoint in checkpoints)
             {
                 if (!checkpoint.isActiveAndEnabled) continue;
-                if (checkpoint.Id < cc) checkpoint.gameObject.SetActive(false);
+                if (checkpoint.Id < cc) checkpoint.Disable();
             }
         }
 
@@ -193,17 +222,25 @@ public class LevelManager : MonoBehaviour
             PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, 0);
             PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, -1);
 
-            currentCheckpoint = checkpoints[0];
+            CurrentCheckpoint = checkpoints[0];
         }
 
         transitioner.SetToBlack();
-        currentCheckpoint.Teleport(PlayerTransform);
         transitioner.FadeToClear();
     }
 
     void ScreenIsBlack()
     {
-        currentCheckpoint.Teleport(PlayerTransform);
-        transitioner.FadeToClear(0.5f);
+        if (isPlayerDead) SceneManager.LoadScene(Id);
+        else
+        {
+            transitioner.FadeToClear(0.5f);
+            CurrentCheckpoint.Teleport(PlayerTransform);
+        }
+    }
+
+    void ScreenIsClear()
+    {
+        PlayerScript.MovementScript.EnableLocomotion();
     }
 }

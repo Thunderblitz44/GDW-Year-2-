@@ -5,9 +5,8 @@ using UnityEngine.SceneManagement;
 public class Player : DamageableEntity
 {
     public PlayerMovement MovementScript { get; private set; }
-    public PlayerAnimator AnimatorScript { get; private set; }
-    public PlayerMenuController PauseScript { get; private set; }
-    public AbilityHUD abilityHud;
+    [SerializeField] internal AbilityHUD abilityHud;
+    PlayerMenuController pauseScript;
 
     // INPUT
     internal ActionMap actions;
@@ -20,9 +19,7 @@ public class Player : DamageableEntity
         base.Awake();
 
         MovementScript = GetComponent<PlayerMovement>();
-        AnimatorScript = GetComponent<PlayerAnimator>();
-        PauseScript = GetComponent<PlayerMenuController>();
-
+        pauseScript = GetComponent<PlayerMenuController>();
         actions = new ActionMap();
 
         // All modules attached to this gameobject
@@ -36,11 +33,13 @@ public class Player : DamageableEntity
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        hp.SetHealth(PlayerPrefs.GetFloat(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.maxHealth));
     }
 
     private void Start()
     {
         DebugHUD.instance.DisplayControls(actions);
+        LevelManager.Instance.CurrentCheckpoint.Teleport(transform);
     }
 
 
@@ -53,8 +52,12 @@ public class Player : DamageableEntity
     {
         actions.General.Pause.performed += ctx =>
         {
-            //PausePlayer();
+            PausePlayer();
+            actions.Menus.Enable();
+            pauseScript.Pause();
         };
+
+        // v TEMPORARY v //
         actions.General.respawnTest.performed += ctx =>
         {
             LevelManager.Instance.Respawn();
@@ -64,25 +67,37 @@ public class Player : DamageableEntity
             PlayerPrefs.DeleteAll();
             SceneManager.LoadScene(LevelManager.Id);
         };
+        actions.General.harmSelfTest.performed += ctx =>
+        {
+            ApplyDamage(10f, DamageTypes.physical);
+        };
+        // ^ TEMPORARY ^ //
 
         actions.General.Enable();
+        actions.CameraControl.Enable();
     }
 
     public void PausePlayer()
     {
         actions.General.Disable();
-        actions.Locomotion.Disable();
-        actions.CameraControl.Disable();
         actions.Abilities.Disable();
-        actions.Menus.Enable();
+        actions.Locomotion.Disable();
+        freeLookCam.gameObject.SetActive(false);
     }
 
     public void UnPausePlayer()
     {
         actions.General.Enable();
-        actions.Locomotion.Enable();
-        actions.CameraControl.Enable();
         actions.Abilities.Enable();
-        actions.Menus.Disable();
+        actions.Locomotion.Enable();
+        freeLookCam.gameObject.SetActive(true);
+    }
+
+    internal override void OnHealthZeroed()
+    {
+        // player death.
+        LevelManager.isPlayerDead = true;
+        PausePlayer();
+        LevelManager.Instance.Respawn(0.5f);
     }
 }

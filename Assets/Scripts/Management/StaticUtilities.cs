@@ -16,6 +16,7 @@ public static class StaticUtilities
     public static readonly string CURRENT_LEVEL = "level";
     public static readonly string CURRENT_CHECKPOINT = "checkpoint";
     public static readonly string LAST_ENCOUNTER = "encounter";
+    public static readonly string CURRENT_PLAYER_HEALTH = "playerHealth";
 
     /*public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
     {

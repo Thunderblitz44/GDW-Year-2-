@@ -15,7 +15,7 @@ public class PauseMenu : MonoBehaviour
     const string pauseTrigger = "pauseTrigger";
     const string settingsTrigger = "settingsTrigger";
 
-    private void Start()
+    private void Awake()
     {
         resumeButton.onClick.AddListener(Resume);
         settingsButton.onClick.AddListener(Settings);
@@ -43,13 +43,15 @@ public class PauseMenu : MonoBehaviour
         animator.SetTrigger(pauseTrigger);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        LevelManager.isGamePaused = true;
     }
 
     public void Resume()
     {
         animator.SetTrigger(pauseTrigger);
-        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        LevelManager.isGamePaused = false;
     }
 
     void Settings()

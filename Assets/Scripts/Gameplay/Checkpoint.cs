@@ -28,7 +28,7 @@ public class Checkpoint : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             LevelManager.Instance.SetCheckpoint(Id);
-            bc.enabled = false;
+            Disable();
         }
     }
 
@@ -44,5 +44,10 @@ public class Checkpoint : MonoBehaviour
             other.position = transform.position;
             other.rotation = transform.rotation;
         }
+    }
+
+    public void Disable()
+    {
+        if (bc) bc.enabled = false;
     }
 }

@@ -4,20 +4,15 @@ using UnityEngine;
 using UnityEngine.AI;
 public class GolemBossScript : MonoBehaviour
 {
+    NavMeshAgent GolemBossAgent;
+    Animator GolemBossAnimator;
 
-    private NavMeshAgent GolemBossAgent;
 
-    private Animator GolemBossAnimator;
-    // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
         GolemBossAnimator = GetComponent<Animator>();
         GolemBossAgent = GetComponentInParent<NavMeshAgent>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
