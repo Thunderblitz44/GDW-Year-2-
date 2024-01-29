@@ -61,7 +61,7 @@ public class Elana : Player
     [SerializeField] float dodgeDistance = 5f;
     [SerializeField] float dodgeSpeed = 10f;
     [SerializeField] float dodgeCooldown = 1f;
-    [SerializeField] AnimationCurve dodgeCurve;
+    [SerializeField] AnimationCurve dodgeCurve = AnimationCurve.EaseInOut(0,0,1,1);
     [SerializeField] AnimationCurve dodgeFovIntensityCurve;
     [SerializeField] float dodgeFovIncrease = 10;
     [SerializeField] AnimationCurve fovRestoreCurve;

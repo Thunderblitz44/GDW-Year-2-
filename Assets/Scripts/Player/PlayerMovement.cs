@@ -182,7 +182,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (CanJump()) Jump();
         };
 
-        EnableLocomotion();
+        //EnableLocomotion();
     }
 
     void Move()

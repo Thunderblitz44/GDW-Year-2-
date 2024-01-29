@@ -52,6 +52,12 @@ public class EncounterVolume : MonoBehaviour
         }
 
         LevelManager.Instance.SetCheckpoint(cp.Id);
-        gameObject.SetActive(false);
+        Disable();
+    }
+
+    public void Disable()
+    {
+        bc.enabled = false;
+        enabled = false;
     }
 }

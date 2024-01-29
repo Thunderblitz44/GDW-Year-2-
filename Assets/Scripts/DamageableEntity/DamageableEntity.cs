@@ -9,7 +9,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
     [SerializeField] bool enableDamageNumbers = true;
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
     public bool isInvincible;
-    HealthComponent hp;
+    internal HealthComponent hp;
 
     internal virtual void Awake()
     {
