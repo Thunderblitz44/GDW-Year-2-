@@ -41,6 +41,7 @@ public class EncounterVolume : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag != "Player") return;
         startEncounter = true;
     }
 

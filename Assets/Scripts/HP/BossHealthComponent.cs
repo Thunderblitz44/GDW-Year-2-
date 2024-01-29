@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossHealthComponent : MonoBehaviour
+public class BossHealthComponent : HealthComponent
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] Animator animator;
+
+    public void Show()
     {
-        
+        hpBarPrefab.SetActive(true);
+        // play anim
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Hide()
     {
-        
+        hpBarPrefab.SetActive(false);
+        // play anim
     }
 }
