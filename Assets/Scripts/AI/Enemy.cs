@@ -17,8 +17,8 @@ public class Enemy : DamageableEntity
         agent = GetComponent<NavMeshAgent>();
         if (trigger)
         {
-            trigger.onTriggerEnter += OnTriggerEnter;
-            trigger.onTriggerExit += OnTriggerExit;
+            trigger.onTriggerEnter += OnAttackTriggerEnter;
+            trigger.onTriggerExit += OnAttackTriggerExit;
         }
     }
 
@@ -31,11 +31,11 @@ public class Enemy : DamageableEntity
         if (updateTimer >= slowUpdateInterval) SlowUpdate();
     }
 
-    internal virtual void OnTriggerEnter(Collider other)
+    internal virtual void OnAttackTriggerEnter(Collider other)
     {
     }
 
-    internal virtual void OnTriggerExit(Collider other)
+    internal virtual void OnAttackTriggerExit(Collider other)
     {
     }
 

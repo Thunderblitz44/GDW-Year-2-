@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 
 public static class StaticUtilities
@@ -9,7 +10,7 @@ public static class StaticUtilities
     public static readonly float damageOverTimeInterval = 0.5f;
     public static readonly Color physicalDamageColor = Color.white;
     public static readonly Color magicDamageColor = Color.magenta;
-    public static readonly Vector2 centerOfScreen = new Vector2(Screen.width / 2, Screen.height / 2);
+    public static readonly Vector2 centerOfScreen = new(Screen.width / 2, Screen.height / 2);
     public static readonly float encounterStartDelay = 1f;
     public static readonly int groundLayer = 64;
     public static int visibleTargets;
@@ -74,7 +75,12 @@ public static class StaticUtilities
 
     public static Quaternion LookRotationYOnly(Vector3 first, Vector3 second, Vector3 worldUp)
     {
-        return Quaternion.LookRotation(first - (Vector3.right * second.x + Vector3.up * first.y + Vector3.forward * second.z), worldUp);
+        return Quaternion.LookRotation(first - BuildVector(second.x, first.y, second.z), worldUp);
+    }
+
+    public static Vector3 BuildVector(float x, float y, float z)
+    {
+        return Vector3.right * x + Vector3.up * y + Vector3.forward * z;
     }
 
     public static void ShootProjectile(List<GameObject> projectilePool, Vector3 origin, Vector3 force)
@@ -89,4 +95,6 @@ public static class StaticUtilities
             break;
         }
     }
+
 }
+

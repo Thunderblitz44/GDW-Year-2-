@@ -19,7 +19,7 @@ public class GolemKnight : Enemy
     {
         base.Update();
 
-        HeadTarget.transform.position = LevelManager.Instance.PlayerTransform.position;
+        HeadTarget.transform.position = LevelManager.PlayerTransform.position;
 
         // attack cooldown + delay
         attackCooldownTimer += Time.deltaTime;
@@ -31,13 +31,13 @@ public class GolemKnight : Enemy
         }
     }
 
-    internal override void OnTriggerEnter(Collider other)
+    internal override void OnAttackTriggerEnter(Collider other)
     {
         attack = true;
         animator.SetBool("CanAttack", true);
     }
 
-    internal override void OnTriggerExit(Collider other)
+    internal override void OnAttackTriggerExit(Collider other)
     {
         attack = false;
         attackTimer = 0f;
@@ -47,7 +47,7 @@ public class GolemKnight : Enemy
     public void EnableAI()
     {
         agent.enabled = true;
-        target = LevelManager.Instance.PlayerTransform;
+        target = LevelManager.PlayerTransform;
         HeadTarget.SetActive(true);
     }
 

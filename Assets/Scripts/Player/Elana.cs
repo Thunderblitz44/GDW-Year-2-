@@ -15,12 +15,9 @@ public class Elana : Player
    public static bool isPrimaryAttacking;
     
     [Header("Secondary Attack")]
+    [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
     [SerializeField] float shootStartDelay = 0.5f;
-    [SerializeField] float bulletDamage = 1f;
-    [SerializeField] float bulletSpeed = 20f;
-    [SerializeField] float bulletLifetime = 1f;
     [SerializeField] float bulletCooldown = 0.25f;
-    [SerializeField] GameObject projectilePrefab;
     [SerializeField] Transform shootOrigin;
     readonly List<GameObject> pooledProjectiles = new(20);
     bool shooting = false;
@@ -96,12 +93,11 @@ public class Elana : Player
             }
         };
 
+        projectile.owner = this;
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
-            MagicBullet mb = Instantiate(projectilePrefab).GetComponent<MagicBullet>();
-            mb.damage = bulletDamage;
-            mb.lifetime = bulletLifetime;
-            mb.owner = this;
+            MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
+            mb.Projectile = projectile;
             pooledProjectiles.Add(mb.gameObject);
         }
 
@@ -342,7 +338,7 @@ public class Elana : Player
     {
         shootingCooldownTimer = 0f;
         // start shooting
-        Vector3 force = StaticUtilities.GetCameraLook() * bulletSpeed + Camera.main.transform.right / 2;
+        Vector3 force = StaticUtilities.GetCameraLook() * projectile.speed + Camera.main.transform.right / 2;
         StaticUtilities.ShootProjectile(pooledProjectiles,shootOrigin.position, force);
     }
 

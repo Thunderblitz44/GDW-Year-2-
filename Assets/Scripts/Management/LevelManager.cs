@@ -9,7 +9,7 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
     public static int Id { get; private set; }
-    public Transform PlayerTransform { get; private set; }
+    public static Transform PlayerTransform { get; private set; }
     public Player PlayerScript { get; private set; }
     public static bool isGamePaused = false;
     public static bool isPlayerDead = false;
