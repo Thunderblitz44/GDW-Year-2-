@@ -5,12 +5,9 @@ using UnityEngine;
 public class GolemRanger : Enemy
 {
     // attack
-    [SerializeField] float projectileDamage = 1f;
-    [SerializeField] float projectileLifetime = 1f;
+    [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
     [SerializeField] float shootCooldown = 1.5f;
     [SerializeField] float shootStartDelay = 0.5f;
-    [SerializeField] float projectileSpeed = 20f;
-    [SerializeField] GameObject projectilePrefab;
     [SerializeField] Transform shootOrigin;
     readonly List<GameObject> pooledProjectiles = new List<GameObject>(5);
     float shootStartTimer;
@@ -21,12 +18,11 @@ public class GolemRanger : Enemy
     {
         base.Awake();
 
+        projectile.owner = this;
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
-            MagicBullet mb = Instantiate(projectilePrefab).GetComponent<MagicBullet>();
-            mb.damage = projectileDamage;
-            mb.lifetime = projectileLifetime;
-            mb.owner = this;
+            MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
+            mb.Projectile = projectile;
             pooledProjectiles.Add(mb.gameObject);
         }
 
@@ -51,12 +47,12 @@ public class GolemRanger : Enemy
         }
     }
 
-    internal override void OnTriggerEnter(Collider other)
+    internal override void OnAttackTriggerEnter(Collider other)
     {
         attack = true;
     }
 
-    internal override void OnTriggerExit(Collider other)
+    internal override void OnAttackTriggerExit(Collider other)
     {
         attack = false;
         shootStartTimer = 0f;
@@ -65,21 +61,14 @@ public class GolemRanger : Enemy
     public void EnableAI()
     {
         agent.enabled = true;
-        target = LevelManager.Instance.PlayerTransform;
+        target = LevelManager.PlayerTransform;
     }
 
     void Attack()
     {
-        foreach (var bullet in pooledProjectiles)
-        {
-            if (bullet.activeSelf) continue;
-
-            bullet.SetActive(true);
-            bullet.transform.position = shootOrigin.position;
-            bullet.GetComponent<Rigidbody>().AddForce((shootOrigin.position - LevelManager.Instance.PlayerTransform.position).normalized * projectileSpeed, ForceMode.Impulse);
-            break;
-        }
+        Vector3 force = (shootOrigin.position - LevelManager.PlayerTransform.position).normalized * projectile.speed;
+        StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
+        
         animator.SetTrigger("Attack");
-        Debug.Log("shoot");
     }
 }

@@ -44,8 +44,8 @@ GameObject:
   - component: {fileID: 2294689707373237091}
   - component: {fileID: 1630653423908187042}
   - component: {fileID: 2566217086271682685}
-  - component: {fileID: 7939089800350437312}
   - component: {fileID: 2715988729204705674}
+  - component: {fileID: 4300098194038806983}
   m_Layer: 0
   m_Name: GOLLUM
   m_TagString: Untagged
@@ -66,6 +66,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5967041162781112444}
+  - {fileID: 279364212812387710}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 91.399, z: 0}
@@ -77,8 +78,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 46217362901632305}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 1000
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -94,7 +95,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!195 &2566217086271682685
 NavMeshAgent:
@@ -104,35 +105,20 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 46217362901632305}
   m_Enabled: 1
-  m_AgentTypeID: -334000983
-  m_Radius: 0.5
+  m_AgentTypeID: 0
+  m_Radius: 7.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 100
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 15
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 8
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &7939089800350437312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 46217362901632305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f556b4fda59102498d0731f2a5202a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10
-  hpBarPrefab: {fileID: 0}
-  animator: {fileID: 0}
+  m_ObstacleAvoidanceType: 2
 --- !u!114 &2715988729204705674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,14 +140,36 @@ MonoBehaviour:
   animator: {fileID: 0}
   minAtkReps: 1
   maxAtkReps: 5
-  shots: 0
-  portals: 0
-  shotDelay: 0
-  shotSpeed: 0
-  shotDamage: 0
-  projectilePrefab: {fileID: 0}
-  portalPrefab: {fileID: 0}
+  timeBetweenAttacks: 2
+  projectile:
+    damage: 1
+    lifeTime: 1
+    speed: 60
+    prefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
+    owner: {fileID: 0}
+  shots: 5
+  shootingStartDelay: 0.5
+  shotDelay: 0.25
+  projectilePrefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
+  portalPrefab: {fileID: 5136089227381563992, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
+  spawnBounds: {fileID: 8412768072518117357}
   laserDamage: 0
+  lrPrefab: {fileID: 0}
+--- !u!114 &4300098194038806983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46217362901632305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f556b4fda59102498d0731f2a5202a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!1 &52743916050893412
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,7 +428,7 @@ GameObject:
   - component: {fileID: 5755203327488182408}
   - component: {fileID: 7865810243817580760}
   - component: {fileID: 3231413606298251904}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Crystal.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,7 +514,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4100
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -685,7 +693,7 @@ GameObject:
   - component: {fileID: 3134527122076296484}
   - component: {fileID: 2039016885447661877}
   - component: {fileID: 6400773426775083187}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Crystal.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -771,7 +779,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4100
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -823,7 +831,7 @@ GameObject:
   - component: {fileID: 7939886295489646560}
   - component: {fileID: 7156265027900731765}
   - component: {fileID: 7529915612974420130}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Spike Leg.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -908,7 +916,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4161
+    m_Bits: 4165
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -980,6 +988,59 @@ Transform:
   m_Father: {fileID: 9190526509372653842}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2169401239153979835
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3228303011553075685}
+  - component: {fileID: 8412768072518117357}
+  m_Layer: 0
+  m_Name: PortalSpawnZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3228303011553075685
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2169401239153979835}
+  m_LocalRotation: {x: 1, y: 8.881787e-15, z: -0.000000059604634, w: 0}
+  m_LocalPosition: {x: -0.02, y: -0.48, z: -5.78}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6672109591049253502}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8412768072518117357
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2169401239153979835}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10.44, y: 5.96, z: 2.31}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2185053658107609233
 GameObject:
   m_ObjectHideFlags: 0
@@ -1050,7 +1111,7 @@ GameObject:
   - component: {fileID: 2176166097600693375}
   - component: {fileID: 4959538603663883345}
   - component: {fileID: 7884673597919575100}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Crystal.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1136,7 +1197,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4100
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -1248,7 +1309,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9174181366437644416}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Bone.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1464,7 +1525,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1266915451806191644}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Bone.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1666,7 +1727,6 @@ Transform:
   - {fileID: 927851392745611961}
   - {fileID: 3881533887559315622}
   - {fileID: 6672109591049253502}
-  - {fileID: 279364212812387710}
   m_Father: {fileID: 3921053169664626479}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1683,7 +1743,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4097
+    m_Bits: 4101
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -1703,7 +1763,7 @@ GameObject:
   - component: {fileID: 5187076073289978026}
   - component: {fileID: 7298968277818343556}
   - component: {fileID: 841268472222594091}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Spike Leg.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1788,7 +1848,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4161
+    m_Bits: 4165
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -1808,7 +1868,7 @@ GameObject:
   - component: {fileID: 444126724349629513}
   - component: {fileID: 3998797343431852075}
   - component: {fileID: 7785966263074208279}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Spike Leg.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1893,7 +1953,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4161
+    m_Bits: 4165
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -1910,7 +1970,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2914775850640275895}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Gollum Headpiece
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2063,7 +2123,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -2083,7 +2143,7 @@ GameObject:
   - component: {fileID: 4859859112529011212}
   - component: {fileID: 3174502005946258068}
   - component: {fileID: 9161626718984549068}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2168,7 +2228,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4097
+    m_Bits: 4101
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -2204,6 +2264,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3228303011553075685}
   - {fileID: 2914775850640275895}
   m_Father: {fileID: 9190526509372653842}
   m_RootOrder: -1
@@ -2220,7 +2281,7 @@ GameObject:
   - component: {fileID: 7172688987840341848}
   - component: {fileID: 5620694141444595254}
   - component: {fileID: 5412245578295219011}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Plane.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2305,7 +2366,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4097
+    m_Bits: 4101
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -2643,7 +2704,7 @@ GameObject:
   - component: {fileID: 279364212812387710}
   - component: {fileID: 5911403745168890727}
   - component: {fileID: 5611189095757050926}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: AttackTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2657,12 +2718,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5625301197560028595}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -6.217249e-15, y: 1, z: -0.00000014901163, w: 0.00000013411045}
+  m_LocalPosition: {x: -0.03999988, y: 5, z: 0.11999953}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 9190526509372653842}
+  m_Father: {fileID: 2294689707373237091}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5911403745168890727
@@ -2692,7 +2753,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -3215,7 +3276,7 @@ GameObject:
   - component: {fileID: 8059594826729222386}
   - component: {fileID: 8598783188982238368}
   - component: {fileID: 4962520326798823887}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Spike Leg.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3300,7 +3361,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4161
+    m_Bits: 4165
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -3440,7 +3501,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2374130049407485760}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Bone.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3561,7 +3622,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5333029655500690746}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3660,7 +3721,7 @@ GameObject:
   - component: {fileID: 464367800279258334}
   - component: {fileID: 1092653845497338193}
   - component: {fileID: 2818674575528486284}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Crystal.008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3746,7 +3807,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4100
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -3852,7 +3913,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -3927,7 +3988,7 @@ GameObject:
   - component: {fileID: 5964305972231356885}
   - component: {fileID: 1817923496453357629}
   - component: {fileID: 5382976979525384147}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Crystal.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4013,7 +4074,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4100
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -4065,7 +4126,7 @@ GameObject:
   - component: {fileID: 5164601037433498479}
   - component: {fileID: 6351639119671290516}
   - component: {fileID: 2753606749943538912}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Crystal.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4151,7 +4212,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4100
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -4171,7 +4232,7 @@ GameObject:
   - component: {fileID: 7089253271650232178}
   - component: {fileID: 4690978236469475811}
   - component: {fileID: 2835121177665896982}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Plane.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4256,7 +4317,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4097
+    m_Bits: 4101
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
