@@ -13,6 +13,7 @@ public class FireTornado : MonoBehaviour
         if (other.gameObject.TryGetComponent(out rb))
         {
             bodies.Add(rb);
+            FMODUnity.RuntimeManager.PlayOneShot("event:/Fire Tornado Placeholder");
         }
     }
 
