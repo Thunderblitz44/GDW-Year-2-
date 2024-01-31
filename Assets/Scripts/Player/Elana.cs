@@ -68,7 +68,7 @@ public class Elana : Player
     bool isDodgeing = false;
     bool canDodge = true;
     const int dodgeId = 3;
-
+    [SerializeField] TrailScript TrailScript; 
     internal override void Awake()
     {
         base.Awake();
@@ -286,6 +286,7 @@ public class Elana : Player
         float dodgeTime = dodgeCurve.keys[1].time;
         float startFOV = freeLookCam.m_Lens.FieldOfView;
         float targetFOV = StaticUtilities.defaultFOV + dodgeFovIncrease;
+        TrailScript.isTrailActive = true;
         while (time < dodgeTime)
         {
             transform.position = Vector3.Lerp(startPos, endPos, dodgeCurve.Evaluate(time += Time.deltaTime));
@@ -325,7 +326,7 @@ public class Elana : Player
         MovementScript.EnableLocomotion();
         isInvincible = false;
         isDodgeing = false;
-
+        TrailScript.isTrailActive = false;
         if (canPortal) return;
 
         portalLink.enabled = false;

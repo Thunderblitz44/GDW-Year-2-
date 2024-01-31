@@ -864,6 +864,7 @@ GameObject:
   - component: {fileID: 2165542872476759163}
   - component: {fileID: 5806460967016296255}
   - component: {fileID: 3827803511361530751}
+  - component: {fileID: 3055155738808416944}
   m_Layer: 0
   m_Name: Elana Blockout
   m_TagString: Untagged
@@ -939,6 +940,25 @@ MonoBehaviour:
   - m_Rig: {fileID: 6226224092575391408}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &3055155738808416944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4874708702232753339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f00cf3fab282fd49a13f1536f0cae32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionToSpawn: {fileID: 5255033431890783745}
+  activeTime: 0.2
+  isTrailActive: 0
+  meshRefreshRate: 0.1
+  skinnedMeshRenderer: {fileID: 4067875380267476300}
+  mat: {fileID: -876546973899608171, guid: cf259c2123d426245951f8bfd636e857, type: 3}
+  meshDestroyDelay: 0.3
 --- !u!1 &4961400195651553855
 GameObject:
   m_ObjectHideFlags: 0

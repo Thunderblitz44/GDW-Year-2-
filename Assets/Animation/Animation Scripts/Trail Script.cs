@@ -8,12 +8,12 @@ public class TrailScript : MonoBehaviour
     public float activeTime = 2f;
     public bool isTrailActive;
     public float meshRefreshRate = 0.1f;
-    public SkinnedMeshRenderer skinnedMeshRenderer; // Single skinned mesh renderer reference
+    public SkinnedMeshRenderer skinnedMeshRenderer;
     public Material mat;
     public float meshDestroyDelay = 1f;
-    
-    // Update is called once per frame
-    void Update()
+
+
+    void FixedUpdate()
     {
         if (isTrailActive)
         {
@@ -27,13 +27,14 @@ public class TrailScript : MonoBehaviour
         {
             timeActive -= meshRefreshRate;
 
-            
+
 
             GameObject gObj = new GameObject();
-            gObj.transform.SetPositionAndRotation(positionToSpawn.position, positionToSpawn.rotation);
+            gObj.transform.SetLocalPositionAndRotation(positionToSpawn.position,
+                positionToSpawn.rotation * Quaternion.Euler(0, 180, 0));
             MeshRenderer mr = gObj.AddComponent<MeshRenderer>();
             MeshFilter mf = gObj.AddComponent<MeshFilter>();
-            
+
             Mesh mesh = new Mesh();
             skinnedMeshRenderer.BakeMesh(mesh);
 
@@ -42,7 +43,7 @@ public class TrailScript : MonoBehaviour
             yield return new WaitForSeconds(meshRefreshRate);
 
 
-            Destroy(gObj,meshDestroyDelay);
+            Destroy(gObj, meshDestroyDelay);
         }
 
         isTrailActive = false;
