@@ -35,7 +35,7 @@ public class Elana : Player
     Vector3 recallPos;
     bool canPortal = true;
     const int portalId = 2;
-
+   
     [Header("Fire Tornado")]
     [SerializeField] float maxRange = 15f;
     [SerializeField] float burnDamage = 1f;
@@ -68,7 +68,15 @@ public class Elana : Player
     bool isDodgeing = false;
     bool canDodge = true;
     const int dodgeId = 3;
-    [SerializeField] TrailScript TrailScript; 
+    [SerializeField] TrailScript TrailScript;
+    
+    [Header("Other")]
+    [SerializeField] Animator specialAnimator;
+    //animator to control portal and potentially other interactions between players/spirit
+   public float recallDelay = 2f;
+    //delay of recall
+   
+   //for determining the difference between the portal and dodge as they both call the same method
     internal override void Awake()
     {
         base.Awake();
@@ -190,28 +198,31 @@ public class Elana : Player
         actions.Abilities.Portal.performed += ctx =>
         {
             if (!canPortal) return;
-
+         
             if (instantiatedPortal)
             {
-                // lerp to portal
-                canPortal = false;
-                meshRenderer.enabled = false;
-                Dodge(transform.position, recallPos, teleportSpeed);
-                return;
+               
+                specialAnimator.SetTrigger("Recall");
+                specialAnimator.SetBool("Underground", true);
+                StartCoroutine(DelayedPortalAction(recallDelay));
+                
+                      return;
+                       
             }
-            
+        
             portalLink.enabled = true;
             recallPos = transform.position;
             instantiatedPortal = Instantiate(recallPointIndicatorPrefab, recallPos, Quaternion.LookRotation(StaticUtilities.GetCameraDir(), Vector3.up));
         };
-
+      
         // Dodge
         actions.Locomotion.Dodge.started += ctx =>
         {
+           
             if (isDodgeing || !canDodge) return;
             canDodge = false;
             abilityHud.SpendPoint(dodgeId, dodgeCooldown);
-
+            
             // raycast - make sure there are no obstacles in the way
             float newDist = dodgeDistance;
 
@@ -233,7 +244,9 @@ public class Elana : Player
             // re-calculate end in case newDist changed
             if (MovementScript.IsMoving()) end = body.position + MovementScript.GetMoveDirection() * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
-
+          
+                TrailScript.isTrailActive = true;
+          
             Dodge(transform.position, end, dodgeSpeed);
         };
 
@@ -265,6 +278,19 @@ public class Elana : Player
         actions.Abilities.Enable();
     }
 
+    void PortalAction()
+    {
+       
+        canPortal = false;
+        meshRenderer.enabled = false;
+        TrailScript.isTrailActive2 = true;
+        Dodge(transform.position, recallPos, teleportSpeed);
+    }
+      private IEnumerator DelayedPortalAction(float delay)
+      {
+          yield return new WaitForSeconds(delay);
+          PortalAction();
+      }
     void Dodge(Vector3 start, Vector3 end, float speed)
     {
         isDodgeing = isInvincible = true;
@@ -286,11 +312,12 @@ public class Elana : Player
         float dodgeTime = dodgeCurve.keys[1].time;
         float startFOV = freeLookCam.m_Lens.FieldOfView;
         float targetFOV = StaticUtilities.defaultFOV + dodgeFovIncrease;
-        TrailScript.isTrailActive = true;
+     
         while (time < dodgeTime)
         {
+         
             transform.position = Vector3.Lerp(startPos, endPos, dodgeCurve.Evaluate(time += Time.deltaTime));
-
+          
             // trying to "lerp" fov from whatever it was to the max
             if (startFOV < targetFOV)
                 freeLookCam.m_Lens.FieldOfView = Mathf.Clamp(startFOV + dodgeFovIntensityCurve.Evaluate(time / dodgeTime) * dodgeFovIncrease, startFOV, targetFOV);
@@ -299,7 +326,8 @@ public class Elana : Player
 
             yield return null;
         }
-
+      
+       
         OnDodgeEnded();
 
         // restore fov
@@ -326,13 +354,16 @@ public class Elana : Player
         MovementScript.EnableLocomotion();
         isInvincible = false;
         isDodgeing = false;
-        TrailScript.isTrailActive = false;
+      
         if (canPortal) return;
-
+    
         portalLink.enabled = false;
         Destroy(instantiatedPortal);
         abilityHud.SpendPoint(portalId, portalCoolown);
         meshRenderer.enabled = true;
+        specialAnimator.SetBool("Underground", false);
+        TrailScript.isTrailActive = false;
+        TrailScript.isTrailActive2 = false;
     }
 
     void ShootMagicBullet()
