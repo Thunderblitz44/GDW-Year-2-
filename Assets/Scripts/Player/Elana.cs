@@ -12,7 +12,7 @@ public class Elana : Player
     [SerializeField] Vector2 knockback;
     //[SerializeField] float cooldown = 1f;
     [SerializeField] MeleeHitBox mhb;
-   public static bool isPrimaryAttacking;
+    [SerializeField] private SpiritWolfAnimator spiritWolfAnimator;
     
     [Header("Secondary Attack")]
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
@@ -171,13 +171,13 @@ public class Elana : Player
             //mhb.gameObject.SetActive(true);
             
             //Animate player/wolf attacking in sync
-            isPrimaryAttacking = true;
+            spiritWolfAnimator.PrimaryAttack();
         };
         actions.Abilities.PrimaryAttack.canceled += ctx =>
         {
-          
+          spiritWolfAnimator.EndAttack();
 
-            isPrimaryAttacking = false;
+           
         };
         actions.Abilities.SecondaryAttack.started += ctx =>
         {
@@ -204,8 +204,10 @@ public class Elana : Player
                
                 specialAnimator.SetTrigger("Recall");
                 specialAnimator.SetBool("Underground", true);
-                StartCoroutine(DelayedPortalAction(recallDelay));
-                
+                canPortal = false;
+                meshRenderer.enabled = false;
+                TrailScript.isTrailActive2 = true;
+                StartCoroutine(DelayedDodge(transform.position, recallPos, teleportSpeed, 1f));
                       return;
                        
             }
@@ -278,19 +280,13 @@ public class Elana : Player
         actions.Abilities.Enable();
     }
 
-    void PortalAction()
+    private IEnumerator DelayedDodge(Vector3 startPosition, Vector3 targetPosition, float speed, float delay)
     {
-       
-        canPortal = false;
-        meshRenderer.enabled = false;
-        TrailScript.isTrailActive2 = true;
-        Dodge(transform.position, recallPos, teleportSpeed);
+        yield return new WaitForSeconds(delay);
+
+        // Call Dodge after the delay
+        Dodge(startPosition, targetPosition, speed);
     }
-      private IEnumerator DelayedPortalAction(float delay)
-      {
-          yield return new WaitForSeconds(delay);
-          PortalAction();
-      }
     void Dodge(Vector3 start, Vector3 end, float speed)
     {
         isDodgeing = isInvincible = true;

@@ -36,7 +36,7 @@ playerMovement = playerMovement.GetComponent<PlayerMovement>();
         animator.SetFloat("ZSpeed", zSpeed);
         animator.SetFloat("YSpeed", ySpeed);
 
-        animator.SetBool("PrimaryAttackBool", Elana.isPrimaryAttacking);
+    
         
         // Matches isGrounded with Groundcheck bool in animator
         

@@ -18,20 +18,12 @@ public class TrailScript : MonoBehaviour
 
     private Coroutine trailCoroutine;
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         if (isTrailActive2 && trailCoroutine == null)
         {
-            // Use Raycast logic to get position and rotation for Trail 2 with Y offset
-            RaycastHit hit;
-            Vector3 raycastOrigin = transform.position + new Vector3(0, 3f, 0); // Adding Y offset
-
-            // Raycast only against objects on the "Ground" layer
-            if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, Mathf.Infinity, groundLayer))
-            {
-                // Start the coroutine and keep a reference to it
-                trailCoroutine = StartCoroutine(ActivateTrail2(hit.point, Quaternion.LookRotation(hit.normal)));
-            }
+            // Start the coroutine and keep a reference to it
+            trailCoroutine = StartCoroutine(ActivateTrail2());
         }
 
         if (!isTrailActive2 && trailCoroutine != null)
@@ -44,31 +36,38 @@ public class TrailScript : MonoBehaviour
         }
     }
 
-    private IEnumerator ActivateTrail2(Vector3 spawnPosition, Quaternion spawnRotation)
+    private IEnumerator ActivateTrail2()
     {
         // Enable the trail prefab
         trailPrefab.SetActive(true);
 
         while (isTrailActive2)
         {
-            // Set the position directly from the hit point
-            trailPrefab.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, spawnPosition.z);
+            // Use Raycast logic to get position and rotation for Trail 2 with Y offset
+            RaycastHit hit;
+            Vector3 raycastOrigin = transform.position + new Vector3(0, 3f, 0); // Adding Y offset
 
-            // Match the rotation
-            trailPrefab.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+            // Raycast only against objects on the "Ground" layer
+            if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, Mathf.Infinity, groundLayer))
+            {
+                // Align the y-axis of the prefab with the normal of the raycast
+                trailPrefab.transform.up = hit.normal;
 
-            // Perform any specific logic for Trail 2 here
+                // Set the position directly from the hit point
+                trailPrefab.transform.position = hit.point;
 
-            // Wait for the next iteration
-            yield return new WaitForSeconds(meshRefreshRate2);
+                // Perform any specific logic for Trail 2 here
+            }
+
+            yield return null; // Wait for the next frame
         }
 
         isTrailActive2 = false; // Disable the trail effect
 
-        // Reset the coroutine reference when it's finished
-        trailCoroutine = null;
-
         // Disable the trail prefab
         trailPrefab.SetActive(false);
+
+        // Reset the coroutine reference when it's finished
+        trailCoroutine = null;
     }
 }
