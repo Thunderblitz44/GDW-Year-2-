@@ -4,26 +4,24 @@ using UnityEngine;
 
 public class MagicBullet : MonoBehaviour
 {
-    public float damage = 1;
-    public float lifetime = 1;
-    public DamageableEntity owner;
-    Rigidbody rb;
+    public ProjectileData Projectile { get; set; }
+    public Rigidbody Rb { get; private set; }
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        Rb = GetComponent<Rigidbody>();
         gameObject.SetActive(false);
-        Invoke(nameof(Die), lifetime);
+        Invoke(nameof(Die), Projectile.lifeTime);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject == owner.gameObject) return;
+        if (collision.gameObject == Projectile.owner.gameObject) return;
 
         IDamageable d;
         if (collision.gameObject.TryGetComponent(out d))
         {
-            d.ApplyDamage(damage, DamageTypes.magic);
+            d.ApplyDamage(Projectile.damage, DamageTypes.magic);
         }
         CancelInvoke(nameof(Die));
         Die();
@@ -31,12 +29,12 @@ public class MagicBullet : MonoBehaviour
 
     void Die()
     {
-        rb.velocity = Vector3.zero;
+        Rb.velocity = Vector3.zero;
         gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
-        Invoke(nameof(Die), lifetime);
+        Invoke(nameof(Die), Projectile.lifeTime);
     }
 }

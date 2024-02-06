@@ -9,7 +9,7 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
     public static int Id { get; private set; }
-    public Transform PlayerTransform { get; private set; }
+    public static Transform PlayerTransform { get; private set; }
     public Player PlayerScript { get; private set; }
     public static bool isGamePaused = false;
     public static bool isPlayerDead = false;
@@ -71,7 +71,7 @@ public class LevelManager : MonoBehaviour
     public void StartEncounter(Bounds volumeBounds, int id)
     {
         currentEncounter = encounterVolumes[id];
-        if (id == encounterVolumes.Count - 1) StartCoroutine(BossRoutine());
+        if (id == encounterVolumes.Count - 1) boss.GetComponent<IBossCommands>().Introduce();
         else StartCoroutine(EncounterRoutine(volumeBounds));
     }
 
@@ -99,26 +99,6 @@ public class LevelManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        // end
-        currentEncounter.EndEncounter();
-    }
-
-    IEnumerator BossRoutine()
-    {
-        BossHealthComponent bossHp = boss.GetComponent<BossHealthComponent>();
-        // delay?
-        yield return new WaitForSeconds(1);
-        // boss entrance animation?
-        // boss hpbar appears
-        bossHp.Show();
-        // start fight
-
-
-        //wait till boss dies
-        while (bossHp.health > 0)
-        {
-            yield return new WaitForSeconds(1);
-        }
         // end
         currentEncounter.EndEncounter();
     }
