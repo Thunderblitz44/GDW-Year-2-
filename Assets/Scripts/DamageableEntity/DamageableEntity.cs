@@ -1,12 +1,13 @@
 using System.Collections;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 public class DamageableEntity : MonoBehaviour, IDamageable
 {
-    [SerializeField] GameObject floatingTextPrefab;
     [SerializeField] bool enableDamageNumbers = true;
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
+    GameObject floatingTextPrefab;
     public bool isInvincible;
     internal HealthComponent hp;
 
@@ -14,6 +15,8 @@ public class DamageableEntity : MonoBehaviour, IDamageable
     {
         hp = GetComponent<HealthComponent>();
         if (hp) hp.onHealthZeroed += OnHealthZeroed;
+
+        if (enableDamageNumbers) LoadFloatingTextPrefab();
     }
 
     internal virtual void OnHealthZeroed()
@@ -21,12 +24,13 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         Destroy(gameObject);
     }
 
-    public void ApplyDamage(float damage)
+    public virtual void ApplyDamage(float damage)
     {
         if (!hp || isInvincible) return;
         hp.DeductHealth(damage);
 
         if (!enableDamageNumbers) return;
+        else if (!floatingTextPrefab) LoadFloatingTextPrefab();
 
         Transform t = Instantiate(floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
@@ -34,7 +38,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         t.SetParent(LevelManager.Instance.WorldCanvas, true);
     }
 
-    public void ApplyDamageOverTime(float dps, float duration)
+    public virtual void ApplyDamageOverTime(float dps, float duration)
     {
         StartCoroutine(DamageOverTimeRoutine(dps, duration));
     }
@@ -50,5 +54,11 @@ public class DamageableEntity : MonoBehaviour, IDamageable
             }
             yield return null;
         }
+    }
+
+    void LoadFloatingTextPrefab()
+    {
+        floatingTextPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/FloatingText.prefab");
+        if (!floatingTextPrefab) Debug.LogWarning("Can't find FloatingTextPrefab in Assets/Prefabs/FloatingText.prefab");
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 public class BossHealthComponent : HealthComponent
 {
     [SerializeField] Animator animator;
-    [SerializeField] float[] phases = new float[4] { 1f, 0.75f, 0.5f, 0.25f };
+    [SerializeField] float[] phases = new float[4] { 1f, 0.75f, 0.5f, 0.25f};
     int phase = 0;
     public Action nextPhase;
 
@@ -26,13 +26,13 @@ public class BossHealthComponent : HealthComponent
 
         for (int i = 0; i < phases.Length; i++)
         {
-            if (health <= maxHealth * phases[i]) 
-            { 
-                if (phase != i)
-                {
-                    phase = i;
-                    nextPhase?.Invoke();
-                }
+            if (health > maxHealth * phases[i]) break;
+
+            // below the threshold
+            if (phase < i)
+            {
+                phase = i;
+                nextPhase?.Invoke();
                 break;
             }
         }

@@ -79,12 +79,12 @@ public class GolemBossScript : Enemy, IBossCommands
         }
     }
 
-
     public void Introduce()
     {
         // entrance animation
         // pool portals
         projectile.owner = this;
+        projectile.CheckPrefab();
         for (int i = 0; i < pooledPortals.Capacity; i++)
         {
             ShootingPortal portal = Instantiate(portalPrefab).GetComponent<ShootingPortal>();
@@ -240,20 +240,49 @@ public class GolemBossScript : Enemy, IBossCommands
         agent.speed = temp;
     }
 
+
+    void SpawnMinions()
+    {
+        StartCoroutine(LevelManager.Instance.EncounterRoutine(LevelManager.Instance.CurrentEncounter.EncounterBounds));
+    }
+
     void NextPhase()
     {
         switch (++phase)
         {
             case 1:
+                Debug.Log("phase 2");
                 // phase 2
                 break;
             case 2:
+                Debug.Log("phase 3");
                 // phase 3
                 break;
             case 3:
+                Debug.Log("phase 4");
                 // phase 4
                 break;
 
         }
+    }
+
+    public override void ApplyDamage(float damage)
+    {
+    }
+
+    public override void ApplyDamageOverTime(float dps, float duration)
+    {
+    }
+
+    internal override void OnHealthZeroed()
+    {
+        StopAllCoroutines();
+        
+        foreach (var portal in pooledPortals)
+        {
+            Destroy(portal.gameObject);
+        }
+
+        Destroy(gameObject, 1f);
     }
 }

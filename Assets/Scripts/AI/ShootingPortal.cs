@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -26,7 +25,7 @@ public class ShootingPortal : MonoBehaviour
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
             MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
-            mb.Projectile = projectile;
+            mb.Initialize(projectile);
             pooledProjectiles.Add(mb.gameObject);
         }
         settingUp = false;
@@ -52,5 +51,13 @@ public class ShootingPortal : MonoBehaviour
         }
 
         transform.LookAt(LevelManager.PlayerTransform);
+    }
+
+    private void OnDestroy()
+    {
+        foreach (GameObject mb in pooledProjectiles)
+        {
+            mb.GetComponent<MagicBullet>().Projectile.OwnerDestroyed();
+        }
     }
 }

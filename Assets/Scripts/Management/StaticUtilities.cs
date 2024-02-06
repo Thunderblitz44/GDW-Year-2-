@@ -14,7 +14,8 @@ public static class StaticUtilities
     public static readonly string LAST_ENCOUNTER = "encounter";
     public static readonly string CURRENT_PLAYER_HEALTH = "playerHealth";
 
-    /*public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
+    /*
+    public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
     {
         return objects.OrderBy(x => Vector2.Distance(centerOfScreen, (Vector2)Camera.main.WorldToScreenPoint(x.transform.position))).ToList();
     }
@@ -37,19 +38,7 @@ public static class StaticUtilities
             }
         }
         return false;
-    }*/
-
-    public static Vector3 GetCameraDir()
-    {
-        return Vector3.right * Camera.main.transform.forward.x +
-            Vector3.forward * Camera.main.transform.forward.z;
     }
-
-    public static Vector3 GetCameraLook()
-    {
-        return Camera.main.transform.forward;
-    }
-
     public static Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint, float overshoot)
     {
         float gravity = Physics.gravity.y;
@@ -61,6 +50,13 @@ public static class StaticUtilities
         Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * h / gravity)
             + Mathf.Sqrt(2 * (displacementY - h) / gravity));
         return velocityXZ + velocityY;
+    }
+    */
+
+    public static Vector3 GetCameraDir()
+    {
+        return Vector3.right * Camera.main.transform.forward.x +
+            Vector3.forward * Camera.main.transform.forward.z;
     }
 
     public static float FastDistance(Vector3 first, Vector3 second)
