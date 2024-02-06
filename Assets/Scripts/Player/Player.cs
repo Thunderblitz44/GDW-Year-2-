@@ -53,6 +53,8 @@ public class Player : DamageableEntity
         actions.General.Pause.performed += ctx =>
         {
             PausePlayer();
+            MovementScript.rb.velocity = Vector3.zero;
+
             actions.Menus.Enable();
             pauseScript.Pause();
         };

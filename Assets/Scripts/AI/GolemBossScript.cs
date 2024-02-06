@@ -6,8 +6,6 @@ using UnityEngine;
 public class GolemBossScript : Enemy, IBossCommands
 {
     [Header("Attack Pattern")]
-    //[SerializeField] int minAtkReps = 1;
-    //[SerializeField] int maxAtkReps = 5;
     [SerializeField] float timeBetweenAttacks = 2;
     int phase = 0;
     float atkTimer;
@@ -38,7 +36,6 @@ public class GolemBossScript : Enemy, IBossCommands
     [Header("Spawn Minions")]
     [SerializeField] int minionCount;
     [SerializeField] int maxSpawned;
-    [SerializeField] 
 
     // battle info
     bool battleStarted = false;

@@ -366,7 +366,16 @@ public class Elana : Player
     {
         shootingCooldownTimer = 0f;
         // start shooting
-        Vector3 force = StaticUtilities.GetCameraLook() * projectile.speed + Camera.main.transform.right / 2;
+        Vector3 force;
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen), out hit, 100f, whatIsDodgeObstacle, QueryTriggerInteraction.Ignore))
+        {
+            force = (hit.point - shootOrigin.position).normalized * projectile.speed;
+        }
+        else
+        {
+            force = StaticUtilities.GetCameraLook() * projectile.speed;
+        }
         StaticUtilities.ShootProjectile(pooledProjectiles,shootOrigin.position, force);
     }
 
