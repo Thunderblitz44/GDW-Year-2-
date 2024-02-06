@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider), typeof(Checkpoint))]
 public class EncounterVolume : MonoBehaviour
 {
     [SerializeField] List<GameObject> barriers;
