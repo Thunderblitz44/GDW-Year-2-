@@ -66,7 +66,7 @@ public class GolemRanger : Enemy
 
     void Attack()
     {
-        Vector3 force = (shootOrigin.position - LevelManager.PlayerTransform.position).normalized * projectile.speed;
+        Vector3 force = (LevelManager.PlayerTransform.position - shootOrigin.position).normalized * projectile.speed;
         StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
         
         animator.SetTrigger("Attack");

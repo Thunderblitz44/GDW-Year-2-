@@ -1,6 +1,5 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamageableEntity : MonoBehaviour, IDamageable
@@ -22,33 +21,32 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         Destroy(gameObject);
     }
 
-    public void ApplyDamage(float damage, DamageTypes type)
+    public void ApplyDamage(float damage)
     {
         if (!hp || isInvincible) return;
         hp.DeductHealth(damage);
 
         if (!enableDamageNumbers) return;
-        string msg = $"<color=#{(type == DamageTypes.physical ? StaticUtilities.physicalDamageColor.ToHexString() : StaticUtilities.magicDamageColor.ToHexString())}>{damage}</color>";
 
         Transform t = Instantiate(floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
-        t.GetComponent<TextMeshProUGUI>().text = msg;
+        t.GetComponent<TextMeshProUGUI>().text = damage.ToString();
         t.SetParent(LevelManager.Instance.WorldCanvas, true);
     }
 
-    public void ApplyDamageOverTime(float dps, DamageTypes type, float duration)
+    public void ApplyDamageOverTime(float dps, float duration)
     {
-        StartCoroutine(DamageOverTimeRoutine(dps, type, duration));
+        StartCoroutine(DamageOverTimeRoutine(dps, duration));
     }
 
-    IEnumerator DamageOverTimeRoutine(float dps, DamageTypes type, float duration)
+    IEnumerator DamageOverTimeRoutine(float dps, float duration)
     {
         for (float i = 0, n = 0; i < duration; i += Time.deltaTime, n += Time.deltaTime)
         {
             if (n > StaticUtilities.damageOverTimeInterval)
             {
                 n = 0;
-                ApplyDamage(dps * StaticUtilities.damageOverTimeInterval, type);
+                ApplyDamage(dps * StaticUtilities.damageOverTimeInterval);
             }
             yield return null;
         }

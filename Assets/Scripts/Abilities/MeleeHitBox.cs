@@ -20,11 +20,7 @@ public class MeleeHitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        IDamageable d;
-        if (other.gameObject.TryGetComponent(out d))
-        {
-            d.ApplyDamage(1, DamageTypes.physical);
-        }
+        StaticUtilities.TryToDamage(other.gameObject, damage);
 
         Rigidbody rb;
         if (other.gameObject.TryGetComponent(out rb))

@@ -69,7 +69,7 @@ public class Player : DamageableEntity
         };
         actions.General.harmSelfTest.performed += ctx =>
         {
-            ApplyDamage(10f, DamageTypes.physical);
+            ApplyDamage(10f);
         };
         // ^ TEMPORARY ^ //
 

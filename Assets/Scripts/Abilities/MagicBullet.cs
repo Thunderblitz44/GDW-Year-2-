@@ -18,11 +18,7 @@ public class MagicBullet : MonoBehaviour
     {
         if (collision.gameObject == Projectile.owner.gameObject) return;
 
-        IDamageable d;
-        if (collision.gameObject.TryGetComponent(out d))
-        {
-            d.ApplyDamage(Projectile.damage, DamageTypes.magic);
-        }
+        StaticUtilities.TryToDamage(collision.gameObject, Projectile.damage);
         CancelInvoke(nameof(Die));
         Die();
     }

@@ -1,15 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using System;
-
 
 public static class StaticUtilities
 {
     public static readonly float defaultFOV = 50f;
     public static readonly float damageOverTimeInterval = 0.5f;
-    public static readonly Color physicalDamageColor = Color.white;
-    public static readonly Color magicDamageColor = Color.magenta;
     public static readonly Vector2 centerOfScreen = new(Screen.width / 2, Screen.height / 2);
     public static readonly float encounterStartDelay = 1f;
     public static readonly int groundLayer = 64;
@@ -72,10 +67,9 @@ public static class StaticUtilities
     {
         return (first - second).sqrMagnitude;
     }
-
-    public static Quaternion LookRotationYOnly(Vector3 first, Vector3 second, Vector3 worldUp)
+    public static Vector3 FlatDirection(Vector3 first, Vector3 second, float yOffset = 0f)
     {
-        return Quaternion.LookRotation(first - BuildVector(second.x, first.y, second.z), worldUp);
+        return first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset;
     }
 
     public static Vector3 BuildVector(float x, float y, float z)
@@ -94,6 +88,28 @@ public static class StaticUtilities
             projectile.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
             break;
         }
+    }
+
+    public static bool TryToDamage(GameObject other, float damage)
+    {
+        IDamageable d;
+        if (other.TryGetComponent(out d))
+        {
+            d.ApplyDamage(damage);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool TryToDamageOverTime(GameObject other, float damage, float duration)
+    {
+        IDamageable d;
+        if (other.TryGetComponent(out d))
+        {
+            d.ApplyDamageOverTime(damage, duration);
+            return true;
+        }
+        return false;
     }
 
 }
