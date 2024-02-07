@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -102,10 +101,11 @@ public class Elana : Player
         };
 
         projectile.owner = this;
+        projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
             MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
-            mb.Projectile = projectile;
+            mb.Initialize(projectile);
             pooledProjectiles.Add(mb.gameObject);
         }
 
@@ -140,7 +140,7 @@ public class Elana : Player
         if (aimingFireTornado)
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, StaticUtilities.GetCameraLook(), out hit))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen), out hit))
             {
                 if (Vector3.Angle(Vector3.up, hit.normal) < 45)
                 {
@@ -366,7 +366,17 @@ public class Elana : Player
     {
         shootingCooldownTimer = 0f;
         // start shooting
-        Vector3 force = StaticUtilities.GetCameraLook() * projectile.speed + Camera.main.transform.right / 2;
+        Vector3 force;
+        RaycastHit hit;
+        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen);
+        if (Physics.Raycast(camLook, out hit, 100f, whatIsDodgeObstacle, QueryTriggerInteraction.Ignore))
+        {
+            force = (hit.point - shootOrigin.position).normalized * projectile.speed;
+        }
+        else
+        {
+            force = camLook.direction * projectile.speed;
+        }
         StaticUtilities.ShootProjectile(pooledProjectiles,shootOrigin.position, force);
     }
 

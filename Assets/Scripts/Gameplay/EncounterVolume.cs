@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider), typeof(Checkpoint))]
 public class EncounterVolume : MonoBehaviour
 {
     [SerializeField] List<GameObject> barriers;
@@ -9,6 +10,7 @@ public class EncounterVolume : MonoBehaviour
     float startTimer;
     Checkpoint cp;
 
+    public Bounds EncounterBounds { get { return bc.bounds; } }
     public int Id { get; set; }
 
     private void Awake()
@@ -58,6 +60,7 @@ public class EncounterVolume : MonoBehaviour
 
     public void Disable()
     {
+        if (!bc) bc = GetComponent<BoxCollider>();
         bc.enabled = false;
         enabled = false;
     }

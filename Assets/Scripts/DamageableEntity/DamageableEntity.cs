@@ -1,13 +1,13 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class DamageableEntity : MonoBehaviour, IDamageable
 {
-    [SerializeField] GameObject floatingTextPrefab;
     [SerializeField] bool enableDamageNumbers = true;
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
+    GameObject floatingTextPrefab;
     public bool isInvincible;
     internal HealthComponent hp;
 
@@ -15,6 +15,8 @@ public class DamageableEntity : MonoBehaviour, IDamageable
     {
         hp = GetComponent<HealthComponent>();
         if (hp) hp.onHealthZeroed += OnHealthZeroed;
+
+        if (enableDamageNumbers) LoadFloatingTextPrefab();
     }
 
     internal virtual void OnHealthZeroed()
@@ -22,35 +24,41 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         Destroy(gameObject);
     }
 
-    public void ApplyDamage(float damage, DamageTypes type)
+    public virtual void ApplyDamage(float damage)
     {
         if (!hp || isInvincible) return;
         hp.DeductHealth(damage);
 
         if (!enableDamageNumbers) return;
-        string msg = $"<color=#{(type == DamageTypes.physical ? StaticUtilities.physicalDamageColor.ToHexString() : StaticUtilities.magicDamageColor.ToHexString())}>{damage}</color>";
+        else if (!floatingTextPrefab) LoadFloatingTextPrefab();
 
         Transform t = Instantiate(floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
-        t.GetComponent<TextMeshProUGUI>().text = msg;
+        t.GetComponent<TextMeshProUGUI>().text = damage.ToString();
         t.SetParent(LevelManager.Instance.WorldCanvas, true);
     }
 
-    public void ApplyDamageOverTime(float dps, DamageTypes type, float duration)
+    public virtual void ApplyDamageOverTime(float dps, float duration)
     {
-        StartCoroutine(DamageOverTimeRoutine(dps, type, duration));
+        StartCoroutine(DamageOverTimeRoutine(dps, duration));
     }
 
-    IEnumerator DamageOverTimeRoutine(float dps, DamageTypes type, float duration)
+    IEnumerator DamageOverTimeRoutine(float dps, float duration)
     {
         for (float i = 0, n = 0; i < duration; i += Time.deltaTime, n += Time.deltaTime)
         {
             if (n > StaticUtilities.damageOverTimeInterval)
             {
                 n = 0;
-                ApplyDamage(dps * StaticUtilities.damageOverTimeInterval, type);
+                ApplyDamage(dps * StaticUtilities.damageOverTimeInterval);
             }
             yield return null;
         }
+    }
+
+    void LoadFloatingTextPrefab()
+    {
+        floatingTextPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/FloatingText.prefab");
+        if (!floatingTextPrefab) Debug.LogWarning("Can't find FloatingTextPrefab in Assets/Prefabs/FloatingText.prefab");
     }
 }
