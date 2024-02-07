@@ -1,29 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MagicBullet : MonoBehaviour
 {
-    public ProjectileData Projectile { get; private set; }
+    public ProjectileData Projectile { get; set; }
     public Rigidbody Rb { get; private set; }
 
     private void Awake()
     {
         Rb = GetComponent<Rigidbody>();
-        Die();
+        gameObject.SetActive(false);
+        Invoke(nameof(Die), Projectile.lifeTime);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (Projectile.owner && Projectile.owner.gameObject == collision.gameObject) return;
+        if (collision.gameObject == Projectile.owner.gameObject) return;
 
-        if (!StaticUtilities.TryToDamage(collision.collider.gameObject, Projectile.damage))
-            StaticUtilities.TryToDamage(collision.gameObject, Projectile.damage);
+        IDamageable d;
+        if (collision.gameObject.TryGetComponent(out d))
+        {
+            d.ApplyDamage(Projectile.damage, DamageTypes.magic);
+        }
         CancelInvoke(nameof(Die));
         Die();
-    }
-
-    private void OnEnable()
-    {
-        Invoke(nameof(Die), Projectile.lifeTime);
     }
 
     void Die()
@@ -32,10 +33,8 @@ public class MagicBullet : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Initialize(ProjectileData data)
+    private void OnEnable()
     {
-        Projectile = data;
-        Rb.excludeLayers = data.ignoreLayers;
-        GetComponent<SphereCollider>().excludeLayers = data.ignoreLayers;
+        Invoke(nameof(Die), Projectile.lifeTime);
     }
 }

@@ -26,7 +26,7 @@ public class LevelManager : MonoBehaviour
     public Transform Canvas { get; private set; }
 
     public Checkpoint CurrentCheckpoint { get; private set; }
-    public EncounterVolume CurrentEncounter { get; private set; }
+    EncounterVolume currentEncounter;
     Transitioner transitioner;
 
     private void Awake()
@@ -70,12 +70,12 @@ public class LevelManager : MonoBehaviour
 
     public void StartEncounter(Bounds volumeBounds, int id)
     {
-        CurrentEncounter = encounterVolumes[id];
+        currentEncounter = encounterVolumes[id];
         if (id == encounterVolumes.Count - 1) boss.GetComponent<IBossCommands>().Introduce();
         else StartCoroutine(EncounterRoutine(volumeBounds));
     }
 
-    public IEnumerator EncounterRoutine(Bounds volumeBounds)
+    IEnumerator EncounterRoutine(Bounds volumeBounds)
     {
         // start
         for (int i = 0; i < 5; i++)
@@ -84,7 +84,7 @@ public class LevelManager : MonoBehaviour
             Vector3 spawnPoint = GetRandomEnemySpawnPoint(volumeBounds);
             Vector3 playerPos = Vector3.right * PlayerTransform.position.x + Vector3.forward * PlayerTransform.position.z + Vector3.up * spawnPoint.y;
             Quaternion spawnRotation = PlayerTransform ? Quaternion.LookRotation(spawnPoint - playerPos, Vector3.up) : Quaternion.identity;
-            spawnedEnemies.Add(Instantiate(enemies[Random.Range(0, enemies.Count)], spawnPoint, spawnRotation).GetComponent<DamageableEntity>());
+            spawnedEnemies.Add(Instantiate(enemies[0], spawnPoint, spawnRotation).GetComponent<DamageableEntity>());
 
             yield return new WaitForSeconds(0.5f);
         }
@@ -100,7 +100,7 @@ public class LevelManager : MonoBehaviour
         }
 
         // end
-        CurrentEncounter.EndEncounter();
+        currentEncounter.EndEncounter();
     }
 
     Vector3 GetRandomEnemySpawnPoint(Bounds volumeBounds)
@@ -148,7 +148,7 @@ public class LevelManager : MonoBehaviour
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_LEVEL, Id);
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, CurrentCheckpoint.Id);
         PlayerPrefs.SetFloat(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().health);
-        if (CurrentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, CurrentEncounter.Id);
+        if (currentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, currentEncounter.Id);
     }
 
     void LoadProgress()
@@ -161,7 +161,7 @@ public class LevelManager : MonoBehaviour
         if (Id == cl)
         {
             CurrentCheckpoint = checkpoints[cc];
-            if (le >= 0) CurrentEncounter = encounterVolumes[le];
+            if (le >= 0) currentEncounter = encounterVolumes[le];
 
             // disable old encounters
             foreach (var volume in encounterVolumes)
@@ -181,7 +181,7 @@ public class LevelManager : MonoBehaviour
         else if (Id < cl)
         {
             CurrentCheckpoint = checkpoints.Last();
-            CurrentEncounter = encounterVolumes.Last();
+            currentEncounter = encounterVolumes.Last();
 
             // disble all encounters
             foreach (var volume in encounterVolumes)

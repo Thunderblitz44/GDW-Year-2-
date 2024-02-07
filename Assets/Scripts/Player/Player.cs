@@ -53,8 +53,6 @@ public class Player : DamageableEntity
         actions.General.Pause.performed += ctx =>
         {
             PausePlayer();
-            MovementScript.rb.velocity = Vector3.zero;
-
             actions.Menus.Enable();
             pauseScript.Pause();
         };
@@ -71,7 +69,7 @@ public class Player : DamageableEntity
         };
         actions.General.harmSelfTest.performed += ctx =>
         {
-            ApplyDamage(10f);
+            ApplyDamage(10f, DamageTypes.physical);
         };
         // ^ TEMPORARY ^ //
 

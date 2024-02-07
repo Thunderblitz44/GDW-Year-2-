@@ -1,23 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class FireTornado : MonoBehaviour
 {
     List<Rigidbody> bodies = new();
-    [HideInInspector] public Vector2 force = Vector2.zero;
-    [HideInInspector] public float burnTime = 0;
-    [HideInInspector] public float damage = 0;
+    [HideInInspector] public Vector2 force = Vector2.one * 10f;
 
     private void OnTriggerEnter(Collider other)
     {
         Rigidbody rb;
         if (other.gameObject.TryGetComponent(out rb))
         {
-            rb.gameObject.GetComponent<NavMeshAgent>().enabled = false;
             bodies.Add(rb);
-            StaticUtilities.TryToDamageOverTime(other.gameObject, damage, burnTime);
             FMODUnity.RuntimeManager.PlayOneShot("event:/Fire Tornado Placeholder");
         }
     }
@@ -27,7 +22,6 @@ public class FireTornado : MonoBehaviour
         Rigidbody rb;
         if (other.gameObject.TryGetComponent(out rb))
         {
-            rb.gameObject.GetComponent<NavMeshAgent>().enabled = true;
             bodies.Remove(rb);
         }
     }
@@ -36,7 +30,7 @@ public class FireTornado : MonoBehaviour
     {
         foreach (var body in bodies)
         {
-            body.AddForce(Vector3.up * force.y, ForceMode.Force);
+            body.AddForce((body.transform.position - transform.position).normalized * force.x + Vector3.up * force.y, ForceMode.Force);
         }   
     }
 }
