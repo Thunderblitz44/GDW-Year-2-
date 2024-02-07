@@ -53,11 +53,11 @@ public class ShootingPortal : MonoBehaviour
         transform.LookAt(LevelManager.PlayerTransform);
     }
 
-    private void OnDestroy()
+    /*private void OnDestroy()
     {
         foreach (GameObject mb in pooledProjectiles)
         {
             mb.GetComponent<MagicBullet>().Projectile.OwnerDestroyed();
         }
-    }
+    }*/
 }

@@ -29,7 +29,7 @@ public class SpiritWolfAnimator : MonoBehaviour
        animator.SetTrigger("PrimaryAttack");
        animator.SetInteger("attackCounter", attackCounter);
       // Debug.Log(attackCounter);
-      Debug.Log(isAttacking);
+      //Debug.Log(isAttacking);
     }
 
 
@@ -37,6 +37,6 @@ public class SpiritWolfAnimator : MonoBehaviour
    {
        isAttacking = false;
        animator.SetBool("isAttacking", isAttacking);
-       Debug.Log(isAttacking);
+       //Debug.Log(isAttacking);
    }
 }

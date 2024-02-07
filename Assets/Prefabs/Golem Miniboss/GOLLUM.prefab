@@ -69,7 +69,7 @@ Transform:
   - {fileID: 279364212812387710}
   - {fileID: 9154924592974689883}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 91.399, z: 0}
 --- !u!54 &1630653423908187042
 Rigidbody:
@@ -139,18 +139,7 @@ MonoBehaviour:
   trigger: {fileID: 5911403745168890727}
   animator: {fileID: 0}
   timeBetweenAttacks: 2
-  projectile:
-    damage: 1
-    lifeTime: 1
-    speed: 60
-    prefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
-    owner: {fileID: 0}
-  shots: 5
-  shootingStartDelay: 0.5
-  shotDelay: 0.25
-  projectilePrefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
-  portalPrefab: {fileID: 5136089227381563992, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
-  spawnBounds: {fileID: 8412768072518117357}
+  attackPrepareTime: 2
   laserDamage: 5
   halfDistance: 20
   sweepSpeed: 2.5
@@ -184,8 +173,24 @@ MonoBehaviour:
   laserObstacle:
     serializedVersion: 2
     m_Bits: 320
-  minionCount: 0
-  maxSpawned: 0
+  projectile:
+    damage: 1
+    lifeTime: 1
+    speed: 60
+    prefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
+    ignoreLayers:
+      serializedVersion: 2
+      m_Bits: 0
+    owner: {fileID: 0}
+  shots: 5
+  shotDelay: 0.25
+  shootingStartDelay: 0.5
+  projectilePrefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
+  portalPrefab: {fileID: 5136089227381563992, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
+  spawnBounds: {fileID: 8412768072518117357}
+  minionCount: 10
+  maxSpawned: 5
+  minionAttackCooldown: 5
 --- !u!114 &4300098194038806983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,7 +579,6 @@ MonoBehaviour:
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
-  mainHpComp: {fileID: 4300098194038806983}
 --- !u!1 &1306369416081568452
 GameObject:
   m_ObjectHideFlags: 0
@@ -856,7 +860,6 @@ MonoBehaviour:
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
-  mainHpComp: {fileID: 4300098194038806983}
 --- !u!1 &1888517811204530611
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,7 +1294,6 @@ MonoBehaviour:
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
-  mainHpComp: {fileID: 4300098194038806983}
 --- !u!1 &2290423251047338893
 GameObject:
   m_ObjectHideFlags: 0
@@ -2234,7 +2236,6 @@ MonoBehaviour:
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
-  mainHpComp: {fileID: 4300098194038806983}
 --- !u!1 &4200776519859068614
 GameObject:
   m_ObjectHideFlags: 0
@@ -4145,7 +4146,6 @@ MonoBehaviour:
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
-  mainHpComp: {fileID: 4300098194038806983}
 --- !u!1 &8506073492072147842
 GameObject:
   m_ObjectHideFlags: 0
@@ -4268,7 +4268,6 @@ MonoBehaviour:
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
-  mainHpComp: {fileID: 4300098194038806983}
 --- !u!1 &8526390327754119732
 GameObject:
   m_ObjectHideFlags: 0
@@ -4446,7 +4445,6 @@ MonoBehaviour:
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
-  mainHpComp: {fileID: 4300098194038806983}
 --- !u!1 &8574375389575719693
 GameObject:
   m_ObjectHideFlags: 0
@@ -4601,7 +4599,6 @@ MonoBehaviour:
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
-  mainHpComp: {fileID: 4300098194038806983}
 --- !u!1 &8896383414403637421
 GameObject:
   m_ObjectHideFlags: 0

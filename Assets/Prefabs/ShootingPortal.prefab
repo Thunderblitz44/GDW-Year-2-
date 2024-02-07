@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 4745027279986039591}
   - component: {fileID: 1080787464917482683}
   - component: {fileID: 4653553125817028430}
+  - component: {fileID: -7231974009785558042}
+  - component: {fileID: 757124165363284824}
   m_Layer: 0
-  m_Name: Portal
+  m_Name: ShootingPortal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,3 +99,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db76e3f23c05d8c4797a558b30b8f6e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-7231974009785558042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5136089227381563992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+--- !u!114 &757124165363284824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5136089227381563992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5

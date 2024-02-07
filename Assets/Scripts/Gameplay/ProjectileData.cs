@@ -24,10 +24,10 @@ public struct ProjectileData
         prefab = null;
     }
 
-    public void OwnerDestroyed()
+    /*public void OwnerDestroyed()
     {
         owner = null;
-    }
+    }*/
 
     public void CheckPrefab()
     {

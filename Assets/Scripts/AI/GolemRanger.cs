@@ -72,7 +72,7 @@ public class GolemRanger : Enemy
         animator.SetTrigger("Attack");
     }
 
-    internal override void OnHealthZeroed()
+    /*internal override void OnHealthZeroed()
     {
         foreach (var projectile in pooledProjectiles)
         {
@@ -80,5 +80,5 @@ public class GolemRanger : Enemy
         }
 
         base.OnHealthZeroed();
-    }
+    }*/
 }

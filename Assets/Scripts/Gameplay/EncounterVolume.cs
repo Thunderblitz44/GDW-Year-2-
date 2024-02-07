@@ -10,7 +10,7 @@ public class EncounterVolume : MonoBehaviour
     float startTimer;
     Checkpoint cp;
 
-    public Bounds EncounterBounds { get { return bc.bounds; } }
+    public Bounds EncounterBounds { get; private set; }
     public int Id { get; set; }
 
     private void Awake()
@@ -39,6 +39,7 @@ public class EncounterVolume : MonoBehaviour
     {
         startTimer = 0;
         bc.enabled = true;
+        EncounterBounds = bc.bounds;
     }
 
     private void OnTriggerEnter(Collider other)

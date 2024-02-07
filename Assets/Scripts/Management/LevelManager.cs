@@ -20,8 +20,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] List<Checkpoint> checkpoints = new();
     [SerializeField] List<GameObject> enemies;
     [SerializeField] GameObject boss;
-    readonly List<DamageableEntity> spawnedEnemies = new();
+    public static readonly List<DamageableEntity> spawnedEnemies = new();
 
+    public List<GameObject> LevelEnemyList { get { return enemies; } }
     public Transform WorldCanvas { get; private set; }
     public Transform Canvas { get; private set; }
 
@@ -103,7 +104,7 @@ public class LevelManager : MonoBehaviour
         CurrentEncounter.EndEncounter();
     }
 
-    Vector3 GetRandomEnemySpawnPoint(Bounds volumeBounds)
+    public Vector3 GetRandomEnemySpawnPoint(Bounds volumeBounds)
     {
         int itterations = 0;
         Start:
@@ -115,11 +116,12 @@ public class LevelManager : MonoBehaviour
 
             foreach (var enemy in spawnedEnemies)
             {
-                if (Vector3.Distance(enemy.transform.position, hit.point) < 2) goto Start;
+                if (Vector3.Distance(enemy.transform.position, hit.point) < 2) goto next;
             }
 
             return hit.point + Vector3.up;
         }
+        next:
         if (++itterations < 20) goto Start;
         else
         {

@@ -26,7 +26,8 @@ public class DamageableEntity : MonoBehaviour, IDamageable
 
     public virtual void ApplyDamage(float damage)
     {
-        if (!hp || isInvincible) return;
+        if (!hp) return;
+        if (isInvincible) damage = 0;
         hp.DeductHealth(damage);
 
         if (!enableDamageNumbers) return;
