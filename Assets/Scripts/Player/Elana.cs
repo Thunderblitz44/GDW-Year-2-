@@ -228,12 +228,12 @@ public class Elana : Player
             // raycast - make sure there are no obstacles in the way
             float newDist = dodgeDistance;
 
-            Transform body = MovementScript.GetBody();
+            Transform body = MovementScript.Body;
             Transform cam = Camera.main.transform;
             Vector3 end;
 
             // calculate end for the raycast
-            if (MovementScript.IsMoving()) end = body.position + MovementScript.GetMoveDirection() * newDist;
+            if (MovementScript.IsMoving) end = body.position + MovementScript.MoveDirection * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
             RaycastHit hit;
@@ -244,7 +244,7 @@ public class Elana : Player
             }
 
             // re-calculate end in case newDist changed
-            if (MovementScript.IsMoving()) end = body.position + MovementScript.GetMoveDirection() * newDist;
+            if (MovementScript.IsMoving) end = body.position + MovementScript.MoveDirection * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
           
                 TrailScript.isTrailActive = true;

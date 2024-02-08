@@ -55,8 +55,7 @@ public static class StaticUtilities
 
     public static Vector3 GetCameraDir()
     {
-        return Vector3.right * Camera.main.transform.forward.x +
-            Vector3.forward * Camera.main.transform.forward.z;
+        return HorizontalizeVector(Camera.main.transform.forward);
     }
 
     public static float FastDistance(Vector3 first, Vector3 second)
@@ -66,6 +65,11 @@ public static class StaticUtilities
     public static Vector3 FlatDirection(Vector3 first, Vector3 second, float yOffset = 0f)
     {
         return first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset;
+    }
+
+    public static Vector3 HorizontalizeVector(Vector3 vec)
+    {
+        return Vector3.right * vec.x + Vector3.forward * vec.z;
     }
 
     public static Vector3 BuildVector(float x, float y, float z)

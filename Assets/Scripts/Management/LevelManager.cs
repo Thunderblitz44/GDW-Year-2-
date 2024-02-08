@@ -13,7 +13,6 @@ public class LevelManager : MonoBehaviour
     public static bool isGamePaused = false;
     public static bool isPlayerDead = false;
 
-
     public NavMeshSurface NavMesh { get; private set; }
     [SerializeField] List<EncounterVolume> encounterVolumes;
     [SerializeField] List<Checkpoint> checkpoints = new();

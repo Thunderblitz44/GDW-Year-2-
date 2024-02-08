@@ -12,7 +12,7 @@ public struct ProjectileData
     public float speed;
     public GameObject prefab;
     public LayerMask ignoreLayers;
-    [HideInInspector] public DamageableEntity owner;
+    public DamageableEntity owner;
 
     public ProjectileData(float damage, float lifeTime, float speed, LayerMask ignoreLayers, DamageableEntity owner)
     {
@@ -23,11 +23,6 @@ public struct ProjectileData
         this.ignoreLayers = ignoreLayers;
         prefab = null;
     }
-
-    /*public void OwnerDestroyed()
-    {
-        owner = null;
-    }*/
 
     public void CheckPrefab()
     {

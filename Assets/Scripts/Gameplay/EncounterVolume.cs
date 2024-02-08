@@ -115,6 +115,16 @@ public class EncounterVolume : MonoBehaviour
         LevelManager.spawnedEnemies.Add(Instantiate(LevelManager.Instance.LevelEnemyList[i], spawnPoint, spawnRotation).GetComponent<DamageableEntity>());
     }
 
+    protected void SpawnEnemy(Vector3 pos, int i = -1)
+    {
+        if (i == -1) i = Random.Range(0, LevelManager.Instance.LevelEnemyList.Count);
+        totalSpawned++;
+        Transform playerTransform = LevelManager.PlayerTransform;
+        Vector3 playerPos = Vector3.right * playerTransform.position.x + Vector3.forward * playerTransform.position.z + Vector3.up * pos.y;
+        Quaternion spawnRotation = Quaternion.LookRotation(pos - playerPos, Vector3.up);
+        LevelManager.spawnedEnemies.Add(Instantiate(LevelManager.Instance.LevelEnemyList[i], pos, spawnRotation).GetComponent<DamageableEntity>());
+    }
+
     protected void CheckRemaining()
     {
         for (int n = 0; n < LevelManager.spawnedEnemies.Count; n++)

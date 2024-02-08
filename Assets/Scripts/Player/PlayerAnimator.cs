@@ -25,7 +25,7 @@ playerMovement = playerMovement.GetComponent<PlayerMovement>();
     { 
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(playerMovement.rb.velocity);
+        Vector3 localVelocity = transform.InverseTransformDirection(playerMovement.Rb.velocity);
 
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
@@ -40,7 +40,7 @@ playerMovement = playerMovement.GetComponent<PlayerMovement>();
         
         // Matches isGrounded with Groundcheck bool in animator
         
-        animator.SetBool("GroundCheck", playerMovement.isGrounded);
+        animator.SetBool("GroundCheck", playerMovement.IsGrounded);
 
      
         }
