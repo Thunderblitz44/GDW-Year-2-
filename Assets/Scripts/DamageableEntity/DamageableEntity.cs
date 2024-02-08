@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DamageableEntity : MonoBehaviour, IDamageable
 {
-    [SerializeField] bool enableDamageNumbers = true;
+    public bool enableDamageNumbers = true;
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
     GameObject floatingTextPrefab;
     public bool isInvincible;

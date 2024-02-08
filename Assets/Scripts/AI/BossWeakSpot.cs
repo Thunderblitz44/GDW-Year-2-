@@ -4,9 +4,29 @@ using UnityEngine;
 
 public class BossWeakSpot : DamageableEntity
 {
+    float stunTime = 5;
+    bool wasInvincible = false;
+
     internal override void Awake()
     {
         base.Awake();
         hp = GetComponentInParent<BossHealthComponent>();
     }
+
+    public override void ApplyDamage(float damage)
+    {
+        base.ApplyDamage(damage);
+        if (wasInvincible && !isInvincible)
+        {
+            Invoke(nameof(BecomeInvincible), stunTime);
+        }
+        wasInvincible = isInvincible;
+    }
+
+    void BecomeInvincible()
+    {
+        isInvincible = true;
+        Debug.Log("unstun");
+    }
+
 }

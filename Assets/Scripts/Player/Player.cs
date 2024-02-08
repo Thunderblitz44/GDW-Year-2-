@@ -11,7 +11,7 @@ public class Player : DamageableEntity
     // INPUT
     internal ActionMap actions;
 
-    [SerializeField] internal CinemachineFreeLook freeLookCam;
+    [SerializeField] protected CinemachineFreeLook freeLookCam;
    
 
     internal override void Awake()

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class EncounterVolume : MonoBehaviour
     bool startEncounter = false;
     float startTimer;
     Checkpoint cp;
+    protected int totalSpawned = 0;
+
 
     public Bounds EncounterBounds { get; private set; }
     public int Id { get; set; }
@@ -22,10 +25,11 @@ public class EncounterVolume : MonoBehaviour
 
     private void Update()
     {
-        if (startEncounter && (startTimer+=Time.deltaTime) > StaticUtilities.encounterStartDelay)
+        if (startEncounter && (startTimer += Time.deltaTime) > StaticUtilities.encounterStartDelay)
         {
             startEncounter = false;
-            LevelManager.Instance.StartEncounter(bc.bounds, Id);
+            LevelManager.Instance.SetEncounter(Id);
+            StartEncounter();
             foreach (var barrier in barriers)
             {
                 barrier.SetActive(true);
@@ -64,5 +68,58 @@ public class EncounterVolume : MonoBehaviour
         if (!bc) bc = GetComponent<BoxCollider>();
         bc.enabled = false;
         enabled = false;
+    }
+
+    void StartEncounter()
+    {
+        StartCoroutine(EncounterRoutine());
+    }
+
+    protected virtual IEnumerator EncounterRoutine()
+    {
+        Transform playerTransform;
+        // start
+        for (int i = 0; i < 5; i++)
+        {
+            playerTransform = LevelManager.PlayerTransform;
+            // pick random spot in the volume
+            Vector3 spawnPoint = LevelManager.GetRandomEnemySpawnPoint(EncounterBounds);
+            Vector3 playerPos = Vector3.right * playerTransform.position.x + Vector3.forward * playerTransform.position.z + Vector3.up * spawnPoint.y;
+            Quaternion spawnRotation = Quaternion.LookRotation(spawnPoint - playerPos, Vector3.up);
+            LevelManager.spawnedEnemies.Add(Instantiate(LevelManager.Instance.LevelEnemyList[Random.Range(0, LevelManager.Instance.LevelEnemyList.Count)], spawnPoint, spawnRotation).GetComponent<DamageableEntity>());
+
+            yield return new WaitForSeconds(0.5f);
+        }
+        // encounter loop
+        while (LevelManager.spawnedEnemies.Count > 0)
+        {
+            for (int i = 0; i < LevelManager.spawnedEnemies.Count; i++)
+            {
+                if (LevelManager.spawnedEnemies[i] == null) LevelManager.spawnedEnemies.RemoveAt(i);
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        // end
+        EndEncounter();
+    }
+
+    protected void SpawnEnemy(int i = -1)
+    {
+        if (i == -1) i = Random.Range(0, LevelManager.Instance.LevelEnemyList.Count);
+        totalSpawned++;
+        Transform playerTransform = LevelManager.PlayerTransform;
+        Vector3 spawnPoint = LevelManager.GetRandomEnemySpawnPoint(EncounterBounds);
+        Vector3 playerPos = Vector3.right * playerTransform.position.x + Vector3.forward * playerTransform.position.z + Vector3.up * spawnPoint.y;
+        Quaternion spawnRotation = Quaternion.LookRotation(spawnPoint - playerPos, Vector3.up);
+        LevelManager.spawnedEnemies.Add(Instantiate(LevelManager.Instance.LevelEnemyList[i], spawnPoint, spawnRotation).GetComponent<DamageableEntity>());
+    }
+
+    protected void CheckRemaining()
+    {
+        for (int n = 0; n < LevelManager.spawnedEnemies.Count; n++)
+        {
+            if (LevelManager.spawnedEnemies[n] == null) LevelManager.spawnedEnemies.RemoveAt(n);
+        }
     }
 }

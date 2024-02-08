@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GolemBossScript : Enemy, IBossCommands
@@ -8,15 +9,20 @@ public class GolemBossScript : Enemy, IBossCommands
     [Header("Attack Pattern")]
     [SerializeField] float timeBetweenAttacks = 2;
     [SerializeField] float attackPrepareTime = 2;
+    [SerializeField] float maxAttackReps = 2;
+    float attackReps;
+    int lastAttackIndex;
     int phase = 0;
     float atkTimer;
     bool isAttacking;
     readonly List<Func<IEnumerator>> attackFuncs = new();
+    readonly List<DamageableEntity> crystals = new();
 
     [Header("Lasers")]
     [SerializeField] float laserDamage;
     [SerializeField] float halfDistance = 10f;
     [SerializeField] float sweepSpeed = 1f;
+    [SerializeField] float sweepSpeedIncrease = 0.5f;
     [SerializeField] float firstSweepDelay = 1f;
     [SerializeField] AnimationCurve laserCurve = AnimationCurve.Linear(0,0,1,1);
     [SerializeField] LineRenderer laserRenderer;
@@ -50,6 +56,8 @@ public class GolemBossScript : Enemy, IBossCommands
     {
         base.Awake();
         (hp as BossHealthComponent).nextPhase += NextPhase;
+        crystals.AddRange(GetComponentsInChildren<DamageableEntity>().ToList());
+        crystals.RemoveAt(0);
     }
 
     internal override void Update()
@@ -62,12 +70,19 @@ public class GolemBossScript : Enemy, IBossCommands
         // attacks
         if (!isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
         {
-            Debug.Log("new attack");
+            //Debug.Log("new attack");
             isAttacking = true;
             atkTimer = 0;
             // pick an attack
             // start coroutine of attack
-            StartCoroutine(attackFuncs[UnityEngine.Random.Range(0,attackFuncs.Count)]());
+            newAtkInd:
+            int attackIndex = UnityEngine.Random.Range(0, attackFuncs.Count);
+            if (attackFuncs.Count > 1 && attackIndex == lastAttackIndex && ++attackReps > maxAttackReps)
+            {
+                goto newAtkInd;
+            }
+            StartCoroutine(attackFuncs[attackIndex]());
+            lastAttackIndex = attackIndex;
         }
 
         if (Vector3.Distance(LevelManager.PlayerTransform.position, transform.position) <= agent.stoppingDistance && tempSpeed == 0)
@@ -105,6 +120,7 @@ public class GolemBossScript : Enemy, IBossCommands
     {
         battleStarted = true;
         target = LevelManager.PlayerTransform;
+        //target = GameObject.Find("gotoTest").transform;
     }
 
     IEnumerator LasersRoutine()
@@ -145,7 +161,7 @@ public class GolemBossScript : Enemy, IBossCommands
             if (s == 0) yield return new WaitForSeconds(firstSweepDelay);
 
             RaycastHit hit;
-            for (float t = 0; t < 1; t += Time.deltaTime * sweepSpeed) 
+            for (float t = 0; t < 1; t += Time.deltaTime * (sweepSpeed + sweepSpeedIncrease * s)) 
             {
                 Vector3 newPos = Vector3.Lerp(start, end, t);
                 targetDir = newPos - laserEmitter.transform.position;
@@ -264,7 +280,7 @@ public class GolemBossScript : Enemy, IBossCommands
         for (int i = 0; i < minionCount; i++)
         {
             // pick random spot in the volume
-            Vector3 spawnPoint = lmInstance.GetRandomEnemySpawnPoint(bossBounds);
+            Vector3 spawnPoint = LevelManager.GetRandomEnemySpawnPoint(bossBounds);
             Vector3 playerPos = Vector3.right * LevelManager.PlayerTransform.position.x + Vector3.forward * LevelManager.PlayerTransform.position.z + Vector3.up * spawnPoint.y;
             Quaternion spawnRotation = LevelManager.PlayerTransform ? Quaternion.LookRotation(spawnPoint - playerPos, Vector3.up) : Quaternion.identity;
             LevelManager.spawnedEnemies.Add(Instantiate(lmInstance.LevelEnemyList[UnityEngine.Random.Range(0, lmInstance.LevelEnemyList.Count)], spawnPoint, spawnRotation).GetComponent<DamageableEntity>());
@@ -280,32 +296,7 @@ public class GolemBossScript : Enemy, IBossCommands
             }
             yield return new WaitForSeconds(0.1f);
         }
-        /*
-        int totalSpawned = 0;
-        do
-        {
-            // spawn enemies - capped at maxSpawned
-            while (LevelManager.spawnedEnemies.Count < maxSpawned && totalSpawned < minionCount)
-            {
-                // pick random spot in the volume
-                Vector3 spawnPoint = lmInstance.GetRandomEnemySpawnPoint(bossBounds);
-                Vector3 playerPos = Vector3.right * LevelManager.PlayerTransform.position.x + Vector3.forward * LevelManager.PlayerTransform.position.z + Vector3.up * spawnPoint.y;
-                Quaternion spawnRotation = LevelManager.PlayerTransform ? Quaternion.LookRotation(spawnPoint - playerPos, Vector3.up) : Quaternion.identity;
-                LevelManager.spawnedEnemies.Add(Instantiate(lmInstance.LevelEnemyList[UnityEngine.Random.Range(0, lmInstance.LevelEnemyList.Count)], spawnPoint, spawnRotation).GetComponent<DamageableEntity>());
-                yield return new WaitForSeconds(0.5f);
-                totalSpawned++;
-            }
-
-            // check if anyone died
-            for (int n = 0; n < LevelManager.spawnedEnemies.Count; n++)
-            {
-                if (LevelManager.spawnedEnemies[n] == null) LevelManager.spawnedEnemies.RemoveAt(n);
-                yield return new WaitForSeconds(0.1f);
-            }
-            yield return null;
-        }
-        while (LevelManager.spawnedEnemies.Count > 0); // wait until everyone dies
-*/
+        
         yield return new WaitForSeconds(minionAttackCooldown);
         usingMinionAttack = false;
 
@@ -318,18 +309,18 @@ public class GolemBossScript : Enemy, IBossCommands
         switch (++phase)
         {
             case 1:
-                Debug.Log("phase 1");
+                //Debug.Log("phase 1");
                 // phase 1
                 attackFuncs.Add(LasersRoutine);
                 break;
             case 2:
-                Debug.Log("phase 2");
+                //Debug.Log("phase 2");
                 // phase 2
                 attackFuncs.Add(ProjectilesRoutine);
-                isInvincible = true;
+                foreach (var crystal in crystals) crystal.isInvincible = true;
                 break;
             case 3:
-                Debug.Log("phase 3");
+                //Debug.Log("phase 3");
                 // phase 3
                 attackFuncs.Add(MinionsRoutine);
                 sweeps++;
@@ -338,7 +329,7 @@ public class GolemBossScript : Enemy, IBossCommands
                 shootingStartDelay = 1f;
                 break;
             case 4:
-                Debug.Log("phase 4");
+                //Debug.Log("phase 4");
                 sweeps++;
                 portals+=2;
                 timeBetweenAttacks = 
