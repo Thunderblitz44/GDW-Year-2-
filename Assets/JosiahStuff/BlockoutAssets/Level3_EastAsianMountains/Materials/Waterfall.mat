@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_eastAsianRooftop_blockout_01
-  m_Shader: {fileID: -6465566751694194690, guid: ada99842a2101fe408e4f30125fabd4c, type: 3}
+  m_Name: Waterfall
+  m_Shader: {fileID: -6465566751694194690, guid: fb94ced2b6bb3bf4f8aa91bf91fad4ca, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -154,7 +154,7 @@ Material:
     - _Border: 0
     - _Border_Effect: 1
     - _BumpScale: 1
-    - _Cell_Location: 0
+    - _Cell_Location: 0.23
     - _Cell_Strength: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -172,56 +172,52 @@ Material:
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _Fog: 1
-    - _GlossMapScale: 1
+    - _GlossMapScale: 0
     - _Glossiness: 0
-    - _GlossyReflections: 1
-    - _HeightBlend: 0.8
+    - _GlossyReflections: 0
+    - _HeightBlend: 0
     - _Height_Blend: 3
     - _Height_Gradient: -2
     - _Lighting_Noise: 0.5
     - _MAIN_LIGHT_SHADOWS_CASCADE: 0
     - _Metallic: 0
-    - _Mode: 0
     - _NoiseStrength: 1
     - _Noise_Multiply: 1
     - _Noise_Scale: 2
     - _Normal_Noise: 0.5
     - _Normal_Value: 0
     - _OcclusionStrength: 1
-    - _Parallax: 0.02
+    - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _ReflectionProbe: 0.5
     - _SHADOWS_SOFT: 1
     - _Shadow_Atten: 0
-    - _Shadow_Strength: 0.67
-    - _Smoothness: 4.97
+    - _Shadow_Strength: 1
+    - _Smoothness: 54.45
     - _SmoothnessTextureChannel: 0
-    - _Smoothness_1: 0.27
+    - _Smoothness_1: 0.039
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TP_Noise: 0.5
-    - _TriPlanar: 0
-    - _UVSec: 0
+    - _Waterfall_Intensity: 0.14
+    - _Waterfall_Speed: 0.11
+    - _Waterfall_Texture_Speed: 0.36
     - _WorkflowMode: 1
     - _WorldPosition: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.4432224, g: 0.5082956, b: 0.49495357, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Border_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0}
-    - _Color: {r: 0.11494304, g: 0.33709028, b: 0.38679248, a: 1}
+    - _Color: {r: 0.14057496, g: 0.21339278, b: 0.764151, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Shadow_Color: {r: 0.2970363, g: 0.3442177, b: 0.8396226, a: 0}
-    - _Smoothness_Color: {r: 2.670157, g: 1.509037, b: 1.034511, a: 0}
+    - _Smoothness_Color: {r: 2.2868972, g: 1.8320608, b: 0.44301143, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _TP_Bottom: {r: 0.1805575, g: 0.1780883, b: 0.4339623, a: 0}
-    - _TP_Middle: {r: 0.509434, g: 0.4397473, b: 0.4397473, a: 0}
-    - _TP_Top: {r: 0.4043317, g: 0.7176471, b: 0.1647059, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &6035502649035809145
+--- !u!114 &5612169308007926186
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
