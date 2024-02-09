@@ -7,7 +7,7 @@ public class Elana : Player
 {
     [Space(10), Header("ABILITIES"), Space(10)]
     [Header("Primary Attack")]
-    [SerializeField] float meleeDamage = 1f;
+    [SerializeField] int meleeDamage = 1;
     [SerializeField] Vector2 knockback;
     //[SerializeField] float cooldown = 1f;
     [SerializeField] MeleeHitBox mhb;
@@ -37,7 +37,7 @@ public class Elana : Player
    
     [Header("Fire Tornado")]
     [SerializeField] float maxRange = 15f;
-    [SerializeField] float burnDps = 1f;
+    [SerializeField] int tornadoDamage = 1;
     [SerializeField] float burnTime = 3f;
     //[SerializeField] float rainTime = 5f;
     [SerializeField] float tornadoTime = 5f;
@@ -109,8 +109,8 @@ public class Elana : Player
             pooledProjectiles.Add(mb.gameObject);
         }
 
-        mhb.damage = meleeDamage;
-        mhb.knockback = knockback;
+        mhb.Damage = meleeDamage;
+        mhb.Knockback = knockback;
     }
 
     void Update()
@@ -148,14 +148,6 @@ public class Elana : Player
                     aoeIndicator.position = hit.point;
                     invalidPlacement = false;
                 }
-                /*else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-                {
-                    RaycastHit hit2;
-                    Physics.Raycast(hit.point, Vector3.down, out hit2, 20f, 6, QueryTriggerInteraction.Ignore);
-                    if (!aoeIndicator.gameObject.activeSelf) aoeIndicator.gameObject.SetActive(true);
-                    aoeIndicator.position = hit2.point == Vector3.zero ? hit.point : hit2.point;
-                    invalidPlacement = false;
-                }*/
                 else
                 {
                     // block
@@ -282,8 +274,8 @@ public class Elana : Player
             canUseFireTornado = false;
             abilityHud.SpendPoint(fireTornadoId, tornadoTime + tornadoCooldown);
             fireTornado = Instantiate(abilityPrefab, aoeIndicator.position, Quaternion.identity);
-            fireTornado.GetComponent<FireTornado>().burnTime = burnTime;
-            fireTornado.GetComponent<FireTornado>().damage = burnDps;
+            fireTornado.GetComponent<FireTornado>().BurnTime = burnTime;
+            fireTornado.GetComponent<FireTornado>().Damage = tornadoDamage;
             Invoke(nameof(EndTornado), tornadoTime);
         };
 

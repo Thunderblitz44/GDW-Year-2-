@@ -33,7 +33,7 @@ public class Player : DamageableEntity
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        hp.SetHealth(PlayerPrefs.GetFloat(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.maxHealth));
+        hp.SetHealth(PlayerPrefs.GetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.MaxHealth));
     }
 
     private void Start()
@@ -71,7 +71,7 @@ public class Player : DamageableEntity
         };
         actions.General.harmSelfTest.performed += ctx =>
         {
-            ApplyDamage(10f);
+            ApplyDamage(10);
         };
         // ^ TEMPORARY ^ //
 

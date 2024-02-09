@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MeleeHitBox : MonoBehaviour
 {
     SphereCollider sc;
-    [HideInInspector] public float damage;
-    [HideInInspector] public Vector2 knockback;
+    public int Damage { get; set; }
+    public Vector2 Knockback { get; set; }
 
     private void Awake()
     {
@@ -20,12 +18,12 @@ public class MeleeHitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        StaticUtilities.TryToDamage(other.gameObject, damage);
+        StaticUtilities.TryToDamage(other.gameObject, Damage);
 
         Rigidbody rb;
         if (other.gameObject.TryGetComponent(out rb))
         {
-            rb.AddForce((transform.forward * knockback.x + Vector3.up * knockback.y) * rb.mass, ForceMode.Impulse);
+            rb.AddForce((transform.forward * Knockback.x + Vector3.up * Knockback.y) * rb.mass, ForceMode.Impulse);
         }
 
         CancelInvoke(nameof(Hide));

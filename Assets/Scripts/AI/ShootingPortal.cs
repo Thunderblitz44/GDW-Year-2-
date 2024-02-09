@@ -48,7 +48,7 @@ public class ShootingPortal : DamageableEntity
         startTimer = 0;
         shotCount = 0;
         explode = false;
-        hp.health = hp.maxHealth;
+        hp.SetHealth(hp.MaxHealth);
     }
 
     private void Update()

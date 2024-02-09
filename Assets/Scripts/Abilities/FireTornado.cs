@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class FireTornado : MonoBehaviour
 {
-    [HideInInspector] public float burnTime = 0;
-    [HideInInspector] public float damage = 0;
+    public float BurnTime { private get;  set; } = 0;
+    public int Damage { private get; set;} = 0;
 
-    List<GameObject> enemiesInTornado = new();
-    List<float> damageTimers = new();
+    readonly List<GameObject> enemiesInTornado = new();
+    readonly List<float> damageTimers = new();
 
     private void Awake()
     {
@@ -38,7 +38,7 @@ public class FireTornado : MonoBehaviour
             if ((damageTimers[i] += Time.deltaTime) < StaticUtilities.damageOverTimeInterval) continue;
  
             damageTimers[i] = 0;
-            StaticUtilities.TryToDamage(enemiesInTornado[i], damage * StaticUtilities.damageOverTimeInterval);
+            StaticUtilities.TryToDamage(enemiesInTornado[i], Damage);
         }
     }
 
@@ -46,7 +46,7 @@ public class FireTornado : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            StaticUtilities.TryToDamageOverTime(other.gameObject, damage, burnTime);
+            StaticUtilities.TryToDamageOverTime(other.gameObject, Damage, BurnTime);
             damageTimers.RemoveAt(enemiesInTornado.IndexOf(other.gameObject));
             enemiesInTornado.Remove(other.gameObject);
         }

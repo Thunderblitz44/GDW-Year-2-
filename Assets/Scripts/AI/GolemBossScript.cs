@@ -19,7 +19,7 @@ public class GolemBossScript : Enemy, IBossCommands
     readonly List<DamageableEntity> crystals = new();
 
     [Header("Lasers")]
-    [SerializeField] float laserDamage;
+    [SerializeField] int laserDamage;
     [SerializeField] float halfDistance = 10f;
     [SerializeField] float sweepSpeed = 1f;
     [SerializeField] float sweepSpeedIncrease = 0.5f;
@@ -340,11 +340,11 @@ public class GolemBossScript : Enemy, IBossCommands
         }
     }
 
-    public override void ApplyDamage(float damage)
+    public override void ApplyDamage(int damage)
     {
     }
 
-    public override void ApplyDamageOverTime(float dps, float duration)
+    public override void ApplyDamageOverTime(int damage, float duration)
     {
     }
 

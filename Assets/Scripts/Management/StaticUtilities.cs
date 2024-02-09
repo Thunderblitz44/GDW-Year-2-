@@ -90,7 +90,7 @@ public static class StaticUtilities
         }
     }
 
-    public static bool TryToDamage(GameObject other, float damage)
+    public static bool TryToDamage(GameObject other, int damage)
     {
         IDamageable d;
         if (other.TryGetComponent(out d))
@@ -101,7 +101,7 @@ public static class StaticUtilities
         return false;
     }
 
-    public static bool TryToDamageOverTime(GameObject other, float damage, float duration)
+    public static bool TryToDamageOverTime(GameObject other, int damage, float duration)
     {
         IDamageable d;
         if (other.TryGetComponent(out d))

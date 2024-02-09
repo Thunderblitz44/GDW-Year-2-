@@ -119,7 +119,7 @@ public class LevelManager : MonoBehaviour
     {
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_LEVEL, Id);
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, CurrentCheckpoint.Id);
-        PlayerPrefs.SetFloat(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().health);
+        PlayerPrefs.SetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().Health);
         if (CurrentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, CurrentEncounter.Id);
     }
 

@@ -13,7 +13,7 @@ public class BossWeakSpot : DamageableEntity
         hp = GetComponentInParent<BossHealthComponent>();
     }
 
-    public override void ApplyDamage(float damage)
+    public override void ApplyDamage(int damage)
     {
         base.ApplyDamage(damage);
         if (wasInvincible && !isInvincible)

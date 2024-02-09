@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
 {
-    [SerializeField] internal float maxHealth = 10f;
-    [SerializeField] internal GameObject hpBarPrefab;
-    internal float health;
+    [SerializeField] protected int maxHealth = 10;
+    public int MaxHealth { get { return maxHealth; } }
+    [SerializeField] protected GameObject hpBarPrefab;
+    protected int health;
+    public int Health { get { return health; } }
     HPBar hpbar;
 
     public Action onHealthZeroed;
@@ -19,7 +21,7 @@ public class HealthComponent : MonoBehaviour
         hpbar.SetHPValue(health);
     }
 
-    public virtual void DeductHealth(float value)
+    public virtual void DeductHealth(int value)
     {
         health = Mathf.Clamp(health - value, 0, maxHealth);
 
@@ -31,7 +33,7 @@ public class HealthComponent : MonoBehaviour
         }
     }
 
-    public void SetHealth(float value)
+    public void SetHealth(int value)
     {
         health = value;
         hpbar.SetHPValue(health);

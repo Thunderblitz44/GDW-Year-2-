@@ -20,7 +20,7 @@ public class BossHealthComponent : HealthComponent
         // play anim
     }
 
-    public override void DeductHealth(float value)
+    public override void DeductHealth(int value)
     {
         base.DeductHealth(value);
 

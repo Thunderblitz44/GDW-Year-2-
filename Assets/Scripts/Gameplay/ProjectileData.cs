@@ -5,16 +5,16 @@ using UnityEngine;
 [Serializable]
 public struct ProjectileData
 {
-    public static ProjectileData defaultProjectile = new(1f, 1f, 60f, 0, null);
+    public static ProjectileData defaultProjectile = new(1, 1f, 60f, 0, null);
 
-    public float damage;
+    public int damage;
     public float lifeTime;
     public float speed;
     public GameObject prefab;
     public LayerMask ignoreLayers;
     public DamageableEntity owner;
 
-    public ProjectileData(float damage, float lifeTime, float speed, LayerMask ignoreLayers, DamageableEntity owner)
+    public ProjectileData(int damage, float lifeTime, float speed, LayerMask ignoreLayers, DamageableEntity owner)
     {
         this.damage = damage;
         this.lifeTime = lifeTime;

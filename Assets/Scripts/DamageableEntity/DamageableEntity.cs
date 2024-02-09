@@ -9,7 +9,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
     GameObject floatingTextPrefab;
     public bool isInvincible;
-    internal HealthComponent hp;
+    protected HealthComponent hp;
 
     internal virtual void Awake()
     {
@@ -24,7 +24,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         Destroy(gameObject);
     }
 
-    public virtual void ApplyDamage(float damage)
+    public virtual void ApplyDamage(int damage)
     {
         if (!hp) return;
         if (isInvincible) damage = 0;
@@ -39,19 +39,19 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         t.SetParent(LevelManager.Instance.WorldCanvas, true);
     }
 
-    public virtual void ApplyDamageOverTime(float dps, float duration)
+    public virtual void ApplyDamageOverTime(int damage, float duration)
     {
-        StartCoroutine(DamageOverTimeRoutine(dps, duration));
+        StartCoroutine(DamageOverTimeRoutine(damage, duration));
     }
 
-    IEnumerator DamageOverTimeRoutine(float dps, float duration)
+    IEnumerator DamageOverTimeRoutine(int damage, float duration)
     {
         for (float i = 0, n = 0; i < duration; i += Time.deltaTime, n += Time.deltaTime)
         {
             if (n > StaticUtilities.damageOverTimeInterval)
             {
                 n = 0;
-                ApplyDamage(dps * StaticUtilities.damageOverTimeInterval);
+                ApplyDamage(damage);
             }
             yield return null;
         }
