@@ -1,42 +1,54 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class FireTornado : MonoBehaviour
 {
-    List<Rigidbody> bodies = new();
-    [HideInInspector] public Vector2 force = Vector2.zero;
     [HideInInspector] public float burnTime = 0;
     [HideInInspector] public float damage = 0;
 
-    private void OnTriggerEnter(Collider other)
+    List<GameObject> enemiesInTornado = new();
+    List<float> damageTimers = new();
+
+    private void Awake()
     {
-        Rigidbody rb;
-        if (other.gameObject.TryGetComponent(out rb))
-        {
-            rb.gameObject.GetComponent<NavMeshAgent>().enabled = false;
-            bodies.Add(rb);
-            StaticUtilities.TryToDamageOverTime(other.gameObject, damage, burnTime);
-            FMODUnity.RuntimeManager.PlayOneShot("event:/Fire Tornado Placeholder");
-        }
+        FMODUnity.RuntimeManager.PlayOneShot("event:/Fire Tornado Placeholder");
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        Rigidbody rb;
-        if (other.gameObject.TryGetComponent(out rb))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            rb.gameObject.GetComponent<NavMeshAgent>().enabled = true;
-            bodies.Remove(rb);
+            enemiesInTornado.Add(other.gameObject);
+            damageTimers.Add(0);
         }
     }
 
     private void Update()
     {
-        foreach (var body in bodies)
+        for (int i = 0; i < enemiesInTornado.Count; i++)
         {
-            body.AddForce(Vector3.up * force.y, ForceMode.Force);
-        }   
+            if (!enemiesInTornado[i])
+            {
+                damageTimers.RemoveAt(i);
+                enemiesInTornado.RemoveAt(i);
+                continue;
+            }
+
+            if ((damageTimers[i] += Time.deltaTime) < StaticUtilities.damageOverTimeInterval) continue;
+ 
+            damageTimers[i] = 0;
+            StaticUtilities.TryToDamage(enemiesInTornado[i], damage * StaticUtilities.damageOverTimeInterval);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            StaticUtilities.TryToDamageOverTime(other.gameObject, damage, burnTime);
+            damageTimers.RemoveAt(enemiesInTornado.IndexOf(other.gameObject));
+            enemiesInTornado.Remove(other.gameObject);
+        }
     }
 }

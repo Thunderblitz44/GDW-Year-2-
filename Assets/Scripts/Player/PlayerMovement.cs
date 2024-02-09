@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     [Header("Ground Check")]
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float maxSlopeAngle = 45f;
-    [SerializeField] float raycastRadius = 0.2f;
+    [SerializeField] float groundRaycastDist = 0.2f;
     Transform groundCheck;
     Transform kneeClearanceCheck;
     RaycastHit ground;
@@ -68,7 +68,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         playerCollisions.onCollisionStay += OnCollisionStay;
         playerCollisions.onCollisionExit += OnCollisionExit;
         playerCollisions.onCollisionEnter += OnCollisionEnter;
-        normalGravity = Physics.gravity;
     }
 
     private void Update()
@@ -92,7 +91,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (IsGrounded && groundAngle < maxSlopeAngle)
             {
                 moveDirection = Vector3.ProjectOnPlane(rotatedInput, ground.normal);
-             //   if (Vector3.Dot(ground.normal, rotatedInput) > 0) Physics.gravity = normalGravity*2;
             }
             Rb.velocity += moveDirection * MoveAcceleration;
         }
@@ -106,10 +104,10 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         RaycastHit hitLower;
         if (Physics.Raycast(groundCheck.position, moveDirection, out hitLower, 0.25f))
         {
-            if (Vector3.Dot(hitLower.normal, moveDirection) < -0.5 && !Physics.Raycast(kneeClearanceCheck.position, moveDirection, 0.4f))
+            if (Vector3.Dot(hitLower.normal, moveDirection) < -0.7f && !Physics.Raycast(kneeClearanceCheck.position, moveDirection, 0.4f))
             {
                 stepClimbing = true;
-                Rb.position += Vector3.up * 0.1f;
+                Rb.position += Vector3.up * 0.05f;
             }
         }
         else if (stepClimbing) stepClimbing = false;
@@ -165,9 +163,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // is grounded test
         // are we colliding with an object lower than groundcheck
         if (collision.collider.gameObject.layer == 6 &&
-            collision.contacts[0].point.y < groundCheck.position.y)
+            collision.contacts[0].point.y < groundCheck.position.y + 1.5f)
         {
-            if (Physics.Raycast(groundCheck.position, Vector3.down, out ground, 0.5f, groundLayer, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(groundCheck.position, Vector3.down, out ground, groundRaycastDist, groundLayer, QueryTriggerInteraction.Ignore))
             {
                 groundAngle = Vector3.Angle(Vector3.up, ground.normal);
                 DebugHUD.instance.SetDebugText("ground angle : " + groundAngle.ToString("0.0"));

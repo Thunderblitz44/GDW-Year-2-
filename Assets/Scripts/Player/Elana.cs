@@ -37,12 +37,12 @@ public class Elana : Player
    
     [Header("Fire Tornado")]
     [SerializeField] float maxRange = 15f;
-    [SerializeField] float burnDamage = 1f;
+    [SerializeField] float burnDps = 1f;
     [SerializeField] float burnTime = 3f;
-    [SerializeField] float rainTime = 5f;
+    //[SerializeField] float rainTime = 5f;
     [SerializeField] float tornadoTime = 5f;
-    [SerializeField] float tornadoDamageMultiplier = 2f;
-    [SerializeField] float tornadoForce = 2f;
+    //[SerializeField] float tornadoDamageMultiplier = 2f;
+    //[SerializeField] float tornadoForce = 2f;
     [SerializeField] float tornadoCooldown = 2f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
@@ -140,7 +140,7 @@ public class Elana : Player
         if (aimingFireTornado)
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen), out hit))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen), out hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
             {
                 if (Vector3.Angle(Vector3.up, hit.normal) < 45)
                 {
@@ -148,6 +148,14 @@ public class Elana : Player
                     aoeIndicator.position = hit.point;
                     invalidPlacement = false;
                 }
+                /*else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+                {
+                    RaycastHit hit2;
+                    Physics.Raycast(hit.point, Vector3.down, out hit2, 20f, 6, QueryTriggerInteraction.Ignore);
+                    if (!aoeIndicator.gameObject.activeSelf) aoeIndicator.gameObject.SetActive(true);
+                    aoeIndicator.position = hit2.point == Vector3.zero ? hit.point : hit2.point;
+                    invalidPlacement = false;
+                }*/
                 else
                 {
                     // block
@@ -274,6 +282,8 @@ public class Elana : Player
             canUseFireTornado = false;
             abilityHud.SpendPoint(fireTornadoId, tornadoTime + tornadoCooldown);
             fireTornado = Instantiate(abilityPrefab, aoeIndicator.position, Quaternion.identity);
+            fireTornado.GetComponent<FireTornado>().burnTime = burnTime;
+            fireTornado.GetComponent<FireTornado>().damage = burnDps;
             Invoke(nameof(EndTornado), tornadoTime);
         };
 
