@@ -11,7 +11,7 @@ public class Enemy : DamageableEntity
     
     [SerializeField] internal Animator animator;
 
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         agent = GetComponent<NavMeshAgent>();
@@ -22,7 +22,7 @@ public class Enemy : DamageableEntity
         }
     }
 
-    internal virtual void Update()
+    protected virtual void Update()
     {
         if (animator) animator.SetFloat("ZSpeed", agent.velocity.magnitude);
 
@@ -31,15 +31,15 @@ public class Enemy : DamageableEntity
         if (updateTimer >= slowUpdateInterval) SlowUpdate();
     }
 
-    internal virtual void OnAttackTriggerEnter(Collider other)
+    protected virtual void OnAttackTriggerEnter(Collider other)
     {
     }
 
-    internal virtual void OnAttackTriggerExit(Collider other)
+    protected virtual void OnAttackTriggerExit(Collider other)
     {
     }
 
-    internal virtual void SlowUpdate()
+    protected virtual void SlowUpdate()
     {
         updateTimer = 0;
         if (!target || !agent || !agent.isActiveAndEnabled || !LevelManager.Instance.NavMesh.isActiveAndEnabled) return;

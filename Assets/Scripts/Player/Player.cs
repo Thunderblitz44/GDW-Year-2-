@@ -5,16 +5,16 @@ using UnityEngine.SceneManagement;
 public class Player : DamageableEntity
 {
     public PlayerMovement MovementScript { get; private set; }
-    [SerializeField] internal AbilityHUD abilityHud;
+    [SerializeField] protected AbilityHUD abilityHud;
     PlayerMenuController pauseScript;
 
     // INPUT
-    internal ActionMap actions;
+    protected ActionMap actions;
 
     [SerializeField] protected CinemachineFreeLook freeLookCam;
    
 
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
@@ -95,7 +95,7 @@ public class Player : DamageableEntity
         freeLookCam.gameObject.SetActive(true);
     }
 
-    internal override void OnHealthZeroed()
+    protected override void OnHealthZeroed()
     {
         // player death.
         LevelManager.isPlayerDead = true;

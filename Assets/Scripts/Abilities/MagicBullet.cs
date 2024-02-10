@@ -13,7 +13,8 @@ public class MagicBullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (Projectile.owner && Projectile.owner.gameObject == collision.gameObject) return;
+        if ((Projectile.owner && Projectile.owner.gameObject == collision.gameObject) ||
+            (Projectile.owner.gameObject.layer == LayerMask.NameToLayer("Player") && collision.gameObject.layer == LayerMask.NameToLayer("Friendly"))) return;
 
         if (!StaticUtilities.TryToDamage(collision.collider.gameObject, Projectile.damage))
             StaticUtilities.TryToDamage(collision.gameObject, Projectile.damage);

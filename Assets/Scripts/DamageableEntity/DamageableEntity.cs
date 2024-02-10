@@ -11,7 +11,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
     public bool isInvincible;
     protected HealthComponent hp;
 
-    internal virtual void Awake()
+    protected virtual void Awake()
     {
         hp = GetComponent<HealthComponent>();
         if (hp) hp.onHealthZeroed += OnHealthZeroed;
@@ -19,7 +19,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         if (enableDamageNumbers) LoadFloatingTextPrefab();
     }
 
-    internal virtual void OnHealthZeroed()
+    protected virtual void OnHealthZeroed()
     {
         Destroy(gameObject);
     }

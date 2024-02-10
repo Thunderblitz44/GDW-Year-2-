@@ -17,7 +17,7 @@ public class ShootingPortal : DamageableEntity
 
     GameObject expl;
 
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         expl = transform.GetChild(0).gameObject;
@@ -77,7 +77,7 @@ public class ShootingPortal : DamageableEntity
         }
     }
 
-    internal override void OnHealthZeroed()
+    protected override void OnHealthZeroed()
     {
         explode = true;
         expl.SetActive(true);
@@ -88,12 +88,4 @@ public class ShootingPortal : DamageableEntity
         expl.SetActive(false);
         gameObject.SetActive(false);
     }
-
-    /*private void OnDestroy()
-    {
-        foreach (GameObject mb in pooledProjectiles)
-        {
-            mb.GetComponent<MagicBullet>().Projectile.OwnerDestroyed();
-        }
-    }*/
 }

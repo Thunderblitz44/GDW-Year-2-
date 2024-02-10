@@ -23,19 +23,11 @@ public class EntityHPBar : HPBar
         transform.rotation = Camera.main.transform.rotation;
     }
 
-    public override void ChangeHPByAmount(float amount)
+    public override void ChangeHPByAmount(int amount)
     {
         if (currentFadeRoutine != null) StopCoroutine(currentFadeRoutine);
         Appear();
         base.ChangeHPByAmount(amount);
-        Disappear();
-    }
-
-    public override void ChangeHpByPercentage(float value01)
-    {
-        if (currentFadeRoutine != null) StopCoroutine(currentFadeRoutine);
-        Appear();
-        base.ChangeHpByPercentage(value01);
         Disappear();
     }
 

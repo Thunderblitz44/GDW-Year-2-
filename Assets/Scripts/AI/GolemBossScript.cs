@@ -52,7 +52,7 @@ public class GolemBossScript : Enemy, IBossCommands
     bool battleStarted = false;
     float tempSpeed;
 
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         (hp as BossHealthComponent).nextPhase += NextPhase;
@@ -60,7 +60,7 @@ public class GolemBossScript : Enemy, IBossCommands
         crystals.RemoveAt(0);
     }
 
-    internal override void Update()
+    protected override void Update()
     {
         if (!battleStarted) return;
         base.Update();
@@ -119,8 +119,8 @@ public class GolemBossScript : Enemy, IBossCommands
     void StartBattle()
     {
         battleStarted = true;
-        target = LevelManager.PlayerTransform;
-        //target = GameObject.Find("gotoTest").transform;
+        //target = LevelManager.PlayerTransform;
+        target = GameObject.Find("gotoTest").transform;
     }
 
     IEnumerator LasersRoutine()
@@ -348,7 +348,7 @@ public class GolemBossScript : Enemy, IBossCommands
     {
     }
 
-    internal override void OnHealthZeroed()
+    protected override void OnHealthZeroed()
     {
         StopAllCoroutines();
         

@@ -7,7 +7,7 @@ public class BossWeakSpot : DamageableEntity
     float stunTime = 5;
     bool wasInvincible = false;
 
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         hp = GetComponentInParent<BossHealthComponent>();

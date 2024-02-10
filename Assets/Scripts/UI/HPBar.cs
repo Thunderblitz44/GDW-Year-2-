@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ public class HPBar : MonoBehaviour
     
     float hp;
 
-    public void SetHPValue(float value)
+    public void SetHPValue(int value)
     {
         if (!filler || !text) return;
 
@@ -19,31 +20,11 @@ public class HPBar : MonoBehaviour
         SetHPFill();
     }
 
-    public void SetHPValue01(float value)
-    {
-        if (!filler || !text) return;
-
-        value = Mathf.Clamp01(value);
-        hp = maxHP * value;
-        SetHPInText();
-        SetHPFill();
-    }
-
-    public virtual void ChangeHPByAmount(float amount)
+    public virtual void ChangeHPByAmount(int amount)
     {
         if (!filler || !text) return;
 
         hp = Mathf.Clamp(hp + amount, 0, maxHP);
-        SetHPInText();
-        SetHPFill();
-    }
-
-    public virtual void ChangeHpByPercentage(float value01)
-    {
-        if (!filler || !text) return;
-
-        value01 = Mathf.Clamp01(value01);
-        hp = Mathf.Clamp(hp + value01 * maxHP, 0, maxHP);
         SetHPInText();
         SetHPFill();
     }
@@ -57,6 +38,4 @@ public class HPBar : MonoBehaviour
     {
         filler.fillAmount = maxHP > 0? hp / maxHP : 0;
     }
-
-    public float GetHP() => hp;
 }

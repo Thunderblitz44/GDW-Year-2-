@@ -13,7 +13,7 @@ public class GolemRanger : Enemy
     float shootCooldownTimer;
     bool attack;
 
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
@@ -33,7 +33,7 @@ public class GolemRanger : Enemy
         }
     }
 
-    internal override void Update()
+    protected override void Update()
     {
         base.Update();
 
@@ -47,12 +47,12 @@ public class GolemRanger : Enemy
         }
     }
 
-    internal override void OnAttackTriggerEnter(Collider other)
+    protected override void OnAttackTriggerEnter(Collider other)
     {
         attack = true;
     }
 
-    internal override void OnAttackTriggerExit(Collider other)
+    protected override void OnAttackTriggerExit(Collider other)
     {
         attack = false;
         shootStartTimer = 0f;
@@ -71,14 +71,4 @@ public class GolemRanger : Enemy
         
         animator.SetTrigger("Attack");
     }
-
-    /*internal override void OnHealthZeroed()
-    {
-        foreach (var projectile in pooledProjectiles)
-        {
-            projectile.GetComponent<MagicBullet>().Projectile.OwnerDestroyed();
-        }
-
-        base.OnHealthZeroed();
-    }*/
 }

@@ -76,7 +76,7 @@ public class Elana : Player
     //delay of recall
    
    //for determining the difference between the portal and dodge as they both call the same method
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
 

@@ -13,7 +13,7 @@ public class GolemKnight : Enemy
     [SerializeField] GameObject HeadTarget;
 
 
-    internal override void Update()
+    protected override void Update()
     {
         base.Update();
 
@@ -29,13 +29,13 @@ public class GolemKnight : Enemy
         }
     }
 
-    internal override void OnAttackTriggerEnter(Collider other)
+    protected override void OnAttackTriggerEnter(Collider other)
     {
         attack = true;
         animator.SetBool("CanAttack", true);
     }
 
-    internal override void OnAttackTriggerExit(Collider other)
+    protected override void OnAttackTriggerExit(Collider other)
     {
         attack = false;
         attackTimer = 0f;
