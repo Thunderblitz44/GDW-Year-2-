@@ -30,7 +30,8 @@ public class MagicBullet : MonoBehaviour
     void Die()
     {
         Rb.velocity = Vector3.zero;
-        gameObject.SetActive(false);
+        if (!Projectile.Destroy) gameObject.SetActive(false);
+        else Destroy(gameObject);
     }
 
     public void Initialize(ProjectileData data)

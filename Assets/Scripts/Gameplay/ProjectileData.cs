@@ -13,6 +13,7 @@ public struct ProjectileData
     public GameObject prefab;
     public LayerMask ignoreLayers;
     public DamageableEntity owner;
+    public bool Destroy { get; private set; }
 
     public ProjectileData(int damage, float lifeTime, float speed, LayerMask ignoreLayers, DamageableEntity owner)
     {
@@ -22,6 +23,7 @@ public struct ProjectileData
         this.owner = owner;
         this.ignoreLayers = ignoreLayers;
         prefab = null;
+        Destroy = false;
     }
 
     public void CheckPrefab()
@@ -29,5 +31,10 @@ public struct ProjectileData
         if (prefab) return;
         prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Magic Bullet/MagicBullet.prefab");
         if (!prefab) Debug.LogWarning("Can't find MagicBullet in Assets/Prefabs/Magic Bullet/");
+    }
+
+    public void OwnerDestroyed()
+    {
+        Destroy = true;
     }
 }
