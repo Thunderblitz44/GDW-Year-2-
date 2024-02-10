@@ -12,7 +12,7 @@ public class GolemKnight : Enemy
     float attackCooldownTimer;
     bool attack;
     [SerializeField] GameObject HeadTarget;
-    private NavMeshAgent GolemKnightAgent;
+   
     private float xSpeed;
     private float ySpeed;
     private float zSpeed;
@@ -20,7 +20,7 @@ public class GolemKnight : Enemy
     private void Start()
     {
         
-        GolemKnightAgent = GetComponent<NavMeshAgent>();
+       
     }
 
     protected override void Update()
@@ -39,7 +39,7 @@ public class GolemKnight : Enemy
         }
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(GolemKnightAgent.velocity.normalized);
+        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
 
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
@@ -76,8 +76,10 @@ public class GolemKnight : Enemy
     {
         agent.enabled = false;
         HeadTarget.SetActive(false);
-        target = LevelManager.PlayerTransform;
+       // target = LevelManager.PlayerTransform;
     }
+    
+    
     void Attack()
     {
         animator.SetTrigger("Attack");
