@@ -11,7 +11,7 @@ public class Player : DamageableEntity
     // INPUT
     internal ActionMap actions;
 
-    [SerializeField] internal CinemachineFreeLook freeLookCam;
+    [SerializeField] protected CinemachineFreeLook freeLookCam;
    
 
     internal override void Awake()
@@ -33,7 +33,7 @@ public class Player : DamageableEntity
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        hp.SetHealth(PlayerPrefs.GetFloat(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.maxHealth));
+        hp.SetHealth(PlayerPrefs.GetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.MaxHealth));
     }
 
     private void Start()
@@ -53,6 +53,8 @@ public class Player : DamageableEntity
         actions.General.Pause.performed += ctx =>
         {
             PausePlayer();
+            MovementScript.Rb.velocity = Vector3.zero;
+
             actions.Menus.Enable();
             pauseScript.Pause();
         };
@@ -69,7 +71,7 @@ public class Player : DamageableEntity
         };
         actions.General.harmSelfTest.performed += ctx =>
         {
-            ApplyDamage(10f, DamageTypes.physical);
+            ApplyDamage(10);
         };
         // ^ TEMPORARY ^ //
 

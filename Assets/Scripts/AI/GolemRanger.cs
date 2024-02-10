@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,10 +18,11 @@ public class GolemRanger : Enemy
         base.Awake();
 
         projectile.owner = this;
+        projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
             MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
-            mb.Projectile = projectile;
+            mb.Initialize(projectile);
             pooledProjectiles.Add(mb.gameObject);
         }
 
@@ -66,9 +66,19 @@ public class GolemRanger : Enemy
 
     void Attack()
     {
-        Vector3 force = (shootOrigin.position - LevelManager.PlayerTransform.position).normalized * projectile.speed;
+        Vector3 force = (LevelManager.PlayerTransform.position - shootOrigin.position).normalized * projectile.speed;
         StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
         
         animator.SetTrigger("Attack");
     }
+
+    /*internal override void OnHealthZeroed()
+    {
+        foreach (var projectile in pooledProjectiles)
+        {
+            projectile.GetComponent<MagicBullet>().Projectile.OwnerDestroyed();
+        }
+
+        base.OnHealthZeroed();
+    }*/
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
@@ -14,19 +13,20 @@ public class LevelManager : MonoBehaviour
     public static bool isGamePaused = false;
     public static bool isPlayerDead = false;
 
-
     public NavMeshSurface NavMesh { get; private set; }
     [SerializeField] List<EncounterVolume> encounterVolumes;
     [SerializeField] List<Checkpoint> checkpoints = new();
     [SerializeField] List<GameObject> enemies;
     [SerializeField] GameObject boss;
-    readonly List<DamageableEntity> spawnedEnemies = new();
+    public static readonly List<DamageableEntity> spawnedEnemies = new();
 
+    public GameObject Boss { get { return boss; } }
+    public List<GameObject> LevelEnemyList { get { return enemies; } }
     public Transform WorldCanvas { get; private set; }
     public Transform Canvas { get; private set; }
 
     public Checkpoint CurrentCheckpoint { get; private set; }
-    EncounterVolume currentEncounter;
+    public EncounterVolume CurrentEncounter { get; private set; }
     Transitioner transitioner;
 
     private void Awake()
@@ -68,42 +68,12 @@ public class LevelManager : MonoBehaviour
         LoadProgress();
     }
 
-    public void StartEncounter(Bounds volumeBounds, int id)
+    public void SetEncounter(int id)
     {
-        currentEncounter = encounterVolumes[id];
-        if (id == encounterVolumes.Count - 1) boss.GetComponent<IBossCommands>().Introduce();
-        else StartCoroutine(EncounterRoutine(volumeBounds));
+        CurrentEncounter = encounterVolumes[id];
     }
 
-    IEnumerator EncounterRoutine(Bounds volumeBounds)
-    {
-        // start
-        for (int i = 0; i < 5; i++)
-        {
-            // pick random spot in the volume
-            Vector3 spawnPoint = GetRandomEnemySpawnPoint(volumeBounds);
-            Vector3 playerPos = Vector3.right * PlayerTransform.position.x + Vector3.forward * PlayerTransform.position.z + Vector3.up * spawnPoint.y;
-            Quaternion spawnRotation = PlayerTransform ? Quaternion.LookRotation(spawnPoint - playerPos, Vector3.up) : Quaternion.identity;
-            spawnedEnemies.Add(Instantiate(enemies[0], spawnPoint, spawnRotation).GetComponent<DamageableEntity>());
-
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        // encounter loop
-        while (spawnedEnemies.Count > 0)
-        {
-            for(int i = 0;i < spawnedEnemies.Count;i++) 
-            {
-                if (spawnedEnemies[i] == null) spawnedEnemies.RemoveAt(i);
-            }
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        // end
-        currentEncounter.EndEncounter();
-    }
-
-    Vector3 GetRandomEnemySpawnPoint(Bounds volumeBounds)
+    public static Vector3 GetRandomEnemySpawnPoint(Bounds volumeBounds)
     {
         int itterations = 0;
         Start:
@@ -115,11 +85,13 @@ public class LevelManager : MonoBehaviour
 
             foreach (var enemy in spawnedEnemies)
             {
-                if (Vector3.Distance(enemy.transform.position, hit.point) < 2) goto Start;
+                if (!enemy) continue;
+                if (Vector3.Distance(enemy.transform.position, hit.point) < 2) goto next;
             }
 
             return hit.point + Vector3.up;
         }
+        next:
         if (++itterations < 20) goto Start;
         else
         {
@@ -147,8 +119,8 @@ public class LevelManager : MonoBehaviour
     {
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_LEVEL, Id);
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, CurrentCheckpoint.Id);
-        PlayerPrefs.SetFloat(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().health);
-        if (currentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, currentEncounter.Id);
+        PlayerPrefs.SetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().Health);
+        if (CurrentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, CurrentEncounter.Id);
     }
 
     void LoadProgress()
@@ -161,7 +133,7 @@ public class LevelManager : MonoBehaviour
         if (Id == cl)
         {
             CurrentCheckpoint = checkpoints[cc];
-            if (le >= 0) currentEncounter = encounterVolumes[le];
+            if (le >= 0) CurrentEncounter = encounterVolumes[le];
 
             // disable old encounters
             foreach (var volume in encounterVolumes)
@@ -181,7 +153,7 @@ public class LevelManager : MonoBehaviour
         else if (Id < cl)
         {
             CurrentCheckpoint = checkpoints.Last();
-            currentEncounter = encounterVolumes.Last();
+            CurrentEncounter = encounterVolumes.Last();
 
             // disble all encounters
             foreach (var volume in encounterVolumes)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +7,7 @@ public class Elana : Player
 {
     [Space(10), Header("ABILITIES"), Space(10)]
     [Header("Primary Attack")]
-    [SerializeField] float meleeDamage = 1f;
+    [SerializeField] int meleeDamage = 1;
     [SerializeField] Vector2 knockback;
     //[SerializeField] float cooldown = 1f;
     [SerializeField] MeleeHitBox mhb;
@@ -38,12 +37,12 @@ public class Elana : Player
    
     [Header("Fire Tornado")]
     [SerializeField] float maxRange = 15f;
-    [SerializeField] float burnDamage = 1f;
+    [SerializeField] int tornadoDamage = 1;
     [SerializeField] float burnTime = 3f;
-    [SerializeField] float rainTime = 5f;
+    //[SerializeField] float rainTime = 5f;
     [SerializeField] float tornadoTime = 5f;
-    [SerializeField] float tornadoDamageMultiplier = 2f;
-    [SerializeField] float tornadoForce = 2f;
+    //[SerializeField] float tornadoDamageMultiplier = 2f;
+    //[SerializeField] float tornadoForce = 2f;
     [SerializeField] float tornadoCooldown = 2f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
@@ -102,15 +101,16 @@ public class Elana : Player
         };
 
         projectile.owner = this;
+        projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
             MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
-            mb.Projectile = projectile;
+            mb.Initialize(projectile);
             pooledProjectiles.Add(mb.gameObject);
         }
 
-        mhb.damage = meleeDamage;
-        mhb.knockback = knockback;
+        mhb.Damage = meleeDamage;
+        mhb.Knockback = knockback;
     }
 
     void Update()
@@ -140,7 +140,7 @@ public class Elana : Player
         if (aimingFireTornado)
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, StaticUtilities.GetCameraLook(), out hit))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen), out hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
             {
                 if (Vector3.Angle(Vector3.up, hit.normal) < 45)
                 {
@@ -228,12 +228,12 @@ public class Elana : Player
             // raycast - make sure there are no obstacles in the way
             float newDist = dodgeDistance;
 
-            Transform body = MovementScript.GetBody();
+            Transform body = MovementScript.Body;
             Transform cam = Camera.main.transform;
             Vector3 end;
 
             // calculate end for the raycast
-            if (MovementScript.IsMoving()) end = body.position + MovementScript.GetMoveDirection() * newDist;
+            if (MovementScript.IsMoving) end = body.position + MovementScript.MoveDirection * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
 
             RaycastHit hit;
@@ -244,7 +244,7 @@ public class Elana : Player
             }
 
             // re-calculate end in case newDist changed
-            if (MovementScript.IsMoving()) end = body.position + MovementScript.GetMoveDirection() * newDist;
+            if (MovementScript.IsMoving) end = body.position + MovementScript.MoveDirection * newDist;
             else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
           
                 TrailScript.isTrailActive = true;
@@ -274,6 +274,8 @@ public class Elana : Player
             canUseFireTornado = false;
             abilityHud.SpendPoint(fireTornadoId, tornadoTime + tornadoCooldown);
             fireTornado = Instantiate(abilityPrefab, aoeIndicator.position, Quaternion.identity);
+            fireTornado.GetComponent<FireTornado>().BurnTime = burnTime;
+            fireTornado.GetComponent<FireTornado>().Damage = tornadoDamage;
             Invoke(nameof(EndTornado), tornadoTime);
         };
 
@@ -366,7 +368,17 @@ public class Elana : Player
     {
         shootingCooldownTimer = 0f;
         // start shooting
-        Vector3 force = StaticUtilities.GetCameraLook() * projectile.speed + Camera.main.transform.right / 2;
+        Vector3 force;
+        RaycastHit hit;
+        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen);
+        if (Physics.Raycast(camLook, out hit, 100f, whatIsDodgeObstacle, QueryTriggerInteraction.Ignore))
+        {
+            force = (hit.point - shootOrigin.position).normalized * projectile.speed;
+        }
+        else
+        {
+            force = camLook.direction * projectile.speed;
+        }
         StaticUtilities.ShootProjectile(pooledProjectiles,shootOrigin.position, force);
     }
 
