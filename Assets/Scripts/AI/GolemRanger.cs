@@ -13,7 +13,6 @@ public class GolemRanger : Enemy
     float shootStartTimer;
     float shootCooldownTimer;
     bool attack;
-    private NavMeshAgent GolemRangerAgent;
     private float xSpeed;
     private float ySpeed;
     private float zSpeed;
@@ -21,6 +20,8 @@ public class GolemRanger : Enemy
     protected override void Awake()
     {
         base.Awake();
+
+
 
         projectile.owner = this;
         projectile.CheckPrefab();
@@ -53,7 +54,7 @@ public class GolemRanger : Enemy
         
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(GolemRangerAgent.velocity.normalized);
+        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
 
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
@@ -91,7 +92,7 @@ public class GolemRanger : Enemy
         animator.SetTrigger("Attack");
     }
 
-    /*protected override void OnHealthZeroed()
+    protected override void OnHealthZeroed()
     {
         foreach (var projectile in pooledProjectiles)
         {
@@ -99,5 +100,5 @@ public class GolemRanger : Enemy
         }
 
         base.OnHealthZeroed();
-    }*/
+    }
 }
