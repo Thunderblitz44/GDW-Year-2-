@@ -6,7 +6,7 @@ using UnityEngine;
 public class MeleeHitBox : MonoBehaviour
 {
     SphereCollider sc;
-     public float damage;
+    public int damage;
     [HideInInspector] public Vector2 knockback;
 
     private void Awake()

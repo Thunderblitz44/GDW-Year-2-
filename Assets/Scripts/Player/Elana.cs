@@ -109,8 +109,8 @@ public class Elana : Player
             pooledProjectiles.Add(mb.gameObject);
         }
 
-        mhb.Damage = meleeDamage;
-        mhb.Knockback = knockback;
+        mhb.damage = meleeDamage;
+        mhb.knockback = knockback;
     }
 
     void Update()
