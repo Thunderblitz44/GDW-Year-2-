@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GolemKnight : Enemy
 {
@@ -9,9 +11,17 @@ public class GolemKnight : Enemy
     float attackTimer;
     float attackCooldownTimer;
     bool attack;
-
     [SerializeField] GameObject HeadTarget;
+    private NavMeshAgent GolemKnightAgent;
+    private float xSpeed;
+    private float ySpeed;
+    private float zSpeed;
 
+    private void Start()
+    {
+        
+        GolemKnightAgent = GetComponent<NavMeshAgent>();
+    }
 
     protected override void Update()
     {
@@ -27,6 +37,19 @@ public class GolemKnight : Enemy
             attackCooldownTimer = 0f;
             Attack();
         }
+        float smoothingFactor = 0.1f;
+
+        Vector3 localVelocity = transform.InverseTransformDirection(GolemKnightAgent.velocity.normalized);
+
+        // Smooth the velocity components (remove the float keyword)
+        xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
+        zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
+        ySpeed = Mathf.Lerp(ySpeed, localVelocity.y, smoothingFactor);
+        // Set the velocity values in the animator
+        animator.SetFloat("XSpeed", xSpeed);
+        animator.SetFloat("ZSpeed", zSpeed);
+        animator.SetFloat("YSpeed", ySpeed);
+
     }
 
     protected override void OnAttackTriggerEnter(Collider other)
@@ -49,6 +72,12 @@ public class GolemKnight : Enemy
         HeadTarget.SetActive(true);
     }
 
+    public void DisableAI()
+    {
+        agent.enabled = false;
+        HeadTarget.SetActive(false);
+        target = LevelManager.PlayerTransform;
+    }
     void Attack()
     {
         animator.SetTrigger("Attack");

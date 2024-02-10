@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GolemRanger : Enemy
 {
@@ -12,8 +13,12 @@ public class GolemRanger : Enemy
     float shootStartTimer;
     float shootCooldownTimer;
     bool attack;
-
-    protected override void Awake()
+    private NavMeshAgent GolemRangerAgent;
+    private float xSpeed;
+    private float ySpeed;
+    private float zSpeed;
+    public float shootForce = 5;
+    internal override void Awake()
     {
         base.Awake();
 
@@ -33,7 +38,7 @@ public class GolemRanger : Enemy
         }
     }
 
-    protected override void Update()
+    internal override void Update()
     {
         base.Update();
 
@@ -45,14 +50,28 @@ public class GolemRanger : Enemy
             shootCooldownTimer = 0f;
             Attack();
         }
+        
+        float smoothingFactor = 0.1f;
+
+        Vector3 localVelocity = transform.InverseTransformDirection(GolemRangerAgent.velocity.normalized);
+
+        // Smooth the velocity components (remove the float keyword)
+        xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
+        zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
+        ySpeed = Mathf.Lerp(ySpeed, localVelocity.y, smoothingFactor);
+        // Set the velocity values in the animator
+        animator.SetFloat("XSpeed", xSpeed);
+        animator.SetFloat("ZSpeed", zSpeed);
+        animator.SetFloat("YSpeed", ySpeed);
+
     }
 
-    protected override void OnAttackTriggerEnter(Collider other)
+    internal override void OnAttackTriggerEnter(Collider other)
     {
         attack = true;
     }
 
-    protected override void OnAttackTriggerExit(Collider other)
+    internal override void OnAttackTriggerExit(Collider other)
     {
         attack = false;
         shootStartTimer = 0f;
@@ -64,11 +83,21 @@ public class GolemRanger : Enemy
         target = LevelManager.PlayerTransform;
     }
 
-    void Attack()
+    public void Attack()
     {
-        Vector3 force = (LevelManager.PlayerTransform.position - shootOrigin.position).normalized * projectile.speed;
+        Vector3 force = new Vector3(0f, shootForce, 0f);
         StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
         
         animator.SetTrigger("Attack");
     }
+
+    /*internal override void OnHealthZeroed()
+    {
+        foreach (var projectile in pooledProjectiles)
+        {
+            projectile.GetComponent<MagicBullet>().Projectile.OwnerDestroyed();
+        }
+
+        base.OnHealthZeroed();
+    }*/
 }
