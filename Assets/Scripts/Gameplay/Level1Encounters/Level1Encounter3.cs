@@ -6,9 +6,13 @@ public class Level1Encounter3 : EncounterVolume
 {
     [Header("Spirit")]
     [SerializeField] Transform spirit;
-    [SerializeField] float startScale = 0.25f;
+    [SerializeField] Vector3 startScale = Vector3.one * 0.25f;
+    [SerializeField] Vector3 endScale = Vector3.one * 0.25f;
     [SerializeField] Transform gotoTransform;
-    float endScale;
+
+    [Header("Challenge")]
+    [SerializeField] float surviveTime = 30f;
+    [SerializeField] GameObject[] torchLights;
 
     [Header("Pillar")]
     [SerializeField] Transform pillar;
@@ -25,8 +29,7 @@ public class Level1Encounter3 : EncounterVolume
             pillar.rotation = pillarPoses[0].rotation;
         }
 
-        endScale = spirit.localScale.x;
-        spirit.localScale = Vector3.one * startScale;
+        spirit.localScale = startScale;
     }
 
     protected override void Update()
@@ -40,7 +43,15 @@ public class Level1Encounter3 : EncounterVolume
     {
         yield return new WaitForSeconds(1f);
 
+        // make the spirit grow
+        for (float i = 0; i <= surviveTime; i+=Time.deltaTime)
+        {
+            spirit.localScale = Vector3.Lerp(startScale, endScale, i / surviveTime);
 
+            // spawn enemies
+
+            yield return null;
+        }
 
         // Make the pillar fall over
         for (float i = 0; i <= 1; i += Time.deltaTime * fallSpeed)

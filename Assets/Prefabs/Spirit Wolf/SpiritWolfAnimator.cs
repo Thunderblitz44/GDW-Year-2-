@@ -29,7 +29,7 @@ public class SpiritWolfAnimator : MonoBehaviour
         animator.SetTrigger("PrimaryAttack");
  
         // Debug.Log(attackCounter);
-        Debug.Log(isAttacking);
+        //Debug.Log(isAttacking);
     }
 
     public void AttackCounter()
