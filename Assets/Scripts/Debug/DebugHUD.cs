@@ -7,7 +7,6 @@ public class DebugHUD : MonoBehaviour
     public static DebugHUD instance;
 
     [SerializeField] TextMeshProUGUI speedTxt;
-    [SerializeField] TextMeshProUGUI airtimeTxt;
     [SerializeField] TextMeshProUGUI timerTxt;
     [SerializeField] Transform controlsPanel;
     [SerializeField] GameObject controlTxtPrefab;
@@ -43,20 +42,6 @@ public class DebugHUD : MonoBehaviour
     {
         if (!speedTxt) return;
         speedTxt.text = $"Speed : {value.ToString("0.00")}u/s";
-    }
-
-    public void SetAirTime(float value)
-    {
-        if (!airtimeTxt) return;
-        airtimeTxt.text = $"Air time : {value.ToString("0.000")}s";
-        CancelInvoke(nameof(ResetAirtime));
-        Invoke(nameof(ResetAirtime), 2f);
-    }
-
-    void ResetAirtime()
-    {
-        if (!airtimeTxt) return;
-        airtimeTxt.text = $"Air time : 0.000s";
     }
 
     public void SetDebugText(string value)

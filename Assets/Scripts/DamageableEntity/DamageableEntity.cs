@@ -60,6 +60,12 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         }
     }
 
+    private void OnParticleCollision(GameObject other)
+    {
+        Debug.Log(other);
+        ApplyDamage(1);
+    }
+
     /*void LoadFloatingTextPrefab()
     {
 #if UNITY_EDITOR
