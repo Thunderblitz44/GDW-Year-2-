@@ -113,10 +113,9 @@ public class GolemRanger : Enemy
         HeadTarget.SetActive(false);
         //target = LevelManager.PlayerTransform;
     }
+
     private void OnParticleCollision(GameObject other)
     {
-        Debug.Log("Colliding");
-       
-
+        StaticUtilities.TryToDamage(other, projectile.damage);
     }
 }
