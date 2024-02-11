@@ -95,5 +95,22 @@ public class GolemKnight : Enemy
         //Debug.Log("dddddddddd");
     }
 
- 
+    public void ReadyAttackR()
+    {
+        
+    }
+
+    public void DisableAttackR()
+    {
+        
+    }
+    public void ReadyAttackL()
+    {
+        
+    }
+
+    public void DisableAttackL()
+    {
+        
+    }
 }
