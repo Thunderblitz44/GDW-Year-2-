@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -27,10 +28,11 @@ public class Enemy : DamageableEntity
         if (animator) animator.SetFloat("ZSpeed", agent.velocity.magnitude);
 
         // timer to recalculate navmesh agent
-        updateTimer += Time.deltaTime;
+       updateTimer += Time.deltaTime;
         if (updateTimer >= slowUpdateInterval) SlowUpdate();
     }
 
+   
     protected virtual void OnAttackTriggerEnter(Collider other)
     {
     }
@@ -42,7 +44,7 @@ public class Enemy : DamageableEntity
     protected virtual void SlowUpdate()
     {
         updateTimer = 0;
-        if (!target || !agent || !agent.isActiveAndEnabled /*|| !LevelManager.Instance.NavMesh.isActiveAndEnabled*/) return;
+       if (!target || !agent || !agent.isActiveAndEnabled /*|| !LevelManager.Instance.NavMesh.isActiveAndEnabled*/) return;
         agent.SetDestination(target.position);
     }
 
@@ -51,8 +53,8 @@ public class Enemy : DamageableEntity
         this.target = target;
     }
 
-    public bool IsAnimationPlaying(int layer)
-    {
-        return animator.GetCurrentAnimatorStateInfo(layer).normalizedTime < 1;
-    }
+   // public bool IsAnimationPlaying(int layer)
+   // {
+       // return animator.GetCurrentAnimatorStateInfo(layer).normalizedTime < 1;
+  //  }
 }
