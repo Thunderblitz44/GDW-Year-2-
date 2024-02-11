@@ -108,6 +108,8 @@ public class Elana : Player
 
         mhb.damage = meleeDamage;
         mhb.knockback = knockback;
+
+        LevelManager.Instance.onEncounterStart += CancelRecallAbility;
     }
 
     void Update()
@@ -137,7 +139,7 @@ public class Elana : Player
         if (aimingFireTornado)
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen), out hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen()), out hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
             {
                 if (Vector3.Angle(Vector3.up, hit.normal) < 45)
                 {
@@ -367,7 +369,7 @@ public class Elana : Player
         // start shooting
         Vector3 force;
         RaycastHit hit;
-        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen);
+        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen());
         if (Physics.Raycast(camLook, out hit, 100f, whatIsDodgeObstacle, QueryTriggerInteraction.Ignore))
         {
             force = (hit.point - shootOrigin.position).normalized * projectile.speed;
@@ -389,5 +391,14 @@ public class Elana : Player
     {
         Destroy(fireTornado);
         Destroy(aoeIndicator.gameObject);
+    }
+
+    void CancelRecallAbility()
+    {
+        if (!instantiatedPortal) return;
+
+        portalLink.enabled = false;
+        Destroy(instantiatedPortal);
+        abilityHud.SpendPoint(portalId, portalCoolown);
     }
 }

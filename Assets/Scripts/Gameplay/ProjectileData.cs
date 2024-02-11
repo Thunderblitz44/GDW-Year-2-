@@ -29,8 +29,12 @@ public struct ProjectileData
     public void CheckPrefab()
     {
         if (prefab) return;
+#if UNITY_EDITOR
         prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Magic Bullet/MagicBullet.prefab");
+        if (owner) Debug.LogWarningFormat("Make sure to assign projectile prefab for {0}", owner);
+        else Debug.LogWarningFormat("Make sure to assign projectile prefabs");
         if (!prefab) Debug.LogWarning("Can't find MagicBullet in Assets/Prefabs/Magic Bullet/");
+#endif
     }
 
     public void OwnerDestroyed()

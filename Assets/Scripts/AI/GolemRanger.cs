@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class GolemRanger : Enemy
 {
@@ -10,6 +9,8 @@ public class GolemRanger : Enemy
     [SerializeField] float shootStartDelay = 0.5f;
     [SerializeField] Transform shootOrigin;
     readonly List<GameObject> pooledProjectiles = new List<GameObject>(5);
+    [SerializeField] ParticleSystem particleSystem;
+    [SerializeField] GameObject HeadTarget;
     float shootStartTimer;
     float shootCooldownTimer;
     bool attack;
@@ -17,6 +18,7 @@ public class GolemRanger : Enemy
     private float ySpeed;
     private float zSpeed;
     public float shootForce = 5;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -42,6 +44,7 @@ public class GolemRanger : Enemy
     protected override void Update()
     {
         base.Update();
+        HeadTarget.transform.position = LevelManager.PlayerTransform.position;
 
         // attack cooldown + delay
         shootCooldownTimer += Time.deltaTime;
@@ -49,7 +52,7 @@ public class GolemRanger : Enemy
             (shootStartTimer += Time.deltaTime) >= shootStartDelay)
         {
             shootCooldownTimer = 0f;
-            Attack();
+            //Attack();
         }
         
         float smoothingFactor = 0.1f;
@@ -70,27 +73,30 @@ public class GolemRanger : Enemy
     protected override void OnAttackTriggerEnter(Collider other)
     {
         attack = true;
+        animator.SetBool("InAttackRange", true);
     }
 
     protected override void OnAttackTriggerExit(Collider other)
     {
         attack = false;
+        animator.SetBool("InAttackRange", false);
         shootStartTimer = 0f;
     }
 
     public void EnableAI()
     {
         agent.enabled = true;
+        HeadTarget.SetActive(true);
         target = LevelManager.PlayerTransform;
     }
 
-    public void Attack()
-    {
-        Vector3 force = new Vector3(0f, shootForce, 0f);
-        StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
+   // public void Attack()
+   // {
+       // Vector3 force = new Vector3(0f, shootForce, 0f);
+       // StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
         
-        animator.SetTrigger("Attack");
-    }
+      //  animator.SetTrigger("Attack");
+    //}
 
     protected override void OnHealthZeroed()
     {
@@ -100,5 +106,17 @@ public class GolemRanger : Enemy
         }
 
         base.OnHealthZeroed();
+    }
+    public void DisableAI()
+    {
+        agent.enabled = false;
+        HeadTarget.SetActive(false);
+        //target = LevelManager.PlayerTransform;
+    }
+    private void OnParticleCollision(GameObject other)
+    {
+        Debug.Log("Colliding");
+       
+
     }
 }

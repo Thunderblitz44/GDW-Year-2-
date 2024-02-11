@@ -69,7 +69,7 @@ Transform:
   - {fileID: 279364212812387710}
   - {fileID: 9154924592974689883}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 91.399, z: 0}
 --- !u!54 &1630653423908187042
 Rigidbody:
@@ -140,9 +140,11 @@ MonoBehaviour:
   animator: {fileID: 0}
   timeBetweenAttacks: 2
   attackPrepareTime: 2
+  maxAttackReps: 2
   laserDamage: 5
   halfDistance: 20
   sweepSpeed: 2.5
+  sweepSpeedIncrease: 0.5
   firstSweepDelay: 1
   laserCurve:
     serializedVersion: 2
@@ -181,7 +183,7 @@ MonoBehaviour:
     ignoreLayers:
       serializedVersion: 2
       m_Bits: 4609
-    owner: {fileID: 0}
+    owner: {fileID: 2715988729204705674}
   shots: 5
   shotDelay: 0.25
   shootingStartDelay: 0.5

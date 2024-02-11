@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class GolemKnight : Enemy
 {
@@ -12,15 +10,14 @@ public class GolemKnight : Enemy
     float attackCooldownTimer;
     bool attack;
     [SerializeField] GameObject HeadTarget;
-   
+  
     private float xSpeed;
     private float ySpeed;
     private float zSpeed;
 
     private void Start()
     {
-        
-       
+  
     }
 
     protected override void Update()
@@ -35,7 +32,7 @@ public class GolemKnight : Enemy
             (attackTimer += Time.deltaTime) >= attackDelay)
         {
             attackCooldownTimer = 0f;
-            Attack();
+           
         }
         float smoothingFactor = 0.1f;
 
@@ -68,20 +65,35 @@ public class GolemKnight : Enemy
     public void EnableAI()
     {
         agent.enabled = true;
-        target = LevelManager.PlayerTransform;
+        TargetPlayer();
         HeadTarget.SetActive(true);
+        //Debug.Log("Hi");
     }
 
     public void DisableAI()
     {
         agent.enabled = false;
         HeadTarget.SetActive(false);
-       // target = LevelManager.PlayerTransform;
+        //target = LevelManager.PlayerTransform;
     }
-    
-    
-    void Attack()
+
+    public void TargetPlayer()
     {
-        animator.SetTrigger("Attack");
+        target = LevelManager.PlayerTransform;
     }
+    public void DisableAILocomotion()
+    {
+        agent.speed = 0.05f;
+        agent.angularSpeed = 180;
+    }
+    public void EnableAILocomotion()
+    {
+      //  Debug.Log("Current agent speed: " + agent.speed); // Debugging line
+        agent.speed = 2;
+      //  Debug.Log("Agent speed set to 2"); // Debugging line
+        
+        //Debug.Log("dddddddddd");
+    }
+
+ 
 }

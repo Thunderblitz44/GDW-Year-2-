@@ -52,6 +52,13 @@ public class EncounterVolume : MonoBehaviour
         startEncounter = true;
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag != "Player") return;
+        startTimer = 0;
+        startEncounter = false;
+    }
+
     public void EndEncounter()
     {
         foreach (var barrier in barriers)

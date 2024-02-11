@@ -32,7 +32,7 @@ public class ShootingPortal : DamageableEntity
         this.shots = shots;
         this.shotCooldown = shotCooldown;
         this.startDelay = startDelay;
-        if (!projectile.prefab) projectile.prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Magic Bullet/MagicBullet.prefab");
+        //if (!projectile.prefab) projectile.prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Magic Bullet/MagicBullet.prefab");
 
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
