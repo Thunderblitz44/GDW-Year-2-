@@ -39,10 +39,7 @@ public class Elana : Player
     [SerializeField] float maxRange = 15f;
     [SerializeField] int tornadoDamage = 1;
     [SerializeField] float burnTime = 3f;
-    //[SerializeField] float rainTime = 5f;
     [SerializeField] float tornadoTime = 5f;
-    //[SerializeField] float tornadoDamageMultiplier = 2f;
-    //[SerializeField] float tornadoForce = 2f;
     [SerializeField] float tornadoCooldown = 2f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
@@ -72,10 +69,10 @@ public class Elana : Player
     [Header("Other")]
     [SerializeField] Animator specialAnimator;
     //animator to control portal and potentially other interactions between players/spirit
-   public float recallDelay = 2f;
+    public float recallDelay = 2f;
     //delay of recall
    
-   //for determining the difference between the portal and dodge as they both call the same method
+    //for determining the difference between the portal and dodge as they both call the same method
     protected override void Awake()
     {
         base.Awake();

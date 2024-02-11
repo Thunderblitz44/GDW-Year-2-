@@ -42,7 +42,7 @@ public class Enemy : DamageableEntity
     protected virtual void SlowUpdate()
     {
         updateTimer = 0;
-        if (!target || !agent || !agent.isActiveAndEnabled /*|| !LevelManager.Instance.NavMesh.isActiveAndEnabled*/) return;
+        if (!target || !agent || !agent.isActiveAndEnabled || !LevelManager.Instance.NavMesh || !LevelManager.Instance.NavMesh.isActiveAndEnabled) return;
         agent.SetDestination(target.position);
     }
 
