@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour, IInputExpander
@@ -78,6 +79,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
         // rotate body
         Body.rotation = Quaternion.LookRotation(StaticUtilities.GetCameraDir());
+
+        DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
     }
 
     private void FixedUpdate()
@@ -122,23 +125,23 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             // convert wasd to 3D direction
             Vector2 input = ctx.ReadValue<Vector2>();
             this.input = Vector3.right * input.x + Vector3.forward * input.y;
+
+            if (input.y < 0.5f && isRunning) isRunning = false;
         };
 
         actions.Locomotion.Move.canceled += ctx =>
         {
             input = Vector3.zero;
+            isRunning = false;
         };
 
         // Run
-        actions.Locomotion.Run.started += ctx =>
+        actions.Locomotion.Run.performed += ctx =>
         {
+            if (Mathf.Abs(input.x) == 1 || input.z < 0) return;
             isRunning = true;
         };
 
-        actions.Locomotion.Run.canceled += ctx =>
-        {
-            isRunning = false;
-        };
 
         // Jump
         actions.Locomotion.Jump.started += ctx =>
