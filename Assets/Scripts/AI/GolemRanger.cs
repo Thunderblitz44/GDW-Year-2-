@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.ParticleSystemJobs;
 public class GolemRanger : Enemy
 {
     // attack
@@ -10,7 +10,7 @@ public class GolemRanger : Enemy
     [SerializeField] float shootStartDelay = 0.5f;
     [SerializeField] Transform shootOrigin;
     readonly List<GameObject> pooledProjectiles = new List<GameObject>(5);
-    [SerializeField] ParticleSystem particleSystem;
+    [SerializeField]  ParticleSystem particleSystem;
     [SerializeField] GameObject HeadTarget;
     float shootStartTimer;
     float shootCooldownTimer;
@@ -19,13 +19,11 @@ public class GolemRanger : Enemy
     private float ySpeed;
     private float zSpeed;
     public float shootForce = 5;
-    
+
     protected override void Awake()
     {
         base.Awake();
-
-
-
+       
         projectile.owner = this;
         projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
@@ -98,7 +96,12 @@ public class GolemRanger : Enemy
         
       //  animator.SetTrigger("Attack");
     //}
-
+    private void InstantiateTest(ParticleSystem subEmitter)
+    {
+        // Create a new GameObject and attach the test script to it
+        GameObject go = new GameObject("TestObject");
+        go.AddComponent<test>();
+    }
     protected override void OnHealthZeroed()
     {
         foreach (var projectile in pooledProjectiles)
@@ -114,10 +117,7 @@ public class GolemRanger : Enemy
         HeadTarget.SetActive(false);
         //target = LevelManager.PlayerTransform;
     }
-    private void OnParticleCollision(GameObject other)
-    {
-        Debug.Log("Colliding");
-       
 
-    }
+
+    
 }
