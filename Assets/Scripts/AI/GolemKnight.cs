@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class GolemKnight : Enemy
 {
@@ -69,7 +67,7 @@ public class GolemKnight : Enemy
         agent.enabled = true;
         TargetPlayer();
         HeadTarget.SetActive(true);
-        Debug.Log("Hi");
+        //Debug.Log("Hi");
     }
 
     public void DisableAI()
@@ -94,7 +92,7 @@ public class GolemKnight : Enemy
         agent.speed = 2;
       //  Debug.Log("Agent speed set to 2"); // Debugging line
         
-        Debug.Log("dddddddddd");
+        //Debug.Log("dddddddddd");
     }
 
  

@@ -39,10 +39,7 @@ public class Elana : Player
     [SerializeField] float maxRange = 15f;
     [SerializeField] int tornadoDamage = 1;
     [SerializeField] float burnTime = 3f;
-    //[SerializeField] float rainTime = 5f;
     [SerializeField] float tornadoTime = 5f;
-    //[SerializeField] float tornadoDamageMultiplier = 2f;
-    //[SerializeField] float tornadoForce = 2f;
     [SerializeField] float tornadoCooldown = 2f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
@@ -72,10 +69,10 @@ public class Elana : Player
     [Header("Other")]
     [SerializeField] Animator specialAnimator;
     //animator to control portal and potentially other interactions between players/spirit
-   public float recallDelay = 2f;
+    public float recallDelay = 2f;
     //delay of recall
    
-   //for determining the difference between the portal and dodge as they both call the same method
+    //for determining the difference between the portal and dodge as they both call the same method
     protected override void Awake()
     {
         base.Awake();
@@ -111,6 +108,8 @@ public class Elana : Player
 
         mhb.damage = meleeDamage;
         mhb.knockback = knockback;
+
+        LevelManager.Instance.onEncounterStart += CancelRecallAbility;
     }
 
     void Update()
@@ -140,7 +139,7 @@ public class Elana : Player
         if (aimingFireTornado)
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen), out hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen()), out hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
             {
                 if (Vector3.Angle(Vector3.up, hit.normal) < 45)
                 {
@@ -370,7 +369,7 @@ public class Elana : Player
         // start shooting
         Vector3 force;
         RaycastHit hit;
-        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen);
+        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen());
         if (Physics.Raycast(camLook, out hit, 100f, whatIsDodgeObstacle, QueryTriggerInteraction.Ignore))
         {
             force = (hit.point - shootOrigin.position).normalized * projectile.speed;
@@ -392,5 +391,14 @@ public class Elana : Player
     {
         Destroy(fireTornado);
         Destroy(aoeIndicator.gameObject);
+    }
+
+    void CancelRecallAbility()
+    {
+        if (!instantiatedPortal) return;
+
+        portalLink.enabled = false;
+        Destroy(instantiatedPortal);
+        abilityHud.SpendPoint(portalId, portalCoolown);
     }
 }

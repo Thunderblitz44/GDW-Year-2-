@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpiritWolfAnimator : MonoBehaviour
@@ -52,7 +50,7 @@ public class SpiritWolfAnimator : MonoBehaviour
         isAttacking = false;
         animator.SetBool("isAttacking", isAttacking);
         animator.SetInteger("attackCounter", attackCounter);
-        Debug.Log(isAttacking);
+        //Debug.Log(isAttacking);
     }
 
     public void AttackEventLeft()

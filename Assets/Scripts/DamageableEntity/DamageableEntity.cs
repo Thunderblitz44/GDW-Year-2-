@@ -1,13 +1,12 @@
 using System.Collections;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 
 public class DamageableEntity : MonoBehaviour, IDamageable
 {
     public bool enableDamageNumbers = true;
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
-    GameObject floatingTextPrefab;
+    //GameObject floatingTextPrefab;
     public bool isInvincible;
     protected HealthComponent hp;
 
@@ -16,7 +15,11 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         hp = GetComponent<HealthComponent>();
         if (hp) hp.onHealthZeroed += OnHealthZeroed;
 
-        if (enableDamageNumbers) LoadFloatingTextPrefab();
+        /*if (enableDamageNumbers)
+        {
+            Debug.LogWarningFormat("Assign floating text prefab for {0}", name);
+            LoadFloatingTextPrefab();
+        }*/
     }
 
     protected virtual void OnHealthZeroed()
@@ -31,9 +34,9 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         hp.DeductHealth(damage);
 
         if (!enableDamageNumbers) return;
-        else if (!floatingTextPrefab) LoadFloatingTextPrefab();
+        //else if (!floatingTextPrefab) LoadFloatingTextPrefab();
 
-        Transform t = Instantiate(floatingTextPrefab).transform;
+        Transform t = Instantiate(LevelManager.Instance.floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
         t.GetComponent<TextMeshProUGUI>().text = damage.ToString();
         t.SetParent(LevelManager.Instance.WorldCanvas, true);
@@ -57,9 +60,11 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         }
     }
 
-    void LoadFloatingTextPrefab()
+    /*void LoadFloatingTextPrefab()
     {
+#if UNITY_EDITOR
         floatingTextPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/FloatingText.prefab");
         if (!floatingTextPrefab) Debug.LogWarning("Can't find FloatingTextPrefab in Assets/Prefabs/FloatingText.prefab");
-    }
+#endif
+    }*/
 }

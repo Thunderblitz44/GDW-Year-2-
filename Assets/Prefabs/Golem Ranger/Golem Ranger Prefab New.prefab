@@ -5698,7 +5698,7 @@ NavMeshAgent:
   m_Acceleration: 55
   avoidancePriority: 50
   m_AngularSpeed: 360
-  m_StoppingDistance: 1.74
+  m_StoppingDistance: 8
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
   m_AutoRepath: 1
@@ -5735,6 +5735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
+  floatingTextPrefab: {fileID: 144886900167941923, guid: 55652b8c6a95fec4c8cf0a4c1acb9422, type: 3}
   isInvincible: 0
   slowUpdateInterval: 0.2
   trigger: {fileID: 5802551568611516133}
@@ -5743,10 +5744,10 @@ MonoBehaviour:
     damage: 1
     lifeTime: 1
     speed: 60
-    prefab: {fileID: 0}
+    prefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
     ignoreLayers:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 4608
     owner: {fileID: 4217710049518990084}
   shootCooldown: 1.5
   shootStartDelay: 0.5
