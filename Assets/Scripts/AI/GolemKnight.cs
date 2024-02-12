@@ -1,23 +1,28 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GolemKnight : Enemy
 {
     // attack
-    [SerializeField] float attackDamage = 1f;
+    [SerializeField] int attackDamage = 1;
     [SerializeField] float attackCooldown = 1.5f;
     [SerializeField] float attackDelay = 0.5f;
     float attackTimer;
     float attackCooldownTimer;
     bool attack;
     [SerializeField] GameObject HeadTarget;
-  
+    MeleeHitBox sword;
+
     private float xSpeed;
     private float ySpeed;
     private float zSpeed;
 
-    private void Start()
+    protected override void Awake()
     {
-  
+        base.Awake();
+
+        sword = transform.GetComponentInChildren<MeleeHitBox>(true);
+        sword.damage = attackDamage;
     }
 
     protected override void Update()
@@ -95,5 +100,27 @@ public class GolemKnight : Enemy
         //Debug.Log("dddddddddd");
     }
 
- 
+    public void ReadyAttackR()
+    {
+        Debug.Log("1");
+        sword.gameObject.SetActive(true);
+    }
+
+    public void DisableAttackR()
+    {
+        sword.Hide();
+        Debug.Log("2");
+    }
+    public void ReadyAttackL()
+    {
+        Debug.Log("3");
+        sword.gameObject.SetActive(true);
+    }
+
+    public void DisableAttackL()
+    {
+        sword.Hide();
+        Debug.Log("4");
+        
+    }
 }
