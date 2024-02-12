@@ -5,29 +5,23 @@ using UnityEngine;
 
 public class MeleeHitBox : MonoBehaviour
 {
-    SphereCollider sc;
-    public int damage;
+    [HideInInspector] public int damage;
     [HideInInspector] public Vector2 knockback;
-
-    private void Awake()
-    {
-        sc = GetComponent<SphereCollider>();
-    }
-
    
-
     private void OnTriggerEnter(Collider other)
     {
-        StaticUtilities.TryToDamage(other.gameObject, damage);
-
         Rigidbody rb;
         if (other.gameObject.TryGetComponent(out rb))
         {
             rb.AddForce((transform.forward * knockback.x + Vector3.up * knockback.y) * rb.mass, ForceMode.Impulse);
         }
+        if (StaticUtilities.TryToDamage(other.gameObject, damage))
+        {
+            Hide();
+        }
 
-        CancelInvoke(nameof(Hide));
-        gameObject.SetActive(false);
+        //CancelInvoke(nameof(Hide));
+        //gameObject.SetActive(false);
     }
 
     public void Hide()
@@ -39,7 +33,4 @@ public class MeleeHitBox : MonoBehaviour
     {
         gameObject.SetActive(true);
     }
-
-   
- 
 }

@@ -39,22 +39,16 @@ public class golemIkScript : MonoBehaviour
 
     private void Update()
     {
-
-       
         HandleGolemMovement();
-       
     }
+
+
     private void HandleGolemMovement()
     {
-       
         transform.position = currentPosition;
-      
         transform.up = currentNormal;
 
-       
-        Ray ray = CreateFootRay();
-
-        if (Physics.Raycast(ray, out RaycastHit info, 10f, terrainLayer.value))
+        if (Physics.Raycast(body.position + (body.right * footSpacing), -transform.up, out RaycastHit info, 10f, terrainLayer.value))
         {
            
             HandleStep(info);
@@ -73,16 +67,8 @@ public class golemIkScript : MonoBehaviour
         }
     }
 
-    private Ray CreateFootRay()
-    {
-       
-        return new Ray(body.position + (body.right * footSpacing), Vector3.down);
-
-    }
-
     public void HandleStep(RaycastHit info)
     {
-       
         if (footDelay == true)
         {
             if (Vector3.Distance(newPosition, info.point) > stepDistance && lerp >= 1f)
@@ -95,17 +81,10 @@ public class golemIkScript : MonoBehaviour
             
             }
         }
-
-        else
-        {
-
-        }
     }
 
     private void InterpolateGolemPositionAndRotation()
     {
-    
-
         Vector3 tempPosition = Vector3.Lerp(oldPosition, newPosition, lerp);
         tempPosition.y += Mathf.Sin(lerp * Mathf.PI) * stepHeight;
 
@@ -115,7 +94,6 @@ public class golemIkScript : MonoBehaviour
 
        
         lerp += Time.deltaTime * speed;
-       
     }
   
     public void FinishStep()
@@ -143,7 +121,4 @@ public class golemIkScript : MonoBehaviour
     //    Gizmos.color = Color.red;
     //    Gizmos.DrawSphere(newPosition, 0.5f);
     // }
-
-
-
 }

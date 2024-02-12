@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -114,8 +115,8 @@ public class GolemRanger : Enemy
         //target = LevelManager.PlayerTransform;
     }
 
-    private void OnParticleCollision(GameObject other)
+    /*private void OnParticleCollision(GameObject other)
     {
         StaticUtilities.TryToDamage(other, projectile.damage);
-    }
+    }*/
 }

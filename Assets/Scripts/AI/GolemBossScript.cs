@@ -311,7 +311,7 @@ public class GolemBossScript : Enemy, IBossCommands
             case 1:
                 //Debug.Log("phase 1");
                 // phase 1
-                attackFuncs.Add(LasersRoutine);
+                //attackFuncs.Add(LasersRoutine);
                 break;
             case 2:
                 //Debug.Log("phase 2");
