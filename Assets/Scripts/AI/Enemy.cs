@@ -24,7 +24,7 @@ public class Enemy : DamageableEntity
 
     protected virtual void Update()
     {
-        if (animator) animator.SetFloat("ZSpeed", agent.velocity.magnitude);
+        //if (animator) animator.SetFloat("ZSpeed", agent.velocity.magnitude);
 
         // timer to recalculate navmesh agent
         updateTimer += Time.deltaTime;

@@ -6,17 +6,17 @@ public class GolemRanger : Enemy
 {
     // attack
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
-    [SerializeField] float shootCooldown = 1.5f;
-    [SerializeField] float shootStartDelay = 0.5f;
+    //[SerializeField] float shootCooldown = 1.5f;
+    //[SerializeField] float shootStartDelay = 0.5f;
     [SerializeField] Transform shootOrigin;
-    readonly List<GameObject> pooledProjectiles = new List<GameObject>(5);
-    [SerializeField] ParticleSystem particleSystem;
+    //readonly List<GameObject> pooledProjectiles = new List<GameObject>(5);
+    [SerializeField] new ParticleSystem particleSystem;
     [SerializeField] GameObject HeadTarget;
-    float shootStartTimer;
-    float shootCooldownTimer;
-    bool attack;
+    //float shootStartTimer;
+    //float shootCooldownTimer;
+    //bool attack;
     private float xSpeed;
-    private float ySpeed;
+    //private float ySpeed;
     private float zSpeed;
     public float shootForce = 5;
     
@@ -25,15 +25,14 @@ public class GolemRanger : Enemy
         base.Awake();
 
 
-
-        projectile.owner = this;
-        projectile.CheckPrefab();
+        particleSystem.GetComponent<MagicBullet>().Initialize(projectile, this);
+        /*projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
             MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
             mb.Initialize(projectile);
             pooledProjectiles.Add(mb.gameObject);
-        }
+        }*/
 
         if (!shootOrigin) 
         { 
@@ -48,13 +47,13 @@ public class GolemRanger : Enemy
         HeadTarget.transform.position = LevelManager.PlayerTransform.position;
 
         // attack cooldown + delay
-        shootCooldownTimer += Time.deltaTime;
+        /*shootCooldownTimer += Time.deltaTime;
         if (shootCooldownTimer >= shootCooldown && attack &&
             (shootStartTimer += Time.deltaTime) >= shootStartDelay)
         {
             shootCooldownTimer = 0f;
             //Attack();
-        }
+        }*/
         
         float smoothingFactor = 0.1f;
 
@@ -63,25 +62,25 @@ public class GolemRanger : Enemy
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
         zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
-        ySpeed = Mathf.Lerp(ySpeed, localVelocity.y, smoothingFactor);
+        //ySpeed = Mathf.Lerp(ySpeed, localVelocity.y, smoothingFactor);
         // Set the velocity values in the animator
         animator.SetFloat("XSpeed", xSpeed);
         animator.SetFloat("ZSpeed", zSpeed);
-        animator.SetFloat("YSpeed", ySpeed);
+        //animator.SetFloat("YSpeed", ySpeed);
 
     }
 
     protected override void OnAttackTriggerEnter(Collider other)
     {
-        attack = true;
+        //attack = true;
         animator.SetBool("InAttackRange", true);
     }
 
     protected override void OnAttackTriggerExit(Collider other)
     {
-        attack = false;
+        //attack = false;
         animator.SetBool("InAttackRange", false);
-        shootStartTimer = 0f;
+        //shootStartTimer = 0f;
     }
 
     public void EnableAI()
@@ -99,7 +98,7 @@ public class GolemRanger : Enemy
       //  animator.SetTrigger("Attack");
     //}
 
-    protected override void OnHealthZeroed()
+    /*protected override void OnHealthZeroed()
     {
         foreach (var projectile in pooledProjectiles)
         {
@@ -107,7 +106,8 @@ public class GolemRanger : Enemy
         }
 
         base.OnHealthZeroed();
-    }
+    }*/
+
     public void DisableAI()
     {
         agent.enabled = false;

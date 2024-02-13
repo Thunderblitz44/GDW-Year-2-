@@ -182,8 +182,19 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         collisions--;
     }
 
-    public void EnableLocomotion() => actions.Locomotion.Enable();
-    public void DisableLocomotion() => actions.Locomotion.Disable();
+    public void EnableLocomotion()
+    {
+        actions.Locomotion.Move.Enable();
+        actions.Locomotion.Jump.Enable();
+        actions.Locomotion.Dodge.Enable();
+    }
+
+    public void DisableLocomotion()
+    {
+        actions.Locomotion.Move.Disable();
+        actions.Locomotion.Jump.Disable();
+        actions.Locomotion.Dodge.Disable();
+    }
 }
 
     /*// MOVEMENT

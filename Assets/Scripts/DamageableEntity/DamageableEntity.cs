@@ -52,9 +52,4 @@ public class DamageableEntity : MonoBehaviour, IDamageable
             yield return null;
         }
     }
-
-    private void OnParticleCollision(GameObject other)
-    {
-        if (gameObject.layer != LayerMask.NameToLayer("Enemy")) ApplyDamage(1);
-    }
 }

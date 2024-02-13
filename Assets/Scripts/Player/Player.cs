@@ -83,7 +83,7 @@ public class Player : DamageableEntity
     {
         actions.General.Disable();
         actions.Abilities.Disable();
-        actions.Locomotion.Disable();
+        MovementScript.DisableLocomotion();
         freeLookCam.gameObject.SetActive(false);
     }
 
@@ -91,7 +91,7 @@ public class Player : DamageableEntity
     {
         actions.General.Enable();
         actions.Abilities.Enable();
-        actions.Locomotion.Enable();
+        MovementScript.EnableLocomotion();
         freeLookCam.gameObject.SetActive(true);
     }
 
