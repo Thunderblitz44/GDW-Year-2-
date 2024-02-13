@@ -1,54 +1,53 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamageableEntity : MonoBehaviour, IDamageable
 {
-    [SerializeField] GameObject floatingTextPrefab;
-    [SerializeField] bool enableDamageNumbers = true;
+    public bool enableDamageNumbers = true;
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
+    //GameObject floatingTextPrefab;
     public bool isInvincible;
-    internal HealthComponent hp;
+    protected HealthComponent hp;
 
-    internal virtual void Awake()
+    protected virtual void Awake()
     {
         hp = GetComponent<HealthComponent>();
         if (hp) hp.onHealthZeroed += OnHealthZeroed;
     }
 
-    internal virtual void OnHealthZeroed()
+    protected virtual void OnHealthZeroed()
     {
         Destroy(gameObject);
     }
 
-    public void ApplyDamage(float damage, DamageTypes type)
+    public virtual void ApplyDamage(int damage)
     {
-        if (!hp || isInvincible) return;
+        if (!hp) return;
+        if (isInvincible) damage = 0;
         hp.DeductHealth(damage);
 
         if (!enableDamageNumbers) return;
-        string msg = $"<color=#{(type == DamageTypes.physical ? StaticUtilities.physicalDamageColor.ToHexString() : StaticUtilities.magicDamageColor.ToHexString())}>{damage}</color>";
 
-        Transform t = Instantiate(floatingTextPrefab).transform;
+        Transform t = Instantiate(LevelManager.Instance.floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
-        t.GetComponent<TextMeshProUGUI>().text = msg;
+        t.GetComponent<TextMeshProUGUI>().text = damage.ToString();
         t.SetParent(LevelManager.Instance.WorldCanvas, true);
     }
 
-    public void ApplyDamageOverTime(float dps, DamageTypes type, float duration)
+    public virtual void ApplyDamageOverTime(int damage, float duration)
     {
-        StartCoroutine(DamageOverTimeRoutine(dps, type, duration));
+        StartCoroutine(DamageOverTimeRoutine(damage, duration));
     }
 
-    IEnumerator DamageOverTimeRoutine(float dps, DamageTypes type, float duration)
+    IEnumerator DamageOverTimeRoutine(int damage, float duration)
     {
         for (float i = 0, n = 0; i < duration; i += Time.deltaTime, n += Time.deltaTime)
         {
             if (n > StaticUtilities.damageOverTimeInterval)
             {
                 n = 0;
-                ApplyDamage(dps * StaticUtilities.damageOverTimeInterval, type);
+                ApplyDamage(damage);
             }
             yield return null;
         }

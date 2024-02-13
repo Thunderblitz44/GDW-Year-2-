@@ -1,36 +1,54 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FireTornado : MonoBehaviour
 {
-    List<Rigidbody> bodies = new();
-    [HideInInspector] public Vector2 force = Vector2.one * 10f;
+    public float BurnTime { private get;  set; } = 0;
+    public int Damage { private get; set;} = 0;
+
+    readonly List<GameObject> enemiesInTornado = new();
+    readonly List<float> damageTimers = new();
+
+    private void Awake()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot("event:/Fire Tornado Placeholder");
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        Rigidbody rb;
-        if (other.gameObject.TryGetComponent(out rb))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            bodies.Add(rb);
-            FMODUnity.RuntimeManager.PlayOneShot("event:/Fire Tornado Placeholder");
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        Rigidbody rb;
-        if (other.gameObject.TryGetComponent(out rb))
-        {
-            bodies.Remove(rb);
+            enemiesInTornado.Add(other.gameObject);
+            damageTimers.Add(0);
         }
     }
 
     private void Update()
     {
-        foreach (var body in bodies)
+        for (int i = 0; i < enemiesInTornado.Count; i++)
         {
-            body.AddForce((body.transform.position - transform.position).normalized * force.x + Vector3.up * force.y, ForceMode.Force);
-        }   
+            if (!enemiesInTornado[i])
+            {
+                damageTimers.RemoveAt(i);
+                enemiesInTornado.RemoveAt(i);
+                continue;
+            }
+
+            if ((damageTimers[i] += Time.deltaTime) < StaticUtilities.damageOverTimeInterval) continue;
+ 
+            damageTimers[i] = 0;
+            StaticUtilities.TryToDamage(enemiesInTornado[i], Damage);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            StaticUtilities.TryToDamageOverTime(other.gameObject, Damage, BurnTime);
+            damageTimers.RemoveAt(enemiesInTornado.IndexOf(other.gameObject));
+            enemiesInTornado.Remove(other.gameObject);
+        }
     }
 }

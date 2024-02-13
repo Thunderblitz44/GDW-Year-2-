@@ -338,7 +338,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4460463442345553458, guid: 8628dacd99a2aec4b8b3b8424f8657b2, type: 3}
+  - {fileID: 2100000, guid: 1998c288b0cd7614d91c60ce8ca7b5e0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -704,6 +704,7 @@ GameObject:
   - component: {fileID: 1868352536089818386}
   - component: {fileID: 5518432593760645779}
   - component: {fileID: 3344167923997644939}
+  - component: {fileID: 6636851960981735281}
   m_Layer: 0
   m_Name: Pheonix Prefab
   m_TagString: Untagged
@@ -727,7 +728,7 @@ Transform:
   - {fileID: 7722804673333516548}
   - {fileID: 5746398364408639841}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5518432593760645779
 Animator:
@@ -766,6 +767,18 @@ MonoBehaviour:
   - m_Rig: {fileID: 7452267239146546241}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &6636851960981735281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7551055892017045898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29825343549c1bd4f8f3dedefa78076e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7648755841356979828
 GameObject:
   m_ObjectHideFlags: 0
