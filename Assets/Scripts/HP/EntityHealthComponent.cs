@@ -23,6 +23,16 @@ public class EntityHealthComponent : HealthComponent
         entityHPBar.transform.position = transform.position + Vector3.up * height;
     }
 
+    private void OnDisable()
+    {
+        if (entityHPBar) entityHPBar.gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        if (entityHPBar) entityHPBar.gameObject.SetActive(true);
+    }
+
     public override void DeductHealth(int value)
     {
         health = Mathf.Clamp(health - value, 0, maxHealth);

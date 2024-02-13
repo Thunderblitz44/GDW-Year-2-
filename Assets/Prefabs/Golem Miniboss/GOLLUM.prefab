@@ -184,7 +184,6 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 4609
     owner: {fileID: 2715988729204705674}
-  shots: 5
   shotDelay: 0.25
   shootingStartDelay: 0.5
   projectilePrefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
@@ -192,6 +191,8 @@ MonoBehaviour:
   spawnBounds: {fileID: 8412768072518117357}
   minionCount: 10
   minionAttackCooldown: 5
+  gotoWallsBase: []
+  gotoWalls: []
 --- !u!114 &4300098194038806983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2861,9 +2862,9 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
-  m_Radius: 20
+  m_Radius: 10.48
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5717830644772578984
 GameObject:
