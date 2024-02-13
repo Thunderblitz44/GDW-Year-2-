@@ -5,7 +5,6 @@ public static class StaticUtilities
 {
     public static readonly float defaultFOV = 50f;
     public static readonly float damageOverTimeInterval = 0.5f;
-    public static readonly Vector2 centerOfScreen = new(Screen.width / 2, Screen.height / 2);
     public static readonly float encounterStartDelay = 1f;
     public static readonly int groundLayer = 64;
     public static int visibleTargets;
@@ -52,6 +51,11 @@ public static class StaticUtilities
         return velocityXZ + velocityY;
     }
     */
+
+    public static Vector2 GetCenterOfScreen()
+    {
+        return Vector2.right * Screen.width / 2 + Vector2.up * Screen.height / 2;
+    }
 
     public static Vector3 GetCameraDir()
     {

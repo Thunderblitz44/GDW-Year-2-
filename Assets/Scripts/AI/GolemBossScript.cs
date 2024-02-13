@@ -18,6 +18,13 @@ public class GolemBossScript : Enemy, IBossCommands
     readonly List<Func<IEnumerator>> attackFuncs = new();
     readonly List<DamageableEntity> crystals = new();
 
+    [Header("Stomp Attack")]
+    [SerializeField] float stompDamage = 10f;
+    [SerializeField] float stompCooldown = 5f;
+    AttackTrigger[] stompTriggers;
+    readonly float[] stompCooldowns = new float[4] { 0, 0, 0, 0 };
+    bool stomping;
+
     [Header("Lasers")]
     [SerializeField] int laserDamage;
     [SerializeField] float halfDistance = 10f;
@@ -32,7 +39,6 @@ public class GolemBossScript : Enemy, IBossCommands
 
     [Header("Portal Projectiles")]
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
-    [SerializeField] int shots = 5;
     [SerializeField] float shotDelay = 0.25f;
     [SerializeField] float shootingStartDelay = 1.5f;
     [SerializeField] GameObject projectilePrefab;
@@ -44,23 +50,34 @@ public class GolemBossScript : Enemy, IBossCommands
 
     [Header("Spawn Minions")]
     [SerializeField] int minionCount;
-    //[SerializeField] int maxSpawned;
     [SerializeField] float minionAttackCooldown = 10f;
     bool usingMinionAttack = false;
+
+    [Header("Walking on walls")]
+    [SerializeField] Transform[] gotoWallsBase;
+    [SerializeField] Transform[] gotoWalls;
+    bool goingUp;
+
 
     // battle info
     bool battleStarted = false;
     float tempSpeed;
 
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         (hp as BossHealthComponent).nextPhase += NextPhase;
         crystals.AddRange(GetComponentsInChildren<DamageableEntity>().ToList());
         crystals.RemoveAt(0);
+
+        stompTriggers = transform.GetComponentsInChildren<AttackTrigger>();
+        foreach (var trigger in stompTriggers)
+        {
+            trigger.onTriggerEnterNotify += StompAttack;
+        }
     }
 
-    internal override void Update()
+    protected override void Update()
     {
         if (!battleStarted) return;
         base.Update();
@@ -68,16 +85,15 @@ public class GolemBossScript : Enemy, IBossCommands
         // timers
         // attack checkers/counters
         // attacks
-        if (!isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
+        if (attackFuncs.Count > 0 && !isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
         {
-            //Debug.Log("new attack");
             isAttacking = true;
             atkTimer = 0;
             // pick an attack
             // start coroutine of attack
             newAtkInd:
             int attackIndex = UnityEngine.Random.Range(0, attackFuncs.Count);
-            if (attackFuncs.Count > 1 && attackIndex == lastAttackIndex && ++attackReps > maxAttackReps)
+            if (attackFuncs.Count > 1 && attackIndex == lastAttackIndex && ++attackReps >= maxAttackReps)
             {
                 goto newAtkInd;
             }
@@ -95,6 +111,28 @@ public class GolemBossScript : Enemy, IBossCommands
             agent.speed = tempSpeed;
             tempSpeed = 0;
         }
+
+        for (int i = 0; i < stompCooldowns.Length; i++)
+        {
+            stompCooldowns[i] += Time.deltaTime;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        for (int i = 0; i < gotoWallsBase.Length; i++)
+        {
+            if (gotoWallsBase[i].gameObject.activeSelf)
+            {
+                if (goingUp) target = gotoWalls[i];
+                else
+                {
+                    target = LevelManager.PlayerTransform;
+                    agent.speed = 3.5f;
+                }
+                gotoWallsBase[i].gameObject.SetActive(false);
+            }
+        }
     }
 
     public void Introduce()
@@ -106,7 +144,7 @@ public class GolemBossScript : Enemy, IBossCommands
         for (int i = 0; i < portals; i++)
         {
             ShootingPortal portal = Instantiate(portalPrefab).GetComponent<ShootingPortal>();
-            portal.Setup(projectile, shots, shotDelay, shootingStartDelay);
+            portal.Setup(projectile, shotDelay, shootingStartDelay);
             pooledPortals.Add(portal);
             pooledPortals[i].gameObject.SetActive(false);
         }
@@ -120,7 +158,6 @@ public class GolemBossScript : Enemy, IBossCommands
     {
         battleStarted = true;
         target = LevelManager.PlayerTransform;
-        //target = GameObject.Find("gotoTest").transform;
     }
 
     IEnumerator LasersRoutine()
@@ -272,6 +309,15 @@ public class GolemBossScript : Enemy, IBossCommands
     {
         if (usingMinionAttack) goto end;
         usingMinionAttack = true;
+
+        // go up wall
+        agent.speed = 6;
+        int wall = UnityEngine.Random.Range(0, gotoWallsBase.Length);
+        target = gotoWallsBase[wall];
+        gotoWallsBase[wall].gameObject.SetActive(true);
+        goingUp = true;
+
+
         yield return new WaitForSeconds(attackPrepareTime);
         isAttacking = false;
         LevelManager lmInstance = LevelManager.Instance;
@@ -296,11 +342,17 @@ public class GolemBossScript : Enemy, IBossCommands
             }
             yield return new WaitForSeconds(0.1f);
         }
-        
+
+        // return from wall
+        target = gotoWallsBase[wall];
+        gotoWallsBase[wall].gameObject.SetActive(true);
+        goingUp = false;
         yield return new WaitForSeconds(minionAttackCooldown);
         usingMinionAttack = false;
 
-        end:
+    end:
+
+        isAttacking = false;
         yield return null;
     }
 
@@ -309,19 +361,13 @@ public class GolemBossScript : Enemy, IBossCommands
         switch (++phase)
         {
             case 1:
-                //Debug.Log("phase 1");
-                // phase 1
                 attackFuncs.Add(LasersRoutine);
                 break;
             case 2:
-                //Debug.Log("phase 2");
-                // phase 2
                 attackFuncs.Add(ProjectilesRoutine);
                 foreach (var crystal in crystals) crystal.isInvincible = true;
                 break;
             case 3:
-                //Debug.Log("phase 3");
-                // phase 3
                 attackFuncs.Add(MinionsRoutine);
                 sweeps++;
                 timeBetweenAttacks = 
@@ -329,13 +375,11 @@ public class GolemBossScript : Enemy, IBossCommands
                 shootingStartDelay = 1f;
                 break;
             case 4:
-                //Debug.Log("phase 4");
                 sweeps++;
                 portals+=2;
                 timeBetweenAttacks = 
                 attackPrepareTime =
                 shootingStartDelay = 0.5f;
-                // phase 4
                 break;
         }
     }
@@ -348,7 +392,19 @@ public class GolemBossScript : Enemy, IBossCommands
     {
     }
 
-    internal override void OnHealthZeroed()
+    void StompAttack(GameObject sender)
+    {
+        for (int i = 0; i < stompTriggers.Length; i++)
+        {
+            if (stompTriggers[i].gameObject == sender && stompCooldowns[i] > stompCooldown)
+            {
+                stompCooldowns[i] = 0;
+                animator.SetTrigger(sender.tag);
+            }
+        }
+    }
+
+    protected override void OnHealthZeroed()
     {
         StopAllCoroutines();
         

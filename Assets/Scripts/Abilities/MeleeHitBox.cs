@@ -1,37 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+
 
 public class MeleeHitBox : MonoBehaviour
 {
-    SphereCollider sc;
-    public int Damage { get; set; }
-    public Vector2 Knockback { get; set; }
-
-    private void Awake()
-    {
-        sc = GetComponent<SphereCollider>();
-    }
-
-    private void OnEnable()
-    {
-        Invoke(nameof(Hide), 0.1f);
-    }
-
+    [HideInInspector] public int damage;
+    [HideInInspector] public Vector2 knockback;
+   
     private void OnTriggerEnter(Collider other)
     {
-        StaticUtilities.TryToDamage(other.gameObject, Damage);
-
         Rigidbody rb;
         if (other.gameObject.TryGetComponent(out rb))
         {
-            rb.AddForce((transform.forward * Knockback.x + Vector3.up * Knockback.y) * rb.mass, ForceMode.Impulse);
+            rb.AddForce((transform.forward * knockback.x + Vector3.up * knockback.y) * rb.mass, ForceMode.Impulse);
+        }
+        if (StaticUtilities.TryToDamage(other.gameObject, damage))
+        {
+            Hide();
         }
 
-        CancelInvoke(nameof(Hide));
+        //CancelInvoke(nameof(Hide));
+        //gameObject.SetActive(false);
+    }
+
+    public void Hide()
+    {
         gameObject.SetActive(false);
     }
 
-    void Hide()
+    public void ReadyAttack()
     {
-        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 }

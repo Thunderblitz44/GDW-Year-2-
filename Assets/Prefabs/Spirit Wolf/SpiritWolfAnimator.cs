@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpiritWolfAnimator : MonoBehaviour
 {
     private int attackCounter;
     private bool isAttacking;
-    
+    [SerializeField] MeleeHitBox meleeHitBoxL;
+    [SerializeField] MeleeHitBox meleeHitBoxR;
     private Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -21,22 +20,57 @@ public class SpiritWolfAnimator : MonoBehaviour
 
     }
 
-   public void PrimaryAttack()
-   {
-       isAttacking = true;
-       attackCounter++;
-       animator.SetBool("isAttacking", isAttacking);
-       animator.SetTrigger("PrimaryAttack");
-       animator.SetInteger("attackCounter", attackCounter);
-      // Debug.Log(attackCounter);
-      //Debug.Log(isAttacking);
+    public void PrimaryAttack()
+    {
+        isAttacking = true;
+        animator.SetBool("isAttacking", isAttacking);
+        animator.SetTrigger("PrimaryAttack");
+ 
+        // Debug.Log(attackCounter);
+        //Debug.Log(isAttacking);
     }
 
+    public void AttackCounter()
+    {
+        attackCounter++;
+        if (attackCounter > 3)
+        {
+            attackCounter = 3;
+        }
+        animator.SetInteger("attackCounter", attackCounter);
+    }
 
-   public void EndAttack()
-   {
-       isAttacking = false;
-       animator.SetBool("isAttacking", isAttacking);
-       //Debug.Log(isAttacking);
-   }
+    public void SpecialReset()
+    {
+        attackCounter = 0;
+        animator.SetInteger("attackCounter", attackCounter);
+    }
+    public void EndAttack()
+    {
+        isAttacking = false;
+        animator.SetBool("isAttacking", isAttacking);
+        animator.SetInteger("attackCounter", attackCounter);
+        //Debug.Log(isAttacking);
+    }
+
+    public void AttackEventLeft()
+    {
+        meleeHitBoxL.ReadyAttack();
+        
+    }
+    public void AttackEventLeftHide()
+    {
+        meleeHitBoxL.Hide();
+        
+    }
+    public void AttackEventRight()
+    {
+        meleeHitBoxR.ReadyAttack();
+    }
+    
+    public void AttackEventRightHide()
+    {
+        meleeHitBoxR.Hide();
+        
+    }
 }

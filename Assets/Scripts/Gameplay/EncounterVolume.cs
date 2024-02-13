@@ -6,7 +6,7 @@ using UnityEngine;
 public class EncounterVolume : MonoBehaviour
 {
     [SerializeField] List<GameObject> barriers;
-    BoxCollider bc;
+    protected BoxCollider bc;
     bool startEncounter = false;
     float startTimer;
     Checkpoint cp;
@@ -16,14 +16,14 @@ public class EncounterVolume : MonoBehaviour
     public Bounds EncounterBounds { get; private set; }
     public int Id { get; set; }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         bc = GetComponent<BoxCollider>();
         cp = GetComponent<Checkpoint>();
         cp.SetOnTriggerEnter = false;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (startEncounter && (startTimer += Time.deltaTime) > StaticUtilities.encounterStartDelay)
         {
@@ -50,6 +50,13 @@ public class EncounterVolume : MonoBehaviour
     {
         if (other.tag != "Player") return;
         startEncounter = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag != "Player") return;
+        startTimer = 0;
+        startEncounter = false;
     }
 
     public void EndEncounter()

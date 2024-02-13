@@ -1,32 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class BossWeakSpot : DamageableEntity
 {
     float stunTime = 5;
-    bool wasInvincible = false;
 
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         hp = GetComponentInParent<BossHealthComponent>();
     }
 
-    public override void ApplyDamage(int damage)
+    public void Stun()
     {
-        base.ApplyDamage(damage);
-        if (wasInvincible && !isInvincible)
-        {
-            Invoke(nameof(BecomeInvincible), stunTime);
-        }
-        wasInvincible = isInvincible;
+        isInvincible = false;
+        ApplyDamage(10);
+        Invoke(nameof(BecomeInvincible), stunTime);
     }
 
     void BecomeInvincible()
     {
         isInvincible = true;
-        Debug.Log("unstun");
     }
-
 }

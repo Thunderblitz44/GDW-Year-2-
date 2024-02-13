@@ -1390,7 +1390,7 @@ Transform:
   - {fileID: 2120519766538766412}
   - {fileID: 4112281365524659511}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4910388760096430903
 MonoBehaviour:
@@ -1408,7 +1408,7 @@ MonoBehaviour:
   - {fileID: 4670379340086271234}
   - {fileID: 2732425775452197647}
   - {fileID: 7362042095431205559}
-  - {fileID: 747647910305478536}
+  - {fileID: 0}
   checkpoints:
   - {fileID: 8667521786545112925}
   - {fileID: 3259163362448362165}
@@ -1550,9 +1550,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7908363047408919702}
   - component: {fileID: 1359329131443139381}
-  - component: {fileID: 747647910305478536}
   - component: {fileID: 8188005840219180917}
   - component: {fileID: 6233813769434459878}
+  - component: {fileID: 2389081061710264335}
   m_Layer: 11
   m_Name: BossEncounter
   m_TagString: Encounter
@@ -1597,19 +1597,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &747647910305478536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8741951937277375333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c631d09e9e262b842b63f89333342157, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  barriers: []
 --- !u!33 &8188005840219180917
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1630,3 +1617,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacec52d1cea0764aae754f3a03b770f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2389081061710264335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8741951937277375333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af1e1e72a25f1904aa06f0e364c04f5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barriers: []

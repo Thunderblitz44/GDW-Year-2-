@@ -5,16 +5,16 @@ using UnityEngine.SceneManagement;
 public class Player : DamageableEntity
 {
     public PlayerMovement MovementScript { get; private set; }
-    [SerializeField] internal AbilityHUD abilityHud;
+    [SerializeField] protected AbilityHUD abilityHud;
     PlayerMenuController pauseScript;
 
     // INPUT
-    internal ActionMap actions;
+    protected ActionMap actions;
 
     [SerializeField] protected CinemachineFreeLook freeLookCam;
    
 
-    internal override void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
@@ -33,13 +33,13 @@ public class Player : DamageableEntity
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        hp.SetHealth(PlayerPrefs.GetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.MaxHealth));
     }
 
     private void Start()
     {
         DebugHUD.instance.DisplayControls(actions);
         LevelManager.Instance.CurrentCheckpoint.Teleport(transform);
+        hp.SetHealth(PlayerPrefs.GetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.MaxHealth));
     }
 
 
@@ -83,7 +83,7 @@ public class Player : DamageableEntity
     {
         actions.General.Disable();
         actions.Abilities.Disable();
-        actions.Locomotion.Disable();
+        MovementScript.DisableLocomotion();
         freeLookCam.gameObject.SetActive(false);
     }
 
@@ -91,11 +91,11 @@ public class Player : DamageableEntity
     {
         actions.General.Enable();
         actions.Abilities.Enable();
-        actions.Locomotion.Enable();
+        MovementScript.EnableLocomotion();
         freeLookCam.gameObject.SetActive(true);
     }
 
-    internal override void OnHealthZeroed()
+    protected override void OnHealthZeroed()
     {
         // player death.
         LevelManager.isPlayerDead = true;

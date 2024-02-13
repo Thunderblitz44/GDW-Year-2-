@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
@@ -19,6 +20,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] List<GameObject> enemies;
     [SerializeField] GameObject boss;
     public static readonly List<DamageableEntity> spawnedEnemies = new();
+    public Action onEncounterStart;
 
     public GameObject Boss { get { return boss; } }
     public List<GameObject> LevelEnemyList { get { return enemies; } }
@@ -28,6 +30,8 @@ public class LevelManager : MonoBehaviour
     public Checkpoint CurrentCheckpoint { get; private set; }
     public EncounterVolume CurrentEncounter { get; private set; }
     Transitioner transitioner;
+
+    public GameObject floatingTextPrefab;
 
     private void Awake()
     {
@@ -71,13 +75,14 @@ public class LevelManager : MonoBehaviour
     public void SetEncounter(int id)
     {
         CurrentEncounter = encounterVolumes[id];
+        onEncounterStart?.Invoke();
     }
 
     public static Vector3 GetRandomEnemySpawnPoint(Bounds volumeBounds)
     {
         int itterations = 0;
         Start:
-        Vector3 spawnPoint = Vector3.right * Random.Range(volumeBounds.min.x, volumeBounds.max.x) + Vector3.up * volumeBounds.max.y + Vector3.forward * Random.Range(volumeBounds.min.z, volumeBounds.max.z);
+        Vector3 spawnPoint = Vector3.right * UnityEngine.Random.Range(volumeBounds.min.x, volumeBounds.max.x) + Vector3.up * volumeBounds.max.y + Vector3.forward * UnityEngine.Random.Range(volumeBounds.min.z, volumeBounds.max.z);
         RaycastHit hit;
         if (Physics.Raycast(spawnPoint, Vector3.down, out hit, 100f, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
         {

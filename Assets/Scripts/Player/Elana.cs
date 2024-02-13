@@ -39,10 +39,7 @@ public class Elana : Player
     [SerializeField] float maxRange = 15f;
     [SerializeField] int tornadoDamage = 1;
     [SerializeField] float burnTime = 3f;
-    //[SerializeField] float rainTime = 5f;
     [SerializeField] float tornadoTime = 5f;
-    //[SerializeField] float tornadoDamageMultiplier = 2f;
-    //[SerializeField] float tornadoForce = 2f;
     [SerializeField] float tornadoCooldown = 2f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
@@ -52,7 +49,8 @@ public class Elana : Player
     bool canUseFireTornado = true;
     bool invalidPlacement = false;
     const int fireTornadoId = 1;
-
+    [SerializeField] private Pheonix pheonix;
+    
     [Header("Dodge")]
     [SerializeField] float dodgeDistance = 5f;
     [SerializeField] float dodgeSpeed = 10f;
@@ -71,12 +69,14 @@ public class Elana : Player
     
     [Header("Other")]
     [SerializeField] Animator specialAnimator;
+
+    [SerializeField] public Animator DragonflyAnimator;
     //animator to control portal and potentially other interactions between players/spirit
-   public float recallDelay = 2f;
+    public float recallDelay = 2f;
     //delay of recall
    
-   //for determining the difference between the portal and dodge as they both call the same method
-    internal override void Awake()
+    //for determining the difference between the portal and dodge as they both call the same method
+    protected override void Awake()
     {
         base.Awake();
 
@@ -100,17 +100,18 @@ public class Elana : Player
             }
         };
 
-        projectile.owner = this;
         projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
             MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
-            mb.Initialize(projectile);
+            mb.Initialize(projectile, this);
             pooledProjectiles.Add(mb.gameObject);
         }
 
-        mhb.Damage = meleeDamage;
-        mhb.Knockback = knockback;
+        mhb.damage = meleeDamage;
+        mhb.knockback = knockback;
+
+        LevelManager.Instance.onEncounterStart += CancelRecallAbility;
     }
 
     void Update()
@@ -140,7 +141,7 @@ public class Elana : Player
         if (aimingFireTornado)
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen), out hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen()), out hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
             {
                 if (Vector3.Angle(Vector3.up, hit.normal) < 45)
                 {
@@ -183,12 +184,13 @@ public class Elana : Player
         {
             shooting = true;
             // aim
-
+DragonflyAnimator.SetBool("IsShooting", true);
         };
         actions.Abilities.SecondaryAttack.canceled += ctx =>
         {
             shooting = false;
             shootStartTimer = 0;
+            DragonflyAnimator.SetBool("IsShooting", false);
         };
 
 
@@ -254,15 +256,19 @@ public class Elana : Player
 
         actions.Abilities.FireTornado.started += ctx =>
         {
+            
             if (!canUseFireTornado) return;
-
+            pheonix.CastAttack();
+           
             aimingFireTornado = true;
             aoeIndicator = Instantiate(aoeIndicatorPrefab).transform;
         };
         actions.Abilities.FireTornado.canceled += ctx =>
         {
+            pheonix.EndAttack();
             if (!canUseFireTornado) return;
-
+          
+           
             aimingFireTornado = false;
             if (invalidPlacement)
             {
@@ -277,6 +283,7 @@ public class Elana : Player
             fireTornado.GetComponent<FireTornado>().BurnTime = burnTime;
             fireTornado.GetComponent<FireTornado>().Damage = tornadoDamage;
             Invoke(nameof(EndTornado), tornadoTime);
+             
         };
 
         actions.Abilities.Enable();
@@ -370,7 +377,7 @@ public class Elana : Player
         // start shooting
         Vector3 force;
         RaycastHit hit;
-        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.centerOfScreen);
+        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen());
         if (Physics.Raycast(camLook, out hit, 100f, whatIsDodgeObstacle, QueryTriggerInteraction.Ignore))
         {
             force = (hit.point - shootOrigin.position).normalized * projectile.speed;
@@ -392,5 +399,14 @@ public class Elana : Player
     {
         Destroy(fireTornado);
         Destroy(aoeIndicator.gameObject);
+    }
+
+    void CancelRecallAbility()
+    {
+        if (!instantiatedPortal) return;
+
+        portalLink.enabled = false;
+        Destroy(instantiatedPortal);
+        abilityHud.SpendPoint(portalId, portalCoolown);
     }
 }
