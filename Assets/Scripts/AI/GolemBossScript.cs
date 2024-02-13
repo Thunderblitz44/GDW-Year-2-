@@ -19,10 +19,11 @@ public class GolemBossScript : Enemy, IBossCommands
     readonly List<DamageableEntity> crystals = new();
 
     [Header("Stomp Attack")]
-    [SerializeField] Collider FrontRight;
-    [SerializeField] Collider FrontLeft;
-    [SerializeField] Collider BackRight;
-    [SerializeField] Collider BackLeft;
+    [SerializeField] float stompDamage = 10f;
+    [SerializeField] float stompCooldown = 5f;
+    AttackTrigger[] stompTriggers;
+    readonly float[] stompCooldowns = new float[4] { 0, 0, 0, 0 };
+    bool stomping;
 
     [Header("Lasers")]
     [SerializeField] int laserDamage;
@@ -49,7 +50,6 @@ public class GolemBossScript : Enemy, IBossCommands
 
     [Header("Spawn Minions")]
     [SerializeField] int minionCount;
-    //[SerializeField] int maxSpawned;
     [SerializeField] float minionAttackCooldown = 10f;
     bool usingMinionAttack = false;
 
@@ -69,6 +69,12 @@ public class GolemBossScript : Enemy, IBossCommands
         (hp as BossHealthComponent).nextPhase += NextPhase;
         crystals.AddRange(GetComponentsInChildren<DamageableEntity>().ToList());
         crystals.RemoveAt(0);
+
+        stompTriggers = transform.GetComponentsInChildren<AttackTrigger>();
+        foreach (var trigger in stompTriggers)
+        {
+            trigger.onTriggerEnterNotify += StompAttack;
+        }
     }
 
     protected override void Update()
@@ -81,7 +87,6 @@ public class GolemBossScript : Enemy, IBossCommands
         // attacks
         if (attackFuncs.Count > 0 && !isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
         {
-            //Debug.Log("new attack");
             isAttacking = true;
             atkTimer = 0;
             // pick an attack
@@ -106,11 +111,11 @@ public class GolemBossScript : Enemy, IBossCommands
             agent.speed = tempSpeed;
             tempSpeed = 0;
         }
-    }
 
-    void Cooldowns()
-    {
-        // yes?
+        for (int i = 0; i < stompCooldowns.Length; i++)
+        {
+            stompCooldowns[i] += Time.deltaTime;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -356,19 +361,13 @@ public class GolemBossScript : Enemy, IBossCommands
         switch (++phase)
         {
             case 1:
-                //Debug.Log("phase 1");
-                // phase 1
                 attackFuncs.Add(LasersRoutine);
                 break;
             case 2:
-                //Debug.Log("phase 2");
-                // phase 2
                 attackFuncs.Add(ProjectilesRoutine);
                 foreach (var crystal in crystals) crystal.isInvincible = true;
                 break;
             case 3:
-                //Debug.Log("phase 3");
-                // phase 3
                 attackFuncs.Add(MinionsRoutine);
                 sweeps++;
                 timeBetweenAttacks = 
@@ -376,13 +375,11 @@ public class GolemBossScript : Enemy, IBossCommands
                 shootingStartDelay = 1f;
                 break;
             case 4:
-                //Debug.Log("phase 4");
                 sweeps++;
                 portals+=2;
                 timeBetweenAttacks = 
                 attackPrepareTime =
                 shootingStartDelay = 0.5f;
-                // phase 4
                 break;
         }
     }
@@ -393,6 +390,18 @@ public class GolemBossScript : Enemy, IBossCommands
 
     public override void ApplyDamageOverTime(int damage, float duration)
     {
+    }
+
+    void StompAttack(GameObject sender)
+    {
+        for (int i = 0; i < stompTriggers.Length; i++)
+        {
+            if (stompTriggers[i].gameObject == sender && stompCooldowns[i] > stompCooldown)
+            {
+                stompCooldowns[i] = 0;
+                animator.SetTrigger(sender.tag);
+            }
+        }
     }
 
     protected override void OnHealthZeroed()
