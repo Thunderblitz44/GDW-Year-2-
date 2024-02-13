@@ -121,16 +121,16 @@ public class GolemBossScript : Enemy, IBossCommands
     private void OnTriggerEnter(Collider other)
     {
         for (int i = 0; i < gotoWallsBase.Length; i++)
-        {
-            if (gotoWallsBase[i].gameObject.activeSelf)
-            {
-                if (goingUp) target = gotoWalls[i];
-                else
-                {
-                    target = LevelManager.PlayerTransform;
-                    agent.speed = 3.5f;
+       {
+          if (gotoWallsBase[i].gameObject.activeSelf)
+           {
+               if (goingUp) target = gotoWalls[i];
+               else
+              {
+                   target = LevelManager.PlayerTransform;
+                   agent.speed = 3.5f;
                 }
-                gotoWallsBase[i].gameObject.SetActive(false);
+               gotoWallsBase[i].gameObject.SetActive(false);
             }
         }
     }
