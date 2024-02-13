@@ -30,7 +30,7 @@ public class golemIkScript : MonoBehaviour
     private void InitializeGolem()
     {
       
-        //footSpacing = transform.localPosition.x;
+        footSpacing = transform.localPosition.x;
         currentPosition = newPosition = oldPosition = transform.position;
         currentNormal = newNormal = oldNormal = transform.up;
         lerp = 1f;
@@ -48,7 +48,7 @@ public class golemIkScript : MonoBehaviour
         transform.position = currentPosition;
         transform.up = currentNormal;
 
-        if (Physics.Raycast(body.position + (-body.right * footSpacing), -body.parent.up, out RaycastHit info, 30f, terrainLayer.value))
+        if (Physics.Raycast(body.position + (-body.right * footSpacing), -body.up, out RaycastHit info, 30f, terrainLayer.value))
         {
            
             HandleStep(info);
