@@ -41,7 +41,7 @@ public class EntityHPBar : HPBar
 
     void Disappear()
     {
-        currentFadeRoutine = StartCoroutine(FadeRoutine());
+        if (gameObject.activeSelf) currentFadeRoutine = StartCoroutine(FadeRoutine());
     }
 
     IEnumerator FadeRoutine()

@@ -25,7 +25,7 @@ public struct ProjectileData
         prefab = null;
         Destroy = false;
     }
-
+    
     public void CheckPrefab()
     {
         if (prefab) return;

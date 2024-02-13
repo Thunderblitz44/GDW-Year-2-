@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class StaticUtilities
 {
-    public static readonly float defaultFOV = 50f;
+    public static readonly float defaultFOV = 80f;
     public static readonly float damageOverTimeInterval = 0.5f;
     public static readonly float encounterStartDelay = 1f;
     public static readonly int groundLayer = 64;

@@ -3,21 +3,33 @@ using UnityEngine;
 public class GolemKnight : Enemy
 {
     // attack
-    [SerializeField] float attackDamage = 1f;
+    [SerializeField] int attackDamage = 1;
     [SerializeField] float attackCooldown = 1.5f;
     [SerializeField] float attackDelay = 0.5f;
     float attackTimer;
     float attackCooldownTimer;
     bool attack;
     [SerializeField] GameObject HeadTarget;
-  
+    AttackTrigger trigger;
+    MeleeHitBox sword;
+
     private float xSpeed;
     private float ySpeed;
     private float zSpeed;
 
-    private void Start()
+    protected override void Awake()
     {
-  
+        base.Awake();
+
+        sword = transform.GetComponentInChildren<MeleeHitBox>(true);
+        sword.damage = attackDamage;
+
+        trigger = transform.GetComponentInChildren<AttackTrigger>();
+        if (trigger)
+        {
+            trigger.onTriggerEnter += OnAttackTriggerEnter;
+            trigger.onTriggerExit += OnAttackTriggerExit;
+        }
     }
 
     protected override void Update()
@@ -49,13 +61,13 @@ public class GolemKnight : Enemy
 
     }
 
-    protected override void OnAttackTriggerEnter(Collider other)
+    void OnAttackTriggerEnter(Collider other)
     {
         attack = true;
         animator.SetBool("CanAttack", true);
     }
 
-    protected override void OnAttackTriggerExit(Collider other)
+    void OnAttackTriggerExit(Collider other)
     {
         attack = false;
         attackTimer = 0f;
@@ -88,29 +100,30 @@ public class GolemKnight : Enemy
     }
     public void EnableAILocomotion()
     {
-      //  Debug.Log("Current agent speed: " + agent.speed); // Debugging line
         agent.speed = 2;
-      //  Debug.Log("Agent speed set to 2"); // Debugging line
-        
-        //Debug.Log("dddddddddd");
     }
 
     public void ReadyAttackR()
     {
-        
+        Debug.Log("1");
+        sword.gameObject.SetActive(true);
     }
 
     public void DisableAttackR()
     {
-        
+        sword.Hide();
+        Debug.Log("2");
     }
     public void ReadyAttackL()
     {
-        
+        Debug.Log("3");
+        sword.gameObject.SetActive(true);
     }
 
     public void DisableAttackL()
     {
+        sword.Hide();
+        Debug.Log("4");
         
     }
 }

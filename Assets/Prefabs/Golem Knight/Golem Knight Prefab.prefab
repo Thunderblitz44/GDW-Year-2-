@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1978699867368621012}
   - component: {fileID: 3653084991926393679}
   - component: {fileID: 5802551568611516133}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AttackTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -760,10 +760,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'neck'\n\tTransform 'head'\n\tTransform 'neck'\n\tTransform
-    'head'\n\tTransform 'neck'\n\tTransform 'head'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -781,7 +778,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -829,7 +826,6 @@ MonoBehaviour:
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
   slowUpdateInterval: 0.2
-  trigger: {fileID: 5802551568611516133}
   animator: {fileID: 4223308464630147859}
   attackDamage: 1
   attackCooldown: 1.5
@@ -1821,6 +1817,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 760596242095179454}
     m_Modifications:
+    - target: {fileID: 3741568614552081624, guid: df0188f630c6b194988a072cabb02132, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 6546518270594113294, guid: df0188f630c6b194988a072cabb02132, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -1911,25 +1911,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6978794468274806647}
     m_Modifications:
-    - target: {fileID: 6546518270594113294, guid: df0188f630c6b194988a072cabb02132, type: 3}
+    - target: {fileID: 1017878972285843648, guid: df0188f630c6b194988a072cabb02132, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741568614552081624, guid: df0188f630c6b194988a072cabb02132, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741568614552081624, guid: df0188f630c6b194988a072cabb02132, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7041231872880549288, guid: df0188f630c6b194988a072cabb02132, type: 3}
       propertyPath: m_RootOrder
       value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7041231872880549288, guid: df0188f630c6b194988a072cabb02132, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.19897826
-      objectReference: {fileID: 0}
-    - target: {fileID: 7041231872880549288, guid: df0188f630c6b194988a072cabb02132, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.32103813
-      objectReference: {fileID: 0}
-    - target: {fileID: 7041231872880549288, guid: df0188f630c6b194988a072cabb02132, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.42779124
       objectReference: {fileID: 0}
     - target: {fileID: 7041231872880549288, guid: df0188f630c6b194988a072cabb02132, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1974,10 +1970,6 @@ PrefabInstance:
     - target: {fileID: 7709225475599779602, guid: df0188f630c6b194988a072cabb02132, type: 3}
       propertyPath: m_Name
       value: Sword Effect Variant
-      objectReference: {fileID: 0}
-    - target: {fileID: 7709225475599779602, guid: df0188f630c6b194988a072cabb02132, type: 3}
-      propertyPath: m_Layer
-      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

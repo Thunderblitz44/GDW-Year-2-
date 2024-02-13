@@ -7,9 +7,12 @@ public class AttackTrigger : MonoBehaviour
     public Action<Collider> onTriggerExit;
     public Action<Collider> onTriggerStay;
 
+    public Action<GameObject> onTriggerEnterNotify;
+
     private void OnTriggerEnter(Collider other)
     {
         onTriggerEnter?.Invoke(other);
+        onTriggerEnterNotify?.Invoke(gameObject);
     }
 
     private void OnTriggerExit(Collider other)

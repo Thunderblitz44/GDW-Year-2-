@@ -49,7 +49,8 @@ public class Elana : Player
     bool canUseFireTornado = true;
     bool invalidPlacement = false;
     const int fireTornadoId = 1;
-
+    [SerializeField] private Pheonix pheonix;
+    
     [Header("Dodge")]
     [SerializeField] float dodgeDistance = 5f;
     [SerializeField] float dodgeSpeed = 10f;
@@ -68,6 +69,8 @@ public class Elana : Player
     
     [Header("Other")]
     [SerializeField] Animator specialAnimator;
+
+    [SerializeField] public Animator DragonflyAnimator;
     //animator to control portal and potentially other interactions between players/spirit
     public float recallDelay = 2f;
     //delay of recall
@@ -97,12 +100,11 @@ public class Elana : Player
             }
         };
 
-        projectile.owner = this;
         projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
             MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
-            mb.Initialize(projectile);
+            mb.Initialize(projectile, this);
             pooledProjectiles.Add(mb.gameObject);
         }
 
@@ -182,12 +184,13 @@ public class Elana : Player
         {
             shooting = true;
             // aim
-
+DragonflyAnimator.SetBool("IsShooting", true);
         };
         actions.Abilities.SecondaryAttack.canceled += ctx =>
         {
             shooting = false;
             shootStartTimer = 0;
+            DragonflyAnimator.SetBool("IsShooting", false);
         };
 
 
@@ -253,15 +256,19 @@ public class Elana : Player
 
         actions.Abilities.FireTornado.started += ctx =>
         {
+            
             if (!canUseFireTornado) return;
-
+            pheonix.CastAttack();
+           
             aimingFireTornado = true;
             aoeIndicator = Instantiate(aoeIndicatorPrefab).transform;
         };
         actions.Abilities.FireTornado.canceled += ctx =>
         {
+            pheonix.EndAttack();
             if (!canUseFireTornado) return;
-
+          
+           
             aimingFireTornado = false;
             if (invalidPlacement)
             {
@@ -276,6 +283,7 @@ public class Elana : Player
             fireTornado.GetComponent<FireTornado>().BurnTime = burnTime;
             fireTornado.GetComponent<FireTornado>().Damage = tornadoDamage;
             Invoke(nameof(EndTornado), tornadoTime);
+             
         };
 
         actions.Abilities.Enable();
