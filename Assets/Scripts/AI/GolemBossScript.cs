@@ -48,10 +48,25 @@ public class GolemBossScript : Enemy, IBossCommands
     [SerializeField] float minionAttackCooldown = 10f;
     bool usingMinionAttack = false;
 
+    [Header("Stomp Attack")] 
+    [SerializeField] Collider FrontRight;
+
+    [SerializeField] Collider FrontLeft;
+    
+    [SerializeField] Collider BackRight;
+
+    [SerializeField] Collider BackLeft;
+
+    
     // battle info
     bool battleStarted = false;
     float tempSpeed;
 
+    
+    
+    
+    
+    
     protected override void Awake()
     {
         base.Awake();
@@ -339,7 +354,22 @@ public class GolemBossScript : Enemy, IBossCommands
                 break;
         }
     }
+    
+ 
+   
+    private void OnTriggerEnter(Collider other)
+    {
+        
+        }
+    
 
+    private bool IsPlayerCollider(Collider collider)
+    {
+        return collider.CompareTag("body");
+    }
+   
+
+  
     public override void ApplyDamage(int damage)
     {
     }
