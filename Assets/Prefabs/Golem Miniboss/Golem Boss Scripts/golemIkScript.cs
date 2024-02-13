@@ -48,7 +48,7 @@ public class golemIkScript : MonoBehaviour
         transform.position = currentPosition;
         transform.up = currentNormal;
 
-        if (Physics.Raycast(body.position + (body.forward * footSpacing), -body.parent.up, out RaycastHit info, 30f, terrainLayer.value))
+        if (Physics.Raycast(body.position + (-body.right * footSpacing), -body.parent.up, out RaycastHit info, 30f, terrainLayer.value))
         {
            
             HandleStep(info);

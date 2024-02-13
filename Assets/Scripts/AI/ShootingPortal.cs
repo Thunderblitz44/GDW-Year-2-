@@ -82,7 +82,7 @@ public class ShootingPortal : DamageableEntity
     {
         explode = true;
         expl.SetActive(true);
-        Invoke(nameof(Die), 0.2f);
+        Invoke(nameof(Die), 0.4f);
     }
 
     void Die()
