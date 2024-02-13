@@ -5,8 +5,6 @@ public class EntityHealthComponent : HealthComponent
     [SerializeField] internal float height = 1.5f;
     EntityHPBar entityHPBar;
 
-    public bool DestroyOnHPZero { get; set; } = true;
-
     private void Awake()
     {
         health = maxHealth;
@@ -23,17 +21,7 @@ public class EntityHealthComponent : HealthComponent
         entityHPBar.transform.position = transform.position + Vector3.up * height;
     }
 
-    private void OnDisable()
-    {
-        if (entityHPBar) entityHPBar.gameObject.SetActive(false);
-    }
-
-    private void OnEnable()
-    {
-        if (entityHPBar) entityHPBar.gameObject.SetActive(true);
-    }
-
-    public override void DeductHealth(int value)
+    public override void DeductHealth(float value)
     {
         health = Mathf.Clamp(health - value, 0, maxHealth);
 
@@ -41,15 +29,8 @@ public class EntityHealthComponent : HealthComponent
 
         if (health == 0)
         {
-            if (DestroyOnHPZero) Destroy(entityHPBar.gameObject);
-            else entityHPBar.gameObject.SetActive(false);
+            Destroy(entityHPBar.gameObject);
             onHealthZeroed?.Invoke();
         }
-    }
-
-    public override void SetHealth(int value)
-    {
-        health = value;
-        if (entityHPBar) entityHPBar.SetHPValue(health);
     }
 }

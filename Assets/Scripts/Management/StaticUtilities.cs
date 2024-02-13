@@ -1,10 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System;
+
 
 public static class StaticUtilities
 {
-    public static readonly float defaultFOV = 80f;
+    public static readonly float defaultFOV = 50f;
     public static readonly float damageOverTimeInterval = 0.5f;
+    public static readonly Color physicalDamageColor = Color.white;
+    public static readonly Color magicDamageColor = Color.magenta;
+    public static readonly Vector2 centerOfScreen = new(Screen.width / 2, Screen.height / 2);
     public static readonly float encounterStartDelay = 1f;
     public static readonly int groundLayer = 64;
     public static int visibleTargets;
@@ -13,8 +19,7 @@ public static class StaticUtilities
     public static readonly string LAST_ENCOUNTER = "encounter";
     public static readonly string CURRENT_PLAYER_HEALTH = "playerHealth";
 
-    /*
-    public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
+    /*public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
     {
         return objects.OrderBy(x => Vector2.Distance(centerOfScreen, (Vector2)Camera.main.WorldToScreenPoint(x.transform.position))).ToList();
     }
@@ -37,7 +42,19 @@ public static class StaticUtilities
             }
         }
         return false;
+    }*/
+
+    public static Vector3 GetCameraDir()
+    {
+        return Vector3.right * Camera.main.transform.forward.x +
+            Vector3.forward * Camera.main.transform.forward.z;
     }
+
+    public static Vector3 GetCameraLook()
+    {
+        return Camera.main.transform.forward;
+    }
+
     public static Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint, float overshoot)
     {
         float gravity = Physics.gravity.y;
@@ -50,30 +67,15 @@ public static class StaticUtilities
             + Mathf.Sqrt(2 * (displacementY - h) / gravity));
         return velocityXZ + velocityY;
     }
-    */
-
-    public static Vector2 GetCenterOfScreen()
-    {
-        return Vector2.right * Screen.width / 2 + Vector2.up * Screen.height / 2;
-    }
-
-    public static Vector3 GetCameraDir()
-    {
-        return HorizontalizeVector(Camera.main.transform.forward);
-    }
 
     public static float FastDistance(Vector3 first, Vector3 second)
     {
         return (first - second).sqrMagnitude;
     }
-    public static Vector3 FlatDirection(Vector3 first, Vector3 second, float yOffset = 0f)
-    {
-        return first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset;
-    }
 
-    public static Vector3 HorizontalizeVector(Vector3 vec)
+    public static Quaternion LookRotationYOnly(Vector3 first, Vector3 second, Vector3 worldUp)
     {
-        return Vector3.right * vec.x + Vector3.forward * vec.z;
+        return Quaternion.LookRotation(first - BuildVector(second.x, first.y, second.z), worldUp);
     }
 
     public static Vector3 BuildVector(float x, float y, float z)
@@ -92,28 +94,6 @@ public static class StaticUtilities
             projectile.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
             break;
         }
-    }
-
-    public static bool TryToDamage(GameObject other, int damage)
-    {
-        IDamageable d;
-        if (other.TryGetComponent(out d))
-        {
-            d.ApplyDamage(damage);
-            return true;
-        }
-        return false;
-    }
-
-    public static bool TryToDamageOverTime(GameObject other, int damage, float duration)
-    {
-        IDamageable d;
-        if (other.TryGetComponent(out d))
-        {
-            d.ApplyDamageOverTime(damage, duration);
-            return true;
-        }
-        return false;
     }
 
 }

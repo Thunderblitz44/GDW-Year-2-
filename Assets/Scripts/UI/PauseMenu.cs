@@ -61,7 +61,7 @@ public class PauseMenu : MonoBehaviour
 
     void Exit()
     {
-        Application.Quit();
+
     }
 
     void MainMenu()
@@ -71,6 +71,6 @@ public class PauseMenu : MonoBehaviour
 
     void Return()
     {
-        animator.SetTrigger(settingsTrigger);
+
     }
 }

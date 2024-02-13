@@ -1,7 +1,7 @@
 
 public interface IDamageable
 {
-    public void ApplyDamage(int damage);
+    public void ApplyDamage(float damage, DamageTypes type);
 
-    public void ApplyDamageOverTime(int damage, float duration);
+    public void ApplyDamageOverTime(float damage, DamageTypes type, float duration);
 }

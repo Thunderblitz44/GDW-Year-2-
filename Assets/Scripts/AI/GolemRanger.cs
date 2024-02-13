@@ -1,77 +1,74 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GolemRanger : Enemy
 {
     // attack
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
+    [SerializeField] float shootCooldown = 1.5f;
+    [SerializeField] float shootStartDelay = 0.5f;
     [SerializeField] Transform shootOrigin;
-    [SerializeField] new ParticleSystem particleSystem;
-    [SerializeField] GameObject HeadTarget;
-    AttackTrigger trigger;
-    private float xSpeed;
-    private float zSpeed;
-    public float shootForce = 5;
-    
-    protected override void Awake()
+    readonly List<GameObject> pooledProjectiles = new List<GameObject>(5);
+    float shootStartTimer;
+    float shootCooldownTimer;
+    bool attack;
+
+    internal override void Awake()
     {
         base.Awake();
 
-
-        particleSystem.GetComponent<MagicBullet>().Initialize(projectile, this);
+        projectile.owner = this;
+        for (int i = 0; i < pooledProjectiles.Capacity; i++)
+        {
+            MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
+            mb.Projectile = projectile;
+            pooledProjectiles.Add(mb.gameObject);
+        }
 
         if (!shootOrigin) 
         { 
             Debug.LogWarning("No shoot origin set for ranger golem!");
             shootOrigin = transform;
         }
+    }
 
-        trigger = transform.GetComponentInChildren<AttackTrigger>();
-        if (trigger)
+    internal override void Update()
+    {
+        base.Update();
+
+        // attack cooldown + delay
+        shootCooldownTimer += Time.deltaTime;
+        if (shootCooldownTimer >= shootCooldown && attack &&
+            (shootStartTimer += Time.deltaTime) >= shootStartDelay)
         {
-            trigger.onTriggerEnter += OnAttackTriggerEnter;
-            trigger.onTriggerExit += OnAttackTriggerExit;
+            shootCooldownTimer = 0f;
+            Attack();
         }
     }
 
-    protected override void Update()
+    internal override void OnAttackTriggerEnter(Collider other)
     {
-        base.Update();
-        HeadTarget.transform.position = LevelManager.PlayerTransform.position;
-
-        float smoothingFactor = 0.1f;
-
-        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
-
-        // Smooth the velocity components (remove the float keyword)
-        xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
-        zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
-        // Set the velocity values in the animator
-        animator.SetFloat("XSpeed", xSpeed);
-        animator.SetFloat("ZSpeed", zSpeed);
-
+        attack = true;
     }
 
-    void OnAttackTriggerEnter(Collider other)
+    internal override void OnAttackTriggerExit(Collider other)
     {
-        //attack = true;
-        animator.SetBool("InAttackRange", true);
-    }
-
-    void OnAttackTriggerExit(Collider other)
-    {
-        animator.SetBool("InAttackRange", false);
+        attack = false;
+        shootStartTimer = 0f;
     }
 
     public void EnableAI()
     {
         agent.enabled = true;
-        HeadTarget.SetActive(true);
         target = LevelManager.PlayerTransform;
     }
 
-    public void DisableAI()
+    void Attack()
     {
-        agent.enabled = false;
-        HeadTarget.SetActive(false);
+        Vector3 force = (shootOrigin.position - LevelManager.PlayerTransform.position).normalized * projectile.speed;
+        StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
+        
+        animator.SetTrigger("Attack");
     }
 }

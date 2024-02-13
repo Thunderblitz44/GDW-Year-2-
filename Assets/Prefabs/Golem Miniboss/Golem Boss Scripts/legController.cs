@@ -32,6 +32,9 @@ public class legController : MonoBehaviour
             activeScriptIndex = (activeScriptIndex + 1) % scriptsToControl.Length;
             scriptsToControl[activeScriptIndex].footDelay = true;
     }
-    
+    void Update()
+    {
+       
+    }
 }
 

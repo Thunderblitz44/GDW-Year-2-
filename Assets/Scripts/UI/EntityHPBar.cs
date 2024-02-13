@@ -23,11 +23,19 @@ public class EntityHPBar : HPBar
         transform.rotation = Camera.main.transform.rotation;
     }
 
-    public override void ChangeHPByAmount(int amount)
+    public override void ChangeHPByAmount(float amount)
     {
         if (currentFadeRoutine != null) StopCoroutine(currentFadeRoutine);
         Appear();
         base.ChangeHPByAmount(amount);
+        Disappear();
+    }
+
+    public override void ChangeHpByPercentage(float value01)
+    {
+        if (currentFadeRoutine != null) StopCoroutine(currentFadeRoutine);
+        Appear();
+        base.ChangeHpByPercentage(value01);
         Disappear();
     }
 
@@ -41,7 +49,7 @@ public class EntityHPBar : HPBar
 
     void Disappear()
     {
-        if (gameObject.activeSelf) currentFadeRoutine = StartCoroutine(FadeRoutine());
+        currentFadeRoutine = StartCoroutine(FadeRoutine());
     }
 
     IEnumerator FadeRoutine()

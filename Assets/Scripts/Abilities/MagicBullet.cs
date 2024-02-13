@@ -1,58 +1,40 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MagicBullet : MonoBehaviour
 {
-    public ProjectileData Projectile { get; private set; }
+    public ProjectileData Projectile { get; set; }
     public Rigidbody Rb { get; private set; }
 
     private void Awake()
     {
         Rb = GetComponent<Rigidbody>();
-        if (Rb) Die();
+        gameObject.SetActive(false);
+        Invoke(nameof(Die), Projectile.lifeTime);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if ((Projectile.owner && Projectile.owner.gameObject == collision.gameObject) ||
-            (Projectile.owner.gameObject.layer == LayerMask.NameToLayer("Player") && collision.gameObject.layer == LayerMask.NameToLayer("Friendly"))) return;
+        if (collision.gameObject == Projectile.owner.gameObject) return;
 
-        if (!StaticUtilities.TryToDamage(collision.collider.gameObject, Projectile.damage))
-            StaticUtilities.TryToDamage(collision.gameObject, Projectile.damage);
+        IDamageable d;
+        if (collision.gameObject.TryGetComponent(out d))
+        {
+            d.ApplyDamage(Projectile.damage, DamageTypes.magic);
+        }
         CancelInvoke(nameof(Die));
         Die();
     }
 
-    private void OnEnable()
-    {
-        if (Rb) Invoke(nameof(Die), Projectile.lifeTime);
-    }
-
     void Die()
     {
-        if (Rb) Rb.velocity = Vector3.zero;
-        if (!Projectile.Destroy) gameObject.SetActive(false);
-        else Destroy(gameObject);
+        Rb.velocity = Vector3.zero;
+        gameObject.SetActive(false);
     }
 
-    public void Initialize(ProjectileData data)
+    private void OnEnable()
     {
-        Initialize(data, data.owner);
-    }
-
-    public void Initialize(ProjectileData data, DamageableEntity owner)
-    {
-        Projectile = data;
-        if (Rb)
-        {
-            Rb.excludeLayers = data.ignoreLayers;
-            GetComponent<SphereCollider>().excludeLayers = data.ignoreLayers;
-        }
-    }
-
-    private void OnParticleCollision(GameObject other)
-    {
-        if ((Projectile.owner && Projectile.owner.gameObject == other) ||
-            (Projectile.owner.gameObject.layer == LayerMask.NameToLayer("Player") && other.layer == LayerMask.NameToLayer("Friendly"))) return;
-        StaticUtilities.TryToDamage(other, Projectile.damage);
+        Invoke(nameof(Die), Projectile.lifeTime);
     }
 }

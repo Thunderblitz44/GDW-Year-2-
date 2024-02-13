@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class golemIkScript : MonoBehaviour
@@ -16,7 +18,6 @@ public class golemIkScript : MonoBehaviour
     private float lerp;
     // Access the ControllerScript
     public legController controllerScript;
-    Transform mainBody;
 
     private void Start()
     {
@@ -29,26 +30,31 @@ public class golemIkScript : MonoBehaviour
 
     private void InitializeGolem()
     {
-      
-        //footSpacing = transform.localPosition.x;
+        body = transform.parent.parent.parent;
+        footSpacing = transform.localPosition.x;
         currentPosition = newPosition = oldPosition = transform.position;
         currentNormal = newNormal = oldNormal = transform.up;
         lerp = 1f;
-        mainBody = GetComponentInParent<Rigidbody>().transform;
     }
 
     private void Update()
     {
+
+       
         HandleGolemMovement();
+       
     }
-
-
     private void HandleGolemMovement()
     {
+       
         transform.position = currentPosition;
+      
         transform.up = currentNormal;
 
-        if (Physics.Raycast(body.position + (body.right * footSpacing), -body.parent.up, out RaycastHit info, 30f, terrainLayer.value))
+       
+        Ray ray = CreateFootRay();
+
+        if (Physics.Raycast(ray, out RaycastHit info, 10f, terrainLayer.value))
         {
            
             HandleStep(info);
@@ -67,8 +73,16 @@ public class golemIkScript : MonoBehaviour
         }
     }
 
+    private Ray CreateFootRay()
+    {
+       
+        return new Ray(body.position + (body.right * footSpacing), Vector3.down);
+
+    }
+
     public void HandleStep(RaycastHit info)
     {
+       
         if (footDelay == true)
         {
             if (Vector3.Distance(newPosition, info.point) > stepDistance && lerp >= 1f)
@@ -81,10 +95,17 @@ public class golemIkScript : MonoBehaviour
             
             }
         }
+
+        else
+        {
+
+        }
     }
 
     private void InterpolateGolemPositionAndRotation()
     {
+    
+
         Vector3 tempPosition = Vector3.Lerp(oldPosition, newPosition, lerp);
         tempPosition.y += Mathf.Sin(lerp * Mathf.PI) * stepHeight;
 
@@ -94,6 +115,7 @@ public class golemIkScript : MonoBehaviour
 
        
         lerp += Time.deltaTime * speed;
+       
     }
   
     public void FinishStep()
@@ -110,15 +132,18 @@ public class golemIkScript : MonoBehaviour
     }
 
 
-    private void OnDrawGizmos()
-     {
+    // private void OnDrawGizmos()
+    // {
 
-         DrawGizmoForNewPosition();
-      }
+    //     DrawGizmoForNewPosition();
+    //  }
 
-     private void DrawGizmoForNewPosition()
-     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(newPosition, 0.5f);
-    }
+    // private void DrawGizmoForNewPosition()
+    // {
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawSphere(newPosition, 0.5f);
+    // }
+
+
+
 }

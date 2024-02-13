@@ -5,16 +5,16 @@ using UnityEngine.SceneManagement;
 public class Player : DamageableEntity
 {
     public PlayerMovement MovementScript { get; private set; }
-    [SerializeField] protected AbilityHUD abilityHud;
+    [SerializeField] internal AbilityHUD abilityHud;
     PlayerMenuController pauseScript;
 
     // INPUT
-    protected ActionMap actions;
+    internal ActionMap actions;
 
-    [SerializeField] protected CinemachineFreeLook freeLookCam;
+    [SerializeField] internal CinemachineFreeLook freeLookCam;
    
 
-    protected override void Awake()
+    internal override void Awake()
     {
         base.Awake();
 
@@ -33,13 +33,13 @@ public class Player : DamageableEntity
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        hp.SetHealth(PlayerPrefs.GetFloat(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.maxHealth));
     }
 
     private void Start()
     {
         DebugHUD.instance.DisplayControls(actions);
         LevelManager.Instance.CurrentCheckpoint.Teleport(transform);
-        hp.SetHealth(PlayerPrefs.GetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.MaxHealth));
     }
 
 
@@ -53,8 +53,6 @@ public class Player : DamageableEntity
         actions.General.Pause.performed += ctx =>
         {
             PausePlayer();
-            MovementScript.Rb.velocity = Vector3.zero;
-
             actions.Menus.Enable();
             pauseScript.Pause();
         };
@@ -71,7 +69,7 @@ public class Player : DamageableEntity
         };
         actions.General.harmSelfTest.performed += ctx =>
         {
-            ApplyDamage(10);
+            ApplyDamage(10f, DamageTypes.physical);
         };
         // ^ TEMPORARY ^ //
 
@@ -83,7 +81,7 @@ public class Player : DamageableEntity
     {
         actions.General.Disable();
         actions.Abilities.Disable();
-        MovementScript.DisableLocomotion();
+        actions.Locomotion.Disable();
         freeLookCam.gameObject.SetActive(false);
     }
 
@@ -91,11 +89,11 @@ public class Player : DamageableEntity
     {
         actions.General.Enable();
         actions.Abilities.Enable();
-        MovementScript.EnableLocomotion();
+        actions.Locomotion.Enable();
         freeLookCam.gameObject.SetActive(true);
     }
 
-    protected override void OnHealthZeroed()
+    internal override void OnHealthZeroed()
     {
         // player death.
         LevelManager.isPlayerDead = true;

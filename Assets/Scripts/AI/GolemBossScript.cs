@@ -1,83 +1,39 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class GolemBossScript : Enemy, IBossCommands
 {
     [Header("Attack Pattern")]
+    [SerializeField] int minAtkReps = 1;
+    [SerializeField] int maxAtkReps = 5;
     [SerializeField] float timeBetweenAttacks = 2;
-    [SerializeField] float attackPrepareTime = 2;
-    [SerializeField] float maxAttackReps = 2;
-    float attackReps;
-    int lastAttackIndex;
-    int phase = 0;
+    int atkRepetitions;
+    int atkCounter;
     float atkTimer;
     bool isAttacking;
-    readonly List<Func<IEnumerator>> attackFuncs = new();
-    readonly List<DamageableEntity> crystals = new();
-
-    [Header("Stomp Attack")]
-    [SerializeField] float stompDamage = 10f;
-    [SerializeField] float stompCooldown = 5f;
-    AttackTrigger[] stompTriggers;
-    readonly float[] stompCooldowns = new float[4] { 0, 0, 0, 0 };
-    bool stomping;
-
-    [Header("Lasers")]
-    [SerializeField] int laserDamage;
-    [SerializeField] float halfDistance = 10f;
-    [SerializeField] float sweepSpeed = 1f;
-    [SerializeField] float sweepSpeedIncrease = 0.5f;
-    [SerializeField] float firstSweepDelay = 1f;
-    [SerializeField] AnimationCurve laserCurve = AnimationCurve.Linear(0,0,1,1);
-    [SerializeField] LineRenderer laserRenderer;
-    [SerializeField] GameObject laserEmitter;
-    [SerializeField] LayerMask laserObstacle;
-    int sweeps = 2;
 
     [Header("Portal Projectiles")]
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
-    [SerializeField] float shotDelay = 0.25f;
+    [SerializeField] int shots = 5;
     [SerializeField] float shootingStartDelay = 1.5f;
+    [SerializeField] float shotDelay = 0.25f;
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] GameObject portalPrefab;
     [SerializeField] BoxCollider spawnBounds;
-    readonly List<ShootingPortal> pooledPortals = new();
+    readonly List<ShootingPortal> pooledPortals = new(3);
     float shotDelayTimer;
-    int portals = 3;
 
-    [Header("Spawn Minions")]
-    [SerializeField] int minionCount;
-    [SerializeField] float minionAttackCooldown = 10f;
-    bool usingMinionAttack = false;
-
-    [Header("Walking on walls")]
-    [SerializeField] Transform[] gotoWallsBase;
-    [SerializeField] Transform[] gotoWalls;
-    bool goingUp;
-
+    [Header("Lasers")]
+    [SerializeField] float laserDamage;
+    [SerializeField] LineRenderer lrPrefab;
+    [SerializeField] GameObject laserEmitter;
 
     // battle info
     bool battleStarted = false;
     float tempSpeed;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        (hp as BossHealthComponent).nextPhase += NextPhase;
-        crystals.AddRange(GetComponentsInChildren<DamageableEntity>().ToList());
-        crystals.RemoveAt(0);
-
-        stompTriggers = transform.GetComponentsInChildren<AttackTrigger>();
-        foreach (var trigger in stompTriggers)
-        {
-            trigger.onTriggerEnterNotify += StompAttack;
-        }
-    }
-
-    protected override void Update()
+    internal override void Update()
     {
         if (!battleStarted) return;
         base.Update();
@@ -85,20 +41,15 @@ public class GolemBossScript : Enemy, IBossCommands
         // timers
         // attack checkers/counters
         // attacks
-        if (attackFuncs.Count > 0 && !isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
+        if (!isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
         {
+            Debug.Log("new attack");
             isAttacking = true;
             atkTimer = 0;
             // pick an attack
             // start coroutine of attack
-            newAtkInd:
-            int attackIndex = UnityEngine.Random.Range(0, attackFuncs.Count);
-            if (attackFuncs.Count > 1 && attackIndex == lastAttackIndex && ++attackReps >= maxAttackReps)
-            {
-                goto newAtkInd;
-            }
-            StartCoroutine(attackFuncs[attackIndex]());
-            lastAttackIndex = attackIndex;
+            StartCoroutine(ProjectilesRoutine());
+            //StartCoroutine(LasersRoutine());
         }
 
         if (Vector3.Distance(LevelManager.PlayerTransform.position, transform.position) <= agent.stoppingDistance && tempSpeed == 0)
@@ -111,47 +62,24 @@ public class GolemBossScript : Enemy, IBossCommands
             agent.speed = tempSpeed;
             tempSpeed = 0;
         }
-
-        for (int i = 0; i < stompCooldowns.Length; i++)
-        {
-            stompCooldowns[i] += Time.deltaTime;
-        }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        for (int i = 0; i < gotoWallsBase.Length; i++)
-        {
-            if (gotoWallsBase[i].gameObject.activeSelf)
-            {
-                if (goingUp) target = gotoWalls[i];
-                else
-                {
-                    target = LevelManager.PlayerTransform;
-                    agent.speed = 3.5f;
-                }
-                gotoWallsBase[i].gameObject.SetActive(false);
-            }
-        }
-    }
 
     public void Introduce()
     {
         // entrance animation
         // pool portals
         projectile.owner = this;
-        projectile.CheckPrefab();
-        for (int i = 0; i < portals; i++)
+        for (int i = 0; i < pooledPortals.Capacity; i++)
         {
             ShootingPortal portal = Instantiate(portalPrefab).GetComponent<ShootingPortal>();
-            portal.Setup(projectile, shotDelay, shootingStartDelay);
+            portal.Setup(projectile,shots, shotDelay, shootingStartDelay);
             pooledPortals.Add(portal);
             pooledPortals[i].gameObject.SetActive(false);
         }
 
         (hp as BossHealthComponent).Show();
         Invoke(nameof(StartBattle), 1f);
-        NextPhase();
     }
 
     void StartBattle()
@@ -162,103 +90,31 @@ public class GolemBossScript : Enemy, IBossCommands
 
     IEnumerator LasersRoutine()
     {
-        float temp = agent.speed;
-        agent.speed = 0.1f;
-
-        List<GameObject> damagedEntities = new();
-        laserEmitter.SetActive(true);
-        yield return new WaitForSeconds(attackPrepareTime);
-
-        Vector3 targetDir, start, end, sweepDir = Vector3.zero;
-
-        for (int s = 0; s < sweeps; s++)
-        {
-            targetDir = LevelManager.PlayerTransform.position - laserEmitter.transform.position;
-            if (s == 0) // left - right
-            {
-                sweepDir = Vector3.Cross(targetDir.normalized, Vector3.up);
-            }
-            else if (s == 1) // front - back
-            {
-                sweepDir = StaticUtilities.FlatDirection(LevelManager.PlayerTransform.position, laserEmitter.transform.position).normalized;
-            }
-            else  
-            {
-                Vector3 lr = Vector3.Cross(targetDir.normalized, Vector3.up);
-                Vector3 fb = StaticUtilities.FlatDirection(LevelManager.PlayerTransform.position, laserEmitter.transform.position).normalized;
-                if (s == 2) sweepDir = (fb + lr).normalized; // front right - back left
-                else if (s == 3) sweepDir = (fb - lr).normalized; // front left - back right
-            }
-            start = LevelManager.PlayerTransform.position - sweepDir * halfDistance + targetDir * 2f;
-            end = LevelManager.PlayerTransform.position + sweepDir * halfDistance + targetDir * 2f;
-
-            laserRenderer.SetPosition(0, laserEmitter.transform.position);
-            laserRenderer.SetPosition(1, start);
-
-            if (s == 0) yield return new WaitForSeconds(firstSweepDelay);
-
-            RaycastHit hit;
-            for (float t = 0; t < 1; t += Time.deltaTime * (sweepSpeed + sweepSpeedIncrease * s)) 
-            {
-                Vector3 newPos = Vector3.Lerp(start, end, t);
-                targetDir = newPos - laserEmitter.transform.position;
-                if (Physics.Raycast(laserEmitter.transform.position, targetDir, out hit, 100, laserObstacle, QueryTriggerInteraction.Ignore))
-                {
-                    laserRenderer.SetPosition(1, hit.point);
-
-                    // only damage things once
-                    if (!damagedEntities.Contains(hit.transform.gameObject) &&
-                        StaticUtilities.TryToDamage(hit.transform.gameObject, laserDamage))
-                    {
-                        // stop damaging that entity
-                        damagedEntities.Add(hit.transform.gameObject);
-                    }
-                }
-                else
-                {
-                    laserRenderer.SetPosition(1, newPos);
-                }
-                yield return null;
-            }
-
-            ResetLaser();
-            damagedEntities.Clear();
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        yield return new WaitForSeconds(0.5f);
-        laserEmitter.SetActive(false);
-
+        // one big laser on top of boss
+        // right-left or left right sweep 
+        // front to back sweep
+        
         yield return null;
-        isAttacking = false;
-        agent.speed = temp;
-    }
-
-    void ResetLaser()
-    {
-        laserRenderer.SetPosition(0, laserEmitter.transform.position);
-        laserRenderer.SetPosition(1, laserEmitter.transform.position);
     }
 
     IEnumerator ProjectilesRoutine()
     {
         float temp = agent.speed;
         agent.speed = 0.1f;
-        yield return new WaitForSeconds(attackPrepareTime);
+        yield return new WaitForSeconds(shootingStartDelay);
 
         // spawn portals
         List<Vector3> portalPositions = new(pooledPortals.Count);
         float minDist = Mathf.Pow(2f, 2f);
         int itt;
-        for (int i = 0; i < portals; i++)
+        for (int i = 0; i < pooledPortals.Count; i++)
         {
             itt = 0;
         getPos:
 
             Vector3 min = spawnBounds.bounds.min;
             Vector3 max = spawnBounds.bounds.max;
-            Vector3 spawnPoint = StaticUtilities.BuildVector(UnityEngine.Random.Range(min.x, max.x), 
-                UnityEngine.Random.Range(min.y, max.y), UnityEngine.Random.Range(min.z, max.z));
+            Vector3 spawnPoint = StaticUtilities.BuildVector(Random.Range(min.x, max.x), Random.Range(min.y, max.y), Random.Range(min.z, max.z));
             
             // check if we like this pos
             foreach (var pos in portalPositions)
@@ -302,117 +158,5 @@ public class GolemBossScript : Enemy, IBossCommands
         yield return null;
         isAttacking = false;
         agent.speed = temp;
-    }
-
-
-    IEnumerator MinionsRoutine()
-    {
-        if (usingMinionAttack) goto end;
-        usingMinionAttack = true;
-
-        // go up wall
-        agent.speed = 6;
-        int wall = UnityEngine.Random.Range(0, gotoWallsBase.Length);
-        target = gotoWallsBase[wall];
-        gotoWallsBase[wall].gameObject.SetActive(true);
-        goingUp = true;
-
-
-        yield return new WaitForSeconds(attackPrepareTime);
-        isAttacking = false;
-        LevelManager lmInstance = LevelManager.Instance;
-        Bounds bossBounds = LevelManager.Instance.CurrentEncounter.EncounterBounds;
-
-        for (int i = 0; i < minionCount; i++)
-        {
-            // pick random spot in the volume
-            Vector3 spawnPoint = LevelManager.GetRandomEnemySpawnPoint(bossBounds);
-            Vector3 playerPos = Vector3.right * LevelManager.PlayerTransform.position.x + Vector3.forward * LevelManager.PlayerTransform.position.z + Vector3.up * spawnPoint.y;
-            Quaternion spawnRotation = LevelManager.PlayerTransform ? Quaternion.LookRotation(spawnPoint - playerPos, Vector3.up) : Quaternion.identity;
-            LevelManager.spawnedEnemies.Add(Instantiate(lmInstance.LevelEnemyList[UnityEngine.Random.Range(0, lmInstance.LevelEnemyList.Count)], spawnPoint, spawnRotation).GetComponent<DamageableEntity>());
-            yield return new WaitForSeconds(0.5f + i*0.5f);
-        }
-
-        // encounter loop
-        while (LevelManager.spawnedEnemies.Count > 0)
-        {
-            for (int i = 0; i < LevelManager.spawnedEnemies.Count; i++)
-            {
-                if (LevelManager.spawnedEnemies[i] == null) LevelManager.spawnedEnemies.RemoveAt(i);
-            }
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        // return from wall
-        target = gotoWallsBase[wall];
-        gotoWallsBase[wall].gameObject.SetActive(true);
-        goingUp = false;
-        yield return new WaitForSeconds(minionAttackCooldown);
-        usingMinionAttack = false;
-
-    end:
-
-        isAttacking = false;
-        yield return null;
-    }
-
-    void NextPhase()
-    {
-        switch (++phase)
-        {
-            case 1:
-                attackFuncs.Add(LasersRoutine);
-                break;
-            case 2:
-                attackFuncs.Add(ProjectilesRoutine);
-                foreach (var crystal in crystals) crystal.isInvincible = true;
-                break;
-            case 3:
-                attackFuncs.Add(MinionsRoutine);
-                sweeps++;
-                timeBetweenAttacks = 
-                attackPrepareTime = 
-                shootingStartDelay = 1f;
-                break;
-            case 4:
-                sweeps++;
-                portals+=2;
-                timeBetweenAttacks = 
-                attackPrepareTime =
-                shootingStartDelay = 0.5f;
-                break;
-        }
-    }
-
-    public override void ApplyDamage(int damage)
-    {
-    }
-
-    public override void ApplyDamageOverTime(int damage, float duration)
-    {
-    }
-
-    void StompAttack(GameObject sender)
-    {
-        for (int i = 0; i < stompTriggers.Length; i++)
-        {
-            if (stompTriggers[i].gameObject == sender && stompCooldowns[i] > stompCooldown)
-            {
-                stompCooldowns[i] = 0;
-                animator.SetTrigger(sender.tag);
-            }
-        }
-    }
-
-    protected override void OnHealthZeroed()
-    {
-        StopAllCoroutines();
-        
-        foreach (var portal in pooledPortals)
-        {
-            Destroy(portal.gameObject);
-        }
-
-        Destroy(gameObject, 1f);
     }
 }
