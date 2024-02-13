@@ -18,6 +18,12 @@ public class GolemBossScript : Enemy, IBossCommands
     readonly List<Func<IEnumerator>> attackFuncs = new();
     readonly List<DamageableEntity> crystals = new();
 
+    [Header("Stomp Attack")]
+    [SerializeField] Collider FrontRight;
+    [SerializeField] Collider FrontLeft;
+    [SerializeField] Collider BackRight;
+    [SerializeField] Collider BackLeft;
+
     [Header("Lasers")]
     [SerializeField] int laserDamage;
     [SerializeField] float halfDistance = 10f;

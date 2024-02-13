@@ -28,8 +28,8 @@ public class golemIkScript : MonoBehaviour
 
     private void InitializeGolem()
     {
-        body = transform.parent.parent.parent;
-        footSpacing = transform.localPosition.x;
+      
+        //footSpacing = transform.localPosition.x;
         currentPosition = newPosition = oldPosition = transform.position;
         currentNormal = newNormal = oldNormal = transform.up;
         lerp = 1f;
@@ -108,15 +108,15 @@ public class golemIkScript : MonoBehaviour
     }
 
 
-    // private void OnDrawGizmos()
-    // {
+    private void OnDrawGizmos()
+     {
 
-    //     DrawGizmoForNewPosition();
-    //  }
+         DrawGizmoForNewPosition();
+      }
 
-    // private void DrawGizmoForNewPosition()
-    // {
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawSphere(newPosition, 0.5f);
-    // }
+     private void DrawGizmoForNewPosition()
+     {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(newPosition, 0.5f);
+    }
 }
