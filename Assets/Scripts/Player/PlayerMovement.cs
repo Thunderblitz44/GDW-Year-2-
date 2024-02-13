@@ -152,6 +152,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             Rb.velocity = StaticUtilities.HorizontalizeVector(Rb.velocity);
             Rb.velocity += Vector3.up * jumpForce;
         };
+
+        actions.Locomotion.Run.Enable();
     }
 
     private void OnCollisionEnter(Collision collision)

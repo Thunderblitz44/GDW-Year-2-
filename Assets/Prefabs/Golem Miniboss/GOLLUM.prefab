@@ -68,7 +68,7 @@ Transform:
   - {fileID: 5967041162781112444}
   - {fileID: 9154924592974689883}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 91.399, z: 0}
 --- !u!54 &1630653423908187042
 Rigidbody:
@@ -111,7 +111,7 @@ NavMeshAgent:
   m_Acceleration: 100
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 15
+  m_StoppingDistance: 5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
   m_AutoRepath: 1
@@ -135,12 +135,12 @@ MonoBehaviour:
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
   slowUpdateInterval: 0.2
-  trigger: {fileID: 0}
   animator: {fileID: 4728185122260356129}
   timeBetweenAttacks: 2
   attackPrepareTime: 2
   maxAttackReps: 2
   stompDamage: 10
+  stompCooldown: 5
   laserDamage: 10
   halfDistance: 20
   sweepSpeed: 2.5
