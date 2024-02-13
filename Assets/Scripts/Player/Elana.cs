@@ -100,12 +100,11 @@ public class Elana : Player
             }
         };
 
-        projectile.owner = this;
         projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
             MagicBullet mb = Instantiate(projectile.prefab).GetComponent<MagicBullet>();
-            mb.Initialize(projectile);
+            mb.Initialize(projectile, this);
             pooledProjectiles.Add(mb.gameObject);
         }
 

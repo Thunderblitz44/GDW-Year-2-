@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class golemIkScript : MonoBehaviour
@@ -18,6 +16,7 @@ public class golemIkScript : MonoBehaviour
     private float lerp;
     // Access the ControllerScript
     public legController controllerScript;
+    Transform mainBody;
 
     private void Start()
     {
@@ -35,6 +34,7 @@ public class golemIkScript : MonoBehaviour
         currentPosition = newPosition = oldPosition = transform.position;
         currentNormal = newNormal = oldNormal = transform.up;
         lerp = 1f;
+        mainBody = GetComponentInParent<Rigidbody>().transform;
     }
 
     private void Update()
@@ -48,7 +48,7 @@ public class golemIkScript : MonoBehaviour
         transform.position = currentPosition;
         transform.up = currentNormal;
 
-        if (Physics.Raycast(body.position + (body.right * footSpacing), -transform.up, out RaycastHit info, 10f, terrainLayer.value))
+        if (Physics.Raycast(body.position + (body.right * footSpacing), -body.parent.up, out RaycastHit info, 30f, terrainLayer.value))
         {
            
             HandleStep(info);

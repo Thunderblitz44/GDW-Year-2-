@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class ShootingPortal : DamageableEntity
 {
-    int shots;
     int shotCount;
     ProjectileData projectile;
     float shotCooldown;
@@ -21,18 +19,16 @@ public class ShootingPortal : DamageableEntity
     {
         base.Awake();
         expl = transform.GetChild(0).gameObject;
+        expl.GetComponent<AttackTrigger>().onTriggerEnter += TriggerEnter;
         expl.SetActive(false);
-        expl.GetComponent<AttackTrigger>().onTriggerStay  += TriggerStay;
         (hp as EntityHealthComponent).DestroyOnHPZero = false;
     }
 
-    public void Setup(ProjectileData projectile, int shots, float shotCooldown, float startDelay)
+    public void Setup(ProjectileData projectile, float shotCooldown, float startDelay)
     {
         this.projectile = projectile;
-        this.shots = shots;
         this.shotCooldown = shotCooldown;
         this.startDelay = startDelay;
-        //if (!projectile.prefab) projectile.prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Magic Bullet/MagicBullet.prefab");
 
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
@@ -51,29 +47,34 @@ public class ShootingPortal : DamageableEntity
         hp.SetHealth(hp.MaxHealth);
     }
 
+    private void OnEnable()
+    {
+        hp.gameObject.SetActive(true);
+        explode = false;
+
+        Invoke(nameof(Die), 10f);
+    }
+
     private void Update()
     {
         if (settingUp) return; 
 
         startTimer += Time.deltaTime;
-        if (startTimer > startDelay && (shotTimer += Time.deltaTime) > shotCooldown) 
+        if (!explode && startTimer > startDelay && (shotTimer += Time.deltaTime) > shotCooldown) 
         {
             shotTimer = 0;
             Vector3 force = (LevelManager.PlayerTransform.position - transform.position).normalized * projectile.speed;
             StaticUtilities.ShootProjectile(pooledProjectiles, transform.position, force);
-            if (++shotCount >= shots) Invoke(nameof(Die), 0.1f);
         }
 
         transform.LookAt(LevelManager.PlayerTransform);
     }
 
-    void TriggerStay (Collider other)
+    void TriggerEnter(Collider other)
     {
-        if (other.tag == "GolemCrystal" && explode)
+        if (other.CompareTag("GolemCrystal"))
         {
-            explode = false;
-            other.GetComponent<DamageableEntity>().isInvincible = false;
-            Invoke(nameof(Die), 0.2f);   
+            other.GetComponent<BossWeakSpot>().Stun();
         }
     }
 
@@ -81,6 +82,7 @@ public class ShootingPortal : DamageableEntity
     {
         explode = true;
         expl.SetActive(true);
+        Invoke(nameof(Die), 0.2f);
     }
 
     void Die()

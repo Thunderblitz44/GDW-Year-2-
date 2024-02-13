@@ -14,12 +14,6 @@ public class DamageableEntity : MonoBehaviour, IDamageable
     {
         hp = GetComponent<HealthComponent>();
         if (hp) hp.onHealthZeroed += OnHealthZeroed;
-
-        /*if (enableDamageNumbers)
-        {
-            Debug.LogWarningFormat("Assign floating text prefab for {0}", name);
-            LoadFloatingTextPrefab();
-        }*/
     }
 
     protected virtual void OnHealthZeroed()
@@ -34,7 +28,6 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         hp.DeductHealth(damage);
 
         if (!enableDamageNumbers) return;
-        //else if (!floatingTextPrefab) LoadFloatingTextPrefab();
 
         Transform t = Instantiate(LevelManager.Instance.floatingTextPrefab).transform;
         t.position = transform.position + Vector3.up * damageNumberSpawnHeight;
@@ -59,17 +52,4 @@ public class DamageableEntity : MonoBehaviour, IDamageable
             yield return null;
         }
     }
-
-    private void OnParticleCollision(GameObject other)
-    {
-        ApplyDamage(1);
-    }
-
-    /*void LoadFloatingTextPrefab()
-    {
-#if UNITY_EDITOR
-        floatingTextPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/FloatingText.prefab");
-        if (!floatingTextPrefab) Debug.LogWarning("Can't find FloatingTextPrefab in Assets/Prefabs/FloatingText.prefab");
-#endif
-    }*/
 }

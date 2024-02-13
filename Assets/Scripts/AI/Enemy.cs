@@ -6,7 +6,6 @@ public class Enemy : DamageableEntity
     internal Transform target;
     internal NavMeshAgent agent;
     [SerializeField] float slowUpdateInterval = 0.2f;
-    [SerializeField] AttackTrigger trigger;
     float updateTimer;
     
     [SerializeField] internal Animator animator;
@@ -15,28 +14,14 @@ public class Enemy : DamageableEntity
     {
         base.Awake();
         agent = GetComponent<NavMeshAgent>();
-        if (trigger)
-        {
-            trigger.onTriggerEnter += OnAttackTriggerEnter;
-            trigger.onTriggerExit += OnAttackTriggerExit;
-        }
+        
     }
 
     protected virtual void Update()
     {
-        if (animator) animator.SetFloat("ZSpeed", agent.velocity.magnitude);
-
         // timer to recalculate navmesh agent
         updateTimer += Time.deltaTime;
         if (updateTimer >= slowUpdateInterval) SlowUpdate();
-    }
-
-    protected virtual void OnAttackTriggerEnter(Collider other)
-    {
-    }
-
-    protected virtual void OnAttackTriggerExit(Collider other)
-    {
     }
 
     protected virtual void SlowUpdate()

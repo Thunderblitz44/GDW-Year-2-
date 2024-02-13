@@ -5761,8 +5761,6 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 4608
     owner: {fileID: 4217710049518990084}
-  shootCooldown: 1.5
-  shootStartDelay: 0.5
   shootOrigin: {fileID: 2724655899545030452}
   particleSystem: {fileID: 3056162837339701200}
   HeadTarget: {fileID: 6535942080977790750}
@@ -6546,6 +6544,7 @@ GameObject:
   - component: {fileID: 2724655899545030452}
   - component: {fileID: 3056162837339701200}
   - component: {fileID: 7439624432600961701}
+  - component: {fileID: 4997796446176632956}
   m_Layer: 12
   m_Name: Shoot Origin
   m_TagString: Untagged
@@ -10502,7 +10501,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 4294967295
+      m_Bits: 12279
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -11539,6 +11538,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &4997796446176632956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6872503113227972740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da7de094ef5bc80469759a8d246e03b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6896477766018008509
 GameObject:
   m_ObjectHideFlags: 0
