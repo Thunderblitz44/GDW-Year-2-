@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GolemRanger : Enemy
@@ -9,6 +7,7 @@ public class GolemRanger : Enemy
     [SerializeField] Transform shootOrigin;
     [SerializeField] new ParticleSystem particleSystem;
     [SerializeField] GameObject HeadTarget;
+    AttackTrigger trigger;
     private float xSpeed;
     private float zSpeed;
     public float shootForce = 5;
@@ -24,6 +23,13 @@ public class GolemRanger : Enemy
         { 
             Debug.LogWarning("No shoot origin set for ranger golem!");
             shootOrigin = transform;
+        }
+
+        trigger = transform.GetComponentInChildren<AttackTrigger>();
+        if (trigger)
+        {
+            trigger.onTriggerEnter += OnAttackTriggerEnter;
+            trigger.onTriggerExit += OnAttackTriggerExit;
         }
     }
 
@@ -45,13 +51,13 @@ public class GolemRanger : Enemy
 
     }
 
-    protected override void OnAttackTriggerEnter(Collider other)
+    void OnAttackTriggerEnter(Collider other)
     {
         //attack = true;
         animator.SetBool("InAttackRange", true);
     }
 
-    protected override void OnAttackTriggerExit(Collider other)
+    void OnAttackTriggerExit(Collider other)
     {
         animator.SetBool("InAttackRange", false);
     }

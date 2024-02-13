@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GolemKnight : Enemy
@@ -11,6 +10,7 @@ public class GolemKnight : Enemy
     float attackCooldownTimer;
     bool attack;
     [SerializeField] GameObject HeadTarget;
+    AttackTrigger trigger;
     MeleeHitBox sword;
 
     private float xSpeed;
@@ -23,6 +23,13 @@ public class GolemKnight : Enemy
 
         sword = transform.GetComponentInChildren<MeleeHitBox>(true);
         sword.damage = attackDamage;
+
+        trigger = transform.GetComponentInChildren<AttackTrigger>();
+        if (trigger)
+        {
+            trigger.onTriggerEnter += OnAttackTriggerEnter;
+            trigger.onTriggerExit += OnAttackTriggerExit;
+        }
     }
 
     protected override void Update()
@@ -54,13 +61,13 @@ public class GolemKnight : Enemy
 
     }
 
-    protected override void OnAttackTriggerEnter(Collider other)
+    void OnAttackTriggerEnter(Collider other)
     {
         attack = true;
         animator.SetBool("CanAttack", true);
     }
 
-    protected override void OnAttackTriggerExit(Collider other)
+    void OnAttackTriggerExit(Collider other)
     {
         attack = false;
         attackTimer = 0f;
@@ -93,11 +100,7 @@ public class GolemKnight : Enemy
     }
     public void EnableAILocomotion()
     {
-      //  Debug.Log("Current agent speed: " + agent.speed); // Debugging line
         agent.speed = 2;
-      //  Debug.Log("Agent speed set to 2"); // Debugging line
-        
-        //Debug.Log("dddddddddd");
     }
 
     public void ReadyAttackR()
