@@ -33,9 +33,9 @@ public class HealthComponent : MonoBehaviour
         }
     }
 
-    public void SetHealth(int value)
+    public virtual void SetHealth(int value)
     {
         health = value;
-        hpbar.SetHPValue(health);
+        if (hpbar) hpbar.SetHPValue(health);
     }
 }

@@ -469,6 +469,7 @@ GameObject:
   - component: {fileID: 8166721978381252773}
   - component: {fileID: 8603241717736914836}
   - component: {fileID: 7431566024961960637}
+  - component: {fileID: 6560816036120648808}
   m_Layer: 12
   m_Name: SubEmitter0
   m_TagString: Untagged
@@ -4325,11 +4326,11 @@ ParticleSystem:
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 2
-    inside: 1
+    inside: 0
     outside: 0
-    enter: 0
+    enter: 2
     exit: 0
     colliderQueryMode: 0
     radiusScale: 1
@@ -5353,6 +5354,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &6560816036120648808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901978203048460771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0638aa0f3e7aa5f44ba71971d4fd3b73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2111272488242941449
 GameObject:
   m_ObjectHideFlags: 0
@@ -5735,7 +5748,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
-  floatingTextPrefab: {fileID: 144886900167941923, guid: 55652b8c6a95fec4c8cf0a4c1acb9422, type: 3}
   isInvincible: 0
   slowUpdateInterval: 0.2
   trigger: {fileID: 5802551568611516133}
@@ -7504,7 +7516,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 2
+        scalar: 7.8
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -7562,7 +7574,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 2
+        scalar: 17.72
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -7620,7 +7632,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 1
+        scalar: 12.38
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -10500,13 +10512,14 @@ ParticleSystem:
   TriggerModule:
     enabled: 1
     serializedVersion: 2
-    inside: 1
+    inside: 2
     outside: 0
-    enter: 0
+    enter: 2
     exit: 0
-    colliderQueryMode: 0
+    colliderQueryMode: 2
     radiusScale: 1
-    primitives: []
+    primitives:
+    - {fileID: 2469168450296438112}
   SubModule:
     serializedVersion: 2
     enabled: 1
@@ -10514,7 +10527,7 @@ ParticleSystem:
     - serializedVersion: 3
       emitter: {fileID: 8603241717736914836}
       type: 1
-      properties: 0
+      properties: 2
       emitProbability: 1
   LightsModule:
     enabled: 0
@@ -10886,7 +10899,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
   CustomDataModule:
     enabled: 0
-    mode0: 0
+    mode0: 1
     vectorComponentCount0: 4
     color0:
       serializedVersion: 2

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class golemIkScript : MonoBehaviour
@@ -48,7 +46,7 @@ public class golemIkScript : MonoBehaviour
         transform.position = currentPosition;
         transform.up = currentNormal;
 
-        if (Physics.Raycast(body.position + (body.right * footSpacing), -transform.up, out RaycastHit info, 10f, terrainLayer.value))
+        if (Physics.Raycast(body.position + (body.right * footSpacing), -body.parent.up, out RaycastHit info, 20f, terrainLayer.value))
         {
            
             HandleStep(info);

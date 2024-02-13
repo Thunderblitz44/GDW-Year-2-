@@ -68,7 +68,7 @@ public class GolemBossScript : Enemy, IBossCommands
         // timers
         // attack checkers/counters
         // attacks
-        if (!isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
+        if (attackFuncs.Count > 0 && !isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
         {
             //Debug.Log("new attack");
             isAttacking = true;

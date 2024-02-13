@@ -37,5 +37,9 @@ public class EntityHealthComponent : HealthComponent
         }
     }
 
-
+    public override void SetHealth(int value)
+    {
+        health = value;
+        if (entityHPBar) entityHPBar.SetHPValue(health);
+    }
 }
