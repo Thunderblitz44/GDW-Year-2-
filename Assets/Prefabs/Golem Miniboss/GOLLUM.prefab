@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 2566217086271682685}
   - component: {fileID: 2715988729204705674}
   - component: {fileID: 4300098194038806983}
+  - component: {fileID: 4783712404027010083}
   m_Layer: 0
   m_Name: GOLLUM
   m_TagString: Untagged
@@ -68,7 +69,7 @@ Transform:
   - {fileID: 5967041162781112444}
   - {fileID: 9154924592974689883}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 91.399, z: 0}
 --- !u!54 &1630653423908187042
 Rigidbody:
@@ -140,6 +141,7 @@ MonoBehaviour:
   attackPrepareTime: 2
   maxAttackReps: 2
   stompDamage: 10
+  stompKnockback: {x: 10, y: 10}
   stompCooldown: 5
   laserDamage: 10
   halfDistance: 20
@@ -190,11 +192,14 @@ MonoBehaviour:
   portalPrefab: {fileID: 5136089227381563992, guid: 3444e2e4a9166ab4ea38b0de31511543, type: 3}
   spawnBounds: {fileID: 8412768072518117357}
   minionCount: 10
+  minionPrepareTime: 5
   minionAttackCooldown: 60
   gotoWallsBase:
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   gotoWalls:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   stunTime: 5
@@ -210,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f556b4fda59102498d0731f2a5202a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 250
+  maxHealth: 200
   hpBarPrefab: {fileID: 0}
   animator: {fileID: 0}
   phases:
@@ -218,6 +223,37 @@ MonoBehaviour:
   - 0.75
   - 0.5
   - 0.25
+--- !u!114 &4783712404027010083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46217362901632305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1505862733
+      Data2: 1083296701
+      Data3: -1217628749
+      Data4: -423801944
+    Path: event:/Golem Core
+  Event: 
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &52743916050893412
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,7 +361,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6384746236253779876}
   - component: {fileID: 5539499250455198707}
-  - component: {fileID: 6126893421075570914}
   m_Layer: 2
   m_Name: Bone.014.R.001_end
   m_TagString: Untagged
@@ -370,37 +405,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.605983
   m_Center: {x: -1.1765513, y: -1.0619221, z: -0.12466489}
---- !u!114 &6126893421075570914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 446741108393369757}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: Ground Tag
-  EventReference:
-    Guid:
-      Data1: -1731825239
-      Data2: 1204342526
-      Data3: 749909686
-      Data4: 2116103429
-    Path: event:/New Event
-  Event: 
-  PlayEvent: 3
-  StopEvent: 4
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  AllowNonRigidbodyDoppler: 1
-  Params: []
-  OverrideAttenuation: 1
-  OverrideMinDistance: 10.76
-  OverrideMaxDistance: 20
 --- !u!1 &675250527851452112
 GameObject:
   m_ObjectHideFlags: 0
@@ -1765,7 +1769,7 @@ MonoBehaviour:
     m_Bits: 64
   hint: {fileID: 6929089880032644206}
   speed: 6
-  stepDistance: 4
+  stepDistance: 4.5
   stepLength: 0.01
   stepHeight: 4
   footOffset: {x: 0, y: -0.5, z: -3}
@@ -3303,7 +3307,7 @@ MonoBehaviour:
     m_Bits: 64
   hint: {fileID: 8414436233799699592}
   speed: 6
-  stepDistance: 4
+  stepDistance: 4.5
   stepLength: 0.01
   stepHeight: 4
   footOffset: {x: 0, y: -0.5, z: 3}
@@ -4010,7 +4014,7 @@ MonoBehaviour:
     m_Bits: 64
   hint: {fileID: 8134747874088874649}
   speed: 6
-  stepDistance: 4
+  stepDistance: 4.5
   stepLength: 0.01
   stepHeight: 4
   footOffset: {x: 0, y: -0.5, z: 3}
@@ -4408,7 +4412,7 @@ MonoBehaviour:
     m_Bits: 64
   hint: {fileID: 7344714898617646987}
   speed: 6
-  stepDistance: 4
+  stepDistance: 4.5
   stepLength: 0.01
   stepHeight: 4
   footOffset: {x: 0, y: -0.5, z: -3}

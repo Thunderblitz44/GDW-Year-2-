@@ -12,12 +12,13 @@ public class FireTornado : MonoBehaviour
 
     private void Awake()
     {
-        FMODUnity.RuntimeManager.PlayOneShot("event:/Fire Tornado Placeholder");
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Fire Tornado Placeholder", gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (other.gameObject.layer != LayerMask.NameToLayer("Player") ||
+            other.gameObject.layer != LayerMask.NameToLayer("Friendly"))
         {
             enemiesInTornado.Add(other.gameObject);
             damageTimers.Add(0);
@@ -44,7 +45,8 @@ public class FireTornado : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (other.gameObject.layer != LayerMask.NameToLayer("Player") || 
+            other.gameObject.layer != LayerMask.NameToLayer("Friendly"))
         {
             StaticUtilities.TryToDamageOverTime(other.gameObject, Damage, BurnTime);
             damageTimers.RemoveAt(enemiesInTornado.IndexOf(other.gameObject));

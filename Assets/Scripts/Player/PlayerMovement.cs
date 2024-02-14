@@ -100,6 +100,36 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
             Rb.velocity += moveDirection * MoveAcceleration;
         }
+        /*
+         if (IsGrounded)
+        {
+            Vector3 rotatedInput = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
+            moveDirection = rotatedInput;
+            if (IsGrounded && groundAngle < maxSlopeAngle)
+            {
+                moveDirection = Vector3.ProjectOnPlane(rotatedInput, ground.normal);
+            }
+            Rb.velocity += moveDirection * MoveAcceleration;
+
+            // cap speed
+            if (Rb.velocity.magnitude >= MoveSpeed)
+            {
+                Rb.velocity = moveDirection * MoveSpeed;
+            }
+        }
+        else
+        {
+            moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
+            Rb.velocity += moveDirection * MoveAcceleration;
+
+            // cap speed
+            if (StaticUtilities.HorizontalizeVector(Rb.velocity).magnitude >= MoveSpeed)
+            {
+                Rb.velocity = moveDirection * MoveSpeed;
+            }
+        }
+        DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
+        */
 
         // Steps
         RaycastHit hitLower;

@@ -6,7 +6,6 @@ public class DamageableEntity : MonoBehaviour, IDamageable
 {
     public bool enableDamageNumbers = true;
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
-    //GameObject floatingTextPrefab;
     public bool isInvincible;
     protected HealthComponent hp;
 
@@ -26,6 +25,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         if (!hp) return;
         if (isInvincible) damage = 0;
         hp.DeductHealth(damage);
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Elana Hit Success", gameObject);
 
         if (!enableDamageNumbers) return;
 
