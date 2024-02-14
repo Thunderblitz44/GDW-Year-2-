@@ -173,6 +173,7 @@ public class Elana : Player
             
             //Animate player/wolf attacking in sync
             spiritWolfAnimator.PrimaryAttack();
+            FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wolf Swipe", gameObject);
         };
         actions.Abilities.PrimaryAttack.canceled += ctx =>
         {
@@ -299,6 +300,7 @@ DragonflyAnimator.SetBool("IsShooting", true);
     void Dodge(Vector3 start, Vector3 end, float speed)
     {
         isDodgeing = isInvincible = true;
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wave Dash", gameObject);
         float dist = Vector3.Distance(start, end);
 
         // lerp it

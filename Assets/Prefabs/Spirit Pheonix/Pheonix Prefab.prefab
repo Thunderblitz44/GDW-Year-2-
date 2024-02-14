@@ -705,6 +705,7 @@ GameObject:
   - component: {fileID: 5518432593760645779}
   - component: {fileID: 3344167923997644939}
   - component: {fileID: 6636851960981735281}
+  - component: {fileID: 2908696448004037049}
   m_Layer: 0
   m_Name: Pheonix Prefab
   m_TagString: Untagged
@@ -779,6 +780,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29825343549c1bd4f8f3dedefa78076e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2908696448004037049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7551055892017045898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 2038689029
+      Data2: 1128867256
+      Data3: -691617644
+      Data4: -575156148
+    Path: event:/Phoenix Flap
+  Event: 
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &7648755841356979828
 GameObject:
   m_ObjectHideFlags: 0

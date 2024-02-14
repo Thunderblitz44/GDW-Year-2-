@@ -26,6 +26,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
         if (!hp) return;
         if (isInvincible) damage = 0;
         hp.DeductHealth(damage);
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Elana Hit Success", gameObject);
 
         if (!enableDamageNumbers) return;
 
