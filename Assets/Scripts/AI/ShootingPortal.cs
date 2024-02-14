@@ -67,6 +67,7 @@ public class ShootingPortal : DamageableEntity
             shotTimer = 0;
             Vector3 force = (LevelManager.PlayerTransform.position - transform.position).normalized * projectile.speed;
             StaticUtilities.ShootProjectile(pooledProjectiles, transform.position, force);
+            FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Boss Bullet", gameObject);
         }
 
         transform.LookAt(LevelManager.PlayerTransform);
