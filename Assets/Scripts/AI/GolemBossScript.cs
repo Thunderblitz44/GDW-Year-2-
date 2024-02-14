@@ -19,9 +19,11 @@ public class GolemBossScript : Enemy, IBossCommands
     readonly List<DamageableEntity> crystals = new();
 
     [Header("Stomp Attack")]
-    [SerializeField] float stompDamage = 10f;
+    [SerializeField] int stompDamage = 10;
+    [SerializeField] Vector2 stompKnockback = Vector2.one * 10f;
     [SerializeField] float stompCooldown = 5f;
     AttackTrigger[] stompTriggers;
+    MeleeHitBox[] stompDamagers;
     readonly float[] stompCooldowns = new float[4] { 0, 0, 0, 0 };
     bool stomping;
 
@@ -58,6 +60,9 @@ public class GolemBossScript : Enemy, IBossCommands
     [SerializeField] Transform[] gotoWalls;
     bool goingUp;
 
+    [Header("Phase 2+")]
+    [SerializeField] float stunTime = 5f;
+
 
     // battle info
     bool battleStarted = false;
@@ -70,10 +75,17 @@ public class GolemBossScript : Enemy, IBossCommands
         crystals.AddRange(GetComponentsInChildren<DamageableEntity>().ToList());
         crystals.RemoveAt(0);
 
-        stompTriggers = transform.GetComponentsInChildren<AttackTrigger>();
+        stompTriggers = GetComponentsInChildren<AttackTrigger>();
         foreach (var trigger in stompTriggers)
         {
             trigger.onTriggerEnterNotify += StompAttack;
+        }
+
+        stompDamagers = GetComponentsInChildren<MeleeHitBox>(true);
+        foreach (var trigger in stompDamagers)
+        {
+            trigger.damage = stompDamage;
+            trigger.knockback = stompKnockback;
         }
     }
 
@@ -180,12 +192,12 @@ public class GolemBossScript : Enemy, IBossCommands
             }
             else if (s == 1) // front - back
             {
-                sweepDir = StaticUtilities.FlatDirection(LevelManager.PlayerTransform.position, laserEmitter.transform.position).normalized;
+                sweepDir = StaticUtilities.FlatDirection(LevelManager.PlayerTransform.position, laserEmitter.transform.position);
             }
             else  
             {
                 Vector3 lr = Vector3.Cross(targetDir.normalized, Vector3.up);
-                Vector3 fb = StaticUtilities.FlatDirection(LevelManager.PlayerTransform.position, laserEmitter.transform.position).normalized;
+                Vector3 fb = StaticUtilities.FlatDirection(LevelManager.PlayerTransform.position, laserEmitter.transform.position);
                 if (s == 2) sweepDir = (fb + lr).normalized; // front right - back left
                 else if (s == 3) sweepDir = (fb - lr).normalized; // front left - back right
             }
@@ -361,13 +373,15 @@ public class GolemBossScript : Enemy, IBossCommands
         switch (++phase)
         {
             case 1:
-                attackFuncs.Add(LasersRoutine);
+                //attackFuncs.Add(LasersRoutine);
                 break;
             case 2:
                 attackFuncs.Add(ProjectilesRoutine);
+                animator.SetBool("ShieldsUp", true);
                 foreach (var crystal in crystals) crystal.isInvincible = true;
                 break;
             case 3:
+                animator.SetBool("ShieldsUp", true);
                 attackFuncs.Add(MinionsRoutine);
                 sweeps++;
                 timeBetweenAttacks = 
@@ -375,6 +389,7 @@ public class GolemBossScript : Enemy, IBossCommands
                 shootingStartDelay = 1f;
                 break;
             case 4:
+                animator.SetBool("ShieldsUp", true);
                 sweeps++;
                 portals+=2;
                 timeBetweenAttacks = 
@@ -414,5 +429,18 @@ public class GolemBossScript : Enemy, IBossCommands
         }
 
         Destroy(gameObject, 1f);
+    }
+
+    public void Stun()
+    {
+        foreach (var crystal in crystals) crystal.isInvincible = false;
+        animator.SetBool("ShieldsUp", false);
+        Invoke(nameof(UnStun), stunTime);
+    }
+
+    void UnStun()
+    {
+        foreach (var crystal in crystals) crystal.isInvincible = true;
+        animator.SetBool("ShieldsUp", true);
     }
 }

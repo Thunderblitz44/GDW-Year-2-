@@ -111,7 +111,7 @@ public class GolemKnight : Enemy
 
     public void DisableAttackR()
     {
-        sword.Hide();
+        sword.gameObject.SetActive(false);
         Debug.Log("2");
     }
     public void ReadyAttackL()
@@ -122,7 +122,7 @@ public class GolemKnight : Enemy
 
     public void DisableAttackL()
     {
-        sword.Hide();
+        sword.gameObject.SetActive(false);
         Debug.Log("4");
         
     }

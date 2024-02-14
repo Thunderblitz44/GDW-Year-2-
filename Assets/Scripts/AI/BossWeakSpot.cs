@@ -1,23 +1,18 @@
 
 public class BossWeakSpot : DamageableEntity
 {
-    float stunTime = 5;
+    GolemBossScript bossScript;
 
     protected override void Awake()
     {
         base.Awake();
         hp = GetComponentInParent<BossHealthComponent>();
+        bossScript = GetComponentInParent<GolemBossScript>();
     }
 
-    public void Stun()
+    public void Stun(int damage)
     {
-        isInvincible = false;
-        ApplyDamage(10);
-        Invoke(nameof(BecomeInvincible), stunTime);
-    }
-
-    void BecomeInvincible()
-    {
-        isInvincible = true;
+        ApplyDamage(damage);
+        bossScript.Stun();
     }
 }
