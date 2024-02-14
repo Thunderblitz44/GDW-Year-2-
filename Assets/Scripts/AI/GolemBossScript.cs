@@ -52,11 +52,12 @@ public class GolemBossScript : Enemy, IBossCommands
 
     [Header("Spawn Minions")]
     [SerializeField] int minionCount;
+    [SerializeField] float minionPrepareTime = 10f;
     [SerializeField] float minionAttackCooldown = 10f;
     bool usingMinionAttack = false;
 
     [Header("Walking on walls")]
-    [SerializeField] Transform[] gotoWallsBase;
+    [SerializeField] BoxCollider[] gotoWallsBase;
     [SerializeField] Transform[] gotoWalls;
     bool goingUp;
 
@@ -142,7 +143,7 @@ public class GolemBossScript : Enemy, IBossCommands
                    target = LevelManager.PlayerTransform;
                    agent.speed = 3.5f;
                 }
-               gotoWallsBase[i].gameObject.SetActive(false);
+                gotoWallsBase[i].enabled = false;
             }
         }
     }
@@ -325,12 +326,12 @@ public class GolemBossScript : Enemy, IBossCommands
         // go up wall
         agent.speed = 6;
         int wall = UnityEngine.Random.Range(0, gotoWallsBase.Length);
-        target = gotoWallsBase[wall];
-        gotoWallsBase[wall].gameObject.SetActive(true);
+        target = gotoWallsBase[wall].transform;
+        gotoWallsBase[wall].enabled = true;
         goingUp = true;
 
 
-        yield return new WaitForSeconds(attackPrepareTime);
+        yield return new WaitForSeconds(minionPrepareTime);
         isAttacking = false;
         LevelManager lmInstance = LevelManager.Instance;
         Bounds bossBounds = LevelManager.Instance.CurrentEncounter.EncounterBounds;
@@ -356,8 +357,8 @@ public class GolemBossScript : Enemy, IBossCommands
         }
 
         // return from wall
-        target = gotoWallsBase[wall];
-        gotoWallsBase[wall].gameObject.SetActive(true);
+        target = gotoWallsBase[wall].transform;
+        gotoWallsBase[wall].enabled = false;
         goingUp = false;
         yield return new WaitForSeconds(minionAttackCooldown);
         usingMinionAttack = false;
@@ -373,7 +374,7 @@ public class GolemBossScript : Enemy, IBossCommands
         switch (++phase)
         {
             case 1:
-                //attackFuncs.Add(LasersRoutine);
+                attackFuncs.Add(LasersRoutine);
                 break;
             case 2:
                 attackFuncs.Add(ProjectilesRoutine);
