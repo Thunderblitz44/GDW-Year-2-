@@ -102,4 +102,14 @@ public class Player : DamageableEntity
         PausePlayer();
         LevelManager.Instance.Respawn(0.5f);
     }
+
+    public void FreezeCamera()
+    {
+        freeLookCam.Follow = null;
+    }
+
+    public void UnFreezeCamera()
+    {
+        freeLookCam.Follow = transform;
+    }
 }

@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour, IInputExpander
@@ -110,10 +109,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
             if (speed < MoveSpeed) oldMoveSpeed = MoveSpeed;
         }
-        //oldMoveDirection = moveDirection;
 
         DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
-
+        Debug.Log(Rb.velocity + " - " + moveDirection);
 
         // Steps
         RaycastHit hitLower;
