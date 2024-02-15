@@ -98,7 +98,7 @@ public class Player : DamageableEntity
     protected override void OnHealthZeroed()
     {
         // player death.
-        LevelManager.isPlayerDead = true;
+        LevelManager.isGameOver = true;
         PausePlayer();
         LevelManager.Instance.Respawn(0.5f);
     }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -13,7 +12,7 @@ public class LevelManager : MonoBehaviour
     public static Transform PlayerTransform { get; private set; }
     public Player PlayerScript { get; private set; }
     public static bool isGamePaused = false;
-    public static bool isPlayerDead = false;
+    public static bool isGameOver = false;
 
     [SerializeField] List<EncounterVolume> encounterVolumes;
     [SerializeField] List<Checkpoint> checkpoints = new();
@@ -114,8 +113,6 @@ public class LevelManager : MonoBehaviour
     public void Respawn(float delay = 0)
     {
         if (!CurrentCheckpoint) return;
-        PlayerScript.MovementScript.DisableLocomotion();
-        //PlayerScript.PausePlayer();
         transitioner.FadeToBlack(delay);
     }
 
@@ -189,7 +186,7 @@ public class LevelManager : MonoBehaviour
 
     void ScreenIsBlack()
     {
-        if (isPlayerDead) SceneManager.LoadScene(Id);
+        if (isGameOver) SceneManager.LoadScene(Id);
         else
         {
             transitioner.FadeToClear(0.5f);
@@ -199,6 +196,6 @@ public class LevelManager : MonoBehaviour
 
     void ScreenIsClear()
     {
-        PlayerScript.MovementScript.EnableLocomotion();
+        PlayerScript.UnPausePlayer();
     }
 }

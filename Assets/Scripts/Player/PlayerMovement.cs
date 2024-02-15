@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour, IInputExpander
@@ -16,6 +17,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     public bool IsMoving { get { return input != Vector3.zero; } }
     public Vector3 MoveDirection { get { return moveDirection; } }
     float MoveSpeed { get { return IsGrounded ? isRunning ? runSpeed : walkSpeed : airSpeed; } }
+    float oldMoveSpeed = 0f;
     float MoveAcceleration { get { return IsGrounded ? isRunning ? runAcceleration : walkAcceleration : airAcceleration; } }
     [Space(10f)]
 
@@ -93,43 +95,25 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             {
                 moveDirection = Vector3.ProjectOnPlane(rotatedInput, ground.normal);
             }
-            Rb.velocity += moveDirection * MoveAcceleration;
+            Rb.velocity += MoveAcceleration * Time.fixedDeltaTime * moveDirection;
+            oldMoveSpeed = MoveSpeed;
         }
-        else if (!IsGrounded && StaticUtilities.HorizontalizeVector(Rb.velocity).magnitude < MoveSpeed)
+        else if (!IsGrounded)
         {
             moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
-            Rb.velocity += moveDirection * MoveAcceleration;
-        }
-        /*
-         if (IsGrounded)
-        {
-            Vector3 rotatedInput = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
-            moveDirection = rotatedInput;
-            if (IsGrounded && groundAngle < maxSlopeAngle)
+            Vector3 newVel = Rb.velocity + MoveAcceleration * Time.fixedDeltaTime * moveDirection;
+            float speed = StaticUtilities.HorizontalizeVector(newVel).magnitude;
+            if (speed < oldMoveSpeed)
             {
-                moveDirection = Vector3.ProjectOnPlane(rotatedInput, ground.normal);
+                Rb.velocity = newVel;
             }
-            Rb.velocity += moveDirection * MoveAcceleration;
 
-            // cap speed
-            if (Rb.velocity.magnitude >= MoveSpeed)
-            {
-                Rb.velocity = moveDirection * MoveSpeed;
-            }
+            if (speed < MoveSpeed) oldMoveSpeed = MoveSpeed;
         }
-        else
-        {
-            moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
-            Rb.velocity += moveDirection * MoveAcceleration;
+        //oldMoveDirection = moveDirection;
 
-            // cap speed
-            if (StaticUtilities.HorizontalizeVector(Rb.velocity).magnitude >= MoveSpeed)
-            {
-                Rb.velocity = moveDirection * MoveSpeed;
-            }
-        }
         DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
-        */
+
 
         // Steps
         RaycastHit hitLower;
@@ -156,6 +140,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             this.input = Vector3.right * input.x + Vector3.forward * input.y;
 
             if (input.y < 0.5f && isRunning) isRunning = false;
+
+            if (input != Vector2.zero && !IsGrounded) Rb.drag = 1f;
+            else Rb.drag = 0;
         };
 
         actions.Locomotion.Move.canceled += ctx =>
@@ -167,7 +154,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // Run
         actions.Locomotion.Run.performed += ctx =>
         {
-            if (Mathf.Abs(input.x) == 1 || input.z < 0) return;
             isRunning = true;
         };
 

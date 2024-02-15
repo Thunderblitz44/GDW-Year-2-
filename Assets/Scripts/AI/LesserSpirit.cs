@@ -36,4 +36,11 @@ public class LesserSpirit : DamageableEntity
         pauseHover = false;
         startPos = transform.position;
     }
+
+    protected override void OnHealthZeroed()
+    {
+        base.OnHealthZeroed();
+        LevelManager.isGameOver = true;
+        LevelManager.Instance.Respawn(1f);
+    }
 }
