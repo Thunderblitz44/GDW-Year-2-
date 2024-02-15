@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Level1Encounter3 : EncounterVolume
 {
@@ -37,8 +39,6 @@ public class Level1Encounter3 : EncounterVolume
     protected override void Update()
     {
         base.Update();
-
-        // move the spirit
     }
 
     protected override IEnumerator EncounterRoutine()
@@ -52,18 +52,26 @@ public class Level1Encounter3 : EncounterVolume
             yield return new WaitForSeconds(ignitionDelay);
         }
 
+        yield return new WaitForSeconds(1f);
+        EntityHealthComponent shp = spirit.GetComponent<EntityHealthComponent>();
+        shp.ShowHPBar();
+
         // make the spirit grow
         for (float i = 0, delay = surviveTime / torchLights.Length; i <= surviveTime + 1; i+=Time.deltaTime)
         {
             // grow the spirit
-            spirit.localScale = Vector3.Lerp(startScale, endScale, i / surviveTime);
+            if (spirit) spirit.localScale = Vector3.Lerp(startScale, endScale, i / surviveTime);
 
             // extinguish torches
             int n = Mathf.FloorToInt(i / delay);
             if (n > 0 && torchLights[n-1].activeSelf) torchLights[n-1].SetActive(false);
 
             // spawn enemies
-            if (Mathf.FloorToInt(i / enemySpawnDelay) > totalSpawned) SpawnEnemy();
+            if (Mathf.FloorToInt(i / enemySpawnDelay) > totalSpawned)
+            {
+                SpawnEnemy();
+                LevelManager.spawnedEnemies.Last().GetComponent<Enemy>().SetFollowTarget(spirit);
+            }
 
             yield return null;
         }
@@ -78,11 +86,15 @@ public class Level1Encounter3 : EncounterVolume
             yield return new WaitForSeconds(0.1f);
         }
         
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
+        shp.HideHPBar();
+        yield return new WaitForSeconds(0.5f);
 
         // move spirit to pillar
         Vector3 startPos = spirit.position;
         AnimationCurve moveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        LesserSpirit sp = spirit.GetComponent<LesserSpirit>();
+        sp.PauseHover();
         for (float i = 0; i <= 1; i += Time.deltaTime * moveSpeed)
         {
             spirit.position = Vector3.Lerp(startPos, gotoTransform.position, moveCurve.Evaluate(i));
@@ -90,7 +102,7 @@ public class Level1Encounter3 : EncounterVolume
         }
 
         yield return new WaitForSeconds(1f);
-
+        sp.UnPauseHover();
 
         // Make the pillar fall over
         for (float i = 0; i <= 1; i += Time.deltaTime * fallSpeed)

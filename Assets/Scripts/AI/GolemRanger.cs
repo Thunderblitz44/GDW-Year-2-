@@ -16,7 +16,6 @@ public class GolemRanger : Enemy
     {
         base.Awake();
 
-
         particleSystem.GetComponent<MagicBullet>().Initialize(projectile, this);
 
         if (!shootOrigin) 
@@ -36,7 +35,9 @@ public class GolemRanger : Enemy
     protected override void Update()
     {
         base.Update();
-        HeadTarget.transform.position = LevelManager.PlayerTransform.position;
+        if (!target) return;
+
+        HeadTarget.transform.position = target.position;
 
         float smoothingFactor = 0.1f;
 
@@ -48,7 +49,6 @@ public class GolemRanger : Enemy
         // Set the velocity values in the animator
         animator.SetFloat("XSpeed", xSpeed);
         animator.SetFloat("ZSpeed", zSpeed);
-
     }
 
     void OnAttackTriggerEnter(Collider other)
@@ -66,7 +66,6 @@ public class GolemRanger : Enemy
     {
         agent.enabled = true;
         HeadTarget.SetActive(true);
-        target = LevelManager.PlayerTransform;
     }
 
     public void DisableAI()
