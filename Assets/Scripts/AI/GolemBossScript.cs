@@ -425,6 +425,8 @@ public class GolemBossScript : Enemy, IBossCommands
     protected override void OnHealthZeroed()
     {
         StopAllCoroutines();
+
+        (hp as BossHealthComponent).Hide();
         
         foreach (var portal in pooledPortals)
         {

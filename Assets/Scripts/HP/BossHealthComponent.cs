@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class BossHealthComponent : HealthComponent
@@ -10,14 +11,14 @@ public class BossHealthComponent : HealthComponent
 
     public void Show()
     {
+        hpbar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = LevelManager.Instance.Boss.name;
         hpBarPrefab.SetActive(true);
-        // play anim
     }
 
     public void Hide()
     {
         hpBarPrefab.SetActive(false);
-        // play anim
+        animator.SetTrigger("BossDead");
     }
 
     public override void DeductHealth(int value)

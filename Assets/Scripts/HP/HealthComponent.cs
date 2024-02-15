@@ -8,7 +8,7 @@ public class HealthComponent : MonoBehaviour
     [SerializeField] protected GameObject hpBarPrefab;
     protected int health;
     public int Health { get { return health; } }
-    HPBar hpbar;
+    protected HPBar hpbar;
 
     public Action onHealthZeroed;
 

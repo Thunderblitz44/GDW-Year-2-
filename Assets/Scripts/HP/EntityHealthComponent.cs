@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class EntityHealthComponent : HealthComponent
 {
-    [SerializeField] internal float height = 1.5f;
+    [SerializeField] float height = 1.5f;
+    [SerializeField] bool autoHide = true;
     EntityHPBar entityHPBar;
 
     public bool DestroyOnHPZero { get; set; } = true;
@@ -37,7 +38,7 @@ public class EntityHealthComponent : HealthComponent
     {
         health = Mathf.Clamp(health - value, 0, maxHealth);
 
-        entityHPBar.ChangeHPByAmount(-value);
+        entityHPBar.ChangeHPByAmount(-value, autoHide);
 
         if (health == 0)
         {
@@ -52,4 +53,7 @@ public class EntityHealthComponent : HealthComponent
         health = value;
         if (entityHPBar) entityHPBar.SetHPValue(health);
     }
+
+    public void ShowHPBar() => entityHPBar.Appear();
+    public void HideHPBar() => entityHPBar.Disappear(true);
 }
