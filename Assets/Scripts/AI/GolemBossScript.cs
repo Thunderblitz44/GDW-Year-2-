@@ -104,7 +104,8 @@ public class GolemBossScript : Enemy, IBossCommands
         agent.SetDestination(targetTransformdebug.position);
         if(agent.isOnOffMeshLink )
         {
-            StartCoroutine(MoveAcrossNavMeshLink(agent, 5f, 1f));
+            animator.SetBool("Jumping", true);
+            StartCoroutine(MoveAcrossNavMeshLink(agent, 5f, 0.5f));
             MoveAcrossNavMeshesStarted=true;
         }
       
@@ -165,8 +166,9 @@ public class GolemBossScript : Enemy, IBossCommands
             normalizedTime += Time.deltaTime / duration;
             yield return null;
             agent.CompleteOffMeshLink();
+           
         }
-        
+        animator.SetBool("Jumping", false);
     }
     private void OnTriggerEnter(Collider other)
     {
