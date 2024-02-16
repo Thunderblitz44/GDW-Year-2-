@@ -12,6 +12,8 @@ public class ShootingPortal : DamageableEntity
     readonly List<GameObject> pooledProjectiles = new(4);
     bool settingUp = true;
     bool explode = false;
+    bool stunned = false;
+    public int bossStunDamage = 10;
 
     GameObject expl;
 
@@ -65,6 +67,7 @@ public class ShootingPortal : DamageableEntity
             shotTimer = 0;
             Vector3 force = (LevelManager.PlayerTransform.position - transform.position).normalized * projectile.speed;
             StaticUtilities.ShootProjectile(pooledProjectiles, transform.position, force);
+            FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Boss Bullet", gameObject);
         }
 
         transform.LookAt(LevelManager.PlayerTransform);
@@ -72,9 +75,10 @@ public class ShootingPortal : DamageableEntity
 
     void TriggerEnter(Collider other)
     {
+        if (stunned) return;
         if (other.CompareTag("GolemCrystal"))
         {
-            other.GetComponent<BossWeakSpot>().Stun();
+            other.GetComponent<BossWeakSpot>().Stun(bossStunDamage);
         }
     }
 
@@ -82,7 +86,7 @@ public class ShootingPortal : DamageableEntity
     {
         explode = true;
         expl.SetActive(true);
-        Invoke(nameof(Die), 0.2f);
+        Invoke(nameof(Die), 0.4f);
     }
 
     void Die()

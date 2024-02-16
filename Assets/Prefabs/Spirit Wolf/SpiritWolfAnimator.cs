@@ -55,22 +55,21 @@ public class SpiritWolfAnimator : MonoBehaviour
 
     public void AttackEventLeft()
     {
-        meleeHitBoxL.ReadyAttack();
-        
+        meleeHitBoxL.gameObject.SetActive(true);
     }
+
     public void AttackEventLeftHide()
     {
-        meleeHitBoxL.Hide();
-        
+        meleeHitBoxL.gameObject.SetActive(false);
     }
+
     public void AttackEventRight()
     {
-        meleeHitBoxR.ReadyAttack();
+        meleeHitBoxR.gameObject.SetActive(true);
     }
     
     public void AttackEventRightHide()
     {
-        meleeHitBoxR.Hide();
-        
+        meleeHitBoxR.gameObject.SetActive(false);
     }
 }

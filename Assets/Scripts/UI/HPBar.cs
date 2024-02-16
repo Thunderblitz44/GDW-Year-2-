@@ -1,20 +1,17 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HPBar : MonoBehaviour
 {
-    [SerializeField] internal Image filler;
-    [SerializeField] internal TextMeshProUGUI text;
+    [SerializeField] TextMeshProUGUI text;
+    [SerializeField] protected Image filler;
     [HideInInspector] public float maxHP;
     
     float hp;
 
     public void SetHPValue(int value)
     {
-        if (!filler || !text) return;
-
         hp = Mathf.Clamp(value, 0, maxHP);
         SetHPInText();
         SetHPFill();
@@ -22,8 +19,6 @@ public class HPBar : MonoBehaviour
 
     public virtual void ChangeHPByAmount(int amount)
     {
-        if (!filler || !text) return;
-
         hp = Mathf.Clamp(hp + amount, 0, maxHP);
         SetHPInText();
         SetHPFill();
@@ -31,11 +26,11 @@ public class HPBar : MonoBehaviour
 
     void SetHPInText()
     {
-        text.text = $"HP : {hp} / {maxHP}";
+        if (text) text.text = $"HP : {hp} / {maxHP}";
     }
 
     void SetHPFill()
     {
-        filler.fillAmount = maxHP > 0? hp / maxHP : 0;
+        if (filler) filler.fillAmount = maxHP > 0? hp / maxHP : 0;
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class StaticUtilities
 {
-    public static readonly float defaultFOV = 50f;
+    public static readonly float defaultFOV = 80f;
     public static readonly float damageOverTimeInterval = 0.5f;
     public static readonly float encounterStartDelay = 1f;
     public static readonly int groundLayer = 64;
@@ -68,7 +68,7 @@ public static class StaticUtilities
     }
     public static Vector3 FlatDirection(Vector3 first, Vector3 second, float yOffset = 0f)
     {
-        return first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset;
+        return (first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset).normalized;
     }
 
     public static Vector3 HorizontalizeVector(Vector3 vec)

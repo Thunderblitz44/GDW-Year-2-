@@ -125,10 +125,7 @@ public class GolemRangerIk : MonoBehaviour
         oldNormal = newNormal;
 
 
-        if (footDelay == true)
-        {
-            controllerScript.SetActiveScript();
-        }
+     
     }
 
 

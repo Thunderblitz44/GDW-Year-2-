@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -17,20 +15,21 @@ public class MeleeHitBox : MonoBehaviour
         }
         if (StaticUtilities.TryToDamage(other.gameObject, damage))
         {
-            Hide();
+            gameObject.SetActive(false);
         }
 
         //CancelInvoke(nameof(Hide));
         //gameObject.SetActive(false);
     }
 
-    public void Hide()
+    private void OnParticleCollision(GameObject other)
     {
-        gameObject.SetActive(false);
-    }
-
-    public void ReadyAttack()
-    {
-        gameObject.SetActive(true);
+        Rigidbody rb;
+        if (other.gameObject.TryGetComponent(out rb))
+        {
+            Vector3 dir = StaticUtilities.FlatDirection(other.transform.position, transform.position);
+            rb.AddForce((dir * knockback.x + Vector3.up * knockback.y) * rb.mass, ForceMode.Impulse);
+        }
+        StaticUtilities.TryToDamage(other.gameObject, damage);
     }
 }

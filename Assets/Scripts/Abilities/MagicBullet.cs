@@ -24,6 +24,7 @@ public class MagicBullet : MonoBehaviour
 
     private void OnEnable()
     {
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Elana Shoot", gameObject);
         if (Rb) Invoke(nameof(Die), Projectile.lifeTime);
     }
 

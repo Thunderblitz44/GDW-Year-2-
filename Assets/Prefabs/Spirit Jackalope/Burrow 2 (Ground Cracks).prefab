@@ -181,6 +181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705097764962883821}
   - component: {fileID: 6914646836967699380}
+  - component: {fileID: -6457883998495949379}
   m_Layer: 0
   m_Name: Burrow 2 (Ground Cracks)
   m_TagString: Untagged
@@ -221,3 +222,34 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &-6457883998495949379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8471120103674386820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -259564558
+      Data2: 1158722494
+      Data3: -2033355117
+      Data4: 295265828
+    Path: event:/Dig a Tunnel
+  Event: 
+  PlayEvent: 11
+  StopEvent: 12
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
