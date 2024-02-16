@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GolemBossScript : Enemy, IBossCommands
 {
@@ -60,7 +61,13 @@ public class GolemBossScript : Enemy, IBossCommands
     [SerializeField] BoxCollider[] gotoWallsBase;
     [SerializeField] Transform[] gotoWalls;
     bool goingUp;
-
+    public NavMeshLinkData[] navMeshLinkData;
+     bool MoveAcrossNavMeshesStarted;
+    
+   public Transform targetTransform; 
+   public Transform targetTransformdebug; 
+    
+    
     [Header("Phase 2+")]
     [SerializeField] float stunTime = 5f;
 
@@ -94,7 +101,13 @@ public class GolemBossScript : Enemy, IBossCommands
     {
         if (!battleStarted) return;
         base.Update();
-
+        agent.SetDestination(targetTransformdebug.position);
+        if(agent.isOnOffMeshLink )
+        {
+            StartCoroutine(MoveAcrossNavMeshLink(agent, 5f, 1f));
+            MoveAcrossNavMeshesStarted=true;
+        }
+      
         // timers
         // attack checkers/counters
         // attacks
@@ -129,23 +142,47 @@ public class GolemBossScript : Enemy, IBossCommands
         {
             stompCooldowns[i] += Time.deltaTime;
         }
-    }
+       
 
+    }
+    IEnumerator MoveAcrossNavMeshLink(NavMeshAgent agent, float height, float duration)
+    {
+        OffMeshLinkData data = agent.currentOffMeshLinkData;
+       
+
+        Vector3 startPos = agent.transform.position;
+        Quaternion startRot = agent.transform.rotation;
+
+        Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
+        Quaternion endRot = Quaternion.LookRotation(data.endPos - data.startPos);
+
+        float normalizedTime = 0.0f;
+        while (normalizedTime < 1.0f)
+        {
+            float yOffset = height * 4.0f * (normalizedTime - normalizedTime * normalizedTime);
+            agent.transform.position = Vector3.Lerp(startPos, endPos, normalizedTime) + yOffset * Vector3.up;
+            agent.transform.rotation = Quaternion.Slerp(startRot, endRot, normalizedTime);
+            normalizedTime += Time.deltaTime / duration;
+            yield return null;
+            agent.CompleteOffMeshLink();
+        }
+        
+    }
     private void OnTriggerEnter(Collider other)
     {
-        for (int i = 0; i < gotoWallsBase.Length; i++)
-       {
-          if (gotoWallsBase[i].gameObject.activeSelf)
-           {
-               if (goingUp) target = gotoWalls[i];
-               else
-              {
-                   target = LevelManager.PlayerTransform;
-                   agent.speed = 3.5f;
-                }
-                gotoWallsBase[i].enabled = false;
-            }
-        }
+       // for (int i = 0; i < gotoWallsBase.Length; i++)
+      // {
+       //   if (gotoWallsBase[i].gameObject.activeSelf)
+         // {
+             // if (goingUp) target = gotoWalls[i];
+            //  else
+            //  {
+                 // target = LevelManager.PlayerTransform;
+                //   agent.speed = 3.5f;
+             //  }
+            //   gotoWallsBase[i].enabled = false;
+        //  }
+      //  }
     }
 
     public void Introduce()
@@ -170,7 +207,7 @@ public class GolemBossScript : Enemy, IBossCommands
     void StartBattle()
     {
         battleStarted = true;
-        target = LevelManager.PlayerTransform;
+       // target = LevelManager.PlayerTransform;
     }
 
     IEnumerator LasersRoutine()
@@ -327,7 +364,7 @@ public class GolemBossScript : Enemy, IBossCommands
         // go up wall
         agent.speed = 6;
         int wall = UnityEngine.Random.Range(0, gotoWallsBase.Length);
-        target = gotoWallsBase[wall].transform;
+       // target = gotoWallsBase[wall].transform;
         gotoWallsBase[wall].enabled = true;
         goingUp = true;
 
@@ -358,7 +395,7 @@ public class GolemBossScript : Enemy, IBossCommands
         }
 
         // return from wall
-        target = gotoWallsBase[wall].transform;
+      //  target = gotoWallsBase[wall].transform;
         gotoWallsBase[wall].enabled = false;
         goingUp = false;
         yield return new WaitForSeconds(minionAttackCooldown);
