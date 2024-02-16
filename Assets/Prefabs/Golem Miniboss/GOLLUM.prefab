@@ -1745,7 +1745,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3395294659954367772}
   m_LocalRotation: {x: 0, y: -0.70597047, z: 0, w: 0.7082413}
-  m_LocalPosition: {x: 4.5, y: -4.78, z: 4.5}
+  m_LocalPosition: {x: 3.71, y: -4.78, z: 4.57}
   m_LocalScale: {x: 0.1, y: 0.10000002, z: 0.10000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1773,8 +1773,9 @@ MonoBehaviour:
   stepLength: 0.01
   stepHeight: 4
   footOffset: {x: 0, y: -0.5, z: -3}
-  footDelay: 1
-  controllerScript: {fileID: 4190177971477063797}
+  footDelay: 0
+  controllerScript: {fileID: 0}
+  footOverride: 0
 --- !u!1 &3465122564849421297
 GameObject:
   m_ObjectHideFlags: 0
@@ -3283,7 +3284,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6330191022586340379}
   m_LocalRotation: {x: 0, y: -0.70824116, z: 0, w: 0.7059706}
-  m_LocalPosition: {x: 4.5, y: -4.78, z: -4.5}
+  m_LocalPosition: {x: 4.57, y: -4.78, z: -3.93}
   m_LocalScale: {x: 0.1, y: 0.10000002, z: 0.10000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3311,8 +3312,9 @@ MonoBehaviour:
   stepLength: 0.01
   stepHeight: 4
   footOffset: {x: 0, y: -0.5, z: 3}
-  footDelay: 1
-  controllerScript: {fileID: 4190177971477063797}
+  footDelay: 0
+  controllerScript: {fileID: 0}
+  footOverride: 0
 --- !u!1 &6467875034102660422
 GameObject:
   m_ObjectHideFlags: 0
@@ -3421,8 +3423,8 @@ GameObject:
   - component: {fileID: 1556122328151630726}
   - component: {fileID: 4728185122260356129}
   - component: {fileID: 6667298408721510827}
-  - component: {fileID: 4190177971477063797}
   - component: {fileID: 5506836407528225032}
+  - component: {fileID: 775574890880635879}
   m_Layer: 2
   m_Name: 'NEW GOLEM '
   m_TagString: Untagged
@@ -3556,23 +3558,6 @@ MonoBehaviour:
   - m_Rig: {fileID: 1979347234565139321}
     m_Active: 1
   m_Effectors: []
---- !u!114 &4190177971477063797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6786712562452735076}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15ee4eac7c91b0e4c95148a32e50f210, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scriptsToControl:
-  - {fileID: 6747041059156608506}
-  - {fileID: 8967759292181278643}
-  - {fileID: 3715715312276195275}
-  - {fileID: 3101528319181264604}
 --- !u!114 &5506836407528225032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3604,6 +3589,23 @@ MonoBehaviour:
   OverrideAttenuation: 1
   OverrideMinDistance: 14.75
   OverrideMaxDistance: 20
+--- !u!114 &775574890880635879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6786712562452735076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ee4eac7c91b0e4c95148a32e50f210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scriptsToControl:
+  - {fileID: 6747041059156608506}
+  - {fileID: 8967759292181278643}
+  - {fileID: 3715715312276195275}
+  - {fileID: 3101528319181264604}
 --- !u!1 &7308959126225804553
 GameObject:
   m_ObjectHideFlags: 0
@@ -3990,7 +3992,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7829173870812848803}
   m_LocalRotation: {x: 0, y: -0.70597047, z: 0, w: 0.7082413}
-  m_LocalPosition: {x: -4.5, y: -4.78, z: -4.5}
+  m_LocalPosition: {x: -4.19, y: -4.78, z: -3.8}
   m_LocalScale: {x: 0.1, y: 0.10000002, z: 0.10000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4019,7 +4021,8 @@ MonoBehaviour:
   stepHeight: 4
   footOffset: {x: 0, y: -0.5, z: 3}
   footDelay: 1
-  controllerScript: {fileID: 4190177971477063797}
+  controllerScript: {fileID: 0}
+  footOverride: 0
 --- !u!1 &7941372547474628098
 GameObject:
   m_ObjectHideFlags: 0
@@ -4388,7 +4391,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8526390327754119732}
   m_LocalRotation: {x: 0, y: -0.70824116, z: 0, w: 0.7059706}
-  m_LocalPosition: {x: -4.5, y: -4.78, z: 4.5}
+  m_LocalPosition: {x: -4.08, y: -4.78, z: 4.1}
   m_LocalScale: {x: 0.1, y: 0.10000002, z: 0.10000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4416,8 +4419,9 @@ MonoBehaviour:
   stepLength: 0.01
   stepHeight: 4
   footOffset: {x: 0, y: -0.5, z: -3}
-  footDelay: 1
-  controllerScript: {fileID: 4190177971477063797}
+  footDelay: 0
+  controllerScript: {fileID: 0}
+  footOverride: 0
 --- !u!1 &8543078452785015074
 GameObject:
   m_ObjectHideFlags: 0
