@@ -61,11 +61,11 @@ public class GolemBossScript : Enemy, IBossCommands
     [SerializeField] BoxCollider[] gotoWallsBase;
     [SerializeField] Transform[] gotoWalls;
     bool goingUp;
-    public NavMeshLinkData[] navMeshLinkData;
+    
      bool MoveAcrossNavMeshesStarted;
     
-   public Transform targetTransform; 
-   public Transform targetTransformdebug; 
+ 
+   
     
     
     [Header("Phase 2+")]
@@ -101,7 +101,7 @@ public class GolemBossScript : Enemy, IBossCommands
     {
         if (!battleStarted) return;
         base.Update();
-        agent.SetDestination(targetTransformdebug.position);
+      
         if(agent.isOnOffMeshLink )
         {
             animator.SetBool("Jumping", true);
@@ -172,19 +172,19 @@ public class GolemBossScript : Enemy, IBossCommands
     }
     private void OnTriggerEnter(Collider other)
     {
-       // for (int i = 0; i < gotoWallsBase.Length; i++)
-      // {
-       //   if (gotoWallsBase[i].gameObject.activeSelf)
-         // {
-             // if (goingUp) target = gotoWalls[i];
-            //  else
-            //  {
-                 // target = LevelManager.PlayerTransform;
-                //   agent.speed = 3.5f;
-             //  }
-            //   gotoWallsBase[i].enabled = false;
-        //  }
-      //  }
+        for (int i = 0; i < gotoWallsBase.Length; i++)
+      {
+          if (gotoWallsBase[i].gameObject.activeSelf)
+          {
+              if (goingUp) target = gotoWalls[i];
+             else
+              {
+                  target = LevelManager.PlayerTransform;
+                   agent.speed = 3.5f;
+               }
+               gotoWallsBase[i].enabled = false;
+          }
+        }
     }
 
     public void Introduce()
@@ -209,7 +209,7 @@ public class GolemBossScript : Enemy, IBossCommands
     void StartBattle()
     {
         battleStarted = true;
-       // target = LevelManager.PlayerTransform;
+        target = LevelManager.PlayerTransform;
     }
 
     IEnumerator LasersRoutine()
@@ -366,7 +366,7 @@ public class GolemBossScript : Enemy, IBossCommands
         // go up wall
         agent.speed = 6;
         int wall = UnityEngine.Random.Range(0, gotoWallsBase.Length);
-       // target = gotoWallsBase[wall].transform;
+        target = gotoWallsBase[wall].transform;
         gotoWallsBase[wall].enabled = true;
         goingUp = true;
 
@@ -397,7 +397,7 @@ public class GolemBossScript : Enemy, IBossCommands
         }
 
         // return from wall
-      //  target = gotoWallsBase[wall].transform;
+        target = gotoWallsBase[wall].transform;
         gotoWallsBase[wall].enabled = false;
         goingUp = false;
         yield return new WaitForSeconds(minionAttackCooldown);
