@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3076011177651852517
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 7
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -20,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterBlockout
+  m_Name: BossTower
   m_Shader: {fileID: -6465566751694194690, guid: ada99842a2101fe408e4f30125fabd4c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -98,6 +85,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_29d5eaba06bc41728633701262f6a5dc_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: be0509aa185ab614b907095fcd51f7a8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_367ff8e12119416cba14b8bf8eebe96e_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 147452ce67e1c124a9b5f42cbcd9da75, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_55d477a2decc414199c4c8730e373d76_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: c7437040d178fbf4b8139c9b9d74af6c, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -112,6 +107,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_6c8eebd9af6448589fb2e56a5eb1b1e1_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_6d11bf2e39434b8887947be6ce272da0_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: d6b17496cff30a74f9a04a248e7e77cd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_857d23b602c647d1a1382949211b482a_Texture_1_Texture2D:
@@ -146,20 +145,20 @@ Material:
     m_Floats:
     - ADDITIONAL_LIGHTS_CALCULATE_SHADOWS: 0
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
-    - _Albedo_1: 1
+    - _Albedo_1: 0.535
     - _Albedo_Scale: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _Border: 0
+    - _Border: 0.079
     - _Border_Effect: 1
     - _BumpScale: 1
-    - _Cell_Location: 0
+    - _Cell_Location: 0.36
     - _Cell_Strength: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Contrast: 0.3
+    - _Contrast: 0.419
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -172,51 +171,66 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Fog: 1
-    - _GlossMapScale: 0
+    - _Fog: 0.525
+    - _GlossMapScale: 1
     - _Glossiness: 0
-    - _GlossyReflections: 0
-    - _HeightBlend: 0.8
-    - _Height_Blend: 3
-    - _Height_Gradient: -2
-    - _Lighting_Noise: 0.5
+    - _GlossyReflections: 1
+    - _HeightBlend: 1
+    - _Height_Blend: 817.26
+    - _Height_Gradient: -4.11
+    - _Lighting_Noise: 0
     - _MAIN_LIGHT_SHADOWS_CASCADE: 0
     - _Metallic: 0
+    - _Mode: 0
     - _NoiseStrength: 1
     - _Noise_Multiply: 1
-    - _Noise_Scale: 0.61
+    - _Noise_Scale: 20.62
     - _Normal_Noise: 0.5
     - _Normal_Value: 0
     - _OcclusionStrength: 1
-    - _Parallax: 0.005
+    - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _ReflectionProbe: 0.5
     - _SHADOWS_SOFT: 1
     - _Shadow_Atten: 0
-    - _Shadow_Strength: 0.5
-    - _Smoothness: 1.13
+    - _Shadow_Strength: 0.911
+    - _Smoothness: 5.41
     - _SmoothnessTextureChannel: 0
-    - _Smoothness_1: 0.33
+    - _Smoothness_1: 0.287
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TP_Noise: 0.5
-    - _TriPlanar: 0
+    - _TP_Noise: 0.119
+    - _TriPlanar: 1
+    - _UVSec: 0
     - _WorkflowMode: 1
-    - _WorldPosition: 0
+    - _WorldPosition: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.6731503, g: 0.63201386, b: 0.6165444, a: 1}
     - _Border_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0}
-    - _Color: {r: 0.1945855, g: 0.12549022, b: 0.98039216, a: 1}
+    - _Color: {r: 0.4716981, g: 0.37824848, b: 0.3537736, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Shadow_Color: {r: 0.2970363, g: 0.3442177, b: 0.8396226, a: 0}
-    - _Smoothness_Color: {r: 10.680628, g: 6.036148, b: 4.138044, a: 0}
+    - _Smoothness_Color: {r: 1.8333858, g: 1.1693065, b: 2.7240987, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _TP_Bottom: {r: 0.1805575, g: 0.1780883, b: 0.4339623, a: 0}
-    - _TP_Middle: {r: 0.509434, g: 0.4397473, b: 0.4397473, a: 0}
-    - _TP_Top: {r: 0.4043317, g: 0.7176471, b: 0.1647059, a: 0}
+    - _TP_Bottom: {r: 0.30840063, g: 0.3037113, b: 0.6132076, a: 0}
+    - _TP_Middle: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 0}
+    - _TP_Top: {r: 1, g: 0.7751151, b: 0.41176474, a: 1}
   m_BuildTextureStacks: []
+--- !u!114 &7630471853080362250
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7

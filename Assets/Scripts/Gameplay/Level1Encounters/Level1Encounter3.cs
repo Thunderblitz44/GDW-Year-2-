@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Level1Encounter3 : EncounterVolume
 {
@@ -56,7 +55,7 @@ public class Level1Encounter3 : EncounterVolume
         EntityHealthComponent shp = spirit.GetComponent<EntityHealthComponent>();
         shp.ShowHPBar();
 
-        // make the spirit grow
+        // make the spirit grows
         for (float i = 0, delay = surviveTime / torchLights.Length; i <= surviveTime + 1; i+=Time.deltaTime)
         {
             // grow the spirit
