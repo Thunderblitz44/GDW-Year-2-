@@ -15,7 +15,7 @@ public class golemIkScript : MonoBehaviour
     private float lerp;
     // Access the ControllerScript
     public legController controllerScript;
-
+    public bool footOverride = false;
     private void Awake()
     {
         if (controllerScript == null)
@@ -52,7 +52,7 @@ public class golemIkScript : MonoBehaviour
 
     public void HandleStep(RaycastHit info)
     {
-        if (!footDelay) return;
+        if (!footDelay && !footOverride) return;
      
         float dist = Vector3.Distance(newPosition, info.point);
         if (dist > stepDistance && lerp >= 1f)

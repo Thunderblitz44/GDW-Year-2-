@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GolemBossScript : Enemy, IBossCommands
 {
@@ -60,7 +61,13 @@ public class GolemBossScript : Enemy, IBossCommands
     [SerializeField] BoxCollider[] gotoWallsBase;
     [SerializeField] Transform[] gotoWalls;
     bool goingUp;
-
+    
+     bool MoveAcrossNavMeshesStarted;
+    
+ 
+   
+    
+    
     [Header("Phase 2+")]
     [SerializeField] float stunTime = 5f;
 
@@ -94,7 +101,14 @@ public class GolemBossScript : Enemy, IBossCommands
     {
         if (!battleStarted) return;
         base.Update();
-
+      
+        if(agent.isOnOffMeshLink )
+        {
+            animator.SetBool("Jumping", true);
+            StartCoroutine(MoveAcrossNavMeshLink(agent, 5f, 0.5f));
+            MoveAcrossNavMeshesStarted=true;
+        }
+      
         // timers
         // attack checkers/counters
         // attacks
@@ -129,24 +143,49 @@ public class GolemBossScript : Enemy, IBossCommands
         {
             stompCooldowns[i] += Time.deltaTime;
         }
-    }
+       
 
-    private void OnTriggerEnter(Collider other)
-    {
-        for (int i = 0; i < gotoWallsBase.Length; i++)
-       {
-          if (gotoWallsBase[i].gameObject.activeSelf)
-           {
-               if (goingUp) target = gotoWalls[i];
-               else
-              {
-                   target = LevelManager.PlayerTransform;
-                   agent.speed = 3.5f;
-                }
-                gotoWallsBase[i].enabled = false;
-            }
-        }
     }
+    IEnumerator MoveAcrossNavMeshLink(NavMeshAgent agent, float height, float duration)
+    {
+        OffMeshLinkData data = agent.currentOffMeshLinkData;
+       
+
+        Vector3 startPos = agent.transform.position;
+        Quaternion startRot = agent.transform.rotation;
+
+        Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
+        Quaternion endRot = Quaternion.LookRotation(data.endPos - data.startPos);
+
+        float normalizedTime = 0.0f;
+        while (normalizedTime < 1.0f)
+        {
+            float yOffset = height * 4.0f * (normalizedTime - normalizedTime * normalizedTime);
+            agent.transform.position = Vector3.Lerp(startPos, endPos, normalizedTime) + yOffset * Vector3.up;
+            agent.transform.rotation = Quaternion.Slerp(startRot, endRot, normalizedTime);
+            normalizedTime += Time.deltaTime / duration;
+            yield return null;
+            agent.CompleteOffMeshLink();
+           
+        }
+        animator.SetBool("Jumping", false);
+    }
+   // private void OnTriggerEnter(Collider other)
+    //{
+     //  for (int i = 0; i < gotoWallsBase.Length; i++)
+    //  {
+      //    if (gotoWallsBase[i].gameObject.activeSelf)
+       //   {
+        //      if (goingUp) target = gotoWalls[i];
+          //   else
+            //  {
+              //    target = LevelManager.PlayerTransform;
+                //   agent.speed = 3.5f;
+               //}
+               //gotoWallsBase[i].enabled = false;
+          //}
+        //}
+    //}
 
     public void Introduce()
     {
