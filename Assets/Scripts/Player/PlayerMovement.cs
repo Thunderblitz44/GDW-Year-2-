@@ -88,11 +88,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // do move
         if (IsGrounded && Rb.velocity.magnitude < MoveSpeed)
         {
-            Vector3 rotatedInput = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
-            moveDirection = rotatedInput;
+            //Vector3 rotatedInput = 
+            moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
             if (IsGrounded && groundAngle < maxSlopeAngle)
             {
-                moveDirection = Vector3.ProjectOnPlane(rotatedInput, ground.normal);
+                moveDirection = Vector3.ProjectOnPlane(moveDirection, ground.normal);
             }
             Rb.velocity += MoveAcceleration * Time.fixedDeltaTime * moveDirection;
             oldMoveSpeed = MoveSpeed;

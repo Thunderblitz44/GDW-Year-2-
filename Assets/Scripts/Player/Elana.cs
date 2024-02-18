@@ -237,7 +237,7 @@ DragonflyAnimator.SetBool("IsShooting", true);
 
             // calculate end for the raycast
             if (MovementScript.IsMoving) end = body.position + MovementScript.MoveDirection * newDist;
-            else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
+            else end = body.position + StaticUtilities.GetCameraDir() * newDist;
 
             RaycastHit hit;
             if (Physics.Raycast(body.position, (end - body.position).normalized,
@@ -248,7 +248,7 @@ DragonflyAnimator.SetBool("IsShooting", true);
 
             // re-calculate end in case newDist changed
             if (MovementScript.IsMoving) end = body.position + MovementScript.MoveDirection * newDist;
-            else end = body.position + new Vector3(cam.forward.x, 0, cam.forward.z) * newDist;
+            else end = body.position + StaticUtilities.GetCameraDir() * newDist;
           
                 TrailScript.isTrailActive = true;
           

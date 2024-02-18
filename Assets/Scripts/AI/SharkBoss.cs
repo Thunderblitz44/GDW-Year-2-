@@ -1,74 +1,79 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class SharkBoss : Enemy
+public class SharkBoss : Enemy, IBossCommands
 {
-    
-   
-    private bool isEnabled = false;
-    public float maxSpeed = 5f; 
-    public float minSpeed = 1f; 
-    public float minDistance = 2f; 
-    public Transform SharkObject;
-    public GameObject HeadTarget;
-    public float lerpSpeed = 1f;
+    [Header("Attack Pattern")]
+    [SerializeField] float timeBetweenAttacks = 2;
+    [SerializeField] float attackPrepareTime = 2;
+    [SerializeField] float maxAttackReps = 2;
+    float attackReps;
+    int lastAttackIndex;
+    int phase = 0;
+    float atkTimer;
+    bool isAttacking;
+    readonly List<Func<IEnumerator>> attackFuncs = new();
+
+    bool battleStarted = false;
+
+    public void Introduce()
+    {
+        (hp as BossHealthComponent).Show();
+        Invoke(nameof(StartBattle), 1f);
+        NextPhase();
+    }
 
     protected override void Awake()
     {
         base.Awake();
-        EnableAI();
+        //EnableAI();
     }
 
     protected override void Update()
     {
+        if (!battleStarted) return;
         base.Update();
-        GameObject lockOn = GameObject.FindGameObjectWithTag("HeadTag");
-        Vector3 headPosition = lockOn.transform.position;
 
-        if (isEnabled)
+        // timers
+        // attack checkers/counters
+        // attacks
+        if (attackFuncs.Count > 0 && !isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
         {
-        
-            float lerpFactor = lerpSpeed * Time.deltaTime;
-
-           
-            SharkObject.position = new Vector3(
-                SharkObject.position.x,
-                Mathf.Lerp(SharkObject.position.y, headPosition.y, lerpFactor),
-                SharkObject.position.z
-            );
-
-          
-            agent.SetDestination(headPosition);
+            isAttacking = true;
+            atkTimer = 0;
+        // pick an attack
+        // start coroutine of that attack
+        newAtkInd:
+            int attackIndex = UnityEngine.Random.Range(0, attackFuncs.Count);
+            if (attackFuncs.Count > 1 && attackIndex == lastAttackIndex && ++attackReps >= maxAttackReps)
+            {
+                goto newAtkInd;
+            }
+            StartCoroutine(attackFuncs[attackIndex]());
+            lastAttackIndex = attackIndex;
         }
-
     }
-    private void EnableAI()
-    {
-        agent.enabled = true;
-        isEnabled = true;
-      
-        HeadTarget.SetActive(true);
 
-    } 
-    
-    public IEnumerator LockOnCoroutine()
+    void StartBattle()
     {
-        float elapsedTime = 0f;
-        float duration = 3f; 
+        battleStarted = true;
+        target = LevelManager.PlayerTransform;
+    }
 
-        while (elapsedTime < duration)
+    void NextPhase()
+    {
+        switch (++phase)
         {
-            SharkObject.position = new Vector3(
-                SharkObject.position.x,
-                Mathf.Lerp(SharkObject.position.y, HeadTarget.transform.position.y, Time.deltaTime * lerpSpeed),
-                SharkObject.position.z
-            );
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
         }
-
- 
     }
-    
 }
