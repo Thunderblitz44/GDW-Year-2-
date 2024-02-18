@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-public class MantisController : MonoBehaviour
+public class MantisController : Enemy
 {
     
-    private NavMeshAgent MantisAgent;
-    private Animator MantisAnimator;
+
     private bool isEnabled = false;
     public float maxSpeed = 5f; // Maximum speed of the AI
     public float minSpeed = 1f; // Minimum speed the AI can have
@@ -18,9 +17,7 @@ public class MantisController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MantisAnimator = GetComponent<Animator>();
-        MantisAgent = GetComponent<NavMeshAgent>();
-        
+     
          //  MantisAgent.enabled = false;
          EnableAI();
     }
@@ -38,8 +35,8 @@ public class MantisController : MonoBehaviour
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
-            MantisAgent.SetDestination(headPosition);
-            MantisAnimator.SetBool("IsAttacking", inAttackRange);
+            agent.SetDestination(headPosition);
+            animator.SetBool("IsAttacking", inAttackRange);
         }
 
         
@@ -49,7 +46,7 @@ public class MantisController : MonoBehaviour
     
     private void EnableAI()
     {
-        MantisAgent.enabled = true;
+        agent.enabled = true;
         isEnabled = true;
       
         HeadTarget.SetActive(true);

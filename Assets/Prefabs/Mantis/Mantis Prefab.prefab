@@ -879,7 +879,7 @@ MonoBehaviour:
   terrainLayer:
     serializedVersion: 2
     m_Bits: 64
-  body: {fileID: 2243357649467658743}
+  hint: {fileID: 0}
   speed: 7.5
   stepDistance: 0.3
   stepLength: 0.01
@@ -887,6 +887,7 @@ MonoBehaviour:
   footOffset: {x: 0, y: 0, z: 0}
   footDelay: 1
   controllerScript: {fileID: 8320365714754200192}
+  footOverride: 0
 --- !u!1 &4303973800015524205
 GameObject:
   m_ObjectHideFlags: 0
@@ -1146,7 +1147,7 @@ MonoBehaviour:
   terrainLayer:
     serializedVersion: 2
     m_Bits: 64
-  body: {fileID: 2793182289209281116}
+  hint: {fileID: 0}
   speed: 7.5
   stepDistance: 0.3
   stepLength: 0.01
@@ -1154,6 +1155,7 @@ MonoBehaviour:
   footOffset: {x: 0, y: 0, z: 0}
   footDelay: 1
   controllerScript: {fileID: 8320365714754200192}
+  footOverride: 0
 --- !u!1 &5562729722021159162
 GameObject:
   m_ObjectHideFlags: 0
@@ -1201,7 +1203,7 @@ MonoBehaviour:
   terrainLayer:
     serializedVersion: 2
     m_Bits: 64
-  body: {fileID: 2243357649467658743}
+  hint: {fileID: 0}
   speed: 7.5
   stepDistance: 0.3
   stepLength: 0.01
@@ -1209,6 +1211,7 @@ MonoBehaviour:
   footOffset: {x: 0, y: 0, z: 0}
   footDelay: 1
   controllerScript: {fileID: 8320365714754200192}
+  footOverride: 0
 --- !u!1 &5685672897400596268
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,7 +1353,7 @@ MonoBehaviour:
   terrainLayer:
     serializedVersion: 2
     m_Bits: 64
-  body: {fileID: 2793182289209281116}
+  hint: {fileID: 0}
   speed: 7.5
   stepDistance: 0.3
   stepLength: 0.01
@@ -1358,6 +1361,7 @@ MonoBehaviour:
   footOffset: {x: 0, y: 0, z: 0}
   footDelay: 1
   controllerScript: {fileID: 8320365714754200192}
+  footOverride: 0
 --- !u!1 &5855728267210173919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1982,6 +1986,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3dbaee162296284880d59261233f394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+  slowUpdateInterval: 0.2
+  animator: {fileID: 4461561986807669065}
   maxSpeed: 5
   minSpeed: 1
   minDistance: 2

@@ -54,6 +54,8 @@ public class SharkBoss : Enemy, IBossCommands
             StartCoroutine(attackFuncs[attackIndex]());
             lastAttackIndex = attackIndex;
         }
+       
+
     }
 
     void StartBattle()
