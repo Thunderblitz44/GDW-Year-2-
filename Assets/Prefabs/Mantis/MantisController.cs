@@ -12,18 +12,24 @@ public class MantisController : Enemy
     public float minDistance = 2f; // Minimum distance at which the AI starts reducing speed
     public CapsuleCollider attackTrigger;
     public GameObject HeadTarget;
-    
+     MeleeHitBox[] RangedAttack;
     private bool inAttackRange;
-    // Start is called before the first frame update
-    void Start()
+    public int RangedAttackDamage;
+    public Vector2 RangedKnockback;
+     void Start()
     {
      
-         //  MantisAgent.enabled = false;
+        RangedAttack = GetComponentsInChildren<MeleeHitBox>(true);
+        foreach (var trigger in RangedAttack)
+        {
+            trigger.damage = RangedAttackDamage;
+            trigger.knockback = RangedKnockback;
+        }
          EnableAI();
     }
 
     // Update is called once per frame
-    void Update()
+   void Update()
     {
              
         GameObject lockOn = GameObject.FindGameObjectWithTag("HeadTag");
