@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Salamander : MonoBehaviour
+public class Salamander : Enemy
 {
    
-    private NavMeshAgent SalamanderAgent;
-    private Animator SalamanderAnimator;
+
     private bool isEnabled = false;
     public float maxSpeed = 5f; // Maximum speed of the AI
     public float minSpeed = 1f; // Minimum speed the AI can have
@@ -19,8 +18,7 @@ public class Salamander : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SalamanderAnimator = GetComponent<Animator>();
-        SalamanderAgent = GetComponent<NavMeshAgent>();
+       
         
          //  MantisAgent.enabled = false;
          EnableAI();
@@ -39,8 +37,8 @@ public class Salamander : MonoBehaviour
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
-            SalamanderAgent.SetDestination(headPosition);
-            SalamanderAnimator.SetBool("IsAttacking", inAttackRange);
+            agent.SetDestination(headPosition);
+            animator.SetBool("IsAttacking", inAttackRange);
         }
 
         
@@ -50,7 +48,7 @@ public class Salamander : MonoBehaviour
     
     private void EnableAI()
     {
-        SalamanderAgent.enabled = true;
+        agent.enabled = true;
         isEnabled = true;
       
         HeadTarget.SetActive(true);

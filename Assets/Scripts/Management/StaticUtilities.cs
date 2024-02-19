@@ -59,7 +59,7 @@ public static class StaticUtilities
 
     public static Vector3 GetCameraDir()
     {
-        return HorizontalizeVector(Camera.main.transform.forward);
+        return HorizontalizeVector(Camera.main.transform.forward * 2).normalized;
     }
 
     public static float FastDistance(Vector3 first, Vector3 second)

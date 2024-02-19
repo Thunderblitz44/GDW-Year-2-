@@ -39,6 +39,59 @@ Transform:
   m_Father: {fileID: 1994350338599981034}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 54.924, z: 0}
+--- !u!1 &1520121895069112928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2118241076795123301}
+  - component: {fileID: 161061120496655937}
+  m_Layer: 0
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2118241076795123301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520121895069112928}
+  m_LocalRotation: {x: -0, y: 0.99998075, z: -0, w: 0.0062153554}
+  m_LocalPosition: {x: 266.17, y: -28.3, z: -187.5}
+  m_LocalScale: {x: 2.5171278, y: 2.5031915, z: 2.839198}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1994350338599981034}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: -180.712, z: 0}
+--- !u!65 &161061120496655937
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520121895069112928}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.9838917, y: 12.491129, z: 16.284767}
+  m_Center: {x: 0.50122017, y: 0.96058905, z: 5.336844}
 --- !u!1 &4884481581776834573
 GameObject:
   m_ObjectHideFlags: 0
@@ -68,8 +121,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4388432834342010178}
+  - {fileID: 2118241076795123301}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &255337680856921124
 PrefabInstance:

@@ -170,22 +170,22 @@ public class GolemBossScript : Enemy, IBossCommands
         }
         animator.SetBool("Jumping", false);
     }
-   // private void OnTriggerEnter(Collider other)
-    //{
-     //  for (int i = 0; i < gotoWallsBase.Length; i++)
-    //  {
-      //    if (gotoWallsBase[i].gameObject.activeSelf)
-       //   {
-        //      if (goingUp) target = gotoWalls[i];
-          //   else
-            //  {
-              //    target = LevelManager.PlayerTransform;
-                //   agent.speed = 3.5f;
-               //}
-               //gotoWallsBase[i].enabled = false;
-          //}
-        //}
-    //}
+    private void OnTriggerEnter(Collider other)
+    {
+       for (int i = 0; i < gotoWallsBase.Length; i++)
+     {
+         if (gotoWallsBase[i].gameObject.activeSelf)
+          {
+             if (goingUp) target = gotoWalls[i];
+             else
+             {
+                 target = LevelManager.PlayerTransform;
+                   agent.speed = 3.5f;
+               }
+               gotoWallsBase[i].enabled = false;
+          }
+        }
+    }
 
     public void Introduce()
     {
