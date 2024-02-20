@@ -7,9 +7,7 @@ public class MantisController : Enemy
     
 
     private bool isEnabled = false;
-    public float maxSpeed = 5f; // Maximum speed of the AI
-    public float minSpeed = 1f; // Minimum speed the AI can have
-    public float minDistance = 2f; // Minimum distance at which the AI starts reducing speed
+  
     public CapsuleCollider attackTrigger;
     public GameObject HeadTarget;
      MeleeHitBox[] RangedAttack;

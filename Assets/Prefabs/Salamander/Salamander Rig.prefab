@@ -5864,7 +5864,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7707842893948261474}
   m_LocalRotation: {x: -0.5, y: -0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: -0.5700002, z: -6.95}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6028,6 +6028,7 @@ GameObject:
   - component: {fileID: 4621947402923023681}
   - component: {fileID: 4102690300096025311}
   - component: {fileID: 949204978320443307}
+  - component: {fileID: 2533738470201342054}
   m_Layer: 0
   m_Name: Salamander Rig
   m_TagString: Untagged
@@ -6179,13 +6180,26 @@ MonoBehaviour:
   isInvincible: 0
   slowUpdateInterval: 0.2
   animator: {fileID: 4674599754464899792}
-  maxSpeed: 5
-  minSpeed: 1
-  minDistance: 2
   attackTrigger: {fileID: 0}
   HeadTarget: {fileID: 1293930843929872002}
   RangedAttackDamage: 40
   RangedKnockback: {x: 0, y: 0}
+--- !u!114 &2533738470201342054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8228145727357662907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 200
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 1
 --- !u!1 &8919782000282124661
 GameObject:
   m_ObjectHideFlags: 0
