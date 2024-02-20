@@ -16,6 +16,7 @@ public class MantisController : Enemy
     private bool inAttackRange;
     public int RangedAttackDamage;
     public Vector2 RangedKnockback;
+
      void Start()
     {
      
@@ -31,10 +32,7 @@ public class MantisController : Enemy
     // Update is called once per frame
    void Update()
     {
-             
-        GameObject lockOn = GameObject.FindGameObjectWithTag("HeadTag");
-        Vector3 headPosition = lockOn.transform.position;
-        
+        Vector3 headPosition = LevelManager.PlayerTransform.position;
         
         
             
@@ -46,7 +44,8 @@ public class MantisController : Enemy
         }
 
         
-        
+       
+    
         
     }
     
