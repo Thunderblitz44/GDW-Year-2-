@@ -1,78 +1,98 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
+
 public class MantisController : Enemy
 {
-    
-
     private bool isEnabled = false;
-  
     public CapsuleCollider attackTrigger;
     public GameObject HeadTarget;
-     MeleeHitBox[] RangedAttack;
+    public MeleeHitBox[] RangedAttack;
     private bool inAttackRange;
     public int RangedAttackDamage;
     public Vector2 RangedKnockback;
 
-     void Start()
+    private VisualEffect teleportEffect; // Reference to the teleport Visual Effect Graph
+
+    void Start()
     {
-     
         RangedAttack = GetComponentsInChildren<MeleeHitBox>(true);
         foreach (var trigger in RangedAttack)
         {
             trigger.damage = RangedAttackDamage;
             trigger.knockback = RangedKnockback;
         }
-         EnableAI();
+
+        // Get the teleport Visual Effect Graph component
+        teleportEffect = GetComponentInChildren<VisualEffect>();
+        if (teleportEffect == null)
+        {
+            Debug.LogError("Teleport Visual Effect Graph component not found!");
+        }
     }
 
-    // Update is called once per frame
-   void Update()
+    // Method to teleport after a delay
+    public void Teleport()
+    {
+        
+        PlayTeleportEffect();
+        StartCoroutine(WarpToPlayerAfterDelay(0.5f)); 
+    }
+
+    // Coroutine to warp the agent to the player position after a delay
+    private IEnumerator WarpToPlayerAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay); // Wait for the specified delay
+        
+        // Enable AI and warp the agent to the player position
+        EnableAI();
+        agent.Warp(LevelManager.PlayerTransform.position);
+
+    }
+
+    void Update()
     {
         Vector3 headPosition = LevelManager.PlayerTransform.position;
-        
-        
-            
+
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
             agent.SetDestination(headPosition);
             animator.SetBool("IsAttacking", inAttackRange);
         }
-
-        
-       
-    
-        
     }
-    
+
     private void EnableAI()
     {
         agent.enabled = true;
         isEnabled = true;
-      
         HeadTarget.SetActive(true);
-
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            // Player entered the attack trigger, set inAttackRange to true
             inAttackRange = true;
-            // You can also trigger an attack animation here if needed
-            // GolemKnightAnimator.SetTrigger("AttackTrigger");
         }
     }
 
-    // Called when another collider exits the trigger
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            // Player exited the attack trigger, set inAttackRange to false
             inAttackRange = false;
         }
+    }
+
+    // Method to play the teleport Visual Effect Graph event
+    private void PlayTeleportEffect()
+    {
+        
+            teleportEffect.SendEvent("Teleport");
+       
+        
+            
     }
 }
