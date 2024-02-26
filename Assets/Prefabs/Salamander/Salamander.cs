@@ -3,25 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Salamander : MonoBehaviour
+public class Salamander : Enemy
 {
    
-    private NavMeshAgent SalamanderAgent;
-    private Animator SalamanderAnimator;
+
     private bool isEnabled = false;
-    public float maxSpeed = 5f; // Maximum speed of the AI
-    public float minSpeed = 1f; // Minimum speed the AI can have
-    public float minDistance = 2f; // Minimum distance at which the AI starts reducing speed
+  
     public CapsuleCollider attackTrigger;
     public GameObject HeadTarget;
-    
+    private float xSpeed;
+    private float zSpeed;
     private bool inAttackRange;
+    public int RangedAttackDamage;
+    public Vector2 RangedKnockback;
+    MeleeHitBox[] RangedAttack;
     // Start is called before the first frame update
     void Start()
     {
-        SalamanderAnimator = GetComponent<Animator>();
-        SalamanderAgent = GetComponent<NavMeshAgent>();
-        
+       
+        RangedAttack = GetComponentsInChildren<MeleeHitBox>(true);
+        foreach (var trigger in RangedAttack)
+        {
+            trigger.damage = RangedAttackDamage;
+            trigger.knockback = RangedKnockback;
+        }
          //  MantisAgent.enabled = false;
          EnableAI();
     }
@@ -30,8 +35,8 @@ public class Salamander : MonoBehaviour
     void Update()
     {
              
-        GameObject lockOn = GameObject.FindGameObjectWithTag("HeadTag");
-        Vector3 headPosition = lockOn.transform.position;
+        
+        Vector3 headPosition = LevelManager.PlayerTransform.position;
         
         
         
@@ -39,18 +44,26 @@ public class Salamander : MonoBehaviour
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
-            SalamanderAgent.SetDestination(headPosition);
-            SalamanderAnimator.SetBool("IsAttacking", inAttackRange);
+            agent.SetDestination(headPosition);
+            animator.SetBool("IsAttacking", inAttackRange);
         }
 
-        
-        
+        float smoothingFactor = 0.1f;
+
+        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+
+        // Smooth the velocity components (remove the float keyword)
+        xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
+        zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
+        // Set the velocity values in the animator
+        animator.SetFloat("XSpeed", xSpeed);
+        animator.SetFloat("ZSpeed", zSpeed);
         
     }
     
     private void EnableAI()
     {
-        SalamanderAgent.enabled = true;
+        agent.enabled = true;
         isEnabled = true;
       
         HeadTarget.SetActive(true);

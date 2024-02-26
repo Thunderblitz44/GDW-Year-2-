@@ -3,7 +3,7 @@ using UnityEngine;
 public class GolemKnight : Enemy
 {
     // attack
-    [SerializeField] int attackDamage = 1;
+    [SerializeField] int attackDamage = 25;
     [SerializeField] float attackCooldown = 1.5f;
     [SerializeField] float attackDelay = 0.5f;
     float attackTimer;

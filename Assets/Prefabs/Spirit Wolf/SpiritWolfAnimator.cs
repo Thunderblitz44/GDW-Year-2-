@@ -4,12 +4,21 @@ public class SpiritWolfAnimator : MonoBehaviour
 {
     private int attackCounter;
     private bool isAttacking;
-    [SerializeField] MeleeHitBox meleeHitBoxL;
-    [SerializeField] MeleeHitBox meleeHitBoxR;
+  
     private Animator animator;
+    public int MeleeAttackDamage;
+    public Vector2 MeleeKnockback;
+    MeleeHitBox[] MeleeAttack;
     // Start is called before the first frame update
     void Start()
     {
+        MeleeAttack = GetComponentsInChildren<MeleeHitBox>(true);
+        foreach (var trigger in MeleeAttack)
+        {
+            trigger.damage = MeleeAttackDamage;
+            trigger.knockback = MeleeKnockback;
+        }
+
         animator = GetComponent<Animator>();
     }
 
@@ -53,23 +62,5 @@ public class SpiritWolfAnimator : MonoBehaviour
         //Debug.Log(isAttacking);
     }
 
-    public void AttackEventLeft()
-    {
-        meleeHitBoxL.gameObject.SetActive(true);
-    }
-
-    public void AttackEventLeftHide()
-    {
-        meleeHitBoxL.gameObject.SetActive(false);
-    }
-
-    public void AttackEventRight()
-    {
-        meleeHitBoxR.gameObject.SetActive(true);
-    }
-    
-    public void AttackEventRightHide()
-    {
-        meleeHitBoxR.gameObject.SetActive(false);
-    }
+ 
 }
