@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 public class SharkController : MonoBehaviour
 {
-    
-    
     private NavMeshAgent SharkAgent;
         private Animator SharkAnimator;
         private bool isEnabled = false;
