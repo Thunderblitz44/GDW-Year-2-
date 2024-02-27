@@ -12,6 +12,9 @@ public class Player : DamageableEntity
     protected ActionMap actions;
 
     [SerializeField] protected CinemachineFreeLook freeLookCam;
+    CinemachineInputProvider inputProvider;
+    bool usingController = false;
+    bool wasUsingController = false;
    
 
     protected override void Awake()
@@ -33,6 +36,7 @@ public class Player : DamageableEntity
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        inputProvider = freeLookCam.GetComponent<CinemachineInputProvider>();
     }
 
     private void Start()
@@ -58,6 +62,32 @@ public class Player : DamageableEntity
             actions.Menus.Enable();
             pauseScript.Pause();
         };
+        actions.CameraControl.Look.started += ctx =>
+        {
+            if (ctx.control.ToString().Contains("Stick")) usingController = true;
+            else usingController = false;
+
+            if (!usingController && wasUsingController)
+            {
+                // using mouse
+                freeLookCam.m_XAxis.m_MaxSpeed = 0.1f;
+                freeLookCam.m_YAxis.m_MaxSpeed = 0.0008f;
+
+                // change the controls panel
+                DebugHUD.instance.DisplayControls(actions, true);
+            }
+            else if (usingController && !wasUsingController)
+            {
+                // using controller
+                freeLookCam.m_XAxis.m_MaxSpeed = 1.2f;
+                freeLookCam.m_YAxis.m_MaxSpeed = 0.008f;
+
+                // change the controls panel
+                DebugHUD.instance.DisplayControls(actions, false);
+            }
+            wasUsingController = usingController;
+        };
+        
 
         // v TEMPORARY v //
         actions.General.respawnTest.performed += ctx =>
