@@ -68,7 +68,7 @@ public static class StaticUtilities
     }
     public static Vector3 FlatDirection(Vector3 first, Vector3 second, float yOffset = 0f)
     {
-        return (first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset).normalized;
+        return ((first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset) * 2).normalized;
     }
 
     public static Vector3 HorizontalizeVector(Vector3 vec)

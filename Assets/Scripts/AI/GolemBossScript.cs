@@ -487,4 +487,9 @@ public class GolemBossScript : Enemy, IBossCommands
         foreach (var crystal in crystals) crystal.isInvincible = true;
         animator.SetBool("ShieldsUp", true);
     }
+
+    public BossHealthComponent GetHPComponent()
+    {
+        return hp as BossHealthComponent;
+    }
 }

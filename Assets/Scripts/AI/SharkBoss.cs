@@ -24,7 +24,6 @@ public class SharkBoss : Enemy, IBossCommands
     [Header("Intro")]
     [SerializeField] SplineContainer introPath;
     [SerializeField] AnimationCurve speedCurve;
-    float speed = 0.1f;
 
     [Header("Passive Path")]
     [SerializeField] SplineContainer passivePath;
@@ -32,7 +31,6 @@ public class SharkBoss : Enemy, IBossCommands
     float passivePathSpeed = 0.1f;
     float lerpToLinkSpeed = 4f;
     float pathRatio;
-    float closestLinkPosDist;
 
     int targetLink;
 
@@ -57,6 +55,16 @@ public class SharkBoss : Enemy, IBossCommands
     [SerializeField] AnimationCurve ramCurve;
     [SerializeField] AnimationCurve expCurve;
     [SerializeField] AnimationCurve logCurve;
+
+    [Header("Shoot Attack")]
+    [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
+    [SerializeField] int shots = 3;
+    [SerializeField] float chargeTime = 1;
+    [SerializeField] float cooldown = 3;
+    [SerializeField] Transform shootOrigin;
+    [SerializeField] LayerMask hitMask;
+    [SerializeField] LayerMask playerLayer;
+    float speed = 0.1f;
 
     public void Introduce()
     {
@@ -98,7 +106,7 @@ public class SharkBoss : Enemy, IBossCommands
                 if (findClosestLink)
                 {
                     findClosestLink = false;
-                    FindNearestPassiveLinkPos(out closestLinkPosDist);
+                    FindNearestPassiveLinkPos(out float dist);
                 }
                 if (calculatePosAndRot)
                 {
@@ -171,19 +179,18 @@ public class SharkBoss : Enemy, IBossCommands
         switch (++phase)
         {
             case 1:
-                attackFuncs.Add(RamRoutine);
                 attackFuncs.Add(DiveRoutine);
-                //attackFuncs.Add(ShootRoutine);
                 break;
             case 2:
+                attackFuncs.Add(RamRoutine);
                 break;
             case 3:
+                attackFuncs.Add(ShootRoutine);
                 break;
             case 4:
                 break;
         }
     }
-
 
     IEnumerator IntroRoutine()
     {
@@ -199,7 +206,6 @@ public class SharkBoss : Enemy, IBossCommands
         StartBattle();
         yield break;
     }
-
 
     IEnumerator DiveRoutine()
     {
@@ -255,6 +261,7 @@ public class SharkBoss : Enemy, IBossCommands
         closestLinkPos += passivePath.transform.position; // passive path is at 0,0,0
         //links direction (to the next link)
         Vector3 linkDir = (Vector3)passivePath.Splines[0].Knots.ElementAt(targetLink + 1 < passivePath.Splines[0].Knots.Count()? targetLink + 1 : 0).Position - closestLinkPos;
+        Destroy(aoeIndicator);
 
         //sharks direction to the link
         Vector3 fwd = StaticUtilities.FlatDirection(transform.position, closestLinkPos);
@@ -282,6 +289,7 @@ public class SharkBoss : Enemy, IBossCommands
             transform.position = lerped;
             yield return null;
         }
+
 
     skip:
         isAttacking = false;
@@ -446,6 +454,7 @@ public class SharkBoss : Enemy, IBossCommands
         end = aoeIndicator.transform.position + Vector3.up * 10;
         startQuat = transform.rotation;
         endQuat = Quaternion.LookRotation(Vector3.up);
+        Destroy(aoeIndicator);
 
         for (float t = 0; t < 1; t += Time.deltaTime * 1.5f)
         {
@@ -456,8 +465,51 @@ public class SharkBoss : Enemy, IBossCommands
         yield return new WaitForSeconds(1);
 
         // boss becomes a sentry turret for X amount of BIG sho
+        int s = 0;
+        float time = 0;
+        bool canShoot = true;
+        while (s < shots)
+        {
+            yield return null;
+            //transform.rotation = Quaternion.LookRotation(StaticUtilities.FlatDirection(target.position, transform.position));
+            time += Time.deltaTime;
 
+            if (time >= chargeTime && canShoot)
+            {
+                canShoot = false;
+                time = 0;
+                s++;
+                // hit scan with lerp
 
+                if (Physics.Raycast(shootOrigin.position, target.position - shootOrigin.position, out hit, 100f, hitMask, QueryTriggerInteraction.Ignore))
+                {
+                    Transform b = Instantiate(projectile.prefab, shootOrigin.position, Quaternion.LookRotation(target.position-shootOrigin.position)).transform;
+                    b.Rotate(Vector3.right, 90f);
+                    start = b.position;
+                    end = hit.point;
+                    float dist = Vector3.Distance(start, end);
+
+                    for (float i = 0; i < dist; i += Time.deltaTime * projectile.speed)
+                    {
+                        b.position = Vector3.Lerp(start, end, i/dist);
+                        yield return null;
+                    }
+                    b.position = end;
+
+                    if (Physics.CheckCapsule(start,end, 1f, playerLayer, QueryTriggerInteraction.Ignore))
+                    {
+                        StaticUtilities.TryToDamage(target.gameObject, projectile.damage);
+                        Debug.Log("hit");
+                    }
+                    Destroy(b.gameObject, projectile.lifeTime); 
+                }
+            }
+            else if (time >= cooldown && !canShoot)
+            {
+                canShoot = true;
+                time = 0;
+            }
+        }
 
         // return to path
     skip:
@@ -470,13 +522,8 @@ public class SharkBoss : Enemy, IBossCommands
         yield break;
     }
 
-    IEnumerator MinionsRoutine()
+    public BossHealthComponent GetHPComponent()
     {
-        yield return null;
-    }
-
-    public IEnumerator LockOnCoroutine()
-    {
-        yield break;
+        return hp as BossHealthComponent;
     }
 }

@@ -5,4 +5,5 @@ using UnityEngine;
 public interface IBossCommands
 {
     public void Introduce();
+    public BossHealthComponent GetHPComponent();
 }

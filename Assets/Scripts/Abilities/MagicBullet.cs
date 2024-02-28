@@ -3,15 +3,15 @@ using UnityEngine;
 public class MagicBullet : MonoBehaviour
 {
     public ProjectileData Projectile { get; private set; }
-    public Rigidbody Rb { get; private set; }
+    public Rigidbody Rb { get; protected set; }
 
-    private void Awake()
+    void Awake()
     {
         Rb = GetComponent<Rigidbody>();
         if (Rb) Die();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         if ((Projectile.owner && Projectile.owner.gameObject == collision.gameObject) ||
             (Projectile.owner.gameObject.layer == LayerMask.NameToLayer("Player") && collision.gameObject.layer == LayerMask.NameToLayer("Friendly"))) return;
@@ -22,7 +22,7 @@ public class MagicBullet : MonoBehaviour
         Die();
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
         FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Elana Shoot", gameObject);
         if (Rb) Invoke(nameof(Die), Projectile.lifeTime);
@@ -46,7 +46,7 @@ public class MagicBullet : MonoBehaviour
         if (Rb)
         {
             Rb.excludeLayers = data.ignoreLayers;
-            GetComponent<SphereCollider>().excludeLayers = data.ignoreLayers;
+            GetComponent<Collider>().excludeLayers = data.ignoreLayers;
         }
     }
 

@@ -13,6 +13,6 @@ public class BossWeakSpot : DamageableEntity
     public void Stun(int damage)
     {
         ApplyDamage(damage);
-        bossScript.Stun();
+        if (bossScript) bossScript.Stun();
     }
 }
