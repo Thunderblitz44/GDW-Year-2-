@@ -1605,8 +1605,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5469225649398627799}
+  - component: {fileID: 208480304599907709}
   - component: {fileID: 8116436632818251914}
   - component: {fileID: 999201821734152369}
+  - component: {fileID: 2230805468125936559}
+  - component: {fileID: 7625824358158529907}
+  - component: {fileID: 4890169901512718093}
   m_Layer: 0
   m_Name: Spirit Of Violence 1
   m_TagString: Untagged
@@ -1632,6 +1636,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!54 &208480304599907709
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004010226852780828}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!95 &8116436632818251914
 Animator:
   serializedVersion: 5
@@ -1669,6 +1700,68 @@ MonoBehaviour:
   - m_Rig: {fileID: 8713225553709843234}
     m_Active: 1
   m_Effectors: []
+--- !u!136 &2230805468125936559
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004010226852780828}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Height: 1.265686
+  m_Direction: 1
+  m_Center: {x: -0, y: 0.62246704, z: -0}
+--- !u!195 &7625824358158529907
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004010226852780828}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.38
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.21
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &4890169901512718093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004010226852780828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3204b1b418062f74184d5609dec846de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+  slowUpdateInterval: 0.2
+  animator: {fileID: 8116436632818251914}
 --- !u!1 &8038987213349376224
 GameObject:
   m_ObjectHideFlags: 0
