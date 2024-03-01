@@ -17,20 +17,24 @@ public class SharkBoss : Enemy, IBossCommands
     float atkTimer;
     bool isAttacking;
     readonly List<Func<IEnumerator>> attackFuncs = new();
-    //Coroutine currentRoutine;
 
     bool battleStarted = false;
 
+    bool interrupt = false;
+
     [Header("Intro")]
+    public bool skipIntro = false;
     [SerializeField] SplineContainer introPath;
     [SerializeField] AnimationCurve speedCurve;
 
     [Header("Passive Path")]
     [SerializeField] SplineContainer passivePath;
+    float speed = 0.1f;
     float passivePathTime;
     float passivePathSpeed = 0.1f;
     float lerpToLinkSpeed = 4f;
     float pathRatio;
+    float distToPath;
 
     int targetLink;
 
@@ -64,11 +68,17 @@ public class SharkBoss : Enemy, IBossCommands
     [SerializeField] Transform shootOrigin;
     [SerializeField] LayerMask hitMask;
     [SerializeField] LayerMask playerLayer;
-    float speed = 0.1f;
+
+    [Header("Domain Expansion")]
+    [SerializeField] GameObject domain;
+    [SerializeField] Vector3 domainGravity;
+    Vector3 normalGravity;
 
     public void Introduce()
     {
         (hp as BossHealthComponent).Show();
+        (hp as BossHealthComponent).nextPhase += NextPhase;
+
         StartCoroutine(IntroRoutine());
     }
 
@@ -106,7 +116,7 @@ public class SharkBoss : Enemy, IBossCommands
                 if (findClosestLink)
                 {
                     findClosestLink = false;
-                    FindNearestPassiveLinkPos(out float dist);
+                    FindNearestPassiveLinkPos(out distToPath);
                 }
                 if (calculatePosAndRot)
                 {
@@ -118,7 +128,7 @@ public class SharkBoss : Enemy, IBossCommands
                 }
 
                 // lerp to link
-                transform.SetPositionAndRotation(Vector3.Lerp(startedPos, closestLinkPos, passivePathTime),
+                transform.SetPositionAndRotation(Vector3.Lerp(startedPos, closestLinkPos, passivePathTime/distToPath),
                     Quaternion.Slerp(startedQuat, lookingAtQuat, passivePathTime));
                 passivePathTime += Time.deltaTime*lerpToLinkSpeed;
 
@@ -179,10 +189,11 @@ public class SharkBoss : Enemy, IBossCommands
         switch (++phase)
         {
             case 1:
-                attackFuncs.Add(DiveRoutine);
+                //attackFuncs.Add(DiveRoutine);
+                //attackFuncs.Add(RamRoutine);
+                StartCoroutine(DomainExpansionRoutine());
                 break;
             case 2:
-                attackFuncs.Add(RamRoutine);
                 break;
             case 3:
                 attackFuncs.Add(ShootRoutine);
@@ -194,16 +205,19 @@ public class SharkBoss : Enemy, IBossCommands
 
     IEnumerator IntroRoutine()
     {
-        for (float t = 0; t < 1; t += Time.deltaTime * speed)
+        if (!skipIntro)
         {
-            transform.position = introPath.EvaluatePosition(t);
-            transform.LookAt(introPath.EvaluatePosition(t + Time.deltaTime));
-            speed = speedCurve.Evaluate(t);
-            yield return null;
+            for (float t = 0; t < 1; t += Time.deltaTime * speed)
+            {
+                transform.position = introPath.EvaluatePosition(t);
+                transform.LookAt(introPath.EvaluatePosition(t + Time.deltaTime));
+                speed = speedCurve.Evaluate(t);
+                yield return null;
+            }
         }
 
-        NextPhase();
         StartBattle();
+        NextPhase();
         yield break;
     }
 
@@ -338,12 +352,16 @@ public class SharkBoss : Enemy, IBossCommands
         }
 
         // aim
-        float anticipationTime = 2f;
+        float anticipationTime = 1.5f;
         for (float t = 0; t < anticipationTime; t += Time.deltaTime)
         {
+            if (interrupt) goto skip;
             transform.LookAt(target);
             yield return null;
         }
+
+        animator.SetTrigger("ChargeUp");
+        yield return new WaitForSeconds(3);
 
         // lerp fast to player pos
         end = target.position + transform.forward * 15f;
@@ -462,16 +480,17 @@ public class SharkBoss : Enemy, IBossCommands
             yield return null;
         }
 
-        yield return new WaitForSeconds(1);
+        animator.SetBool("FacePlayer", true);
 
-        // boss becomes a sentry turret for X amount of BIG sho
+        // boss becomes a sentry turret for X amount of BIG shot
         int s = 0;
         float time = 0;
         bool canShoot = true;
         while (s < shots)
         {
             yield return null;
-            //transform.rotation = Quaternion.LookRotation(StaticUtilities.FlatDirection(target.position, transform.position));
+
+            transform.rotation = Quaternion.LookRotation(Vector3.up, -StaticUtilities.FlatDirection(target.position, transform.position));
             time += Time.deltaTime;
 
             if (time >= chargeTime && canShoot)
@@ -479,8 +498,8 @@ public class SharkBoss : Enemy, IBossCommands
                 canShoot = false;
                 time = 0;
                 s++;
-                // hit scan with lerp
 
+                // hit scan with lerp
                 if (Physics.Raycast(shootOrigin.position, target.position - shootOrigin.position, out hit, 100f, hitMask, QueryTriggerInteraction.Ignore))
                 {
                     Transform b = Instantiate(projectile.prefab, shootOrigin.position, Quaternion.LookRotation(target.position-shootOrigin.position)).transform;
@@ -509,8 +528,13 @@ public class SharkBoss : Enemy, IBossCommands
                 canShoot = true;
                 time = 0;
             }
+            else if (interrupt && !canShoot)
+            {
+                break;
+            }
         }
 
+        animator.SetBool("FacePlayer", false);
         // return to path
     skip:
 
@@ -525,5 +549,92 @@ public class SharkBoss : Enemy, IBossCommands
     public BossHealthComponent GetHPComponent()
     {
         return hp as BossHealthComponent;
+    }
+
+    IEnumerator DomainExpansionRoutine()
+    {
+        interrupt = true;
+        while (isAttacking) yield return null;
+        isAttacking = true;
+        interrupt = false;
+
+        // dive and appear in the middle
+        Quaternion startQuat, endQuat;
+        Vector3 start, end, lerped;
+        AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        // spawn a aoe ring on the ground below the boss
+        RaycastHit hit;
+        Vector3 diveDir = Vector3.down + transform.forward * 0.6f;
+        Debug.DrawRay(transform.position, diveDir, Color.green, Time.deltaTime);
+
+        if (Physics.Raycast(transform.position, diveDir, out hit, 80f, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
+        {
+            followPassivePath = false;
+
+            // dive into the aoe ring
+            end = hit.point + Vector3.down * 40f;
+            start = transform.position;
+            for (float t = 0; t < 1; t += Time.deltaTime)
+            {
+                lerped = StaticUtilities.BuildVector(Mathf.Lerp(start.x, end.x, diveHCurve.Evaluate(t)),
+                    Mathf.Lerp(start.y, end.y, diveVCurve.Evaluate(t)),
+                    Mathf.Lerp(start.z, end.z, diveHCurve.Evaluate(t)));
+                transform.LookAt(lerped);
+                transform.position = lerped;
+                yield return null;
+            }
+        }
+        else
+        {
+            Debug.Log("cant find the ground for diving");
+            goto skip;
+        }
+
+        // at this point, the shark is underground
+        yield return new WaitForSeconds(1);
+
+        // boss comes out half way out of random spot
+        start = LevelManager.Instance.CurrentEncounter.EncounterBounds.center + Vector3.down * 50f;
+        end = LevelManager.Instance.CurrentEncounter.EncounterBounds.center + Vector3.up * 6;
+        startQuat = transform.rotation;
+        endQuat = Quaternion.LookRotation(Vector3.up);
+
+        for (float t = 0; t < 1; t += Time.deltaTime * 1.5f)
+        {
+            transform.SetPositionAndRotation(Vector3.Lerp(start, end, curve.Evaluate(t)), Quaternion.Lerp(startQuat, endQuat, t));
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        Vector3 domainTrueScale = Vector3.one * 130f;
+
+        // Spawn domain
+        domain.SetActive(true);
+        for (float t = 0; t < 1; t += Time.deltaTime)
+        {
+            domain.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one*2, curve.Evaluate(t));
+            yield return null;
+        }
+        yield return new WaitForSeconds(1);
+        for (float t = 0; t < 1; t+=Time.deltaTime)
+        {
+            domain.transform.localScale = Vector3.Lerp(Vector3.one * 2, domainTrueScale, curve.Evaluate(t));
+            yield return null;
+        }
+
+        // gravity effects
+        // slow player?
+        normalGravity = Physics.gravity;
+        Physics.gravity = domainGravity;
+
+    skip:
+
+        isAttacking = false;
+        followPassivePath = true;
+        findClosestLink = true;
+        calculatePosAndRot = true;
+        isOnPath = false;
+        yield break;
     }
 }

@@ -44,6 +44,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         LevelManager.isGamePaused = true;
+        Time.timeScale = 0;
     }
 
     public void Resume()
@@ -52,6 +53,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         LevelManager.isGamePaused = false;
+        Time.timeScale = 1;
     }
 
     void Settings()
