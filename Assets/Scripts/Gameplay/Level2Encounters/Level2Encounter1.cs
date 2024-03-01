@@ -1,18 +1,49 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Level2Encounter1 : MonoBehaviour
+public class Level2Encounter1 : EncounterVolume
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] int totalEnemies = 10;
+    [SerializeField] int maxSpawnedAtOnce = 3;
 
-    // Update is called once per frame
-    void Update()
+    protected override IEnumerator EncounterRoutine()
     {
-        
+        // spawn 1 salamander
+        SpawnEnemy(0);
+
+        // wait
+        while (LevelManager.spawnedEnemies.Count > 0)
+        {
+            yield return new WaitForSeconds(0.1f);
+            CheckRemaining();
+        }
+        yield return new WaitForSeconds(2f);
+
+        // spawn 1 mantis
+        SpawnEnemy(1);
+
+        // wait
+        while (LevelManager.spawnedEnemies.Count > 0)
+        {
+            yield return new WaitForSeconds(0.1f);
+            CheckRemaining();
+        }
+        yield return new WaitForSeconds(2f);
+
+        // spawn the rest
+        do
+        {
+            // spawn enemies until cap
+            if (LevelManager.spawnedEnemies.Count < maxSpawnedAtOnce && totalSpawned < totalEnemies)
+            {
+                yield return new WaitForSeconds(0.4f);
+                SpawnEnemy();
+            }
+
+            CheckRemaining();
+            yield return new WaitForSeconds(0.1f);
+        } while (LevelManager.spawnedEnemies.Count > 0);
+
+        EndEncounter();
     }
 }

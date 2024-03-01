@@ -112,7 +112,6 @@ public class LevelManager : MonoBehaviour
 
     public void Respawn(float delay = 0)
     {
-        if (!CurrentCheckpoint) return;
         PlayerScript.FreezeCamera();
         transitioner.FadeToBlack(delay);
     }
@@ -191,7 +190,7 @@ public class LevelManager : MonoBehaviour
         else
         {
             transitioner.FadeToClear(0.5f);
-            CurrentCheckpoint.Teleport(PlayerTransform);
+            if (CurrentCheckpoint) CurrentCheckpoint.Teleport(PlayerTransform);
             PlayerScript.UnFreezeCamera();
         }
     }

@@ -358,10 +358,11 @@ DragonflyAnimator.SetBool("IsShooting", true);
     void OnDodgeEnded()
     {
         // dodge end
+        
         MovementScript.EnableLocomotion();
         isInvincible = false;
         isDodgeing = false;
-      
+        MovementScript.Rb.velocity = StaticUtilities.HorizontalizeVector(MovementScript.Rb.velocity);
         if (canPortal) return;
     
         portalLink.enabled = false;

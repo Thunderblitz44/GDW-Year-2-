@@ -1,18 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
-public class Level2Encounter2 : MonoBehaviour
+public class Level2Encounter2 : EncounterVolume
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] NavMeshSurface previousNavmesh;
+    [SerializeField] NavMeshSurface[] navmeshes;
+    protected override IEnumerator EncounterRoutine()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        previousNavmesh.enabled = false;
+        // spawn 5 mantis
+        for (int i = 0; i < 5; i++)
+        {
+            if (navmeshes[0].isActiveAndEnabled) SpawnEnemy(1);
+            yield return new WaitForSeconds(1);
+        }
     }
 }

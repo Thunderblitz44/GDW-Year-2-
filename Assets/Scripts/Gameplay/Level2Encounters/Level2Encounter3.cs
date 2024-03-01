@@ -1,18 +1,40 @@
 using System.Collections;
-using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
-public class Level2Encounter3 : MonoBehaviour
+public class Level2Encounter3 : EncounterVolume
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] int totalEnemies = 10;
+    [SerializeField] int maxSpawnedAtOnce = 3;
+    [SerializeField] NavMeshSurface[] previousNavmeshes;
 
-    // Update is called once per frame
-    void Update()
+
+    protected override IEnumerator EncounterRoutine()
     {
-        
+        foreach (NavMeshSurface surface in previousNavmeshes)
+        {
+            surface.enabled = false;
+        }
+
+        for (int i = 0, c = LevelManager.spawnedEnemies.Count; i < c; i++)
+        {
+            Destroy(LevelManager.spawnedEnemies[0].gameObject);
+            LevelManager.spawnedEnemies.RemoveAt(0);
+        }
+
+        do
+        {
+            // spawn enemies until cap
+            if (LevelManager.spawnedEnemies.Count < maxSpawnedAtOnce && totalSpawned < totalEnemies)
+            {
+                yield return new WaitForSeconds(0.9f);
+                SpawnEnemy();
+            }
+
+            CheckRemaining();
+            yield return new WaitForSeconds(0.1f);
+        } while (LevelManager.spawnedEnemies.Count > 0);
+
+        EndEncounter();
     }
 }

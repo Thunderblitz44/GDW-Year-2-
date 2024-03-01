@@ -39,14 +39,6 @@ public class GolemKnight : Enemy
 
         HeadTarget.transform.position = target.position;
 
-        // attack cooldown + delay
-        /*attackCooldownTimer += Time.deltaTime;
-        if (attackCooldownTimer >= attackCooldown && attack && 
-            (attackTimer += Time.deltaTime) >= attackDelay)
-        {
-            attackCooldownTimer = 0f;
-           
-        }*/
         float smoothingFactor = 0.1f;
 
         Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);

@@ -51,8 +51,10 @@ public class MantisController : Enemy
 
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         Vector3 headPosition = LevelManager.PlayerTransform.position;
 
         if (isEnabled)

@@ -5,8 +5,6 @@ using UnityEngine.AI;
 
 public class Salamander : Enemy
 {
-   
-
     private bool isEnabled = false;
   
     public CapsuleCollider attackTrigger;
@@ -32,15 +30,12 @@ public class Salamander : Enemy
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-             
-        
+        base.Update();
+
         Vector3 headPosition = LevelManager.PlayerTransform.position;
         
-        
-        
-            
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;

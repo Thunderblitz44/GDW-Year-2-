@@ -12,7 +12,6 @@ public class Player : DamageableEntity
     protected ActionMap actions;
 
     [SerializeField] protected CinemachineFreeLook freeLookCam;
-    CinemachineInputProvider inputProvider;
     bool usingController = false;
     bool wasUsingController = false;
    
@@ -35,11 +34,9 @@ public class Player : DamageableEntity
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        inputProvider = freeLookCam.GetComponent<CinemachineInputProvider>();
     }
 
-    private void Start()
+    void Start()
     {
         DebugHUD.instance.DisplayControls(actions);
         LevelManager.Instance.CurrentCheckpoint.Teleport(transform);
@@ -131,6 +128,7 @@ public class Player : DamageableEntity
         LevelManager.isGameOver = true;
         PausePlayer();
         LevelManager.Instance.Respawn(0.5f);
+        Destroy(hp); 
     }
 
     public void FreezeCamera()
