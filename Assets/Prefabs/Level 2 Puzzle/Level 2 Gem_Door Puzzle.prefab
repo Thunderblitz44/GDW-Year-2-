@@ -412,6 +412,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5692251415852890144}
+  - component: {fileID: 2450894375282448044}
+  - component: {fileID: 4508038469704285230}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -435,6 +437,39 @@ Transform:
   m_Father: {fileID: 6201970547324466988}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2450894375282448044
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3564284966711157198}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 18.482862, y: 14.330075, z: 19.888096}
+  m_Center: {x: -18.295942, y: 7.848132, z: -2.4130664}
+--- !u!114 &4508038469704285230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3564284966711157198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 282deee132f33f74ab0656581c46a111, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3579180538322074824
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,7 +544,7 @@ GameObject:
   - component: {fileID: 1416200241651352002}
   - component: {fileID: 1806990275871408966}
   - component: {fileID: 5389909206767684825}
-  - component: {fileID: 6676890752072568995}
+  - component: {fileID: 7121547161533492443}
   m_Layer: 0
   m_Name: Green Gem
   m_TagString: Untagged
@@ -524,7 +559,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3928681794215713326}
-  m_LocalRotation: {x: -0, y: 0.2779378, z: -0, w: 0.96059906}
+  m_LocalRotation: {x: 0, y: -0.10105626, z: 0, w: 0.99488074}
   m_LocalPosition: {x: 238.704, y: -46.61, z: -274.327}
   m_LocalScale: {x: 3.4006257, y: 3.8530817, z: 2.8504386}
   m_ConstrainProportionsScale: 0
@@ -542,7 +577,7 @@ Transform:
   - {fileID: 3426754816731809386}
   m_Father: {fileID: 6201970547324466988}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -11.6, z: 0}
 --- !u!114 &1416200241651352002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -586,8 +621,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 3, z: 3}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 7.7211437, y: 1.7847168, z: 3.1178849}
+  m_Center: {x: -0.45647916, y: 0.79528433, z: 0.058942724}
 --- !u!114 &5389909206767684825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -600,7 +635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacec52d1cea0764aae754f3a03b770f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6676890752072568995
+--- !u!114 &7121547161533492443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -609,10 +644,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3928681794215713326}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c631d09e9e262b842b63f89333342157, type: 3}
+  m_Script: {fileID: 11500000, guid: 1839909b27f1b42478cacbdf173b4e4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   barriers: []
+  gem: 2
 --- !u!1 &4378727549511801675
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,7 +661,7 @@ GameObject:
   - component: {fileID: 5259158121930537863}
   - component: {fileID: 284196744962832436}
   - component: {fileID: 2353904832815587931}
-  - component: {fileID: 6748663312983480159}
+  - component: {fileID: 3331600973555630355}
   m_Layer: 0
   m_Name: Blue Gem
   m_TagString: Untagged
@@ -641,7 +677,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4378727549511801675}
   m_LocalRotation: {x: -0, y: 0.2779378, z: -0, w: 0.96059906}
-  m_LocalPosition: {x: 225.21, y: -46.61, z: -173.1}
+  m_LocalPosition: {x: 225.66, y: -46.61, z: -173.39}
   m_LocalScale: {x: 3.4006257, y: 3.8530817, z: 2.8504386}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -707,8 +743,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 3, z: 3}
-  m_Center: {x: 0, y: 0.24213697, z: 0}
+  m_Size: {x: 2.15, y: 1.5, z: 7.43}
+  m_Center: {x: 0, y: 0.51, z: 0}
 --- !u!114 &2353904832815587931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,7 +757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacec52d1cea0764aae754f3a03b770f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6748663312983480159
+--- !u!114 &3331600973555630355
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -730,10 +766,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4378727549511801675}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c631d09e9e262b842b63f89333342157, type: 3}
+  m_Script: {fileID: 11500000, guid: 1839909b27f1b42478cacbdf173b4e4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   barriers: []
+  gem: 0
 --- !u!1 &4405745881581644290
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,7 +1031,7 @@ Transform:
   - {fileID: 4382849703250111934}
   - {fileID: 6662550379728729935}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5699087031975025985
 Animator:
@@ -1383,7 +1420,7 @@ GameObject:
   - component: {fileID: 2991860577009528195}
   - component: {fileID: 7700631580354372405}
   - component: {fileID: 32222485856449956}
-  - component: {fileID: 331558865405677669}
+  - component: {fileID: 6220255557367112871}
   m_Layer: 0
   m_Name: Yellow Gem
   m_TagString: Untagged
@@ -1399,7 +1436,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8275110643491024845}
   m_LocalRotation: {x: -0, y: 0.2779378, z: -0, w: 0.96059906}
-  m_LocalPosition: {x: 256.24, y: -46.61, z: -195.82}
+  m_LocalPosition: {x: 256.36, y: -46.61, z: -195.95}
   m_LocalScale: {x: 3.4006257, y: 3.8530817, z: 2.8504386}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1458,8 +1495,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 3, z: 3}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.7791195, y: 2, z: 6.817308}
+  m_Center: {x: -0.13955845, y: 0.79998213, z: -0.22284007}
 --- !u!114 &32222485856449956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1472,7 +1509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacec52d1cea0764aae754f3a03b770f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &331558865405677669
+--- !u!114 &6220255557367112871
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1481,10 +1518,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8275110643491024845}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c631d09e9e262b842b63f89333342157, type: 3}
+  m_Script: {fileID: 11500000, guid: 1839909b27f1b42478cacbdf173b4e4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   barriers: []
+  gem: 1
 --- !u!1001 &1760327315707794097
 PrefabInstance:
   m_ObjectHideFlags: 0

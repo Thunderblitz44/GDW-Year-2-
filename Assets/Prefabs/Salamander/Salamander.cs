@@ -40,7 +40,7 @@ public class Salamander : Enemy
         {
             HeadTarget.transform.position = headPosition;
             agent.SetDestination(headPosition);
-            animator.SetBool("IsAttacking", inAttackRange);
+            //animator.SetBool("IsAttacking", inAttackRange);
         }
 
         float smoothingFactor = 0.1f;
