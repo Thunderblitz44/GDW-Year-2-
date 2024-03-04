@@ -23,8 +23,11 @@ public class LockonTarget : MonoBehaviour
     private void Update()
     {
         // test if visible
-        if (!col) return;
-        testResult = GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), col.bounds);
+        if (!col) {
+            Debug.Log("no collider, cant detect");
+            return;
+        }
+        testResult = GeometryUtility.TestPlanesAABB(StaticUtilities.cameraFrustrumPlanes, col.bounds);
         if (!startCheckVisibility && testResult)
         {
             startCheckVisibility = true;

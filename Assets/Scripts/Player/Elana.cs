@@ -14,6 +14,7 @@ public class Elana : Player
     //[SerializeField] MeleeHitBox mhb;
     [SerializeField] private SpiritWolfAnimator spiritWolfAnimator;
     [SerializeField] float wolfLerpSpeed = 1;
+    [SerializeField] float lockonRadiusOverride = 200f;
     Transform spiritWolf;
     bool melee;
     bool lerpWolf;
@@ -222,7 +223,7 @@ public class Elana : Player
             wolfRotStart = GetSpiritWolfPassiveRot();
 
             autoLockOverride = true;
-            autoLockRadiusOverride = 100;
+            autoLockRadiusOverride = lockonRadiusOverride;
             autoLockRangeOverride = range;
 
             //Animate player/wolf attacking in sync

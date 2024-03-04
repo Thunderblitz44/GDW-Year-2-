@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
 public static class StaticUtilities
 {
     public static readonly int groundLayer = 64;
@@ -16,6 +15,7 @@ public static class StaticUtilities
     public static readonly AnimationCurve easeCurve01 = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     public static readonly List<Transform> renderedEnemies = new();
+    public static Plane[] cameraFrustrumPlanes;
 
 
     public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects, float cutoffRadius)
@@ -24,16 +24,16 @@ public static class StaticUtilities
             .OrderBy(x => Vector2.Distance(GetCenterOfScreen(), (Vector2)Camera.main.WorldToScreenPoint(x.position))).ToList();
     }
 
-    public static List<Transform> SortByVisible(List<Transform> objects, float range, LayerMask targetLayer, LayerMask blockingLayers)
+    public static List<Transform> SortByVisible(List<Transform> objects, float range, LayerMask blockingLayers)
     {
-        return objects.Where(t => IsVisible(t, range, targetLayer, blockingLayers)).ToList();
+        return objects.Where(t => IsVisible(t, range, blockingLayers)).ToList();
     }
 
-    public static bool IsVisible(Transform obj, float range, LayerMask targetLayer, LayerMask blockingLayers)
+    public static bool IsVisible(Transform obj, float range, LayerMask blockingLayers)
     {
-        if (Physics.Raycast(Camera.main.transform.position, obj.position - Camera.main.transform.position, out RaycastHit hit, range, blockingLayers))
+        if (Physics.Raycast(Camera.main.transform.position, obj.position - Camera.main.transform.position, out RaycastHit hit, range, blockingLayers, QueryTriggerInteraction.Ignore))
         {
-            if (1 << hit.transform.gameObject.layer == targetLayer)
+            if (obj == hit.collider.transform)
             {
                 return true;
             }

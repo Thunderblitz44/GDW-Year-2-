@@ -3,10 +3,8 @@ using Cinemachine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using TMPro.EditorUtilities;
-using System;
 
-public class Player : DamageableEntity
+public abstract class Player : DamageableEntity
 {
     public PlayerMovement MovementScript { get; private set; }
     [SerializeField] protected AbilityHUD abilityHud;
@@ -25,7 +23,6 @@ public class Player : DamageableEntity
     [SerializeField] float autoLockRange = 20f;
     [SerializeField] Image lockonIcon;
     [SerializeField] LayerMask blockingSightLayers;
-    [SerializeField] LayerMask targetLayer;
     [SerializeField] float iconLerpSpeed = 5;
     [SerializeField] float targetsCheckDelay = 0.2f;
     protected Transform lockonTarget;
@@ -81,6 +78,9 @@ public class Player : DamageableEntity
         {
             lockonIcon.enabled = false;
         }
+
+        // update camera frustrum planes
+        StaticUtilities.cameraFrustrumPlanes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
     }
 
     public void OnDestroy()
@@ -216,7 +216,7 @@ public class Player : DamageableEntity
         targets = StaticUtilities.SortByDistanceToScreenCenter(targets, autoLockOverride ? autoLockRadiusOverride : autoLockRadius);
 
         // sort by visible
-        targets = StaticUtilities.SortByVisible(targets, autoLockOverride ? autoLockRangeOverride : autoLockRange, targetLayer, blockingSightLayers);
+        targets = StaticUtilities.SortByVisible(targets, autoLockOverride ? autoLockRangeOverride : autoLockRange, blockingSightLayers);
     }
 
     private void SetLockonIconPosition()
@@ -239,8 +239,5 @@ public class Player : DamageableEntity
         }
     }
 
-    protected virtual void OnLockonTargetChanged()
-    {
-
-    }
+    protected abstract void OnLockonTargetChanged();
 }
