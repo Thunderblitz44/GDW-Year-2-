@@ -6,20 +6,35 @@ public class LockonTarget : MonoBehaviour
     float visibilityCheckDelay = 0.2f;
     float timer = 0f;
 
-    private void OnBecameVisible()
+    Plane[] camFrustrum;
+    Collider col;
+    bool testResult;
+
+    void Awake()
     {
-        startCheckVisibility = true;
+        col = GetComponent<Collider>();
     }
 
-    private void OnBecameInvisible()
+    private void OnDestroy()
     {
-        startCheckVisibility = false;
-        
         SetInvisible();
     }
 
     private void Update()
     {
+        // test if visible
+        if (!col) return;
+        testResult = GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), col.bounds);
+        if (!startCheckVisibility && testResult)
+        {
+            startCheckVisibility = true;
+        }
+        else if (startCheckVisibility && !testResult)
+        {
+            startCheckVisibility = false;
+            SetInvisible();
+        }
+
         if (!startCheckVisibility) return;
 
         timer += Time.deltaTime;

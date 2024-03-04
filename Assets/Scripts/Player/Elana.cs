@@ -8,10 +8,10 @@ public class Elana : Player
 {
     [Space(10), Header("ABILITIES"), Space(10)]
     [Header("Primary Attack")]
-    [SerializeField] int meleeDamage = 1;
+    //[SerializeField] int meleeDamage = 1;
     [SerializeField] float range = 4f;
-    [SerializeField] Vector2 knockback;
-    [SerializeField] MeleeHitBox mhb;
+    //[SerializeField] Vector2 knockback;
+    //[SerializeField] MeleeHitBox mhb;
     [SerializeField] private SpiritWolfAnimator spiritWolfAnimator;
     [SerializeField] float wolfLerpSpeed = 1;
     Transform spiritWolf;
@@ -119,8 +119,8 @@ public class Elana : Player
             pooledProjectiles.Add(mb.gameObject);
         }
 
-        mhb.damage = meleeDamage;
-        mhb.knockback = knockback;
+        //mhb.damage = meleeDamage;
+        //mhb.knockback = knockback;
 
         LevelManager.Instance.onEncounterStart += CancelRecallAbility;
 

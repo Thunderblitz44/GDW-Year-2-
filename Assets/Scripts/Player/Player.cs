@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro.EditorUtilities;
+using System;
 
 public class Player : DamageableEntity
 {
@@ -25,7 +26,7 @@ public class Player : DamageableEntity
     [SerializeField] Image lockonIcon;
     [SerializeField] LayerMask blockingSightLayers;
     [SerializeField] LayerMask targetLayer;
-    [SerializeField] float lerpSpeed = 5;
+    [SerializeField] float iconLerpSpeed = 5;
     [SerializeField] float targetsCheckDelay = 0.2f;
     protected Transform lockonTarget;
     Vector3 lerpStart;
@@ -227,7 +228,7 @@ public class Player : DamageableEntity
             if (lerpTime < 1)
             {
                 lockonIcon.transform.position = Vector2.Lerp(lerpStart, lerpEnd, StaticUtilities.easeCurve01.Evaluate(lerpTime));
-                lerpTime += Time.deltaTime * lerpSpeed;
+                lerpTime += Time.deltaTime * iconLerpSpeed;
             }
             else
             {

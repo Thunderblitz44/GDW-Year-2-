@@ -31,7 +31,7 @@ public static class StaticUtilities
 
     public static bool IsVisible(Transform obj, float range, LayerMask targetLayer, LayerMask blockingLayers)
     {
-        if (Physics.Raycast(Camera.main.transform.position, obj.position - Camera.main.transform.position, out RaycastHit hit, range, blockingLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(Camera.main.transform.position, obj.position - Camera.main.transform.position, out RaycastHit hit, range, blockingLayers))
         {
             if (1 << hit.transform.gameObject.layer == targetLayer)
             {

@@ -523,83 +523,6 @@ Transform:
   m_Father: {fileID: 6914953460680732259}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1425915393480014381
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6087232689844442351}
-  - component: {fileID: 7076781560170703724}
-  - component: {fileID: 2482243520328298073}
-  - component: {fileID: 5182973598368843164}
-  m_Layer: 0
-  m_Name: MeleeHitbox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6087232689844442351
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425915393480014381}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.22, z: 1.268}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 984737051393073514}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &7076781560170703724
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425915393480014381}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!135 &2482243520328298073
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425915393480014381}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 4087
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5182973598368843164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425915393480014381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c885b2e226d8acb4dbae236a85ea933a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 0
-  knockback: {x: 0, y: 0}
 --- !u!1 &1699098064243249531
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,7 +760,6 @@ Transform:
   - {fileID: 42776951590014760}
   - {fileID: 5351164244853221291}
   - {fileID: 2903461974480955669}
-  - {fileID: 6087232689844442351}
   - {fileID: 1648939964315176429}
   - {fileID: 4599692560650440037}
   m_Father: {fileID: 5103401310647644098}
@@ -1154,8 +1076,9 @@ MonoBehaviour:
   isInvincible: 0
   abilityHud: {fileID: 8250759103211013585}
   freeLookCam: {fileID: 7109237663124450128}
-  aimAssist: 1
-  assistanceRadius: 3
+  autoLock: 0
+  autoLockRadius: 100
+  autoLockRange: 20
   lockonIcon: {fileID: 1374900038260622372}
   blockingSightLayers:
     serializedVersion: 2
@@ -1163,36 +1086,11 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 4096
-  lerpSpeed: 5
-  lerpCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  meleeDamage: 1
-  range: 4
-  knockback: {x: 10, y: 4}
-  mhb: {fileID: 5182973598368843164}
+  iconLerpSpeed: 5
+  targetsCheckDelay: 0.05
+  range: 6
   spiritWolfAnimator: {fileID: 9188040051408430813}
+  wolfLerpSpeed: 3
   enemyLayer:
     serializedVersion: 2
     m_Bits: 4096
@@ -5827,7 +5725,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1883594850342248349, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.014349652
+      value: -0.014349646
       objectReference: {fileID: 0}
     - target: {fileID: 1883594850342248349, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -5835,7 +5733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1883594850342248349, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0477021
+      value: -0.047702085
       objectReference: {fileID: 0}
     - target: {fileID: 2275666174603956261, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_Name
@@ -5859,7 +5757,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2352767033468916339, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.014349661
+      value: -0.014349642
       objectReference: {fileID: 0}
     - target: {fileID: 2352767033468916339, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -5867,7 +5765,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2352767033468916339, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.047702122
+      value: -0.047702063
       objectReference: {fileID: 0}
     - target: {fileID: 3171917052943126800, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_Damping
@@ -5930,8 +5828,12 @@ PrefabInstance:
       value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3667547350440925883, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
+      propertyPath: m_XAxis.m_MaxSpeed
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3667547350440925883, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_YAxis.m_MaxSpeed
-      value: 0.0008
+      value: 0.0015
       objectReference: {fileID: 0}
     - target: {fileID: 3667547350440925883, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_Lens.NearClipPlane
@@ -6007,15 +5909,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.011826582
+      value: 0.011826584
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9342692
+      value: 0.93426925
       objectReference: {fileID: 0}
     - target: {fileID: 4452510964980113591, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.031123616
+      value: 0.031123618
       objectReference: {fileID: 0}
     - target: {fileID: 4495033614909230112, guid: 4a4ae064405559c4da21735d58d0e08f, type: 3}
       propertyPath: m_Follow
