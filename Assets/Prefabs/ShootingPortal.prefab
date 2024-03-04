@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 295262102757075415}
   - component: {fileID: 2960689923720329026}
   - component: {fileID: 2199025800735167321}
+  - component: {fileID: 8191444970516273987}
   m_Layer: 0
   m_Name: ShootingPortal
   m_TagString: Untagged
@@ -52,6 +53,7 @@ MonoBehaviour:
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
+  bossStunDamage: 10
 --- !u!114 &757124165363284824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,6 +69,7 @@ MonoBehaviour:
   maxHealth: 5
   hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
   height: 1.5
+  autoHide: 1
 --- !u!65 &295262102757075415
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -86,7 +89,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.25, y: 1.25, z: 0.3}
+  m_Size: {x: 2, y: 2, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!2083052967 &2960689923720329026
 VisualEffect:
@@ -166,6 +169,18 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &8191444970516273987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5136089227381563992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83c76d47260da7e4a8eeae6b0bee366e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5568324200785603623
 GameObject:
   m_ObjectHideFlags: 0
