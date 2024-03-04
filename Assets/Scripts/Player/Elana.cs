@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.VFX;
 
 public class Elana : Player
@@ -8,10 +9,20 @@ public class Elana : Player
     [Space(10), Header("ABILITIES"), Space(10)]
     [Header("Primary Attack")]
     [SerializeField] int meleeDamage = 1;
+    [SerializeField] float range = 4f;
     [SerializeField] Vector2 knockback;
-    //[SerializeField] float cooldown = 1f;
     [SerializeField] MeleeHitBox mhb;
     [SerializeField] private SpiritWolfAnimator spiritWolfAnimator;
+    [SerializeField] float wolfLerpSpeed = 1;
+    Transform spiritWolf;
+    bool melee;
+    bool lerpWolf;
+    [SerializeField] LayerMask enemyLayer;
+    Vector3 wolfLerpStart;
+    Vector3 wolfLerpEnd;
+    Quaternion wolfRotStart;
+    Quaternion wolfRotEnd;
+    float wolfLerpTime;
     
     [Header("Secondary Attack")]
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
@@ -112,10 +123,14 @@ public class Elana : Player
         mhb.knockback = knockback;
 
         LevelManager.Instance.onEncounterStart += CancelRecallAbility;
+
+        spiritWolf = spiritWolfAnimator.transform;
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         shootingCooldownTimer += Time.deltaTime;
         if (shooting && (shootStartTimer += Time.deltaTime) > shootStartDelay && shootingCooldownTimer > bulletCooldown)
         {
@@ -140,8 +155,7 @@ public class Elana : Player
 
         if (aimingFireTornado)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen()), out hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen()), out RaycastHit hit, maxRange, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
             {
                 if (Vector3.Angle(Vector3.up, hit.normal) < 45)
                 {
@@ -157,6 +171,38 @@ public class Elana : Player
                 }
             }
         }
+
+        if (melee) 
+        {
+            if (wolfLerpTime < 1)
+            {
+                if (lockonTarget)
+                {
+                    wolfLerpEnd = FindSpiritWolfAttackPos();
+                    wolfRotEnd = Quaternion.LookRotation(wolfLerpEnd - wolfLerpStart);
+                }
+                else
+                {
+                    wolfLerpEnd = GetSpiritWolfPassivePos();
+                    wolfRotEnd = GetSpiritWolfPassiveRot();
+                }
+
+                spiritWolf.SetPositionAndRotation(Vector3.Lerp(wolfLerpStart, wolfLerpEnd, StaticUtilities.easeCurve01.Evaluate(wolfLerpTime)),
+                    Quaternion.Slerp(wolfRotStart, wolfRotEnd, StaticUtilities.easeCurve01.Evaluate(wolfLerpTime * 2f)));
+            }
+            else if (lockonTarget)
+            {
+                spiritWolf.position = FindSpiritWolfAttackPos();
+                spiritWolf.LookAt(lockonTarget);
+            }
+            else
+            {
+                spiritWolf.position = GetSpiritWolfPassivePos();
+                spiritWolf.rotation = GetSpiritWolfPassiveRot();
+                // default pos
+            }
+            if (lerpWolf) wolfLerpTime += Time.deltaTime * wolfLerpSpeed;
+        }
     }
 
     public override void SetupInputEvents()
@@ -169,23 +215,35 @@ public class Elana : Player
         actions.Abilities.PrimaryAttack.started += ctx =>
         {
             // melee
-            //mhb.gameObject.SetActive(true);
-            
+            melee = true;
+            lerpWolf = true;
+            wolfLerpTime = 0;
+            wolfLerpStart = GetSpiritWolfPassivePos();
+            wolfRotStart = GetSpiritWolfPassiveRot();
+
+            autoLockOverride = true;
+            autoLockRadiusOverride = 100;
+            autoLockRangeOverride = range;
+
             //Animate player/wolf attacking in sync
             spiritWolfAnimator.PrimaryAttack();
             FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wolf Swipe", gameObject);
         };
         actions.Abilities.PrimaryAttack.canceled += ctx =>
         {
-          spiritWolfAnimator.EndAttack();
+            spiritWolfAnimator.EndAttack();
+            wolfLerpTime = 1;
+            spiritWolf.position = GetSpiritWolfPassivePos();
+            lerpWolf = false;
 
-           
+            melee = false;
+            autoLockOverride = false;
         };
         actions.Abilities.SecondaryAttack.started += ctx =>
         {
             shooting = true;
             // aim
-DragonflyAnimator.SetBool("IsShooting", true);
+            DragonflyAnimator.SetBool("IsShooting", true);
         };
         actions.Abilities.SecondaryAttack.canceled += ctx =>
         {
@@ -379,17 +437,26 @@ DragonflyAnimator.SetBool("IsShooting", true);
         shootingCooldownTimer = 0f;
         // start shooting
         Vector3 force;
-        RaycastHit hit;
-        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen());
-        if (Physics.Raycast(camLook, out hit, 100f, whatIsDodgeObstacle, QueryTriggerInteraction.Ignore))
+
+        if (autoLock && lockonTarget)
         {
-            force = (hit.point - shootOrigin.position).normalized * projectile.speed;
+            force = (lockonTarget.position - shootOrigin.position).normalized * projectile.speed;
+            StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
         }
         else
         {
-            force = camLook.direction * projectile.speed;
+            RaycastHit hit;
+            Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen());
+            if (Physics.Raycast(camLook, out hit, 100f, whatIsDodgeObstacle, QueryTriggerInteraction.Ignore))
+            {
+                force = (hit.point - shootOrigin.position).normalized * projectile.speed;
+            }
+            else
+            {
+                force = camLook.direction * projectile.speed;
+            }
+            StaticUtilities.ShootProjectile(pooledProjectiles,shootOrigin.position, force);
         }
-        StaticUtilities.ShootProjectile(pooledProjectiles,shootOrigin.position, force);
     }
 
     void EndTornado()
@@ -411,5 +478,47 @@ DragonflyAnimator.SetBool("IsShooting", true);
         portalLink.enabled = false;
         Destroy(instantiatedPortal);
         abilityHud.SpendPoint(portalId, portalCoolown);
+    }
+
+    protected override void OnLockonTargetChanged()
+    {
+        if (melee)
+        {
+            wolfLerpStart = spiritWolf.position;
+            wolfRotStart = spiritWolf.rotation;
+            if (lockonTarget)
+            {
+                wolfLerpEnd = FindSpiritWolfAttackPos();
+                wolfRotEnd = GetSpiritWolfPassiveRot();
+            }
+            else
+            {
+                wolfLerpEnd = GetSpiritWolfPassivePos();
+                wolfRotEnd = Quaternion.LookRotation(MovementScript.Body.forward);
+            }
+            wolfLerpTime = 0;
+        }
+    }
+
+    Vector3 GetSpiritWolfPassivePos()
+    {
+        return MovementScript.Body.position + MovementScript.Body.right + MovementScript.Body.up * 0.25f;
+    }
+
+    Quaternion GetSpiritWolfPassiveRot()
+    {
+        return Quaternion.LookRotation(MovementScript.Body.forward);
+    }
+
+    Vector3 FindSpiritWolfAttackPos()
+    {
+        if (NavMesh.SamplePosition(lockonTarget.position + 0.5f * MovementScript.Body.right - 0.5f * MovementScript.Body.forward, out NavMeshHit hit2, range, NavMesh.AllAreas))
+        {
+            return StaticUtilities.BuildVector(hit2.position.x, lockonTarget.position.y, hit2.position.z);
+        }
+        else
+        {
+            return lockonTarget.position - MovementScript.Body.forward;
+        }
     }
 }

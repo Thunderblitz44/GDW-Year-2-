@@ -1,44 +1,46 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
 
 public static class StaticUtilities
 {
+    public static readonly int groundLayer = 64;
     public static readonly float defaultFOV = 80f;
     public static readonly float damageOverTimeInterval = 0.5f;
     public static readonly float encounterStartDelay = 1f;
-    public static readonly int groundLayer = 64;
-    public static int visibleTargets;
     public static readonly string CURRENT_LEVEL = "level";
     public static readonly string CURRENT_CHECKPOINT = "checkpoint";
     public static readonly string LAST_ENCOUNTER = "encounter";
     public static readonly string CURRENT_PLAYER_HEALTH = "playerHealth";
+    public static readonly AnimationCurve easeCurve01 = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    /*
-    public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
+    public static readonly List<Transform> renderedEnemies = new();
+
+
+    public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects, float cutoffRadius)
     {
-        return objects.OrderBy(x => Vector2.Distance(centerOfScreen, (Vector2)Camera.main.WorldToScreenPoint(x.transform.position))).ToList();
+        return objects.Where(t => Vector2.Distance(GetCenterOfScreen(), (Vector2)Camera.main.WorldToScreenPoint(t.position)) < cutoffRadius)
+            .OrderBy(x => Vector2.Distance(GetCenterOfScreen(), (Vector2)Camera.main.WorldToScreenPoint(x.position))).ToList();
     }
 
-    public static List<Transform> SortByVisible(List<Transform> objects, int checklayer)
+    public static List<Transform> SortByVisible(List<Transform> objects, float range, LayerMask targetLayer, LayerMask blockingLayers)
     {
-        visibleTargets = 0;
-        return objects.OrderBy(x => IsVisible(x, checklayer)).ToList();
+        return objects.Where(t => IsVisible(t, range, targetLayer, blockingLayers)).ToList();
     }
 
-    public static bool IsVisible(Transform obj, int layer)
+    public static bool IsVisible(Transform obj, float range, LayerMask targetLayer, LayerMask blockingLayers)
     {
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, obj.position - Camera.main.transform.position, out hit))
+        if (Physics.Raycast(Camera.main.transform.position, obj.position - Camera.main.transform.position, out RaycastHit hit, range, blockingLayers, QueryTriggerInteraction.Ignore))
         {
-            if (hit.transform.gameObject.layer == layer)
+            if (1 << hit.transform.gameObject.layer == targetLayer)
             {
-                visibleTargets++; 
                 return true;
             }
         }
         return false;
     }
-    public static Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint, float overshoot)
+    /*public static Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint, float overshoot)
     {
         float gravity = Physics.gravity.y;
         float displacementY = Mathf.Abs(endpoint.y - startpoint.y);
@@ -49,8 +51,8 @@ public static class StaticUtilities
         Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * h / gravity)
             + Mathf.Sqrt(2 * (displacementY - h) / gravity));
         return velocityXZ + velocityY;
-    }
-    */
+    }*/
+
 
     public static Vector2 GetCenterOfScreen()
     {
@@ -115,6 +117,5 @@ public static class StaticUtilities
         }
         return false;
     }
-
 }
 

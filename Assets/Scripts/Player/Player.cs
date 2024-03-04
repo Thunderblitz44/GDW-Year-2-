@@ -1,6 +1,9 @@
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using UnityEngine.UI;
+using TMPro.EditorUtilities;
 
 public class Player : DamageableEntity
 {
@@ -14,8 +17,25 @@ public class Player : DamageableEntity
     [SerializeField] protected CinemachineFreeLook freeLookCam;
     bool usingController = false;
     bool wasUsingController = false;
-   
 
+    [Header("Auto Lockon")]
+    [SerializeField] protected bool autoLock = false;
+    [SerializeField] float autoLockRadius = 100f;
+    [SerializeField] float autoLockRange = 20f;
+    [SerializeField] Image lockonIcon;
+    [SerializeField] LayerMask blockingSightLayers;
+    [SerializeField] LayerMask targetLayer;
+    [SerializeField] float lerpSpeed = 5;
+    [SerializeField] float targetsCheckDelay = 0.2f;
+    protected Transform lockonTarget;
+    Vector3 lerpStart;
+    Vector3 lerpEnd;
+    float lerpTime = 1;
+    float targetsChecktimer;
+    protected bool autoLockOverride;
+    protected float autoLockRadiusOverride;
+    protected float autoLockRangeOverride;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -43,6 +63,24 @@ public class Player : DamageableEntity
         hp.SetHealth(PlayerPrefs.GetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.MaxHealth));
     }
 
+    protected virtual void Update()
+    {
+        if (autoLock || autoLockOverride)
+        {
+            SetLockonIconPosition();
+
+            targetsChecktimer += Time.deltaTime;
+            if (targetsChecktimer > targetsCheckDelay)
+            {
+                targetsChecktimer = 0f;
+                CheckLockonTargets();
+            }
+        }
+        else if (!autoLock && lockonIcon.isActiveAndEnabled)
+        {
+            lockonIcon.enabled = false;
+        }
+    }
 
     public void OnDestroy()
     {
@@ -67,8 +105,9 @@ public class Player : DamageableEntity
             if (!usingController && wasUsingController)
             {
                 // using mouse
-                freeLookCam.m_XAxis.m_MaxSpeed = 0.1f;
-                freeLookCam.m_YAxis.m_MaxSpeed = 0.0008f;
+                
+                freeLookCam.m_XAxis.m_MaxSpeed = SettingsManager.Instance.Settings.MouseSensXForCinemachine;
+                freeLookCam.m_YAxis.m_MaxSpeed = SettingsManager.Instance.Settings.MouseSensYForCinemachine;
 
                 // change the controls panel
                 DebugHUD.instance.DisplayControls(actions, true);
@@ -76,8 +115,8 @@ public class Player : DamageableEntity
             else if (usingController && !wasUsingController)
             {
                 // using controller
-                freeLookCam.m_XAxis.m_MaxSpeed = 1.2f;
-                freeLookCam.m_YAxis.m_MaxSpeed = 0.008f;
+                freeLookCam.m_XAxis.m_MaxSpeed = SettingsManager.Instance.Settings.GamepadSensXForCinemachine;
+                freeLookCam.m_YAxis.m_MaxSpeed = SettingsManager.Instance.Settings.GamepadSensYForCinemachine;
 
                 // change the controls panel
                 DebugHUD.instance.DisplayControls(actions, false);
@@ -139,5 +178,68 @@ public class Player : DamageableEntity
     public void UnFreezeCamera()
     {
         freeLookCam.Follow = transform;
+    }
+
+    private void CheckLockonTargets()
+    {
+        List<Transform> targets = StaticUtilities.renderedEnemies;
+        SortTargets(ref targets);
+
+        if (targets.Count > 0)
+        {
+            // is it the same?
+            if (lockonTarget == targets[0] && lockonIcon.isActiveAndEnabled) return;
+            // are we switching?
+            else if (lockonTarget && targets.Count > 1)
+            {
+                lerpTime = 0f;
+                lerpStart = lockonIcon.transform.position;
+            }
+            else if (!lockonTarget) lerpTime = 1;
+
+            // if its the first / change
+            lockonTarget = targets[0];
+            OnLockonTargetChanged();
+        }
+        else if (lockonIcon.isActiveAndEnabled)
+        {
+            lockonIcon.enabled = false;
+            lockonTarget = null;
+            OnLockonTargetChanged();
+        }
+    }
+
+    public void SortTargets(ref List<Transform> targets)
+    {
+        // sort by distance
+        targets = StaticUtilities.SortByDistanceToScreenCenter(targets, autoLockOverride ? autoLockRadiusOverride : autoLockRadius);
+
+        // sort by visible
+        targets = StaticUtilities.SortByVisible(targets, autoLockOverride ? autoLockRangeOverride : autoLockRange, targetLayer, blockingSightLayers);
+    }
+
+    private void SetLockonIconPosition()
+    {
+        if (lockonTarget)
+        {
+            lerpEnd = Camera.main.WorldToScreenPoint(lockonTarget.position);
+
+            if (lerpTime < 1)
+            {
+                lockonIcon.transform.position = Vector2.Lerp(lerpStart, lerpEnd, StaticUtilities.easeCurve01.Evaluate(lerpTime));
+                lerpTime += Time.deltaTime * lerpSpeed;
+            }
+            else
+            {
+                lockonIcon.transform.position = lerpEnd;
+            }
+
+            if (!lockonIcon.isActiveAndEnabled) lockonIcon.enabled = true;
+        }
+    }
+
+    protected virtual void OnLockonTargetChanged()
+    {
+
     }
 }

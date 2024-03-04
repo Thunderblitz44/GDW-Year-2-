@@ -189,14 +189,14 @@ public class SharkBoss : Enemy, IBossCommands
         switch (++phase)
         {
             case 1:
-                //attackFuncs.Add(DiveRoutine);
-                //attackFuncs.Add(RamRoutine);
-                StartCoroutine(DomainExpansionRoutine());
+                attackFuncs.Add(DiveRoutine);
+                attackFuncs.Add(RamRoutine);
+                attackFuncs.Add(ShootRoutine);
                 break;
             case 2:
+                StartCoroutine(DomainExpansionRoutine());
                 break;
             case 3:
-                attackFuncs.Add(ShootRoutine);
                 break;
             case 4:
                 break;

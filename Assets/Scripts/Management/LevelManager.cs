@@ -36,7 +36,7 @@ public class LevelManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Debug.LogWarning("There were 2 LevelManager scripts!");
+            Debug.LogWarning("There were multiple LevelManager scripts!");
             Destroy(this);
             return;
         }
