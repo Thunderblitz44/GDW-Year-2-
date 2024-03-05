@@ -15,6 +15,6 @@ public class BossEncounter : EncounterVolume
     {
         base.EndEncounter();
 
-        teleporter.SetActive(true);
+        if (teleporter) teleporter.SetActive(true);
     }
 }

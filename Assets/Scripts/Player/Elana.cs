@@ -8,10 +8,7 @@ public class Elana : Player
 {
     [Space(10), Header("ABILITIES"), Space(10)]
     [Header("Primary Attack")]
-    //[SerializeField] int meleeDamage = 1;
     [SerializeField] float range = 4f;
-    //[SerializeField] Vector2 knockback;
-    //[SerializeField] MeleeHitBox mhb;
     [SerializeField] private SpiritWolfAnimator spiritWolfAnimator;
     [SerializeField] float wolfLerpSpeed = 1;
     [SerializeField] float lockonRadiusOverride = 200f;
