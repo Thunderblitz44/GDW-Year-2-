@@ -62,11 +62,8 @@ public class GolemBossScript : Enemy, IBossCommands
     [SerializeField] Transform[] gotoWalls;
     bool goingUp;
     
-     bool MoveAcrossNavMeshesStarted;
-    
- 
+    bool MoveAcrossNavMeshesStarted;
    
-    
     
     [Header("Phase 2+")]
     [SerializeField] float stunTime = 5f;
@@ -473,6 +470,7 @@ public class GolemBossScript : Enemy, IBossCommands
         }
 
         Destroy(gameObject, 1f);
+        LevelManager.Instance.CurrentEncounter.EndEncounter();
     }
 
     public void Stun()

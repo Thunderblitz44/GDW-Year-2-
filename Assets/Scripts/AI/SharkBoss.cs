@@ -19,9 +19,7 @@ public class SharkBoss : Enemy, IBossCommands
     float atkTimer;
     bool isAttacking;
     readonly List<Func<IEnumerator>> attackFuncs = new();
-
     bool battleStarted = false;
-
     bool interrupt = false;
 
     [Header("Intro")]
@@ -740,6 +738,7 @@ public class SharkBoss : Enemy, IBossCommands
         (hp as BossHealthComponent).Hide();
 
         Destroy(gameObject, 1f);
+        LevelManager.Instance.CurrentEncounter.EndEncounter();
     }
 
     public void OnTouchedPlayer()
