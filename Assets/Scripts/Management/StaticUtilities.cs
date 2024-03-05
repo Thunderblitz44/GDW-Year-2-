@@ -68,6 +68,14 @@ public static class StaticUtilities
     {
         return (first - second).sqrMagnitude;
     }
+
+    /// <summary>
+    /// Returns a flat direction based on first's Y value
+    /// </summary>
+    /// <param name="first">target</param>
+    /// <param name="second">start</param>
+    /// <param name="yOffset"></param>
+    /// <returns></returns>
     public static Vector3 FlatDirection(Vector3 first, Vector3 second, float yOffset = 0f)
     {
         return ((first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset) * 2).normalized;

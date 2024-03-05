@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Splines;
 
 public class SharkBoss : Enemy, IBossCommands
@@ -51,14 +53,28 @@ public class SharkBoss : Enemy, IBossCommands
 
     [Header("Dive Attack")]
     [SerializeField] GameObject aoeIndicatorPrefab;
-    GameObject aoeIndicator;
+    DecalProjector aoeIndicator;
     [SerializeField] AnimationCurve diveHCurve;
     [SerializeField] AnimationCurve diveVCurve;
+    [SerializeField] float aoeRadius = 8f;
+    float diveSpeed = 1f;
+    float lerpToPlayerDelay = 1f;
+    float lerpToPlayerSpeed = 1f;
+    bool diveAttack;
 
     [Header("Ram Attack")]
+    [SerializeField] float ramSpeed = 3f;
     [SerializeField] AnimationCurve ramCurve;
     [SerializeField] AnimationCurve expCurve;
     [SerializeField] AnimationCurve logCurve;
+    [SerializeField] GameObject ramIndicatorPrefab;
+    [SerializeField] bool blink;
+    [SerializeField] float blinkSpeed = 3f;
+    DecalProjector ramIndicator;
+    Collider[] bodyColliders;
+    float aimTime = 2f;
+    float chargeSpeed = 1;
+    bool ramAttack;
 
     [Header("Shoot Attack")]
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
@@ -68,11 +84,35 @@ public class SharkBoss : Enemy, IBossCommands
     [SerializeField] Transform shootOrigin;
     [SerializeField] LayerMask hitMask;
     [SerializeField] LayerMask playerLayer;
+    float popOutDelay = 2f;
 
     [Header("Domain Expansion")]
     [SerializeField] GameObject domain;
     [SerializeField] Vector3 domainGravity;
     Vector3 normalGravity;
+
+    [Header("Damage")]
+    [SerializeField] int bodyContactDamage = 5;
+    [SerializeField] int ramDamage = 5;
+    [SerializeField] int diveDamage = 5;
+
+    [Header("Knockback")]
+    [SerializeField, Tooltip("x = backwards, y = upwards")] Vector2 bodyContactKnockback = Vector2.one;
+    [SerializeField, Tooltip("x = backwards, y = upwards")] Vector2 ramKnockback = new Vector2(2,1);
+    [SerializeField, Tooltip("x = backwards, y = upwards")] Vector2 diveKnockback = new Vector2(1,2);
+    [SerializeField, Tooltip("x = backwards, y = upwards")] Vector2 shotKnockback = Vector2.one;
+
+    [Header("Other")]
+    [SerializeField] GameObject headDamagerCollider;
+    [SerializeField] float bodyContactDamageCooldown = 2f;
+    bool canDamage = true;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        bodyColliders = transform.GetComponentsInChildren<Collider>();
+    }
 
     public void Introduce()
     {
@@ -188,17 +228,19 @@ public class SharkBoss : Enemy, IBossCommands
     {
         switch (++phase)
         {
-            case 1:
-                attackFuncs.Add(DiveRoutine);
-                attackFuncs.Add(RamRoutine);
-                attackFuncs.Add(ShootRoutine);
+            case 1: 
+                attackFuncs.Add(RamRoutine); 
+                attackFuncs.Add(DiveRoutine); 
                 break;
-            case 2:
-                StartCoroutine(DomainExpansionRoutine());
+            case 2: 
+                StartCoroutine(DomainExpansionRoutine()); 
                 break;
             case 3:
+                attackFuncs.Add(ShootRoutine);
+                blink = true; 
                 break;
-            case 4:
+            case 4: 
+                Rage(); 
                 break;
         }
     }
@@ -224,7 +266,6 @@ public class SharkBoss : Enemy, IBossCommands
     IEnumerator DiveRoutine()
     {
         Vector3 start, end, lerped;
-        AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         // spawn a aoe ring on the ground below the boss
         RaycastHit hit;
         Vector3 diveDir = Vector3.down + transform.forward * 0.6f;
@@ -232,13 +273,16 @@ public class SharkBoss : Enemy, IBossCommands
         
         if (Physics.Raycast(transform.position, diveDir, out hit, 50f, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
         {
-            aoeIndicator = Instantiate(aoeIndicatorPrefab, hit.point + Vector3.up, Quaternion.identity);
+            aoeIndicator = Instantiate(aoeIndicatorPrefab, hit.point - transform.forward, aoeIndicatorPrefab.transform.rotation).GetComponent<DecalProjector>();
+            aoeIndicator.size = new Vector3(aoeRadius, aoeRadius, 5f);
             followPassivePath = false;
+            diveAttack = true;
+            headDamagerCollider.SetActive(true);
 
             // dive into the aoe ring
             end = hit.point + Vector3.down * 40f;
             start = transform.position;
-            for (float t = 0; t < 1; t += Time.deltaTime)
+            for (float t = 0; t < 1; t += Time.deltaTime * diveSpeed)
             {
                 lerped = StaticUtilities.BuildVector(Mathf.Lerp(start.x, end.x, diveHCurve.Evaluate(t)),
                     Mathf.Lerp(start.y, end.y, diveVCurve.Evaluate(t)),
@@ -256,26 +300,26 @@ public class SharkBoss : Enemy, IBossCommands
 
         // at this point, the shark is underground
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(lerpToPlayerDelay);
 
         // lerp the aoe ring to the player
         
         start = aoeIndicator.transform.position;
         end = target.position;
-        for (float t = 0; t < 1; t += Time.deltaTime )
+        for (float t = 0; t < 1; t += Time.deltaTime * lerpToPlayerSpeed)
         {
-            aoeIndicator.transform.position = Vector3.Lerp(start, end, curve.Evaluate(t));
+            aoeIndicator.transform.position = Vector3.Lerp(start, end, StaticUtilities.easeCurve01.Evaluate(t));
             yield return null;
         }
 
-        // boss jumps out
+        // boss jumps out //
 
         transform.position = aoeIndicator.transform.position + Vector3.down * 30f;
         FindNearestPassiveLinkPos(out float dist);
         closestLinkPos += passivePath.transform.position; // passive path is at 0,0,0
         //links direction (to the next link)
         Vector3 linkDir = (Vector3)passivePath.Splines[0].Knots.ElementAt(targetLink + 1 < passivePath.Splines[0].Knots.Count()? targetLink + 1 : 0).Position - closestLinkPos;
-        Destroy(aoeIndicator);
+        Destroy(aoeIndicator.gameObject);
 
         //sharks direction to the link
         Vector3 fwd = StaticUtilities.FlatDirection(transform.position, closestLinkPos);
@@ -294,7 +338,9 @@ public class SharkBoss : Enemy, IBossCommands
 
         start = transform.position;
         end = closestLinkPos;
-        for (float t = 1; t > 0; t -= Time.deltaTime)
+
+        // lerp to link
+        for (float t = 1; t > 0; t -= Time.deltaTime * diveSpeed)
         {
             lerped = StaticUtilities.BuildVector(Mathf.Lerp(end.x, start.x, diveHCurve.Evaluate(t)),
                 Mathf.Lerp(end.y, start.y, diveVCurve.Evaluate(t)),
@@ -304,8 +350,10 @@ public class SharkBoss : Enemy, IBossCommands
             yield return null;
         }
 
+        headDamagerCollider.SetActive(false);
 
     skip:
+        diveAttack = false;
         isAttacking = false;
         followPassivePath = true;
         yield break;
@@ -313,26 +361,39 @@ public class SharkBoss : Enemy, IBossCommands
 
     IEnumerator RamRoutine()
     {
-        // if player is too close to the walls, skip
-
-        // go to one of corners further from the player - maybe not
         float radius = 5f;
         float frequency = 6f;
         Vector3 start, end, lerped;
-        AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        Quaternion lookEnd, lookStart;
+        Vector3 ogScale = transform.localScale;
 
         followPassivePath = false;
+        ramAttack = true;
         // spiral to ground level
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 50f, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
         {
-            end = hit.point + Vector3.up * 5f;
-            start = transform.position;
-            for (float t = 0; t < 1; t += Time.deltaTime)
+            if (!blink)
             {
-                lerped = StaticUtilities.BuildVector(start.x + radius * Mathf.Sin(t * frequency), Mathf.Lerp(start.y, end.y, curve.Evaluate(t)), start.z + radius * Mathf.Cos(t * frequency));
-                transform.LookAt(lerped);
-                transform.position = lerped;
-                yield return null;
+                // lerp to ground
+                end = hit.point + Vector3.up * 5f;
+                start = transform.position;
+                for (float t = 0; t < 1; t += Time.deltaTime)
+                {
+                    lerped = StaticUtilities.BuildVector(start.x + radius * Mathf.Sin(t * frequency), Mathf.Lerp(start.y, end.y, StaticUtilities.easeCurve01.Evaluate(t)), start.z + radius * Mathf.Cos(t * frequency));
+                    transform.LookAt(lerped);
+                    transform.position = lerped;
+                    yield return null;
+                }
+            }
+            else
+            {
+                for (float t = 0; t < 1; t+=Time.deltaTime * blinkSpeed)
+                {
+                    transform.localScale = Vector3.Lerp(ogScale, Vector3.zero, StaticUtilities.easeCurve01.Evaluate(t));
+                    yield return null;
+                }
+                transform.position = hit.point + Vector3.up * 5f;
+                transform.LookAt(target);
             }
         }
         else
@@ -341,40 +402,69 @@ public class SharkBoss : Enemy, IBossCommands
             goto skip;
         }
 
-        // face the player
-        Quaternion lookEnd = Quaternion.LookRotation(target.position - transform.position);
-        Quaternion lookStart = transform.rotation;
+        if (!blink)
+        {
+            // face the player
+            lookEnd = Quaternion.LookRotation(target.position - transform.position);
+            lookStart = transform.rotation;
        
-        for (float t = 0; t < 1; t += Time.deltaTime * 2)
+            for (float t = 0; t < 1; t += Time.deltaTime * 2)
+            {
+                transform.rotation = Quaternion.Slerp(lookStart, lookEnd, StaticUtilities.easeCurve01.Evaluate(t));
+                yield return null;
+            }
+
+            // aim
+            for (float t = 0; t < aimTime; t += Time.deltaTime)
+            {
+                if (interrupt) goto skip;
+                transform.LookAt(target);
+                yield return null;
+            }
+        }
+        else
         {
-            transform.rotation = Quaternion.Slerp(lookStart, lookEnd, curve.Evaluate(t));
-            yield return null;
+            for (float t = 0; t < 1; t += Time.deltaTime * blinkSpeed)
+            {
+                transform.LookAt(target);
+                transform.localScale = Vector3.Lerp(Vector3.zero, ogScale, StaticUtilities.easeCurve01.Evaluate(t));
+                yield return null;
+            }
         }
 
-        // aim
-        float anticipationTime = 1.5f;
-        for (float t = 0; t < anticipationTime; t += Time.deltaTime)
-        {
-            if (interrupt) goto skip;
-            transform.LookAt(target);
-            yield return null;
-        }
+        float waitTime = 3f;
+        Vector3 halfPoint, dir;
+        start = transform.position;
+        end = target.position;
+        ramIndicator = Instantiate(ramIndicatorPrefab).GetComponent<DecalProjector>();
 
+        animator.speed = chargeSpeed;
         animator.SetTrigger("ChargeUp");
-        yield return new WaitForSeconds(3);
+
+        // keep the ram indicator lined up to the player
+        for (float t = 0; t < waitTime/chargeSpeed; t += Time.deltaTime)
+        {
+            dir = StaticUtilities.FlatDirection(target.position, start);
+            end = target.position + dir * 15f;
+            halfPoint = StaticUtilities.HorizontalizeVector(end - start) / 2;
+            ramIndicator.transform.position = start + StaticUtilities.BuildVector(halfPoint.x, 0, halfPoint.z);
+            ramIndicator.size = StaticUtilities.BuildVector(ramIndicator.size.x, Vector3.Distance(end, start), ramIndicator.size.z);
+            ramIndicator.transform.rotation = Quaternion.LookRotation(Vector3.down, dir);
+            yield return null;
+        }
+
+        headDamagerCollider.SetActive(true);
 
         // lerp fast to player pos
-        end = target.position + transform.forward * 15f;
-        start = transform.position;
-
-        for (float t = 0; t < 1; t += Time.deltaTime * 3)
+        for (float t = 0; t < 1; t += Time.deltaTime * ramSpeed)
         {
             transform.position = Vector3.Lerp(start, end, ramCurve.Evaluate(t));
             yield return null;
         }
 
         // return to passive path
-
+        headDamagerCollider.SetActive(true);
+        Destroy(ramIndicator.gameObject);
         FindNearestPassiveLinkPos(out float dist);
         pathRatio = targetLink / (passivePath.Splines[0].Knots.Count() * 1.0f);
         closestLinkPos += passivePath.transform.position; // passive path is at 0,0,0
@@ -391,7 +481,6 @@ public class SharkBoss : Enemy, IBossCommands
         // slerping to midpoint
         for (int i = 0; i < 2; i++)
         {
-
             for (float t = 0; t < 1; t += Time.deltaTime * s) 
             {
                 lerped = StaticUtilities.BuildVector(Mathf.Lerp(start.x, end.x, horizCuve.Evaluate(t)),
@@ -413,6 +502,8 @@ public class SharkBoss : Enemy, IBossCommands
         }
 
     skip:
+        animator.speed = 1;
+        ramAttack = false;
         followPassivePath = true;
         calculatePosAndRot = true;
         isOnPath = false;
@@ -424,7 +515,6 @@ public class SharkBoss : Enemy, IBossCommands
     {
         Quaternion startQuat, endQuat;
         Vector3 start, end, lerped;
-        AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         // spawn a aoe ring on the ground below the boss
         RaycastHit hit;
         Vector3 diveDir = Vector3.down + transform.forward * 0.6f;
@@ -432,13 +522,15 @@ public class SharkBoss : Enemy, IBossCommands
 
         if (Physics.Raycast(transform.position, diveDir, out hit, 80f, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
         {
-            aoeIndicator = Instantiate(aoeIndicatorPrefab, hit.point + Vector3.up, Quaternion.identity);
+            aoeIndicator = Instantiate(aoeIndicatorPrefab, hit.point - transform.forward, aoeIndicatorPrefab.transform.rotation).GetComponent<DecalProjector>();
+            aoeIndicator.size = new Vector3(aoeRadius, aoeRadius, 5f);
             followPassivePath = false;
+            headDamagerCollider.SetActive(true);
 
             // dive into the aoe ring
             end = hit.point + Vector3.down * 40f;
             start = transform.position;
-            for (float t = 0; t < 1; t += Time.deltaTime)
+            for (float t = 0; t < 1; t += Time.deltaTime * diveSpeed)
             {
                 lerped = StaticUtilities.BuildVector(Mathf.Lerp(start.x, end.x, diveHCurve.Evaluate(t)),
                     Mathf.Lerp(start.y, end.y, diveVCurve.Evaluate(t)),
@@ -457,32 +549,34 @@ public class SharkBoss : Enemy, IBossCommands
         // at this point, the shark is underground
         yield return new WaitForSeconds(0.75f);
 
-        aoeIndicator.SetActive(false);
+        aoeIndicator.gameObject.SetActive(false);
         
         yield return new WaitForSeconds(1);
 
         // tp ring to random spot
-        aoeIndicator.SetActive(true);
+        aoeIndicator.gameObject.SetActive(true);
         aoeIndicator.transform.position = LevelManager.GetRandomEnemySpawnPoint(LevelManager.Instance.CurrentEncounter.EncounterBounds);
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(popOutDelay);
 
         // boss comes out half way out of random spot
         start = aoeIndicator.transform.position + Vector3.down * 40f;
         end = aoeIndicator.transform.position + Vector3.up * 10;
         startQuat = transform.rotation;
         endQuat = Quaternion.LookRotation(Vector3.up);
-        Destroy(aoeIndicator);
 
+        // pop out
         for (float t = 0; t < 1; t += Time.deltaTime * 1.5f)
         {
-            transform.SetPositionAndRotation(Vector3.Lerp(start, end, curve.Evaluate(t)), Quaternion.Lerp(startQuat, endQuat, t));
+            transform.SetPositionAndRotation(Vector3.Lerp(start, end, StaticUtilities.easeCurve01.Evaluate(t)), Quaternion.Lerp(startQuat, endQuat, t));
             yield return null;
         }
 
+        Destroy(aoeIndicator);
         animator.SetBool("FacePlayer", true);
+        headDamagerCollider.SetActive(false);
 
-        // boss becomes a sentry turret for X amount of BIG shot
+        // boss becomes a sentry turret for X amount of BIG shots
         int s = 0;
         float time = 0;
         bool canShoot = true;
@@ -490,6 +584,7 @@ public class SharkBoss : Enemy, IBossCommands
         {
             yield return null;
 
+            // face the player
             transform.rotation = Quaternion.LookRotation(Vector3.up, -StaticUtilities.FlatDirection(target.position, transform.position));
             time += Time.deltaTime;
 
@@ -518,7 +613,7 @@ public class SharkBoss : Enemy, IBossCommands
                     if (Physics.CheckCapsule(start,end, 1f, playerLayer, QueryTriggerInteraction.Ignore))
                     {
                         StaticUtilities.TryToDamage(target.gameObject, projectile.damage);
-                        Debug.Log("hit");
+                        target.GetComponent<Rigidbody>().AddForce(StaticUtilities.FlatDirection(target.position, transform.position) * shotKnockback.x + Vector3.up * shotKnockback.y, ForceMode.Impulse);
                     }
                     Destroy(b.gameObject, projectile.lifeTime); 
                 }
@@ -636,5 +731,69 @@ public class SharkBoss : Enemy, IBossCommands
         calculatePosAndRot = true;
         isOnPath = false;
         yield break;
+    }
+
+    protected override void OnHealthZeroed()
+    {
+        StopAllCoroutines();
+
+        (hp as BossHealthComponent).Hide();
+
+        Destroy(gameObject, 1f);
+    }
+
+    public void OnTouchedPlayer()
+    {
+        Rigidbody targetRb = target.GetComponent<Rigidbody>();
+        Vector3 force;
+        if (ramAttack)
+        {
+            StaticUtilities.TryToDamage(target.gameObject, ramDamage);
+            force = StaticUtilities.FlatDirection(target.position, transform.position) * ramKnockback.x + Vector3.up * ramKnockback.y;
+            foreach (var col in bodyColliders)
+            {
+                col.enabled = false;
+            }
+            Invoke(nameof(EnableColliders), 1f);
+        }
+        else if (diveAttack)
+        {
+            StaticUtilities.TryToDamage(target.gameObject, diveDamage);
+            force = StaticUtilities.FlatDirection(target.position, transform.position) * diveKnockback.x + Vector3.up * diveKnockback.y;
+        }
+        else
+        {
+            StaticUtilities.TryToDamage(target.gameObject, bodyContactDamage);
+            force = StaticUtilities.FlatDirection(target.position, transform.position) * bodyContactKnockback.x + Vector3.up * bodyContactKnockback.y;
+        }
+        targetRb.AddForce(force * targetRb.mass, ForceMode.Impulse);
+    }
+
+    void EnableColliders()
+    {
+        foreach (var col in bodyColliders)
+        {
+            col.enabled = true;
+        }
+    }
+
+    void Rage()
+    {
+        // behaviour
+        timeBetweenAttacks = 2f;
+        passivePathSpeed *= 1.5f;
+
+        // dive attack
+        diveSpeed = 2f;
+        lerpToPlayerSpeed = 2f;
+        lerpToPlayerDelay = 0;
+
+        // ram attack
+        chargeSpeed = 2;
+
+        // shoot attack
+        popOutDelay = 0.5f;
+        shots = 4;
+        cooldown = 0f;
     }
 }

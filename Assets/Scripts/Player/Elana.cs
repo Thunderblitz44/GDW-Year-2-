@@ -356,6 +356,7 @@ public class Elana : Player
         // Call Dodge after the delay
         Dodge(startPosition, targetPosition, speed);
     }
+
     void Dodge(Vector3 start, Vector3 end, float speed)
     {
         isDodgeing = isInvincible = true;
@@ -366,7 +367,7 @@ public class Elana : Player
         dodgeCurve.ClearKeys();
         dodgeCurve.AddKey(0, 0);
         dodgeCurve.AddKey(dist / speed, 1);
-
+        if (dodgeCurve.keys.Length != 2) return;
         if (currentdodgeRoutine != null) StopCoroutine(currentdodgeRoutine);
         currentdodgeRoutine = StartCoroutine(DodgeRoutine(start, end));
     }
