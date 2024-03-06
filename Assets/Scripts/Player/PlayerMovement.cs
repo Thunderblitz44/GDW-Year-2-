@@ -111,7 +111,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         }
 
         DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
-        Debug.Log(Rb.velocity + " - " + moveDirection);
+       // Debug.Log(Rb.velocity + " - " + moveDirection);
 
         // Steps
         RaycastHit hitLower;

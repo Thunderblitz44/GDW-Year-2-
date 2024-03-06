@@ -9,6 +9,7 @@ public class MeleeHitBox : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Rigidbody rb;
+        SkinnedMeshRenderer skinnedMeshRenderer;
         if (other.gameObject.TryGetComponent(out rb))
         {
             rb.AddForce((transform.forward * knockback.x + Vector3.up * knockback.y) * rb.mass, ForceMode.Impulse);
@@ -17,7 +18,10 @@ public class MeleeHitBox : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-
+        if (other.gameObject.TryGetComponent(out skinnedMeshRenderer))
+        {
+            skinnedMeshRenderer.material.SetFloat("flash", 1f);
+        }
         //CancelInvoke(nameof(Hide));
         //gameObject.SetActive(false);
     }
@@ -25,10 +29,16 @@ public class MeleeHitBox : MonoBehaviour
     private void OnParticleCollision(GameObject other)
     {
         Rigidbody rb;
-        if (other.gameObject.TryGetComponent(out rb))
+        SkinnedMeshRenderer skinnedMeshRenderer;
+        if (other.gameObject.TryGetComponent(out rb ))
         {
             Vector3 dir = StaticUtilities.FlatDirection(other.transform.position, transform.position);
             rb.AddForce((dir * knockback.x + Vector3.up * knockback.y) * rb.mass, ForceMode.Impulse);
+        }
+
+        if (other.gameObject.TryGetComponent(out skinnedMeshRenderer))
+        {
+            skinnedMeshRenderer.material.SetFloat("flash", 1f);
         }
         StaticUtilities.TryToDamage(other.gameObject, damage);
     }

@@ -9,12 +9,17 @@ public class Enemy : DamageableEntity
     float updateTimer;
     
     [SerializeField] protected Animator animator;
+    [SerializeField] protected SkinnedMeshRenderer skinnedMeshRenderer;
+   protected float flashDuration = 0.2f; 
+    protected float flashTimer = 0f;
 
     protected override void Awake()
     {
         base.Awake();
+        
         agent = GetComponent<NavMeshAgent>();
         target = LevelManager.PlayerTransform;
+        
     }
 
     protected virtual void Update()
@@ -25,6 +30,15 @@ public class Enemy : DamageableEntity
         // timer to recalculate navmesh agent
         updateTimer += Time.deltaTime;
         if (updateTimer >= slowUpdateInterval) SlowUpdate();
+        
+        
+        if (flashTimer > 0)
+        {
+            flashTimer -= Time.deltaTime;
+            float flashIntensity = Mathf.Lerp(0f, 1f, flashTimer / flashDuration);
+            skinnedMeshRenderer.material.SetFloat("_flash", flashIntensity);
+            Debug.Log("hi");
+        }
     }
 
     protected virtual void SlowUpdate()
@@ -42,6 +56,9 @@ public class Enemy : DamageableEntity
     public override void ApplyDamage(int damage)
     {
         base.ApplyDamage(damage);
+        
+        // Trigger flash effect
+        flashTimer += flashDuration;
         target = LevelManager.PlayerTransform;
     }
 }
