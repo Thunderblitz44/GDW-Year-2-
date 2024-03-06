@@ -3,41 +3,62 @@ using UnityEngine.AI;
 
 public class Enemy : DamageableEntity
 {
-    internal Transform target;
-    internal NavMeshAgent agent;
+    protected Transform target;
+    protected NavMeshAgent agent;
     [SerializeField] float slowUpdateInterval = 0.2f;
     float updateTimer;
     
-    [SerializeField] internal Animator animator;
+    [SerializeField] protected Animator animator;
+    [SerializeField] protected SkinnedMeshRenderer skinnedMeshRenderer;
+   protected float flashDuration = 0.2f; 
+    protected float flashTimer = 0f;
 
     protected override void Awake()
     {
         base.Awake();
+        
         agent = GetComponent<NavMeshAgent>();
+        target = LevelManager.PlayerTransform;
         
     }
 
     protected virtual void Update()
     {
+        if (!target) target = LevelManager.PlayerTransform;
+        if (!target) return;
+
         // timer to recalculate navmesh agent
         updateTimer += Time.deltaTime;
         if (updateTimer >= slowUpdateInterval) SlowUpdate();
+        
+        
+        if (flashTimer > 0)
+        {
+            flashTimer -= Time.deltaTime;
+            float flashIntensity = Mathf.Lerp(0f, 1f, flashTimer / flashDuration);
+            skinnedMeshRenderer.material.SetFloat("_flash", flashIntensity);
+            Debug.Log("hi");
+        }
     }
 
     protected virtual void SlowUpdate()
     {
         updateTimer = 0;
-        if (!target || !agent || !agent.isActiveAndEnabled || !LevelManager.Instance.NavMesh || !LevelManager.Instance.NavMesh.isActiveAndEnabled) return;
+        if (!agent || !agent.isActiveAndEnabled) return;
         agent.SetDestination(target.position);
     }
 
-    public virtual void SetFollowTarget(Transform target)
+    public void SetFollowTarget(Transform target)
     {
         this.target = target;
     }
 
-    public bool IsAnimationPlaying(int layer)
+    public override void ApplyDamage(int damage)
     {
-        return animator.GetCurrentAnimatorStateInfo(layer).normalizedTime < 1;
+        base.ApplyDamage(damage);
+        
+        // Trigger flash effect
+        flashTimer += flashDuration;
+        target = LevelManager.PlayerTransform;
     }
 }

@@ -1,8 +1,10 @@
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
-public class Player : DamageableEntity
+public abstract class Player : DamageableEntity
 {
     public PlayerMovement MovementScript { get; private set; }
     [SerializeField] protected AbilityHUD abilityHud;
@@ -12,8 +14,26 @@ public class Player : DamageableEntity
     protected ActionMap actions;
 
     [SerializeField] protected CinemachineFreeLook freeLookCam;
-   
+    bool usingController = false;
+    bool wasUsingController = false;
 
+    [Header("Auto Lockon")]
+    [SerializeField] protected bool autoLock = false;
+    [SerializeField] float autoLockRadius = 100f;
+    [SerializeField] float autoLockRange = 20f;
+    [SerializeField] Image lockonIcon;
+    [SerializeField] LayerMask blockingSightLayers;
+    [SerializeField] float iconLerpSpeed = 5;
+    [SerializeField] float targetsCheckDelay = 0.2f;
+    protected Transform lockonTarget;
+    Vector3 lerpStart;
+    Vector3 lerpEnd;
+    float lerpTime = 1;
+    float targetsChecktimer;
+    protected bool autoLockOverride;
+    protected float autoLockRadiusOverride;
+    protected float autoLockRangeOverride;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -32,16 +52,36 @@ public class Player : DamageableEntity
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
     }
 
-    private void Start()
+    void Start()
     {
         DebugHUD.instance.DisplayControls(actions);
         LevelManager.Instance.CurrentCheckpoint.Teleport(transform);
         hp.SetHealth(PlayerPrefs.GetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.MaxHealth));
     }
 
+    protected virtual void Update()
+    {
+        if (autoLock || autoLockOverride)
+        {
+            SetLockonIconPosition();
+
+            targetsChecktimer += Time.deltaTime;
+            if (targetsChecktimer > targetsCheckDelay)
+            {
+                targetsChecktimer = 0f;
+                CheckLockonTargets();
+            }
+        }
+        else if (!autoLock && lockonIcon.isActiveAndEnabled)
+        {
+            lockonIcon.enabled = false;
+        }
+
+        // update camera frustrum planes
+        StaticUtilities.cameraFrustrumPlanes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+    }
 
     public void OnDestroy()
     {
@@ -58,6 +98,33 @@ public class Player : DamageableEntity
             actions.Menus.Enable();
             pauseScript.Pause();
         };
+        actions.CameraControl.Look.started += ctx =>
+        {
+            if (ctx.control.ToString().Contains("Stick")) usingController = true;
+            else usingController = false;
+
+            if (!usingController && wasUsingController)
+            {
+                // using mouse
+                
+                freeLookCam.m_XAxis.m_MaxSpeed = SettingsManager.Instance.Settings.MouseSensXForCinemachine;
+                freeLookCam.m_YAxis.m_MaxSpeed = SettingsManager.Instance.Settings.MouseSensYForCinemachine;
+
+                // change the controls panel
+                DebugHUD.instance.DisplayControls(actions, true);
+            }
+            else if (usingController && !wasUsingController)
+            {
+                // using controller
+                freeLookCam.m_XAxis.m_MaxSpeed = SettingsManager.Instance.Settings.GamepadSensXForCinemachine;
+                freeLookCam.m_YAxis.m_MaxSpeed = SettingsManager.Instance.Settings.GamepadSensYForCinemachine;
+
+                // change the controls panel
+                DebugHUD.instance.DisplayControls(actions, false);
+            }
+            wasUsingController = usingController;
+        };
+        
 
         // v TEMPORARY v //
         actions.General.respawnTest.performed += ctx =>
@@ -98,8 +165,79 @@ public class Player : DamageableEntity
     protected override void OnHealthZeroed()
     {
         // player death.
-        LevelManager.isPlayerDead = true;
+        LevelManager.isGameOver = true;
         PausePlayer();
         LevelManager.Instance.Respawn(0.5f);
+        Destroy(hp); 
     }
+
+    public void FreezeCamera()
+    {
+        freeLookCam.Follow = null;
+    }
+
+    public void UnFreezeCamera()
+    {
+        freeLookCam.Follow = transform;
+    }
+
+    private void CheckLockonTargets()
+    {
+        List<Transform> targets = StaticUtilities.renderedEnemies;
+        SortTargets(ref targets);
+
+        if (targets.Count > 0)
+        {
+            // is it the same?
+            if (lockonTarget == targets[0] && lockonIcon.isActiveAndEnabled) return;
+            // are we switching?
+            else if (lockonTarget && targets.Count > 1)
+            {
+                lerpTime = 0f;
+                lerpStart = lockonIcon.transform.position;
+            }
+            else if (!lockonTarget) lerpTime = 1;
+
+            // if its the first / change
+            lockonTarget = targets[0];
+            OnLockonTargetChanged();
+        }
+        else if (lockonIcon.isActiveAndEnabled)
+        {
+            lockonIcon.enabled = false;
+            lockonTarget = null;
+            OnLockonTargetChanged();
+        }
+    }
+
+    public void SortTargets(ref List<Transform> targets)
+    {
+        // sort by distance
+        targets = StaticUtilities.SortByDistanceToScreenCenter(targets, autoLockOverride ? autoLockRadiusOverride : autoLockRadius);
+
+        // sort by visible
+        targets = StaticUtilities.SortByVisible(targets, autoLockOverride ? autoLockRangeOverride : autoLockRange, blockingSightLayers);
+    }
+
+    private void SetLockonIconPosition()
+    {
+        if (lockonTarget)
+        {
+            lerpEnd = Camera.main.WorldToScreenPoint(lockonTarget.position);
+
+            if (lerpTime < 1)
+            {
+                lockonIcon.transform.position = Vector2.Lerp(lerpStart, lerpEnd, StaticUtilities.easeCurve01.Evaluate(lerpTime));
+                lerpTime += Time.deltaTime * iconLerpSpeed;
+            }
+            else
+            {
+                lockonIcon.transform.position = lerpEnd;
+            }
+
+            if (!lockonIcon.isActiveAndEnabled) lockonIcon.enabled = true;
+        }
+    }
+
+    protected abstract void OnLockonTargetChanged();
 }

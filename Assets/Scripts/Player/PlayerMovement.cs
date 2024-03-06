@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     public bool IsMoving { get { return input != Vector3.zero; } }
     public Vector3 MoveDirection { get { return moveDirection; } }
     float MoveSpeed { get { return IsGrounded ? isRunning ? runSpeed : walkSpeed : airSpeed; } }
+    float oldMoveSpeed = 0f;
     float MoveAcceleration { get { return IsGrounded ? isRunning ? runAcceleration : walkAcceleration : airAcceleration; } }
     [Space(10f)]
 
@@ -87,19 +88,30 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // do move
         if (IsGrounded && Rb.velocity.magnitude < MoveSpeed)
         {
-            Vector3 rotatedInput = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
-            moveDirection = rotatedInput;
+            //Vector3 rotatedInput = 
+            moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
             if (IsGrounded && groundAngle < maxSlopeAngle)
             {
-                moveDirection = Vector3.ProjectOnPlane(rotatedInput, ground.normal);
+                moveDirection = Vector3.ProjectOnPlane(moveDirection, ground.normal);
             }
-            Rb.velocity += moveDirection * MoveAcceleration;
+            Rb.velocity += MoveAcceleration * Time.fixedDeltaTime * moveDirection;
+            oldMoveSpeed = MoveSpeed;
         }
-        else if (!IsGrounded && StaticUtilities.HorizontalizeVector(Rb.velocity).magnitude < MoveSpeed)
+        else if (!IsGrounded)
         {
             moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
-            Rb.velocity += moveDirection * MoveAcceleration;
+            Vector3 newVel = Rb.velocity + MoveAcceleration * Time.fixedDeltaTime * moveDirection;
+            float speed = StaticUtilities.HorizontalizeVector(newVel).magnitude;
+            if (speed < oldMoveSpeed)
+            {
+                Rb.velocity = newVel;
+            }
+
+            if (speed < MoveSpeed) oldMoveSpeed = MoveSpeed;
         }
+
+        DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
+       // Debug.Log(Rb.velocity + " - " + moveDirection);
 
         // Steps
         RaycastHit hitLower;
@@ -126,6 +138,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             this.input = Vector3.right * input.x + Vector3.forward * input.y;
 
             if (input.y < 0.5f && isRunning) isRunning = false;
+
+            if (input != Vector2.zero && !IsGrounded) Rb.drag = 1f;
+            else Rb.drag = 0;
         };
 
         actions.Locomotion.Move.canceled += ctx =>
@@ -137,7 +152,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // Run
         actions.Locomotion.Run.performed += ctx =>
         {
-            if (Mathf.Abs(input.x) == 1 || input.z < 0) return;
             isRunning = true;
         };
 

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1400485629818402461}
   - component: {fileID: 1573755773593854443}
   - component: {fileID: 7050279656432711969}
+  - component: {fileID: 3842258136215444709}
   - component: {fileID: 7159579806497090781}
   m_Layer: 12
   m_Name: TestDummy
@@ -122,7 +123,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floatingTextPrefab: {fileID: 144886900167941923, guid: 55652b8c6a95fec4c8cf0a4c1acb9422, type: 3}
   enableDamageNumbers: 1
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
@@ -153,6 +153,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &3842258136215444709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1372597563944741731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83c76d47260da7e4a8eeae6b0bee366e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7159579806497090781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,3 +180,4 @@ MonoBehaviour:
   maxHealth: 20
   hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
   height: 1.5
+  autoHide: 1

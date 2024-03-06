@@ -59,7 +59,7 @@ public class EncounterVolume : MonoBehaviour
         startEncounter = false;
     }
 
-    public void EndEncounter()
+    public virtual void EndEncounter()
     {
         foreach (var barrier in barriers)
         {

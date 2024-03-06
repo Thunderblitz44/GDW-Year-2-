@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 public class SharkController : MonoBehaviour
 {
-    
-    
     private NavMeshAgent SharkAgent;
         private Animator SharkAnimator;
         private bool isEnabled = false;
@@ -17,12 +13,11 @@ public class SharkController : MonoBehaviour
         public float lerpSpeed = 1f;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         SharkAgent = GetComponent<NavMeshAgent>();
             SharkAnimator = GetComponent<Animator>();
             
-            EnableAI();
     }
 
     // Update is called once per frame

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -11,26 +9,37 @@ public class MeleeHitBox : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Rigidbody rb;
+        SkinnedMeshRenderer skinnedMeshRenderer;
         if (other.gameObject.TryGetComponent(out rb))
         {
             rb.AddForce((transform.forward * knockback.x + Vector3.up * knockback.y) * rb.mass, ForceMode.Impulse);
         }
         if (StaticUtilities.TryToDamage(other.gameObject, damage))
         {
-            Hide();
+            gameObject.SetActive(false);
         }
-
+        if (other.gameObject.TryGetComponent(out skinnedMeshRenderer))
+        {
+            skinnedMeshRenderer.material.SetFloat("flash", 1f);
+        }
         //CancelInvoke(nameof(Hide));
         //gameObject.SetActive(false);
     }
 
-    public void Hide()
+    private void OnParticleCollision(GameObject other)
     {
-        gameObject.SetActive(false);
-    }
+        Rigidbody rb;
+        SkinnedMeshRenderer skinnedMeshRenderer;
+        if (other.gameObject.TryGetComponent(out rb ))
+        {
+            Vector3 dir = StaticUtilities.FlatDirection(other.transform.position, transform.position);
+            rb.AddForce((dir * knockback.x + Vector3.up * knockback.y) * rb.mass, ForceMode.Impulse);
+        }
 
-    public void ReadyAttack()
-    {
-        gameObject.SetActive(true);
+        if (other.gameObject.TryGetComponent(out skinnedMeshRenderer))
+        {
+            skinnedMeshRenderer.material.SetFloat("flash", 1f);
+        }
+        StaticUtilities.TryToDamage(other.gameObject, damage);
     }
 }

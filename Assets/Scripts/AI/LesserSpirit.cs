@@ -1,22 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LesserSpirit : DamageableEntity
 {
     [Header("Spirit Stuff")]
-    [SerializeField] float hoverVerticalDeviation = 0.5f;
-    [SerializeField] float hoverDeviationSpeed = 1f;
-    Rigidbody rb;
+    [SerializeField] float verticalAmplitude = 0.2f;
+    [SerializeField] float verticalFrequency = 0.8f;
+    [SerializeField] float LeftRightAmplitude = 0.08f;
+    [SerializeField] float LeftRightFrequency = 1.6f;
+    [SerializeField] float BackFrontAmplitude = 0.02f;
+    [SerializeField] float BackFrontFrequency = 0.4f;
+    Vector3 startPos;
+    bool pauseHover;
 
     protected override void Awake()
     {
         base.Awake();
-        rb = GetComponent<Rigidbody>();
+        startPos = transform.position;
     }
 
     private void Update()
     {
-        //transform.position += Vector3.up * (hoverVerticalDeviation * Mathf.Sin(Time.deltaTime * hoverDeviationSpeed));
+        if (pauseHover) return;
+        transform.position = startPos + StaticUtilities.BuildVector(Mathf.Sin(Time.timeSinceLevelLoad * LeftRightFrequency) * LeftRightAmplitude,
+            Mathf.Sin(Time.timeSinceLevelLoad * verticalFrequency) * verticalAmplitude,
+            Mathf.Sin(Time.timeSinceLevelLoad * BackFrontFrequency) * BackFrontAmplitude);
+    }
+
+    public void PauseHover()
+    {
+        pauseHover = true;
+    }
+
+    public void UnPauseHover()
+    {
+        pauseHover = false;
+        startPos = transform.position;
+    }
+
+    protected override void OnHealthZeroed()
+    {
+        base.OnHealthZeroed();
+        LevelManager.isGameOver = true;
+        LevelManager.Instance.Respawn(1f);
     }
 }

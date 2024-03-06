@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
@@ -12,9 +12,8 @@ public class LevelManager : MonoBehaviour
     public static Transform PlayerTransform { get; private set; }
     public Player PlayerScript { get; private set; }
     public static bool isGamePaused = false;
-    public static bool isPlayerDead = false;
+    public static bool isGameOver = false;
 
-    public NavMeshSurface NavMesh { get; private set; }
     [SerializeField] List<EncounterVolume> encounterVolumes;
     [SerializeField] List<Checkpoint> checkpoints = new();
     [SerializeField] List<GameObject> enemies;
@@ -37,7 +36,7 @@ public class LevelManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Debug.LogWarning("There were 2 LevelManager scripts!");
+            Debug.LogWarning("There were multiple LevelManager scripts!");
             Destroy(this);
             return;
         }
@@ -56,7 +55,6 @@ public class LevelManager : MonoBehaviour
         }
 
         Id = SceneManager.GetActiveScene().buildIndex;
-        NavMesh = FindFirstObjectByType<NavMeshSurface>();
         Canvas = GameObject.FindGameObjectWithTag("MainCanvas").transform;
         WorldCanvas = GameObject.FindGameObjectWithTag("WorldCanvas").transform;
         PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
@@ -81,22 +79,22 @@ public class LevelManager : MonoBehaviour
     public static Vector3 GetRandomEnemySpawnPoint(Bounds volumeBounds)
     {
         int itterations = 0;
-        Start:
-        Vector3 spawnPoint = Vector3.right * UnityEngine.Random.Range(volumeBounds.min.x, volumeBounds.max.x) + Vector3.up * volumeBounds.max.y + Vector3.forward * UnityEngine.Random.Range(volumeBounds.min.z, volumeBounds.max.z);
-        RaycastHit hit;
-        if (Physics.Raycast(spawnPoint, Vector3.down, out hit, 100f, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
+    Start:
+        Vector3 spawnPoint = Vector3.right * UnityEngine.Random.Range(volumeBounds.min.x, volumeBounds.max.x) + Vector3.up * volumeBounds.center.y + Vector3.forward * UnityEngine.Random.Range(volumeBounds.min.z, volumeBounds.max.z);
+        if (NavMesh.SamplePosition(spawnPoint, out NavMeshHit hit, 30f, NavMesh.AllAreas))
         {
-            if (Vector3.Distance(hit.point, PlayerTransform.position) < 3) goto Start;
+            if (Vector3.Distance(hit.position, PlayerTransform.position) < 3) goto Start;
 
             foreach (var enemy in spawnedEnemies)
             {
                 if (!enemy) continue;
-                if (Vector3.Distance(enemy.transform.position, hit.point) < 2) goto next;
+                if (Vector3.Distance(enemy.transform.position, hit.position) < 2) goto next;
             }
 
-            return hit.point + Vector3.up;
+            return hit.position + Vector3.up;
         }
-        next:
+
+    next:
         if (++itterations < 20) goto Start;
         else
         {
@@ -114,9 +112,7 @@ public class LevelManager : MonoBehaviour
 
     public void Respawn(float delay = 0)
     {
-        if (!CurrentCheckpoint) return;
-        PlayerScript.MovementScript.DisableLocomotion();
-        //PlayerScript.PausePlayer();
+        PlayerScript.FreezeCamera();
         transitioner.FadeToBlack(delay);
     }
 
@@ -190,16 +186,17 @@ public class LevelManager : MonoBehaviour
 
     void ScreenIsBlack()
     {
-        if (isPlayerDead) SceneManager.LoadScene(Id);
+        if (isGameOver) SceneManager.LoadScene(Id);
         else
         {
             transitioner.FadeToClear(0.5f);
-            CurrentCheckpoint.Teleport(PlayerTransform);
+            if (CurrentCheckpoint) CurrentCheckpoint.Teleport(PlayerTransform);
+            PlayerScript.UnFreezeCamera();
         }
     }
 
     void ScreenIsClear()
     {
-        PlayerScript.MovementScript.EnableLocomotion();
+        PlayerScript.UnPausePlayer();
     }
 }

@@ -1,44 +1,46 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class StaticUtilities
 {
+    public static readonly int groundLayer = 64;
     public static readonly float defaultFOV = 80f;
     public static readonly float damageOverTimeInterval = 0.5f;
     public static readonly float encounterStartDelay = 1f;
-    public static readonly int groundLayer = 64;
-    public static int visibleTargets;
     public static readonly string CURRENT_LEVEL = "level";
     public static readonly string CURRENT_CHECKPOINT = "checkpoint";
     public static readonly string LAST_ENCOUNTER = "encounter";
     public static readonly string CURRENT_PLAYER_HEALTH = "playerHealth";
+    public static readonly AnimationCurve easeCurve01 = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    /*
-    public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects)
+    public static readonly List<Transform> renderedEnemies = new();
+    public static Plane[] cameraFrustrumPlanes;
+
+
+    public static List<Transform> SortByDistanceToScreenCenter(List<Transform> objects, float cutoffRadius)
     {
-        return objects.OrderBy(x => Vector2.Distance(centerOfScreen, (Vector2)Camera.main.WorldToScreenPoint(x.transform.position))).ToList();
+        return objects.Where(t => Vector2.Distance(GetCenterOfScreen(), (Vector2)Camera.main.WorldToScreenPoint(t.position)) < cutoffRadius)
+            .OrderBy(x => Vector2.Distance(GetCenterOfScreen(), (Vector2)Camera.main.WorldToScreenPoint(x.position))).ToList();
     }
 
-    public static List<Transform> SortByVisible(List<Transform> objects, int checklayer)
+    public static List<Transform> SortByVisible(List<Transform> objects, float range, LayerMask blockingLayers)
     {
-        visibleTargets = 0;
-        return objects.OrderBy(x => IsVisible(x, checklayer)).ToList();
+        return objects.Where(t => IsVisible(t, range, blockingLayers)).ToList();
     }
 
-    public static bool IsVisible(Transform obj, int layer)
+    public static bool IsVisible(Transform obj, float range, LayerMask blockingLayers)
     {
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, obj.position - Camera.main.transform.position, out hit))
+        if (Physics.Raycast(Camera.main.transform.position, obj.position - Camera.main.transform.position, out RaycastHit hit, range, blockingLayers, QueryTriggerInteraction.Ignore))
         {
-            if (hit.transform.gameObject.layer == layer)
+            if (obj == hit.collider.transform)
             {
-                visibleTargets++; 
                 return true;
             }
         }
         return false;
     }
-    public static Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint, float overshoot)
+    /*public static Vector3 CalculateLaunchVelocity(Vector3 startpoint, Vector3 endpoint, float overshoot)
     {
         float gravity = Physics.gravity.y;
         float displacementY = Mathf.Abs(endpoint.y - startpoint.y);
@@ -49,8 +51,8 @@ public static class StaticUtilities
         Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * h / gravity)
             + Mathf.Sqrt(2 * (displacementY - h) / gravity));
         return velocityXZ + velocityY;
-    }
-    */
+    }*/
+
 
     public static Vector2 GetCenterOfScreen()
     {
@@ -59,16 +61,24 @@ public static class StaticUtilities
 
     public static Vector3 GetCameraDir()
     {
-        return HorizontalizeVector(Camera.main.transform.forward);
+        return HorizontalizeVector(Camera.main.transform.forward * 2).normalized;
     }
 
     public static float FastDistance(Vector3 first, Vector3 second)
     {
         return (first - second).sqrMagnitude;
     }
-    public static Vector3 FlatDirection(Vector3 first, Vector3 second, float yOffset = 0f)
+
+    /// <summary>
+    /// Returns a flat direction based on first's Y value
+    /// </summary>
+    /// <param name="to">target</param>
+    /// <param name="from">start</param>
+    /// <param name="yOffset"></param>
+    /// <returns></returns>
+    public static Vector3 FlatDirection(Vector3 to, Vector3 from, float yOffset = 0f)
     {
-        return first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset;
+        return ((to - BuildVector(from.x, to.y, from.z) + Vector3.up * yOffset) * 2).normalized;
     }
 
     public static Vector3 HorizontalizeVector(Vector3 vec)
@@ -115,6 +125,5 @@ public static class StaticUtilities
         }
         return false;
     }
-
 }
 

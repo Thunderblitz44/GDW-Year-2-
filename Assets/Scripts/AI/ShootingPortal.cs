@@ -12,6 +12,8 @@ public class ShootingPortal : DamageableEntity
     readonly List<GameObject> pooledProjectiles = new(4);
     bool settingUp = true;
     bool explode = false;
+    bool stunned = false;
+    public int bossStunDamage = 10;
 
     GameObject expl;
 
@@ -73,9 +75,10 @@ public class ShootingPortal : DamageableEntity
 
     void TriggerEnter(Collider other)
     {
+        if (stunned) return;
         if (other.CompareTag("GolemCrystal"))
         {
-            other.GetComponent<BossWeakSpot>().Stun();
+            other.GetComponent<BossWeakSpot>().Stun(bossStunDamage);
         }
     }
 
@@ -83,7 +86,7 @@ public class ShootingPortal : DamageableEntity
     {
         explode = true;
         expl.SetActive(true);
-        Invoke(nameof(Die), 0.2f);
+        Invoke(nameof(Die), 0.4f);
     }
 
     void Die()
