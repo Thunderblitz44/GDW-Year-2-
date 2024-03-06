@@ -108,7 +108,7 @@ public class Elana : Player
                 canDodge = true;
             }
         };
-
+        
         projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
         {
@@ -116,9 +116,6 @@ public class Elana : Player
             mb.Initialize(projectile, this);
             pooledProjectiles.Add(mb.gameObject);
         }
-
-        //mhb.damage = meleeDamage;
-        //mhb.knockback = knockback;
 
         LevelManager.Instance.onEncounterStart += CancelRecallAbility;
 
@@ -364,7 +361,13 @@ public class Elana : Player
         dodgeCurve.ClearKeys();
         dodgeCurve.AddKey(0, 0);
         dodgeCurve.AddKey(dist / speed, 1);
-        if (dodgeCurve.keys.Length != 2) return;
+
+        if (dodgeCurve.keys.Length != 2) 
+        {
+            isDodgeing = isInvincible = false;
+            return;
+        }
+
         if (currentdodgeRoutine != null) StopCoroutine(currentdodgeRoutine);
         currentdodgeRoutine = StartCoroutine(DodgeRoutine(start, end));
     }
@@ -519,5 +522,10 @@ public class Elana : Player
         {
             return lockonTarget.position - MovementScript.Body.forward;
         }
+    }
+
+    public bool IsAttacking()
+    {
+        return shooting || melee || aimingFireTornado;
     }
 }

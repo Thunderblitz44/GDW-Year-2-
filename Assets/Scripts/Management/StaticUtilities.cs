@@ -72,13 +72,13 @@ public static class StaticUtilities
     /// <summary>
     /// Returns a flat direction based on first's Y value
     /// </summary>
-    /// <param name="first">target</param>
-    /// <param name="second">start</param>
+    /// <param name="to">target</param>
+    /// <param name="from">start</param>
     /// <param name="yOffset"></param>
     /// <returns></returns>
-    public static Vector3 FlatDirection(Vector3 first, Vector3 second, float yOffset = 0f)
+    public static Vector3 FlatDirection(Vector3 to, Vector3 from, float yOffset = 0f)
     {
-        return ((first - BuildVector(second.x, first.y, second.z) + Vector3.up * yOffset) * 2).normalized;
+        return ((to - BuildVector(from.x, to.y, from.z) + Vector3.up * yOffset) * 2).normalized;
     }
 
     public static Vector3 HorizontalizeVector(Vector3 vec)
