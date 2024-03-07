@@ -1,26 +1,20 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 public class SpiritOfViolence : Enemy, IBossCommands
 {
     //* PART 2 - ELANA DOPPLEGANGER - *//
-    
-    [Header("Attack Pattern")]
-    [SerializeField] float timeBetweenAttacks = 2;
-    [SerializeField] float attackPrepareTime = 2;
-    [SerializeField] float maxAttackReps = 2;
-    float attackReps;
-    int lastAttackIndex;
-    float atkTimer;
-    bool isAttacking;
-    bool canPauseAttack;
-    bool pauseAttack;
-    bool interruptAttack;
-    readonly List<Func<IEnumerator>> attackFuncs = new();
+    [Header("Behaviour")]
+    [SerializeField] int maxAttacksAtOnce = 2;
+    [SerializeField] float startAttackingDelay = 2f;
+    [SerializeField] float maxViewAngle = 120;
+    bool canSeePlayer;
+    int attacksBeingUsed;
     bool battleStarted = false;
+    bool pauseAttack;
     Elana player;
 
     [Header("Melee Attack")]
@@ -28,13 +22,13 @@ public class SpiritOfViolence : Enemy, IBossCommands
     [SerializeField] float wolfLerpSpeed = 1;
     [SerializeField] float minMeleeAttackTime = 1;
     [SerializeField] float maxMeleeAttackTime = 5;
-    [SerializeField] SpiritWolfAnimator spiritWolfAnimator;
+    [SerializeField] float minMeleeCooldown = 2;
+    [SerializeField] float maxMeleeCooldown = 5;
     [SerializeField] LayerMask playerLayer;
     [SerializeField] bool enableMelee;
+    SpiritWolfAnimator spiritWolfAnimator;
     Transform spiritWolf;
     float playerDistance = 1000;
-    float wolfLerpTime;
-    bool lerpWolf;
     bool melee;
 
     [Header("Ranged Attack")]
@@ -45,11 +39,11 @@ public class SpiritOfViolence : Enemy, IBossCommands
     [SerializeField] int minBurst = 10;
     [SerializeField] int maxBurst = 30;
     [SerializeField] public Animator dragonflyAnimator;
+    [SerializeField] float minRangedCooldown = 2f;
+    [SerializeField] float maxRangedCooldown = 6f;
     [SerializeField] bool enableRange;
-    readonly List<GameObject> pooledProjectiles = new(20);
+    readonly List<GameObject> pooledProjectiles = new(8);
     bool shooting;
-    float shootingCooldownTimer;
-    float shootStartTimer;
 
     [Header("Dodge")]
     [SerializeField] float dodgeDistance = 6f;
@@ -59,27 +53,42 @@ public class SpiritOfViolence : Enemy, IBossCommands
     [SerializeField] LayerMask whatIsDodgeObstacle;
     [SerializeField] bool enableDash;
     bool isDodgeing = false;
+    float dodgeAwayDelay = 1f;
+    float dodgeAwayTimer;
 
     [Header("Fire Tornado")]
     [SerializeField] float maxRange = 15f;
     [SerializeField] int tornadoDamage = 1;
     [SerializeField] float burnTime = 3f;
     [SerializeField] float tornadoTime = 5f;
-    [SerializeField] float tornadoCooldown = 2f;
+    [SerializeField] float minTornadoCooldown = 2f;
+    [SerializeField] float maxTornadoCooldown = 8f;
+    [SerializeField] float tornadoChargeTime = 3f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
     [SerializeField] bool enableTornado;
     Transform aoeIndicator;
     GameObject fireTornado;
-    bool aimingFireTornado = false;
+    bool aimingFireTornado;
     bool canUseFireTornado = true;
-    [SerializeField] private Pheonix pheonix;
+    Pheonix pheonix;
+
+    [Header("Nav Agent Stuff")]
+    [SerializeField] float meleeStopDist = 3f;
+    [SerializeField] float rangedStopDist = 10f;
+    [SerializeField] float tooCloseDist = 3f;
+    [SerializeField] float walkSpeed = 3f;
+    [SerializeField] float runSpeed = 5f;
+
 
     protected override void Awake()
     {
         base.Awake();
         player = LevelManager.Instance.PlayerScript as Elana;
+        spiritWolfAnimator = GetComponentInChildren<SpiritWolfAnimator>();
         spiritWolf = spiritWolfAnimator.transform;
+        pheonix = GetComponentInChildren<Pheonix>();
+        updateTargetOnDamaged = false;
     }
 
     protected override void Update()
@@ -87,39 +96,39 @@ public class SpiritOfViolence : Enemy, IBossCommands
         if (!battleStarted) return;
         base.Update();
 
-        // timers
-        // attack checkers/counters
-        // attacks
-        if (attackFuncs.Count > 0 && !isAttacking && (atkTimer += Time.deltaTime) > timeBetweenAttacks)
+        if (startAttackingDelay > 0)
         {
-            isAttacking = true;
-            atkTimer = 0;
-        // pick an attack
-        // start coroutine of that attack
-        newAtkInd:
-            int attackIndex = UnityEngine.Random.Range(0, attackFuncs.Count);
-            if (attackFuncs.Count > 1 && attackIndex == lastAttackIndex && ++attackReps >= maxAttackReps)
-            {
-                goto newAtkInd;
-            }
-            StartCoroutine(attackFuncs[attackIndex]());
-            lastAttackIndex = attackIndex;
+            startAttackingDelay -= Time.deltaTime;
+            return;
         }
 
-
-        // Dodge logic
+        // Dodge logic - pauses attacks
         if (enableDash && CanDodge() && ShouldDodge())
         {
-            isDodgeing = isInvincible = true;
             StartCoroutine(DodgeRoutine());
         }
 
-        // Melee logic - interrupts the other attacks
-        if (enableMelee && !pauseAttack && playerDistance < meleeRange && (!isAttacking || IsAttackPauseable()))
+        // Melee logic 
+        if (enableMelee && CanMelee() && ShouldMelee())
         {
-            isAttacking = interruptAttack = true;
             StartCoroutine(MeleeRoutine());
         }
+
+        // Ranged logic
+        if (enableRange && CanShoot() && ShouldShoot())
+        {
+            StartCoroutine(RangedRoutine());
+        }
+
+        // Tornado logic
+        if (enableTornado && CanTornado() && ShouldTornado())
+        {
+            agent.speed = 0.1f;
+            StartCoroutine(FireTornadoRoutine());
+        }
+
+        if (canSeePlayer) dodgeAwayTimer = dodgeAwayDelay;
+        else if (agent.velocity.magnitude <= 0.01) dodgeAwayTimer -= Time.deltaTime;
     }
 
     protected override void SlowUpdate()
@@ -127,6 +136,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
         base.SlowUpdate();
 
         playerDistance = Vector3.Distance(player.transform.position, transform.position);
+        canSeePlayer = Vector3.Dot(transform.forward, StaticUtilities.FlatDirection(player.transform.position, transform.position)) > maxViewAngle/180;
     }
 
     protected override void OnHealthZeroed()
@@ -147,8 +157,6 @@ public class SpiritOfViolence : Enemy, IBossCommands
     public void Introduce()
     {
         (hp as BossHealthComponent).Show();
-        attackFuncs.Add(RangedRoutine);
-        //attackFuncs.Add(FireTornadoRoutine);
 
         projectile.CheckPrefab();
         for (int i = 0; i < pooledProjectiles.Capacity; i++)
@@ -163,42 +171,87 @@ public class SpiritOfViolence : Enemy, IBossCommands
 
     IEnumerator MeleeRoutine()
     {
-        canPauseAttack = true;
+        melee = true;
+        attacksBeingUsed++;
+        agent.stoppingDistance = meleeStopDist;
+
         Vector3 start, end;
         Quaternion startRot, endRot;
-        yield return null;
-        melee = true;
+        target = player.transform;
 
-        //Animate player/wolf attacking in sync
         FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wolf Swipe", gameObject);
-        spiritWolfAnimator.PrimaryAttack();
-        start = transform.position + transform.right + transform.up * 0.25f;
-        end = FindSpiritWolfAttackPos();
+        
 
-        startRot = Quaternion.LookRotation(transform.forward);
-        endRot = Quaternion.LookRotation(end - start);
+        float attackTime = Random.Range(minMeleeAttackTime, maxMeleeAttackTime);
 
-        // lerp
-        for (float t = 0; t < 1; t += Time.deltaTime * wolfLerpSpeed)
+        bool needsLerp;
+        bool playerTooFar;
+        bool oldPlayerTooFar = false;
+
+        float lerpTime = 0;
+        for (float t = 0; t < attackTime; t += Time.deltaTime)
         {
-            spiritWolf.SetPositionAndRotation(Vector3.Lerp(start, end, StaticUtilities.easeCurve01.Evaluate(t)),
-                Quaternion.Slerp(startRot, endRot, StaticUtilities.easeCurve01.Evaluate(t * 2f)));
+            while (pauseAttack || !canSeePlayer)
+            {
+                if (isDodgeing) spiritWolfAnimator.EndAttack();
+                yield return new WaitForSeconds(0.2f);
+            }
+            spiritWolfAnimator.PrimaryAttack();
 
-            if (playerDistance > meleeRange) goto end;
+            playerTooFar = playerDistance > meleeRange;
+            if (playerTooFar != oldPlayerTooFar) lerpTime = 0;
+            oldPlayerTooFar = playerTooFar;
+            needsLerp = lerpTime < 1;
+            
+            if (!playerTooFar && needsLerp)
+            {
+                start = FindSpiritWolfStartPos();
+                end = FindSpiritWolfAttackPos();
+                startRot = Quaternion.LookRotation(transform.forward);
+                endRot = Quaternion.LookRotation(end - start);
+                //lerp to
+                for (lerpTime = 0; lerpTime < 1 && !playerTooFar; lerpTime += Time.deltaTime * wolfLerpSpeed)
+                {
+                    spiritWolf.SetPositionAndRotation(Vector3.Lerp(start, end, StaticUtilities.easeCurve01.Evaluate(lerpTime)),
+                        Quaternion.Slerp(startRot, endRot, StaticUtilities.easeCurve01.Evaluate(lerpTime * 2f)));
+                    yield return null;
+                }
+            }
+            else if (!playerTooFar && !needsLerp)
+            {
+                spiritWolf.position = FindSpiritWolfAttackPos();
+                spiritWolf.LookAt(player.transform);
+            }
+            else if (playerTooFar && needsLerp)
+            {
+                start = FindSpiritWolfStartPos();
+                end = GetSpiritWolfPassivePos();
+
+                // lerp back
+                for (lerpTime = 0; lerpTime < 1 && playerTooFar; lerpTime += Time.deltaTime * wolfLerpSpeed)
+                {
+                    spiritWolf.position = Vector3.Lerp(start, end, StaticUtilities.easeCurve01.Evaluate(lerpTime));
+                    spiritWolf.rotation = Quaternion.LookRotation(player.transform.position - transform.position);
+                    yield return null;
+                }
+            }
+            else if (playerTooFar && !needsLerp)
+            {
+                spiritWolf.rotation = Quaternion.LookRotation(player.transform.position - transform.position);
+                if (!isDodgeing) StartCoroutine(DodgeRoutine());
+            }
+
+            if (!aimingFireTornado && playerTooFar) agent.speed = runSpeed;
+            else if (!aimingFireTornado && !playerTooFar) agent.speed = walkSpeed;
+
             yield return null;
         }
 
-        float attackTime = UnityEngine.Random.Range(minMeleeAttackTime, maxMeleeAttackTime);
-        for (float t = 0; t < attackTime && playerDistance < meleeRange; t += Time.deltaTime)
-        {
-            spiritWolf.position = FindSpiritWolfAttackPos();
-            spiritWolf.LookAt(player.transform);
-            yield return null;
-        }
-
-    end:
+        if (!aimingFireTornado) agent.speed = walkSpeed;
         spiritWolfAnimator.EndAttack();
-        yield return new WaitForSeconds(2f);
+        attacksBeingUsed--;
+
+        yield return new WaitForSeconds(GetRandomCooldown(minMeleeCooldown, maxMeleeCooldown));
 
         melee = false;
         yield break;
@@ -216,26 +269,38 @@ public class SpiritOfViolence : Enemy, IBossCommands
         }
     }
 
+    Vector3 FindSpiritWolfStartPos()
+    {
+        if (spiritWolfAnimator.IsAttacking)
+        {
+            return spiritWolf.position;
+        }
+        else
+        {
+            return GetSpiritWolfPassivePos();
+        }
+    }
+
+    Vector3 GetSpiritWolfPassivePos()
+    {
+        return transform.position + transform.right + transform.up * 0.25f;
+    }
+
     IEnumerator RangedRoutine()
     {
-        if (!enableRange) yield break;
-        isAttacking = canPauseAttack = true;
+        attacksBeingUsed++;
+        if (!melee) agent.stoppingDistance = rangedStopDist;
+     
         Vector3 force;
-
         SetShooting(true);
         // shoot at player in bursts of random amounts
-        int shots = UnityEngine.Random.Range(minBurst, maxBurst);
+        int shots = Random.Range(minBurst, maxBurst);
         for (int s = 0; s < shots; s++)
         {
-            while (pauseAttack)
+            while (pauseAttack || !canSeePlayer)
             {
                 if (shooting) SetShooting(false);
                 yield return new WaitForSeconds(0.5f);
-            }
-            if (interruptAttack) 
-            {
-                SetShooting(false);
-                yield break;
             }
             if (!shooting) SetShooting(true);
 
@@ -244,11 +309,12 @@ public class SpiritOfViolence : Enemy, IBossCommands
 
             yield return new WaitForSeconds(bulletCooldown);
         }
+        dragonflyAnimator.SetBool("IsShooting", false);
+        attacksBeingUsed--;
 
-        SetShooting(false);
-        isAttacking = false;
-        canPauseAttack = false;
-        yield break;
+        yield return new WaitForSeconds(GetRandomCooldown(minRangedCooldown, maxRangedCooldown));
+
+        shooting = false;
     }
 
     void SetShooting(bool isShooting)
@@ -259,17 +325,65 @@ public class SpiritOfViolence : Enemy, IBossCommands
 
     IEnumerator FireTornadoRoutine()
     {
-        // stop moving
-        // aim fire tornado
-        // spawn fire tornado on player
+        // prepare
+        attacksBeingUsed++;
+        agent.speed = 0.1f;
+        canUseFireTornado = false;
 
-        yield break;
+        aoeIndicator = Instantiate(aoeIndicatorPrefab, player.transform.position, aoeIndicatorPrefab.transform.rotation).transform;
+
+        // aim 
+        RaycastHit hit;
+        float testDist = 10f;
+        aimingFireTornado = true;
+        pheonix.CastAttack();
+        for (float t = 0; t < tornadoChargeTime && canSeePlayer && playerDistance > tooCloseDist; t += Time.deltaTime)
+        {
+            if (Physics.Raycast(player.transform.position, Vector3.down, out hit, testDist, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
+            {
+                if (!aoeIndicator.gameObject.activeSelf) aoeIndicator.gameObject.SetActive(true);
+                aoeIndicator.position = hit.point;
+            }
+            else if (aoeIndicator.gameObject.activeSelf) aoeIndicator.gameObject.SetActive(false);
+            yield return null;
+        }
+
+        // end of cast
+        pheonix.EndAttack();
+        aimingFireTornado = false;
+        attacksBeingUsed--;
+        if (agent.speed == 0.1f) agent.speed = walkSpeed;
+
+        // spawn on player
+        if (Physics.Raycast(player.transform.position, Vector3.down, out hit, testDist, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
+        {
+            fireTornado = Instantiate(abilityPrefab, hit.point, abilityPrefab.transform.rotation);
+            fireTornado.GetComponent<FireTornado>().BurnTime = burnTime;
+            fireTornado.GetComponent<FireTornado>().Damage = tornadoDamage;
+        }
+        else
+        {
+            // cancel
+            canUseFireTornado = true;
+            Destroy(aoeIndicator.gameObject);
+            yield break;
+        }
+
+        yield return new WaitForSeconds(tornadoTime);
+
+        fireTornado.GetComponent<VisualEffect>().Stop();
+        Destroy(aoeIndicator.gameObject);
+
+        yield return new WaitForSeconds(GetRandomCooldown(minTornadoCooldown, maxTornadoCooldown));
+
+        Destroy(fireTornado);
+        canUseFireTornado = true;
     }
 
     IEnumerator DodgeRoutine()
     {
         // pause current attack
-        pauseAttack = true;
+        isDodgeing = isInvincible = pauseAttack = true;
         
         // dodge prepare
         // raycast - make sure there are no obstacles in the way
@@ -278,9 +392,20 @@ public class SpiritOfViolence : Enemy, IBossCommands
         Vector3 start = transform.position, end, targetDir, dodgeDir;
 
         // calculate dodge direction
-        int side = UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;
         targetDir = StaticUtilities.FlatDirection(player.transform.position, transform.position);
-        dodgeDir = Vector3.Cross(targetDir * side, Vector3.up);
+        if (!canSeePlayer)
+        {
+            dodgeDir = transform.forward;
+        }
+        else if (melee)
+        {
+            dodgeDir = targetDir;
+        }
+        else
+        {
+            int side = Random.Range(0, 2) == 0 ? -1 : 1;
+            dodgeDir = Vector3.Cross(targetDir * side, Vector3.up);
+        }
 
         if (Physics.Raycast(transform.position, dodgeDir,
             out RaycastHit hit, dodgeDistance, whatIsDodgeObstacle, QueryTriggerInteraction.Ignore))
@@ -301,23 +426,54 @@ public class SpiritOfViolence : Enemy, IBossCommands
 
         // dodge end
         pauseAttack = isInvincible = false;
+        float cooldown = melee ? minDodgeCooldown : GetRandomCooldown(minDodgeCooldown, maxDodgeCooldown);
+        yield return new WaitForSeconds(cooldown);
 
-        yield return new WaitForSeconds(UnityEngine.Random.Range(minDodgeCooldown, maxDodgeCooldown));
         isDodgeing = false;
     }
 
     bool ShouldDodge()
     {
-        return player.IsAttacking();
+        return (player.IsAttacking() && !aimingFireTornado && !melee) || (agent.velocity.magnitude <= 0.01 && !canSeePlayer && dodgeAwayTimer <= 0);
     }
 
     bool CanDodge()
     {
-        return !isDodgeing && (!isAttacking || IsAttackPauseable());
+        return !isDodgeing;
     }
 
-    bool IsAttackPauseable()
+    bool ShouldMelee()
     {
-        return isAttacking && canPauseAttack;
+        return !pauseAttack && attacksBeingUsed < maxAttacksAtOnce && !aimingFireTornado;
+    }
+
+    bool CanMelee()
+    {
+        return !melee && !isDodgeing && canSeePlayer;
+    }
+
+    bool ShouldShoot()
+    {
+        return playerDistance > tooCloseDist && attacksBeingUsed < maxAttacksAtOnce;
+    }
+    
+    bool CanShoot()
+    {
+        return !isDodgeing && !shooting && canSeePlayer;
+    }
+
+    bool ShouldTornado()
+    {
+        return playerDistance > tooCloseDist && attacksBeingUsed < maxAttacksAtOnce;
+    }
+
+    bool CanTornado()
+    {
+        return canUseFireTornado && !isDodgeing && canSeePlayer;
+    }
+
+    float GetRandomCooldown(float min, float max)
+    {
+        return UnityEngine.Random.Range(min, max);
     }
 }

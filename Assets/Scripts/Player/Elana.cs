@@ -9,9 +9,9 @@ public class Elana : Player
     [Space(10), Header("ABILITIES"), Space(10)]
     [Header("Primary Attack")]
     [SerializeField] float range = 4f;
-    [SerializeField] private SpiritWolfAnimator spiritWolfAnimator;
     [SerializeField] float wolfLerpSpeed = 1;
     [SerializeField] float lockonRadiusOverride = 200f;
+    SpiritWolfAnimator spiritWolfAnimator;
     Transform spiritWolf;
     bool melee;
     bool lerpWolf;
@@ -27,7 +27,7 @@ public class Elana : Player
     [SerializeField] float shootStartDelay = 0.5f;
     [SerializeField] float bulletCooldown = 0.25f;
     [SerializeField] Transform shootOrigin;
-    readonly List<GameObject> pooledProjectiles = new(20);
+    readonly List<GameObject> pooledProjectiles = new(8);
     bool shooting = false;
     float shootingCooldownTimer;
     float shootStartTimer;
@@ -52,13 +52,13 @@ public class Elana : Player
     [SerializeField] float tornadoCooldown = 2f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
+    Pheonix pheonix;
     Transform aoeIndicator;
     GameObject fireTornado;
     bool aimingFireTornado = false;
     bool canUseFireTornado = true;
     bool invalidPlacement = false;
     const int fireTornadoId = 1;
-    [SerializeField] private Pheonix pheonix;
     
     [Header("Dodge")]
     [SerializeField] float dodgeDistance = 5f;
@@ -70,11 +70,11 @@ public class Elana : Player
     [SerializeField] AnimationCurve fovRestoreCurve;
     [SerializeField] float fovRestoreSpeed = 5;
     [SerializeField] LayerMask whatIsDodgeObstacle;
+    TrailScript TrailScript;
     Coroutine currentdodgeRoutine;
     bool isDodgeing = false;
     bool canDodge = true;
     const int dodgeId = 3;
-    [SerializeField] TrailScript TrailScript;
     
     [Header("Other")]
     [SerializeField] Animator specialAnimator;
@@ -119,7 +119,10 @@ public class Elana : Player
 
         LevelManager.Instance.onEncounterStart += CancelRecallAbility;
 
+        spiritWolfAnimator = GetComponentInChildren<SpiritWolfAnimator>();
         spiritWolf = spiritWolfAnimator.transform;
+        pheonix = GetComponentInChildren<Pheonix>();
+        TrailScript = GetComponentInChildren<TrailScript>();
     }
 
     protected override void Update()

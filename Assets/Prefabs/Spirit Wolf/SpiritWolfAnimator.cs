@@ -4,6 +4,7 @@ public class SpiritWolfAnimator : MonoBehaviour
 {
     private int attackCounter;
     private bool isAttacking;
+    public bool IsAttacking { get { return isAttacking; } } 
   
     private Animator animator;
     public int MeleeAttackDamage;
@@ -31,6 +32,7 @@ public class SpiritWolfAnimator : MonoBehaviour
 
     public void PrimaryAttack()
     {
+        if (isAttacking) return;
         isAttacking = true;
         animator.SetBool("isAttacking", isAttacking);
         animator.SetTrigger("PrimaryAttack");
@@ -56,6 +58,7 @@ public class SpiritWolfAnimator : MonoBehaviour
     }
     public void EndAttack()
     {
+        if (!isAttacking) return;
         isAttacking = false;
         animator.SetBool("isAttacking", isAttacking);
         animator.SetInteger("attackCounter", attackCounter);
