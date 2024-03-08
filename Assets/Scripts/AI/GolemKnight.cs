@@ -18,6 +18,9 @@ public class GolemKnight : Enemy
     private float ySpeed;
     private float zSpeed;
      public VisualEffect vfxGraph;
+     
+     public ParticleSystem DustSystemRight;
+     public ParticleSystem DustSystemLeft;
     protected override void Awake()
     {
        
@@ -73,10 +76,7 @@ public class GolemKnight : Enemy
         animator.SetBool("CanAttack", false);
     }
 
-    protected override void OnHealthZeroed()
-    {
-      animator.SetTrigger("Die");
-    }
+  
 
     public void EnableAI()
     {
@@ -131,5 +131,15 @@ public class GolemKnight : Enemy
     public void DeathBurst()
     {
      vfxGraph.SendEvent("death");
+    }
+    
+    public void DustLeft()
+    {
+        DustSystemLeft.Emit(6);
+    }
+    
+    public void DustRight()
+    {
+        DustSystemRight.Emit(6);
     }
 }
