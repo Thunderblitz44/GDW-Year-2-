@@ -537,6 +537,7 @@ GameObject:
   - component: {fileID: 3758318142719057615}
   - component: {fileID: 4107051554739900881}
   - component: {fileID: 4662972220064153754}
+  - component: {fileID: 3540772884567966331}
   m_Layer: 0
   m_Name: Bear
   m_TagString: Untagged
@@ -559,7 +560,7 @@ Transform:
   - {fileID: 3099335849879861378}
   - {fileID: 3719016228967178754}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6535110002509659281
 Animator:
@@ -594,6 +595,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c503e7b0a7ac94a48b0c90f252629ec7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+  slowUpdateInterval: 0.2
   orbPrefab: {fileID: 6240609129731547276, guid: 0ffcff54d15f62c4981644d410cdb787, type: 3}
   spearPrefab: {fileID: 1548096383054364043, guid: 9267f5b56447f7b4a8adaf9f64d9575b, type: 3}
   orbSpawnPoint: {fileID: 3719016228967178754}
@@ -633,6 +638,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83c76d47260da7e4a8eeae6b0bee366e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3540772884567966331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2556186224508118287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f556b4fda59102498d0731f2a5202a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 1000
+  hpBarPrefab: {fileID: 0}
+  animator: {fileID: 0}
+  phases:
+  - 1
+  - 0.75
+  - 0.5
+  - 0.25
 --- !u!1 &2686826098058819360
 GameObject:
   m_ObjectHideFlags: 0

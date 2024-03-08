@@ -4922,6 +4922,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3254978986513607678}
+  - component: {fileID: 5894166679090359393}
+  - component: {fileID: 463917017538517606}
   m_Layer: 0
   m_Name: Lightning Orb (2)
   m_TagString: Untagged
@@ -4945,6 +4947,37 @@ Transform:
   m_Father: {fileID: 6077768358163657598}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5894166679090359393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640673294986030117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 0
+--- !u!114 &463917017538517606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640673294986030117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
 --- !u!1 &1139823301814496911
 GameObject:
   m_ObjectHideFlags: 0
@@ -4960,6 +4993,8 @@ GameObject:
   - component: {fileID: 3986041058937810362}
   - component: {fileID: 3369318061977738268}
   - component: {fileID: 510929831449851946}
+  - component: {fileID: 5601102096696084535}
+  - component: {fileID: 7109532778542211622}
   m_Layer: 0
   m_Name: Orb (2)
   m_TagString: Untagged
@@ -5073,7 +5108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4664852c416bbf54fbf80cadf26faea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RangedAttackDamage: 5
+  RangedAttackDamage: 50
   RangedKnockback: {x: 1, y: 1}
 --- !u!198 &3986041058937810362
 ParticleSystem:
@@ -8892,7 +8927,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 256
+      m_Bits: 768
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -9942,6 +9977,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &5601102096696084535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139823301814496911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+--- !u!114 &7109532778542211622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139823301814496911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 0
 --- !u!1 &2071373824183784250
 GameObject:
   m_ObjectHideFlags: 0
@@ -14870,6 +14936,8 @@ GameObject:
   - component: {fileID: 2777138355234229692}
   - component: {fileID: 6607621423980105767}
   - component: {fileID: 7171901964678805527}
+  - component: {fileID: 5848552103510032345}
+  - component: {fileID: 8573030351499754810}
   m_Layer: 0
   m_Name: Orb (1)
   m_TagString: Untagged
@@ -14983,7 +15051,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4664852c416bbf54fbf80cadf26faea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RangedAttackDamage: 5
+  RangedAttackDamage: 50
   RangedKnockback: {x: 1, y: 1}
 --- !u!198 &2777138355234229692
 ParticleSystem:
@@ -18802,7 +18870,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 256
+      m_Bits: 768
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -19852,6 +19920,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &5848552103510032345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2489842278509994113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+--- !u!114 &8573030351499754810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2489842278509994113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 0
 --- !u!1 &3168843031997883245
 GameObject:
   m_ObjectHideFlags: 0
@@ -19861,6 +19960,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1157989591911562730}
+  - component: {fileID: 2944463258126762210}
+  - component: {fileID: 1432400049572708067}
   m_Layer: 0
   m_Name: Lightning Orb (4)
   m_TagString: Untagged
@@ -19884,6 +19985,37 @@ Transform:
   m_Father: {fileID: 6077768358163657598}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2944463258126762210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3168843031997883245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 0
+--- !u!114 &1432400049572708067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3168843031997883245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
 --- !u!1 &4133368027000678783
 GameObject:
   m_ObjectHideFlags: 0
@@ -19899,6 +20031,8 @@ GameObject:
   - component: {fileID: 8012585446846298843}
   - component: {fileID: 154062228504466010}
   - component: {fileID: 4440633663937278977}
+  - component: {fileID: 3161448007195682232}
+  - component: {fileID: 2843774619044440821}
   m_Layer: 0
   m_Name: Orb
   m_TagString: Untagged
@@ -20012,7 +20146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4664852c416bbf54fbf80cadf26faea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RangedAttackDamage: 5
+  RangedAttackDamage: 50
   RangedKnockback: {x: 1, y: 1}
 --- !u!198 &8012585446846298843
 ParticleSystem:
@@ -23831,7 +23965,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 256
+      m_Bits: 768
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -24881,6 +25015,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &3161448007195682232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4133368027000678783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+--- !u!114 &2843774619044440821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4133368027000678783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 0
 --- !u!1 &4329685056305857694
 GameObject:
   m_ObjectHideFlags: 0
@@ -29809,6 +29974,8 @@ GameObject:
   - component: {fileID: 2812142337616769251}
   - component: {fileID: 3390407661712952119}
   - component: {fileID: 726653387443927532}
+  - component: {fileID: 2531694134397746591}
+  - component: {fileID: 5129797846356939815}
   m_Layer: 0
   m_Name: Orb
   m_TagString: Untagged
@@ -29922,7 +30089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4664852c416bbf54fbf80cadf26faea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RangedAttackDamage: 5
+  RangedAttackDamage: 50
   RangedKnockback: {x: 1, y: 1}
 --- !u!198 &2812142337616769251
 ParticleSystem:
@@ -33741,7 +33908,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 256
+      m_Bits: 768
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -34791,6 +34958,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &2531694134397746591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4470832062141889991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+--- !u!114 &5129797846356939815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4470832062141889991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 0
 --- !u!1 &5077756166736156292
 GameObject:
   m_ObjectHideFlags: 0
@@ -34800,6 +34998,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2915117432484499395}
+  - component: {fileID: 5563935883378362784}
+  - component: {fileID: 7883362285875941394}
   m_Layer: 0
   m_Name: Lightning Orb (5)
   m_TagString: Untagged
@@ -34823,6 +35023,37 @@ Transform:
   m_Father: {fileID: 6077768358163657598}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5563935883378362784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5077756166736156292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 0
+--- !u!114 &7883362285875941394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5077756166736156292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
 --- !u!1 &5169133724489104202
 GameObject:
   m_ObjectHideFlags: 0
@@ -34832,6 +35063,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2944605107144949976}
+  - component: {fileID: 8687836130439132025}
+  - component: {fileID: 3604981411319741490}
   m_Layer: 0
   m_Name: Lightning Orb (3)
   m_TagString: Untagged
@@ -34855,6 +35088,37 @@ Transform:
   m_Father: {fileID: 6077768358163657598}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8687836130439132025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5169133724489104202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 0
+--- !u!114 &3604981411319741490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5169133724489104202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
 --- !u!1 &5870172603265498281
 GameObject:
   m_ObjectHideFlags: 0
@@ -39783,6 +40047,8 @@ GameObject:
   - component: {fileID: 2957271534728246563}
   - component: {fileID: 2370891656687902801}
   - component: {fileID: 1993178860339704907}
+  - component: {fileID: 956883007481375598}
+  - component: {fileID: 3111155360546227397}
   m_Layer: 0
   m_Name: Orb
   m_TagString: Untagged
@@ -39896,7 +40162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4664852c416bbf54fbf80cadf26faea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RangedAttackDamage: 5
+  RangedAttackDamage: 50
   RangedKnockback: {x: 1, y: 1}
 --- !u!198 &2957271534728246563
 ParticleSystem:
@@ -43715,7 +43981,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 256
+      m_Bits: 768
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -44765,6 +45031,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &956883007481375598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6152659689000742010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839248f0c2073564d982eb856696d3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDamageNumbers: 1
+  damageNumberSpawnHeight: 1.5
+  isInvincible: 0
+--- !u!114 &3111155360546227397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6152659689000742010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
+  height: 1.5
+  autoHide: 0
 --- !u!1 &6240609129731547276
 GameObject:
   m_ObjectHideFlags: 0
@@ -44790,9 +45087,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6240609129731547276}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 426.82104, y: -64.531334, z: -280.09}
-  m_LocalScale: {x: 1.9369, y: 1.9369, z: 1.9369}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1996142797973231591}
   - {fileID: 3254978986513607678}

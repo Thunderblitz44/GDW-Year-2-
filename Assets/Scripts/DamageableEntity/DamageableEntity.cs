@@ -18,13 +18,9 @@ public class DamageableEntity : MonoBehaviour, IDamageable
 
     protected virtual void OnHealthZeroed()
     {
-       Destroy(gameObject);
-        
-        animator2.SetTrigger("Die"); 
-        
+       if (animator2) animator2.SetTrigger("Die"); 
+       else Destroy(gameObject);
     }
-
-
    
     public virtual void ApplyDamage(int damage)
     {

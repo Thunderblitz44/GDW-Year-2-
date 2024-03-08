@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,7 +65,6 @@ public class Elana : Player
     [SerializeField] float dodgeDistance = 5f;
     [SerializeField] float dodgeSpeed = 10f;
     [SerializeField] float dodgeCooldown = 1f;
-    [SerializeField] AnimationCurve dodgeCurve = AnimationCurve.EaseInOut(0,0,1,1);
     [SerializeField] AnimationCurve dodgeFovIntensityCurve;
     [SerializeField] float dodgeFovIncrease = 10;
     [SerializeField] AnimationCurve fovRestoreCurve;
@@ -358,83 +358,66 @@ public class Elana : Player
     {
         isDodgeing = isInvincible = true;
         FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wave Dash", gameObject);
-        float dist = Vector3.Distance(start, end);
 
         // lerp it
-        dodgeCurve.ClearKeys();
-        dodgeCurve.AddKey(0, 0);
-        dodgeCurve.AddKey(dist / speed, 1);
-
-        if (dodgeCurve.keys.Length != 2) 
-        {
-            isDodgeing = isInvincible = false;
-            return;
-        }
 
         if (currentdodgeRoutine != null) StopCoroutine(currentdodgeRoutine);
-        currentdodgeRoutine = StartCoroutine(DodgeRoutine(start, end));
+        currentdodgeRoutine = StartCoroutine(DodgeRoutine(start, end, speed));
     }
 
-    IEnumerator DodgeRoutine(Vector3 startPos, Vector3 endPos)
+    IEnumerator DodgeRoutine(Vector3 startPos, Vector3 endPos, float speed)
     {
         MovementScript.DisableLocomotion();
-        float time = 0;
-        float dodgeTime = dodgeCurve.keys[1].time;
+        
+        float dist = Vector3.Distance(startPos, endPos);
         float startFOV = freeLookCam.m_Lens.FieldOfView;
         float targetFOV = StaticUtilities.defaultFOV + dodgeFovIncrease;
-     
-        while (time < dodgeTime)
+
+        for (float t = 0; t < dist; t += Time.deltaTime * speed) 
         {
-         
-            transform.position = Vector3.Lerp(startPos, endPos, dodgeCurve.Evaluate(time += Time.deltaTime));
-          
+            transform.position = Vector3.Lerp(startPos, endPos, StaticUtilities.easeCurve01.Evaluate(t/dist));
+
             // trying to "lerp" fov from whatever it was to the max
             if (startFOV < targetFOV)
-                freeLookCam.m_Lens.FieldOfView = Mathf.Clamp(startFOV + dodgeFovIntensityCurve.Evaluate(time / dodgeTime) * dodgeFovIncrease, startFOV, targetFOV);
+                freeLookCam.m_Lens.FieldOfView = Mathf.Clamp(startFOV + dodgeFovIntensityCurve.Evaluate(t) * dodgeFovIncrease, startFOV, targetFOV);
             else
-                freeLookCam.m_Lens.FieldOfView = Mathf.Clamp(startFOV + dodgeFovIntensityCurve.Evaluate(time / dodgeTime) * dodgeFovIncrease, targetFOV, startFOV);
+                freeLookCam.m_Lens.FieldOfView = Mathf.Clamp(startFOV + dodgeFovIntensityCurve.Evaluate(t) * dodgeFovIncrease, targetFOV, startFOV);
 
             yield return null;
         }
-      
-       
-        OnDodgeEnded();
 
-        // restore fov
-        time = 0f;
-        startFOV = freeLookCam.m_Lens.FieldOfView;
-        targetFOV = StaticUtilities.defaultFOV;
-        while (time < 1)
-        {
-            // "lerp" back to default fov
-            if (targetFOV < startFOV)
-                freeLookCam.m_Lens.FieldOfView = Mathf.Clamp(startFOV - fovRestoreCurve.Evaluate(time) * dodgeFovIncrease, targetFOV, startFOV);
-            else
-                freeLookCam.m_Lens.FieldOfView = Mathf.Clamp(startFOV - fovRestoreCurve.Evaluate(time) * dodgeFovIncrease, startFOV, targetFOV);
-
-            time += Time.deltaTime * fovRestoreSpeed;
-            yield return null;
-        }
-        freeLookCam.m_Lens.FieldOfView = StaticUtilities.defaultFOV;
-    }
-
-    void OnDodgeEnded()
-    {
         // dodge end
-        
         MovementScript.EnableLocomotion();
         isInvincible = false;
         isDodgeing = false;
         MovementScript.Rb.velocity = StaticUtilities.HorizontalizeVector(MovementScript.Rb.velocity);
-        if (canPortal) return;
-    
-        portalLink.enabled = false;
-        Destroy(instantiatedPortal);
-        abilityHud.SpendPoint(portalId, portalCoolown);
-        meshRenderer.enabled = true;
-        specialAnimator.SetBool("Underground", false);
-        TrailScript.isTrailActive = false;
-        TrailScript.isTrailActive2 = false;
+
+        if (!canPortal)
+        {
+            portalLink.enabled = false;
+            Destroy(instantiatedPortal);
+            abilityHud.SpendPoint(portalId, portalCoolown);
+            meshRenderer.enabled = true;
+            specialAnimator.SetBool("Underground", false);
+            TrailScript.isTrailActive = false;
+            TrailScript.isTrailActive2 = false;
+        }
+
+        // restore fov
+        startFOV = freeLookCam.m_Lens.FieldOfView;
+        targetFOV = StaticUtilities.defaultFOV;
+        for (float t = 0; t < 1; t += Time.deltaTime * dodgeSpeed)
+        {
+            // "lerp" back to default fov
+            if (targetFOV < startFOV)
+                freeLookCam.m_Lens.FieldOfView = Mathf.Clamp(startFOV - fovRestoreCurve.Evaluate(t) * dodgeFovIncrease, targetFOV, startFOV);
+            else
+                freeLookCam.m_Lens.FieldOfView = Mathf.Clamp(startFOV - fovRestoreCurve.Evaluate(t) * dodgeFovIncrease, startFOV, targetFOV);
+
+            yield return null;
+        }
+        freeLookCam.m_Lens.FieldOfView = StaticUtilities.defaultFOV;
+        currentdodgeRoutine = null;
     }
 
     void ShootMagicBullet()
