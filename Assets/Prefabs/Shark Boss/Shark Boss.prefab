@@ -1499,6 +1499,7 @@ MonoBehaviour:
   isInvincible: 0
   slowUpdateInterval: 0.2
   animator: {fileID: 7119125301393037553}
+  skinnedMeshRenderer: {fileID: 2165085442879012743}
   timeBetweenAttacks: 3
   attackPrepareTime: 2
   maxAttackReps: 2
@@ -1597,6 +1598,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   aoeRadius: 8
+  ramSpeed: 3
   ramCurve:
     serializedVersion: 2
     m_Curve:
@@ -1670,6 +1672,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   ramIndicatorPrefab: {fileID: 196874601794211698, guid: 9e27db76783444f4b98b2bcb0f7712db, type: 3}
+  blink: 0
+  blinkSpeed: 3
   projectile:
     damage: 0
     lifeTime: 120
@@ -1699,6 +1703,7 @@ MonoBehaviour:
   diveKnockback: {x: 1, y: 2}
   shotKnockback: {x: 1, y: 1}
   headDamagerCollider: {fileID: 0}
+  bodyContactDamageCooldown: 2
 --- !u!114 &3758829509253796115
 MonoBehaviour:
   m_ObjectHideFlags: 0

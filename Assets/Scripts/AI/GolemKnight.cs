@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class GolemKnight : Enemy
 {
@@ -12,24 +13,29 @@ public class GolemKnight : Enemy
     [SerializeField] GameObject HeadTarget;
     AttackTrigger trigger;
     MeleeHitBox sword;
-
+    private float DeathType;
     private float xSpeed;
     private float ySpeed;
     private float zSpeed;
-
+     public VisualEffect vfxGraph;
     protected override void Awake()
     {
+       
         base.Awake();
 
         sword = transform.GetComponentInChildren<MeleeHitBox>(true);
         sword.damage = attackDamage;
-
+        int randomDeathType = Random.Range(0, 2);
+        DeathType = randomDeathType;
+        animator.SetInteger("deathType", randomDeathType);
+       
         trigger = transform.GetComponentInChildren<AttackTrigger>();
         if (trigger)
         {
             trigger.onTriggerEnter += OnAttackTriggerEnter;
             trigger.onTriggerExit += OnAttackTriggerExit;
         }
+        
     }
 
     protected override void Update()
@@ -65,6 +71,11 @@ public class GolemKnight : Enemy
         attack = false;
         attackTimer = 0f;
         animator.SetBool("CanAttack", false);
+    }
+
+    protected override void OnHealthZeroed()
+    {
+      animator.SetTrigger("Die");
     }
 
     public void EnableAI()
@@ -111,5 +122,14 @@ public class GolemKnight : Enemy
     {
         sword.gameObject.SetActive(false);
         //Debug.Log("4");
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+    public void DeathBurst()
+    {
+     vfxGraph.SendEvent("death");
     }
 }

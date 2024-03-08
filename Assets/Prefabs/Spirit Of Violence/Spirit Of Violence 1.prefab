@@ -704,8 +704,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 5561349426305759274, guid: ea7838220dc1a67418b9fed90b4d4c23, type: 3}
-  - {fileID: 6664358993437552698, guid: ea7838220dc1a67418b9fed90b4d4c23, type: 3}
+  - {fileID: -876546973899608171, guid: 2f9ad7ea53b954c4aac896c4f3c7a4c5, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1762,6 +1761,52 @@ MonoBehaviour:
   isInvincible: 0
   slowUpdateInterval: 0.2
   animator: {fileID: 8116436632818251914}
+  skinnedMeshRenderer: {fileID: 0}
+  timeBetweenAttacks: 2
+  attackPrepareTime: 2
+  maxAttackReps: 2
+  meleeRange: 6
+  wolfLerpSpeed: 1
+  minMeleeAttackTime: 1
+  maxMeleeAttackTime: 5
+  spiritWolfAnimator: {fileID: 0}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  enableMelee: 0
+  projectile:
+    damage: 1
+    lifeTime: 1
+    speed: 60
+    prefab: {fileID: 0}
+    ignoreLayers:
+      serializedVersion: 2
+      m_Bits: 0
+    owner: {fileID: 0}
+  shootStartDelay: 0.5
+  bulletCooldown: 0.25
+  shootOrigin: {fileID: 0}
+  minBurst: 10
+  maxBurst: 30
+  dragonflyAnimator: {fileID: 0}
+  enableRange: 0
+  dodgeDistance: 6
+  dodgeSpeed: 10
+  minDodgeCooldown: 1
+  maxDodgeCooldown: 5
+  whatIsDodgeObstacle:
+    serializedVersion: 2
+    m_Bits: 0
+  enableDash: 0
+  maxRange: 15
+  tornadoDamage: 1
+  burnTime: 3
+  tornadoTime: 5
+  tornadoCooldown: 2
+  aoeIndicatorPrefab: {fileID: 0}
+  abilityPrefab: {fileID: 0}
+  enableTornado: 0
+  pheonix: {fileID: 0}
 --- !u!1 &8038987213349376224
 GameObject:
   m_ObjectHideFlags: 0
