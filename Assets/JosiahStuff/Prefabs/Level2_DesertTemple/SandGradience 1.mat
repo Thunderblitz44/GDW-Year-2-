@@ -32,7 +32,8 @@ Material:
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -63,6 +64,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emit_1:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -212,6 +217,7 @@ Material:
     - _Border_Effect: 5
     - _BumpScale: 1
     - _BumpStrength: 1
+    - _CastShadows: 1
     - _Cell_Location: 0.39
     - _Cell_Strength: 1
     - _ClearCoatMask: 0
@@ -228,6 +234,7 @@ Material:
     - _Dot_Smoothness: 2
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _Emit: 0
     - _EnvironmentReflections: 1
     - _Fog: 1
     - _GlossMapScale: 0
@@ -236,8 +243,9 @@ Material:
     - _HeightBlend: 0.631
     - _Height_Blend: 777.93
     - _Height_Gradient: -85.7
+    - _Light_Contrast: 1
     - _Light_Intensity: 0
-    - _Lighting_Noise: 0.5
+    - _Lighting_Noise: 0.1
     - _MAIN_LIGHT_SHADOWS_CASCADE: 0
     - _Metallic: 0
     - _Mode: 0
@@ -268,13 +276,16 @@ Material:
     - _UVSec: 0
     - _WorkflowMode: 1
     - _WorldPosition: 0
+    - _ZTest: 4
     - _ZWrite: 1
+    - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 0.6037736, g: 0.4896703, b: 0.40726238, a: 1}
     - _Border_Color: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 1}
     - _BottomColor: {r: 0.5471698, g: 0.41929352, b: 0.26584196, a: 0}
     - _Color: {r: 1.6226416, g: 1.1831505, b: 0.86489856, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmitColor: {r: 1, g: 1, b: 1, a: 0}
     - _Shadow_Color: {r: 0.15755162, g: 0.18092497, b: 0.45754716, a: 0}
     - _Smoothness_Color: {r: 1.8060868, g: 1.0478365, b: 0.7922927, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
