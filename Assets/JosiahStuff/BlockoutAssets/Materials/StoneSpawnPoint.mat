@@ -19,7 +19,8 @@ Material:
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -27,6 +28,10 @@ Material:
     m_TexEnvs:
     - _Albedo:
         m_Texture: {fileID: 2800000, guid: 0bb9857b212b4474c95b43eea2dd7a54, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emit_1:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Gradient_Texture:
@@ -91,21 +96,29 @@ Material:
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
     - _Albedo_1: 1
     - _Albedo_Scale: 1
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
     - _Border: 0
     - _Border_Effect: 1
+    - _CastShadows: 1
     - _Cell_Location: 0
     - _Cell_Strength: 1
     - _Contrast: 0.232
+    - _Cull: 2
     - _Distance_Atten: 0
     - _Dot: 0.5
     - _Dot_Density: 400
     - _Dot_Distance: 300
     - _Dot_Smoothness: 2
+    - _DstBlend: 0
+    - _Emit: 0
     - _Fog: 1
     - _HeightBlend: 0.8
     - _Height_Blend: 92.4
     - _Height_Gradient: -50.3
-    - _Lighting_Noise: 0.5
+    - _Light_Contrast: 1
+    - _Lighting_Noise: 0.1
     - _MAIN_LIGHT_SHADOWS_CASCADE: 0
     - _NoiseStrength: 1
     - _Noise_Multiply: 1
@@ -120,12 +133,18 @@ Material:
     - _Shadow_Strength: 0.806
     - _Smoothness: 1.24
     - _Smoothness_1: 0.888
+    - _SrcBlend: 1
+    - _Surface: 0
     - _TP_Noise: 0
     - _TriPlanar: 0.456
     - _WorldPosition: 0.641
+    - _ZTest: 4
+    - _ZWrite: 1
+    - _ZWriteControl: 0
     m_Colors:
     - _Border_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0}
     - _Color: {r: 0.84397674, g: 0.7971698, b: 1, a: 1}
+    - _EmitColor: {r: 1, g: 1, b: 1, a: 0}
     - _Shadow_Color: {r: 0.49808654, g: 0.529426, b: 0.8584906, a: 0}
     - _Smoothness_Color: {r: 3.5378234, g: 1.9188336, b: 1.8189753, a: 0}
     - _TP_Bottom: {r: 1.1478158, g: 0.5031545, b: 0.40606695, a: 0}
