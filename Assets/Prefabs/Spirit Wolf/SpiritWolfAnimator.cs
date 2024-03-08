@@ -10,7 +10,7 @@ public class SpiritWolfAnimator : MonoBehaviour
     public int MeleeAttackDamage;
     public Vector2 MeleeKnockback;
     MeleeHitBox[] MeleeAttack;
-    // Start is called before the first frame update
+
     void Start()
     {
         MeleeAttack = GetComponentsInChildren<MeleeHitBox>(true);
@@ -23,22 +23,12 @@ public class SpiritWolfAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-      
-
-    }
-
     public void PrimaryAttack()
     {
         if (isAttacking) return;
         isAttacking = true;
         animator.SetBool("isAttacking", isAttacking);
         animator.SetTrigger("PrimaryAttack");
- 
-        // Debug.Log(attackCounter);
-        //Debug.Log(isAttacking);
     }
 
     public void AttackCounter()
@@ -62,7 +52,6 @@ public class SpiritWolfAnimator : MonoBehaviour
         isAttacking = false;
         animator.SetBool("isAttacking", isAttacking);
         animator.SetInteger("attackCounter", attackCounter);
-        //Debug.Log(isAttacking);
     }
 
  

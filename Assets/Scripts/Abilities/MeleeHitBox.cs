@@ -22,8 +22,6 @@ public class MeleeHitBox : MonoBehaviour
         {
             skinnedMeshRenderer.material.SetFloat("flash", 1f);
         }
-        //CancelInvoke(nameof(Hide));
-        //gameObject.SetActive(false);
     }
 
     private void OnParticleCollision(GameObject other)

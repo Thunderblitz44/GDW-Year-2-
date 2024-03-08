@@ -11,11 +11,18 @@ public class SpiritOfViolence : Enemy, IBossCommands
     [SerializeField] int maxAttacksAtOnce = 2;
     [SerializeField] float startAttackingDelay = 2f;
     [SerializeField] float maxViewAngle = 120;
+    [SerializeField] float aggressiveChaseDist = 10f;
     bool canSeePlayer;
     int attacksBeingUsed;
     bool battleStarted = false;
     bool pauseAttack;
     Elana player;
+
+    [Header("attacks")]
+    [SerializeField] bool enableMelee;
+    [SerializeField] bool enableRange;
+    [SerializeField] bool enableTornado;
+    [SerializeField] bool enableDash;
 
     [Header("Melee Attack")]
     [SerializeField] float meleeRange = 6f;
@@ -25,11 +32,11 @@ public class SpiritOfViolence : Enemy, IBossCommands
     [SerializeField] float minMeleeCooldown = 2;
     [SerializeField] float maxMeleeCooldown = 5;
     [SerializeField] LayerMask playerLayer;
-    [SerializeField] bool enableMelee;
     SpiritWolfAnimator spiritWolfAnimator;
     Transform spiritWolf;
     float playerDistance = 1000;
     bool melee;
+    bool canUseMelee = true;
 
     [Header("Ranged Attack")]
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
@@ -41,19 +48,18 @@ public class SpiritOfViolence : Enemy, IBossCommands
     [SerializeField] public Animator dragonflyAnimator;
     [SerializeField] float minRangedCooldown = 2f;
     [SerializeField] float maxRangedCooldown = 6f;
-    [SerializeField] bool enableRange;
     readonly List<GameObject> pooledProjectiles = new(8);
     bool shooting;
+    bool canUseRanged = true;
 
     [Header("Dodge")]
     [SerializeField] float dodgeDistance = 6f;
     [SerializeField] float dodgeSpeed = 10f;
     [SerializeField] float minDodgeCooldown = 1f;
     [SerializeField] float maxDodgeCooldown = 5f;
+    [SerializeField] float dodgeAwayDelay = 1.5f;
     [SerializeField] LayerMask whatIsDodgeObstacle;
-    [SerializeField] bool enableDash;
     bool isDodgeing = false;
-    float dodgeAwayDelay = 1f;
     float dodgeAwayTimer;
 
     [Header("Fire Tornado")]
@@ -66,7 +72,6 @@ public class SpiritOfViolence : Enemy, IBossCommands
     [SerializeField] float tornadoChargeTime = 3f;
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] GameObject abilityPrefab;
-    [SerializeField] bool enableTornado;
     Transform aoeIndicator;
     GameObject fireTornado;
     bool aimingFireTornado;
@@ -79,11 +84,15 @@ public class SpiritOfViolence : Enemy, IBossCommands
     [SerializeField] float tooCloseDist = 3f;
     [SerializeField] float walkSpeed = 3f;
     [SerializeField] float runSpeed = 5f;
-
+    [SerializeField] float rotationSpeed = 1000f;
+    float stopSpeed = 0.01f;
+    bool isStopped;
+    bool aggroChase;
 
     protected override void Awake()
     {
         base.Awake();
+        isInvincible = true;
         player = LevelManager.Instance.PlayerScript as Elana;
         spiritWolfAnimator = GetComponentInChildren<SpiritWolfAnimator>();
         spiritWolf = spiritWolfAnimator.transform;
@@ -108,12 +117,6 @@ public class SpiritOfViolence : Enemy, IBossCommands
             StartCoroutine(DodgeRoutine());
         }
 
-        // Melee logic 
-        if (enableMelee && CanMelee() && ShouldMelee())
-        {
-            StartCoroutine(MeleeRoutine());
-        }
-
         // Ranged logic
         if (enableRange && CanShoot() && ShouldShoot())
         {
@@ -123,12 +126,22 @@ public class SpiritOfViolence : Enemy, IBossCommands
         // Tornado logic
         if (enableTornado && CanTornado() && ShouldTornado())
         {
-            agent.speed = 0.1f;
             StartCoroutine(FireTornadoRoutine());
         }
 
+        // Melee logic 
+        if (enableMelee && CanMelee() && ShouldMelee())
+        {
+            StartCoroutine(MeleeRoutine());
+        }
+
+        isStopped = agent.velocity.magnitude < stopSpeed;
         if (canSeePlayer) dodgeAwayTimer = dodgeAwayDelay;
-        else if (agent.velocity.magnitude <= 0.01) dodgeAwayTimer -= Time.deltaTime;
+        else if (isStopped) dodgeAwayTimer -= Time.deltaTime;
+
+        aggroChase = playerDistance >= aggressiveChaseDist;
+        if (aggroChase && !aimingFireTornado && !melee) agent.speed = runSpeed;
+        else if (!aggroChase && !aimingFireTornado && !melee) agent.speed = walkSpeed;
     }
 
     protected override void SlowUpdate()
@@ -167,11 +180,13 @@ public class SpiritOfViolence : Enemy, IBossCommands
         }
 
         battleStarted = true;
+        isInvincible = false;
     }
 
     IEnumerator MeleeRoutine()
     {
         melee = true;
+        canUseMelee = false;
         attacksBeingUsed++;
         agent.stoppingDistance = meleeStopDist;
 
@@ -191,7 +206,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
         float lerpTime = 0;
         for (float t = 0; t < attackTime; t += Time.deltaTime)
         {
-            while (pauseAttack || !canSeePlayer)
+            while (pauseAttack)
             {
                 if (isDodgeing) spiritWolfAnimator.EndAttack();
                 yield return new WaitForSeconds(0.2f);
@@ -203,12 +218,14 @@ public class SpiritOfViolence : Enemy, IBossCommands
             oldPlayerTooFar = playerTooFar;
             needsLerp = lerpTime < 1;
             
-            if (!playerTooFar && needsLerp)
+            if (!playerTooFar && needsLerp && canSeePlayer)
             {
                 start = FindSpiritWolfStartPos();
                 end = FindSpiritWolfAttackPos();
                 startRot = Quaternion.LookRotation(transform.forward);
                 endRot = Quaternion.LookRotation(end - start);
+                agent.angularSpeed = 0;
+                
                 //lerp to
                 for (lerpTime = 0; lerpTime < 1 && !playerTooFar; lerpTime += Time.deltaTime * wolfLerpSpeed)
                 {
@@ -217,15 +234,16 @@ public class SpiritOfViolence : Enemy, IBossCommands
                     yield return null;
                 }
             }
-            else if (!playerTooFar && !needsLerp)
+            else if (!playerTooFar && !needsLerp && canSeePlayer)
             {
                 spiritWolf.position = FindSpiritWolfAttackPos();
                 spiritWolf.LookAt(player.transform);
             }
-            else if (playerTooFar && needsLerp)
+            else if ((playerTooFar && needsLerp) || !canSeePlayer)
             {
                 start = FindSpiritWolfStartPos();
                 end = GetSpiritWolfPassivePos();
+                agent.angularSpeed = rotationSpeed;
 
                 // lerp back
                 for (lerpTime = 0; lerpTime < 1 && playerTooFar; lerpTime += Time.deltaTime * wolfLerpSpeed)
@@ -247,13 +265,14 @@ public class SpiritOfViolence : Enemy, IBossCommands
             yield return null;
         }
 
-        if (!aimingFireTornado) agent.speed = walkSpeed;
+        if (!aimingFireTornado && isStopped) agent.speed = walkSpeed;
+        agent.angularSpeed = rotationSpeed;
         spiritWolfAnimator.EndAttack();
         attacksBeingUsed--;
+        melee = false;
 
         yield return new WaitForSeconds(GetRandomCooldown(minMeleeCooldown, maxMeleeCooldown));
-
-        melee = false;
+        canUseMelee = true;
         yield break;
     }
 
@@ -289,6 +308,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
     IEnumerator RangedRoutine()
     {
         attacksBeingUsed++;
+        canUseRanged = false; 
         if (!melee) agent.stoppingDistance = rangedStopDist;
      
         Vector3 force;
@@ -304,17 +324,19 @@ public class SpiritOfViolence : Enemy, IBossCommands
             }
             if (!shooting) SetShooting(true);
 
+            if (playerDistance <= tooCloseDist && CanDodge()) StartCoroutine(DodgeRoutine());
+
             force = (player.transform.position - shootOrigin.position).normalized * projectile.speed;
             StaticUtilities.ShootProjectile(pooledProjectiles, shootOrigin.position, force);
 
             yield return new WaitForSeconds(bulletCooldown);
         }
-        dragonflyAnimator.SetBool("IsShooting", false);
+        SetShooting(false);
         attacksBeingUsed--;
 
+        if (isStopped && !melee && !aimingFireTornado) agent.speed = walkSpeed;
         yield return new WaitForSeconds(GetRandomCooldown(minRangedCooldown, maxRangedCooldown));
-
-        shooting = false;
+        canUseRanged = true; 
     }
 
     void SetShooting(bool isShooting)
@@ -327,7 +349,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
     {
         // prepare
         attacksBeingUsed++;
-        agent.speed = 0.1f;
+        agent.speed = stopSpeed;
         canUseFireTornado = false;
 
         aoeIndicator = Instantiate(aoeIndicatorPrefab, player.transform.position, aoeIndicatorPrefab.transform.rotation).transform;
@@ -352,7 +374,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
         pheonix.EndAttack();
         aimingFireTornado = false;
         attacksBeingUsed--;
-        if (agent.speed == 0.1f) agent.speed = walkSpeed;
+        if (isStopped) agent.speed = walkSpeed;
 
         // spawn on player
         if (Physics.Raycast(player.transform.position, Vector3.down, out hit, testDist, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
@@ -391,13 +413,17 @@ public class SpiritOfViolence : Enemy, IBossCommands
 
         Vector3 start = transform.position, end, targetDir, dodgeDir;
 
+        // for if we cant see the player - do a 180
+        Quaternion startRot = transform.rotation;
+        Quaternion endRot = Quaternion.LookRotation(-transform.forward);
+
         // calculate dodge direction
         targetDir = StaticUtilities.FlatDirection(player.transform.position, transform.position);
         if (!canSeePlayer)
         {
             dodgeDir = transform.forward;
         }
-        else if (melee)
+        else if (melee || aggroChase)
         {
             dodgeDir = targetDir;
         }
@@ -420,6 +446,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
         FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wave Dash", gameObject);
         for (float t = 0; t < 1; t += Time.deltaTime * dodgeSpeed)
         {
+            if (!canSeePlayer) transform.rotation = Quaternion.Slerp(startRot, endRot, StaticUtilities.easeCurve01.Evaluate(t));
             transform.position = Vector3.Lerp(start, end, StaticUtilities.easeCurve01.Evaluate(t));
             yield return null;
         }
@@ -434,7 +461,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
 
     bool ShouldDodge()
     {
-        return (player.IsAttacking() && !aimingFireTornado && !melee) || (agent.velocity.magnitude <= 0.01 && !canSeePlayer && dodgeAwayTimer <= 0);
+        return (player.IsAttacking() && !aimingFireTornado && !melee) || (isStopped && !canSeePlayer && dodgeAwayTimer <= 0) || aggroChase;
     }
 
     bool CanDodge()
@@ -449,7 +476,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
 
     bool CanMelee()
     {
-        return !melee && !isDodgeing && canSeePlayer;
+        return canUseMelee && !pauseAttack;
     }
 
     bool ShouldShoot()
@@ -459,7 +486,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
     
     bool CanShoot()
     {
-        return !isDodgeing && !shooting && canSeePlayer;
+        return !pauseAttack && canUseRanged;
     }
 
     bool ShouldTornado()
@@ -469,7 +496,7 @@ public class SpiritOfViolence : Enemy, IBossCommands
 
     bool CanTornado()
     {
-        return canUseFireTornado && !isDodgeing && canSeePlayer;
+        return canUseFireTornado && !pauseAttack;
     }
 
     float GetRandomCooldown(float min, float max)
