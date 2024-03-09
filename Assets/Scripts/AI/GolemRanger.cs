@@ -11,7 +11,8 @@ public class GolemRanger : Enemy
     private float xSpeed;
     private float zSpeed;
     public float shootForce = 5;
-    
+    public ParticleSystem DustSystemRight;
+    public ParticleSystem DustSystemLeft;
     protected override void Awake()
     {
         base.Awake();
@@ -72,5 +73,15 @@ public class GolemRanger : Enemy
     {
         agent.enabled = false;
         HeadTarget.SetActive(false);
+    }
+    
+    public void DustLeft()
+    {
+        DustSystemLeft.Emit(6);
+    }
+    
+    public void DustRight()
+    {
+        DustSystemRight.Emit(6);
     }
 }
