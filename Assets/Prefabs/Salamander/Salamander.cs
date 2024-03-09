@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Salamander : Enemy
 {
@@ -14,6 +11,7 @@ public class Salamander : Enemy
     private bool inAttackRange;
     public int RangedAttackDamage;
     public Vector2 RangedKnockback;
+    Vector3 localVelocity;
     MeleeHitBox[] RangedAttack;
     // Start is called before the first frame update
     void Start()
@@ -39,13 +37,14 @@ public class Salamander : Enemy
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
-            agent.SetDestination(headPosition);
+            if (agent) agent.SetDestination(headPosition);
             //animator.SetBool("IsAttacking", inAttackRange);
         }
 
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        if (agent) localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        else localVelocity = Vector3.zero;
 
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
@@ -55,7 +54,13 @@ public class Salamander : Enemy
         animator.SetFloat("ZSpeed", zSpeed);
         
     }
-    
+
+    // temporary until we get a death animation
+    protected override void OnHealthZeroed()
+    {
+        Destroy(gameObject);
+    }
+
     private void EnableAI()
     {
         agent.enabled = true;

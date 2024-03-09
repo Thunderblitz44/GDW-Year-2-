@@ -5976,7 +5976,7 @@ Rigidbody:
   m_GameObject: {fileID: 7193714435628247317}
   serializedVersion: 4
   m_Mass: 500
-  m_Drag: 0
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -6010,11 +6010,10 @@ MonoBehaviour:
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
   slowUpdateInterval: 0.2
-  animator: {fileID: 22703637280118072}
-  skinnedMeshRenderer: {fileID: 1306035279448391353}
+  flashTimer: 0
   attackTrigger: {fileID: 7736429351798985896}
   HeadTarget: {fileID: 8568648645733408583}
-  RangedAttackDamage: 10
+  RangedAttackDamage: 30
   RangedKnockback: {x: 0, y: 0}
 --- !u!95 &22703637280118072
 Animator:
@@ -6094,7 +6093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 300
   hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
   height: 5.29
   autoHide: 1

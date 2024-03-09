@@ -8,6 +8,7 @@ public class DamageableEntity : MonoBehaviour, IDamageable
     [SerializeField] float damageNumberSpawnHeight = 1.5f;
     public bool isInvincible;
     protected HealthComponent hp;
+    
     protected Animator animator2;
     protected virtual void Awake()
     {
@@ -18,13 +19,13 @@ public class DamageableEntity : MonoBehaviour, IDamageable
 
     protected virtual void OnHealthZeroed()
     {
-       Destroy(gameObject);
-        
-        animator2.SetTrigger("Die"); 
-        
+        if (animator2)
+        {
+            animator2.SetTrigger("Die");
+            Destroy(hp);
+        }
+        else Destroy(gameObject);
     }
-
-
    
     public virtual void ApplyDamage(int damage)
     {

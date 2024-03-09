@@ -21,6 +21,7 @@ public class GolemKnight : Enemy
      
      public ParticleSystem DustSystemRight;
      public ParticleSystem DustSystemLeft;
+    Vector3 localVelocity;
     protected override void Awake()
     {
        
@@ -50,7 +51,8 @@ public class GolemKnight : Enemy
 
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        if (agent) localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        else localVelocity = Vector3.zero;
 
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
@@ -75,8 +77,6 @@ public class GolemKnight : Enemy
         attackTimer = 0f;
         animator.SetBool("CanAttack", false);
     }
-
-  
 
     public void EnableAI()
     {
