@@ -13,12 +13,15 @@ public class GolemRanger : Enemy
     public float shootForce = 5;
     public ParticleSystem DustSystemRight;
     public ParticleSystem DustSystemLeft;
+    private int DeathType;
     protected override void Awake()
     {
         base.Awake();
 
         particleSystem.GetComponent<MagicBullet>().Initialize(projectile, this);
-
+        int randomDeathType = Random.Range(0, 2);
+        DeathType = randomDeathType;
+        animator.SetInteger("deathType", randomDeathType);
         if (!shootOrigin) 
         { 
             Debug.LogWarning("No shoot origin set for ranger golem!");
