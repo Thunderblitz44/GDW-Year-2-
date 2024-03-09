@@ -18,6 +18,10 @@ public class GolemKnight : Enemy
     private float ySpeed;
     private float zSpeed;
      public VisualEffect vfxGraph;
+     
+     public ParticleSystem DustSystemRight;
+     public ParticleSystem DustSystemLeft;
+    Vector3 localVelocity;
     protected override void Awake()
     {
        
@@ -47,7 +51,8 @@ public class GolemKnight : Enemy
 
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        if (agent) localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        else localVelocity = Vector3.zero;
 
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
@@ -71,11 +76,6 @@ public class GolemKnight : Enemy
         attack = false;
         attackTimer = 0f;
         animator.SetBool("CanAttack", false);
-    }
-
-    protected override void OnHealthZeroed()
-    {
-      animator.SetTrigger("Die");
     }
 
     public void EnableAI()
@@ -131,5 +131,15 @@ public class GolemKnight : Enemy
     public void DeathBurst()
     {
      vfxGraph.SendEvent("death");
+    }
+    
+    public void DustLeft()
+    {
+        DustSystemLeft.Emit(6);
+    }
+    
+    public void DustRight()
+    {
+        DustSystemRight.Emit(6);
     }
 }

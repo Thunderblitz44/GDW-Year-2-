@@ -6,19 +6,19 @@ public class Enemy : DamageableEntity
     protected Transform target;
     protected NavMeshAgent agent;
     [SerializeField] float slowUpdateInterval = 0.2f;
-    float updateTimer;
     protected bool updateTargetOnDamaged = true;
+    float updateTimer;
 
     protected Animator animator;
     protected SkinnedMeshRenderer skinnedMeshRenderer;
-    float flashDuration = 0.2f; 
-    float flashTimer = 0f;
+    public float flashTimer = 0f;
 
     protected override void Awake()
     {
         base.Awake();
         
         animator = GetComponent<Animator>();
+        if (!animator) animator = GetComponentInChildren<Animator>();
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
 
         agent = GetComponent<NavMeshAgent>();
@@ -34,13 +34,18 @@ public class Enemy : DamageableEntity
         updateTimer += Time.deltaTime;
         if (updateTimer >= slowUpdateInterval) SlowUpdate();
         
-        
-        if (flashTimer > 0 && skinnedMeshRenderer)
+        if (skinnedMeshRenderer && flashTimer > 0)
         {
             flashTimer -= Time.deltaTime;
-            float flashIntensity = Mathf.Lerp(0f, 1f, flashTimer / flashDuration);
+            float flashIntensity = Mathf.Lerp(0f, 1f, flashTimer / StaticUtilities.damageFlashDuration);
             skinnedMeshRenderer.material.SetFloat("_flash", flashIntensity);
         }
+    }
+
+    protected override void OnHealthZeroed()
+    {
+        Destroy(agent);
+        base.OnHealthZeroed();
     }
 
     protected virtual void SlowUpdate()
@@ -60,7 +65,7 @@ public class Enemy : DamageableEntity
         base.ApplyDamage(damage);
         
         // Trigger flash effect
-        flashTimer = flashDuration;
+        flashTimer = StaticUtilities.damageFlashDuration;
         if (updateTargetOnDamaged) target = LevelManager.PlayerTransform;
     }
 }

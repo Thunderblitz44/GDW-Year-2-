@@ -11,7 +11,8 @@ public class GolemRanger : Enemy
     private float xSpeed;
     private float zSpeed;
     public float shootForce = 5;
-    
+    Vector3 localVelocity;
+
     protected override void Awake()
     {
         base.Awake();
@@ -41,7 +42,8 @@ public class GolemRanger : Enemy
 
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        if (agent) localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        else localVelocity = Vector3.zero;
 
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
