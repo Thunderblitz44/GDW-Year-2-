@@ -91,7 +91,7 @@ public class LevelManager : MonoBehaviour
                 if (Vector3.Distance(enemy.transform.position, hit.position) < 2) goto next;
             }
 
-            return hit.position + Vector3.up;
+            return hit.position + Vector3.up * 2f;
         }
 
     next:

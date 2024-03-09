@@ -102,4 +102,8 @@ public class MantisController : Enemy
         
             
     }
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -13,7 +13,10 @@ public class Gorilla : Enemy
     private float xSpeed;
     private float zSpeed;
     Vector3 localVelocity;
+    public ParticleSystem DustSystemRight;
+    public ParticleSystem DustSystemLeft;
 
+    private int DeathType;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,12 +28,15 @@ public class Gorilla : Enemy
             trigger.knockback = RangedKnockback;
         }
        
-        
+        int randomDeathType = Random.Range(0, 2);
+        DeathType = randomDeathType;
+        animator.SetInteger("deathType", randomDeathType);
     }
 
 
     protected override void Update()
     {
+        base.Update();
         Vector3 headPosition = LevelManager.PlayerTransform.position;
         
         if (isEnabled)
@@ -55,9 +61,13 @@ public class Gorilla : Enemy
         
     }
 
-
     // temporary until we get a death animation
     protected override void OnHealthZeroed()
+    {
+        Destroy(gameObject);
+    }
+
+    public void Die()
     {
         Destroy(gameObject);
     }
@@ -89,6 +99,16 @@ public class Gorilla : Enemy
             // Player exited the attack trigger, set inAttackRange to false
             inAttackRange = false;
         }
+    }
+    
+    public void DustLeft()
+    {
+        DustSystemLeft.Emit(6);
+    }
+    
+    public void DustRight()
+    {
+        DustSystemRight.Emit(6);
     }
 }
 

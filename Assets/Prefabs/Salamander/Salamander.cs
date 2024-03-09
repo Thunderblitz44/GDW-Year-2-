@@ -89,4 +89,9 @@ public class Salamander : Enemy
             inAttackRange = false;
         }
     }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -68,4 +68,6 @@ public class Enemy : DamageableEntity
         if (!isInvincible) flashTimer = StaticUtilities.damageFlashDuration;
         if (updateTargetOnDamaged) target = LevelManager.PlayerTransform;
     }
+
+    
 }

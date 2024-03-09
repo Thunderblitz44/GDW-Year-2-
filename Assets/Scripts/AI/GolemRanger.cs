@@ -1,27 +1,31 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class GolemRanger : Enemy
 {
     // attack
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
     [SerializeField] Transform shootOrigin;
-    [SerializeField] ParticleSystem particles;
+    [SerializeField] new ParticleSystem particleSystem;
     [SerializeField] GameObject HeadTarget;
     AttackTrigger trigger;
     private float xSpeed;
     private float zSpeed;
     public float shootForce = 5;
-    Vector3 localVelocity;
-
     public ParticleSystem DustSystemRight;
     public ParticleSystem DustSystemLeft;
+    private int DeathType;
+    Vector3 localVelocity;
+    public VisualEffect vfxGraph;
 
     protected override void Awake()
     {
         base.Awake();
 
-        particles.GetComponent<MagicBullet>().Initialize(projectile, this);
-
+        particleSystem.GetComponent<MagicBullet>().Initialize(projectile, this);
+        int randomDeathType = Random.Range(0, 2);
+        DeathType = randomDeathType;
+        animator.SetInteger("deathType", randomDeathType);
         if (!shootOrigin) 
         { 
             Debug.LogWarning("No shoot origin set for ranger golem!");
@@ -56,12 +60,6 @@ public class GolemRanger : Enemy
         animator.SetFloat("ZSpeed", zSpeed);
     }
 
-    // temporary until we get a death animation
-    protected override void OnHealthZeroed()
-    {
-        Destroy(gameObject);
-    }
-
     void OnAttackTriggerEnter(Collider other)
     {
         //attack = true;
@@ -71,6 +69,12 @@ public class GolemRanger : Enemy
     void OnAttackTriggerExit(Collider other)
     {
         animator.SetBool("InAttackRange", false);
+    }
+
+    protected override void OnHealthZeroed()
+    {
+        base.OnHealthZeroed();
+        particleSystem.Stop(); 
     }
 
     public void EnableAI()
@@ -84,14 +88,24 @@ public class GolemRanger : Enemy
         agent.enabled = false;
         HeadTarget.SetActive(false);
     }
-
+    
     public void DustLeft()
     {
         DustSystemLeft.Emit(6);
     }
-
+    
     public void DustRight()
     {
         DustSystemRight.Emit(6);
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
+    public void DeathBurst()
+    {
+        vfxGraph.SendEvent("death");
     }
 }
