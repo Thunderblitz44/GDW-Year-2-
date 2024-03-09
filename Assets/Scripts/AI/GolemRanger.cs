@@ -5,7 +5,7 @@ public class GolemRanger : Enemy
     // attack
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
     [SerializeField] Transform shootOrigin;
-    [SerializeField] new ParticleSystem particleSystem;
+    [SerializeField] ParticleSystem particles;
     [SerializeField] GameObject HeadTarget;
     AttackTrigger trigger;
     private float xSpeed;
@@ -13,11 +13,14 @@ public class GolemRanger : Enemy
     public float shootForce = 5;
     Vector3 localVelocity;
 
+    public ParticleSystem DustSystemRight;
+    public ParticleSystem DustSystemLeft;
+
     protected override void Awake()
     {
         base.Awake();
 
-        particleSystem.GetComponent<MagicBullet>().Initialize(projectile, this);
+        particles.GetComponent<MagicBullet>().Initialize(projectile, this);
 
         if (!shootOrigin) 
         { 
@@ -53,6 +56,12 @@ public class GolemRanger : Enemy
         animator.SetFloat("ZSpeed", zSpeed);
     }
 
+    // temporary until we get a death animation
+    protected override void OnHealthZeroed()
+    {
+        Destroy(gameObject);
+    }
+
     void OnAttackTriggerEnter(Collider other)
     {
         //attack = true;
@@ -74,5 +83,15 @@ public class GolemRanger : Enemy
     {
         agent.enabled = false;
         HeadTarget.SetActive(false);
+    }
+
+    public void DustLeft()
+    {
+        DustSystemLeft.Emit(6);
+    }
+
+    public void DustRight()
+    {
+        DustSystemRight.Emit(6);
     }
 }

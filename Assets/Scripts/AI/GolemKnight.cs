@@ -135,11 +135,11 @@ public class GolemKnight : Enemy
     
     public void DustLeft()
     {
-        DustSystemLeft.Emit(6);
+        //DustSystemLeft.Emit(6);
     }
     
     public void DustRight()
     {
-        DustSystemRight.Emit(6);
+        //DustSystemRight.Emit(6);
     }
 }
