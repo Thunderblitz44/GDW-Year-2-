@@ -106,7 +106,7 @@ public class Bear : Enemy
         attackFuncs.Add(SlamAttackRoutine);
 
         battleStarted = true;
-        isInvincible = true;
+        //isInvincible = true;
     }
 
     public BossHealthComponent GetHPComponent()

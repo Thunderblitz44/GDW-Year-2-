@@ -11,7 +11,7 @@ public class Enemy : DamageableEntity
 
     protected Animator animator;
     protected SkinnedMeshRenderer skinnedMeshRenderer;
-    public float flashTimer = 0f;
+    [HideInInspector] public float flashTimer = 0f;
 
     protected override void Awake()
     {
@@ -65,7 +65,7 @@ public class Enemy : DamageableEntity
         base.ApplyDamage(damage);
         
         // Trigger flash effect
-        flashTimer = StaticUtilities.damageFlashDuration;
+        if (!isInvincible) flashTimer = StaticUtilities.damageFlashDuration;
         if (updateTargetOnDamaged) target = LevelManager.PlayerTransform;
     }
 }

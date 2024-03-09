@@ -599,10 +599,22 @@ MonoBehaviour:
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
   slowUpdateInterval: 0.2
+  flashTimer: 0
+  timeBetweenAttacks: 2
+  attackPrepareTime: 2
+  maxAttackReps: 1
+  startAttackingDelay: 2
+  enableSlam: 1
+  enableOrbs: 1
+  enableSpear: 1
+  slamCooldown: 1
   orbPrefab: {fileID: 6240609129731547276, guid: 0ffcff54d15f62c4981644d410cdb787, type: 3}
-  spearPrefab: {fileID: 1548096383054364043, guid: 9267f5b56447f7b4a8adaf9f64d9575b, type: 3}
   orbSpawnPoint: {fileID: 3719016228967178754}
+  orbCooldown: 1
+  spearPrefab: {fileID: 1548096383054364043, guid: 9267f5b56447f7b4a8adaf9f64d9575b, type: 3}
   spearSpawnPoint: {fileID: 7483055262654949519}
+  aoeIndicatorPrefab: {fileID: 0}
+  spearCooldown: 1
 --- !u!136 &4107051554739900881
 CapsuleCollider:
   m_ObjectHideFlags: 0

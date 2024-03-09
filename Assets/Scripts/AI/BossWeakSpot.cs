@@ -37,6 +37,6 @@ public class BossWeakSpot : DamageableEntity
     {
         base.ApplyDamage(damage);
         if (bossScript.GetType().Equals(typeof(SharkBoss))) (bossScript as SharkBoss).flashTimer = 0.2f;
-        if (flashThis) flashTimer = StaticUtilities.damageFlashDuration;
+        if (flashThis && !isInvincible) flashTimer = StaticUtilities.damageFlashDuration;
     }
 }
