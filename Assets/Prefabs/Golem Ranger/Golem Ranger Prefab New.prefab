@@ -5688,7 +5688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  maxHealth: 100
   hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
   height: 1.5
   autoHide: 1
@@ -5708,10 +5708,9 @@ MonoBehaviour:
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
   slowUpdateInterval: 0.2
-  animator: {fileID: 4223308464630147859}
-  skinnedMeshRenderer: {fileID: 9201745676133549281}
+  flashTimer: 0
   projectile:
-    damage: 1
+    damage: 5
     lifeTime: 1
     speed: 60
     prefab: {fileID: 3834878703041650075, guid: f8648ce82b6c21142aa29c68b71d5ff6, type: 3}
@@ -5725,6 +5724,7 @@ MonoBehaviour:
   shootForce: 5
   DustSystemRight: {fileID: 8105711150027334799}
   DustSystemLeft: {fileID: 8714598575362544339}
+  vfxGraph: {fileID: 5424835713434682655}
 --- !u!114 &9126768966314664053
 MonoBehaviour:
   m_ObjectHideFlags: 0

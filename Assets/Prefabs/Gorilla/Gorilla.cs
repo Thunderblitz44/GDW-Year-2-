@@ -36,6 +36,7 @@ public class Gorilla : Enemy
 
     protected override void Update()
     {
+        base.Update();
         Vector3 headPosition = LevelManager.PlayerTransform.position;
         
         if (isEnabled)
@@ -60,9 +61,13 @@ public class Gorilla : Enemy
         
     }
 
-
     // temporary until we get a death animation
     protected override void OnHealthZeroed()
+    {
+        Destroy(gameObject);
+    }
+
+    public void Die()
     {
         Destroy(gameObject);
     }

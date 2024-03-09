@@ -128,6 +128,7 @@ public class GolemKnight : Enemy
     {
         Destroy(gameObject);
     }
+
     public void DeathBurst()
     {
      vfxGraph.SendEvent("death");

@@ -8,7 +8,7 @@ public class HeathPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        StaticUtilities.TryToDamage(other.gameObject, -healAmount);
+        StaticUtilities.TryToDamage(other.transform.parent.gameObject, -healAmount);
         gameObject.SetActive(false);
     }
 }

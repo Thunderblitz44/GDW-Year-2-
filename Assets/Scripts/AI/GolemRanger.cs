@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class GolemRanger : Enemy
 {
@@ -14,6 +15,9 @@ public class GolemRanger : Enemy
     public ParticleSystem DustSystemRight;
     public ParticleSystem DustSystemLeft;
     private int DeathType;
+    Vector3 localVelocity;
+    public VisualEffect vfxGraph;
+
     protected override void Awake()
     {
         base.Awake();
@@ -45,7 +49,8 @@ public class GolemRanger : Enemy
 
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        if (agent) localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        else localVelocity = Vector3.zero;
 
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
@@ -64,6 +69,12 @@ public class GolemRanger : Enemy
     void OnAttackTriggerExit(Collider other)
     {
         animator.SetBool("InAttackRange", false);
+    }
+
+    protected override void OnHealthZeroed()
+    {
+        base.OnHealthZeroed();
+        particleSystem.Stop(); 
     }
 
     public void EnableAI()
@@ -86,5 +97,15 @@ public class GolemRanger : Enemy
     public void DustRight()
     {
         DustSystemRight.Emit(6);
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
+    public void DeathBurst()
+    {
+        vfxGraph.SendEvent("death");
     }
 }
