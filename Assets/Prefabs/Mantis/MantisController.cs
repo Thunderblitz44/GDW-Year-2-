@@ -11,7 +11,7 @@ public class MantisController : Enemy
     private bool inAttackRange;
     public int RangedAttackDamage;
     public Vector2 RangedKnockback;
-
+    public VisualEffect vfxGraph;
     private VisualEffect teleportEffect; // Reference to the teleport Visual Effect Graph
 
     void Start()
@@ -64,11 +64,7 @@ public class MantisController : Enemy
         }
     }
 
-    // temporary until we get a death animation
-    protected override void OnHealthZeroed()
-    {
-        Destroy(gameObject);
-    }
+ 
 
     private void EnableAI()
     {
@@ -105,5 +101,10 @@ public class MantisController : Enemy
     public void Die()
     {
         Destroy(gameObject);
+    }
+    
+    public void DeathBurst()
+    {
+        vfxGraph.SendEvent("death");
     }
 }

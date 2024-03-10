@@ -33,8 +33,11 @@ public class GolemRangerLights : MonoBehaviour
 
         for (int i = 0; i < lineRenderers.Length; i++)
         {
-            lineRenderers[i].SetPosition(0, bonesToDraw[i].position);
-            lineRenderers[i].SetPosition(1, bonesToDraw[i + 1].position);
+            if (lineRenderers[i] != null && bonesToDraw[i] != null && bonesToDraw[i + 1] != null)
+            {
+                lineRenderers[i].SetPosition(0, bonesToDraw[i].position);
+                lineRenderers[i].SetPosition(1, bonesToDraw[i + 1].position);
+            }
         }
     }
 

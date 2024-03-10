@@ -11,8 +11,13 @@ public class Enemy : DamageableEntity
 
     protected Animator animator;
     protected SkinnedMeshRenderer skinnedMeshRenderer;
-    [HideInInspector] public float flashTimer = 0f;
-
+    [HideInInspector] public float flashTimer = 0f; 
+    [HideInInspector] public float dissolveTimer = 0f; 
+    private bool dissolve = false;
+    private float dissolveTime = 0f;
+    private float dissolveSpeed = 0.3f;
+    private bool isAwake = true;
+    public float spawndissolveTimer = 1f;
     protected override void Awake()
     {
         base.Awake();
@@ -23,6 +28,7 @@ public class Enemy : DamageableEntity
 
         agent = GetComponent<NavMeshAgent>();
         target = LevelManager.PlayerTransform;
+        skinnedMeshRenderer.material.SetFloat("_dissolve", 1);
     }
 
     protected virtual void Update()
@@ -40,11 +46,34 @@ public class Enemy : DamageableEntity
             float flashIntensity = Mathf.Lerp(0f, 1f, flashTimer / StaticUtilities.damageFlashDuration);
             skinnedMeshRenderer.material.SetFloat("_flash", flashIntensity);
         }
+
+        if (skinnedMeshRenderer && isAwake)
+        {
+            spawndissolveTimer = Mathf.Lerp(1f, 0f, Time.time );
+           
+            skinnedMeshRenderer.material.SetFloat("_dissolve", spawndissolveTimer);
+
+        }
+        if ( skinnedMeshRenderer && dissolve)
+        {
+            
+            dissolveTimer += Time.deltaTime * dissolveSpeed * 2;
+
+          
+          
+        
+            skinnedMeshRenderer.material.SetFloat("_dissolve", dissolveTimer);
+
+         
+            Debug.Log("Dissolve Timer: " + dissolveTimer);
+        }
     }
 
     protected override void OnHealthZeroed()
     {
+        dissolve = true;
         Destroy(agent);
+      
         base.OnHealthZeroed();
     }
 
@@ -63,7 +92,7 @@ public class Enemy : DamageableEntity
     public override void ApplyDamage(int damage)
     {
         base.ApplyDamage(damage);
-        
+      
         // Trigger flash effect
         if (!isInvincible) flashTimer = StaticUtilities.damageFlashDuration;
         if (updateTargetOnDamaged) target = LevelManager.PlayerTransform;

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.VFX;
 public class Gorilla : Enemy
 {
     private bool isEnabled = false;
@@ -15,12 +15,14 @@ public class Gorilla : Enemy
     Vector3 localVelocity;
     public ParticleSystem DustSystemRight;
     public ParticleSystem DustSystemLeft;
-
+    public VisualEffect vfxGraph;
+    private int AttackType;
     private int DeathType;
     // Start is called before the first frame update
     void Start()
     {
         EnableAI();
+    
         RangedAttack = GetComponentsInChildren<MeleeHitBox>(true);
         foreach (var trigger in RangedAttack)
         {
@@ -61,12 +63,6 @@ public class Gorilla : Enemy
         
     }
 
-    // temporary until we get a death animation
-    protected override void OnHealthZeroed()
-    {
-        Destroy(gameObject);
-    }
-
     public void Die()
     {
         Destroy(gameObject);
@@ -86,6 +82,7 @@ public class Gorilla : Enemy
         {
             // Player entered the attack trigger, set inAttackRange to true
             inAttackRange = true;
+            animator.SetBool("inAttackRange", inAttackRange);
             // You can also trigger an attack animation here if needed
             // GolemKnightAnimator.SetTrigger("AttackTrigger");
         }
@@ -98,6 +95,7 @@ public class Gorilla : Enemy
         {
             // Player exited the attack trigger, set inAttackRange to false
             inAttackRange = false;
+            animator.SetBool("inAttackRange", inAttackRange);
         }
     }
     
@@ -109,6 +107,16 @@ public class Gorilla : Enemy
     public void DustRight()
     {
         DustSystemRight.Emit(6);
+    }
+    public void DeathBurst()
+    {
+        vfxGraph.SendEvent("death");
+    }
+
+    public void ChooseNextAttack()
+    {
+        AttackType = Random.Range(0, 3);
+        animator.SetInteger("AttackType", AttackType);
     }
 }
 

@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.VFX;
 public class Bat : Enemy
 {
    private bool isEnabled = false;
-   
+   public VisualEffect vfxGraph;
+
     public CapsuleCollider attackTrigger;
     public GameObject HeadTarget;
     MeleeHitBox[] RangedAttack;
@@ -55,7 +56,7 @@ public class Bat : Enemy
     }
 
     // temporary until we get a death animation
-    protected override void OnHealthZeroed()
+    public void Die()
     {
         Destroy(gameObject);
     }
@@ -87,5 +88,16 @@ public class Bat : Enemy
             // Player exited the attack trigger, set inAttackRange to false
             inAttackRange = false;
         }
+    }
+    
+    public void DeathBurst()
+    {
+      
+        vfxGraph.SendEvent("death");
+    }
+
+    public void Spawn()
+    {
+        
     }
 }

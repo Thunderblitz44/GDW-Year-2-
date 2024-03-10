@@ -131,6 +131,13 @@ public class GolemKnight : Enemy
 
     public void DeathBurst()
     {
+        LineRenderer[] lineRenderers = GetComponentsInChildren<LineRenderer>();
+
+        
+        foreach (LineRenderer lineRenderer in lineRenderers)
+        {
+            Destroy(lineRenderer.gameObject);
+        }
      vfxGraph.SendEvent("death");
     }
     
