@@ -45,6 +45,7 @@ public class Enemy : DamageableEntity
     protected override void OnHealthZeroed()
     {
         Destroy(agent);
+        Destroy(GetComponent<LockonTarget>());
         base.OnHealthZeroed();
     }
 

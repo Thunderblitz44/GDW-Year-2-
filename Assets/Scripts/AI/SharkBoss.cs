@@ -744,8 +744,10 @@ public class SharkBoss : Enemy, IBossCommands
 
         (hp as BossHealthComponent).Hide();
 
-        Destroy(gameObject, 1f);
         LevelManager.Instance.CurrentEncounter.EndEncounter();
+        Physics.gravity = normalGravity;
+        Destroy(domain);
+        Destroy(gameObject, 1f);
     }
 
     public void OnTouchedPlayer()

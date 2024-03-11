@@ -9,26 +9,30 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
     public static int Id { get; private set; }
-    public static Transform PlayerTransform { get; private set; }
-    public Player PlayerScript { get; private set; }
     public static bool isGamePaused = false;
     public static bool isGameOver = false;
 
+    [SerializeField] Player playerScript;
+    [SerializeField] Canvas worldCanvas;
+    [SerializeField] Canvas canvas;
     [SerializeField] List<EncounterVolume> encounterVolumes;
     [SerializeField] List<Checkpoint> checkpoints = new();
     [SerializeField] List<GameObject> enemies;
     [SerializeField] GameObject boss;
+    Transitioner transitioner;
+
+    public List<GameObject> LevelEnemyList { get { return enemies; } }
     public static readonly List<DamageableEntity> spawnedEnemies = new();
     public Action onEncounterStart;
-
+    
+    public static Transform PlayerTransform { get; private set; }
+    public Player PlayerScript { get { return playerScript; }}
     public GameObject Boss { get { return boss; } }
-    public List<GameObject> LevelEnemyList { get { return enemies; } }
-    public Transform WorldCanvas { get; private set; }
-    public Transform Canvas { get; private set; }
+    public Transform WorldCanvas { get { return worldCanvas.transform; } }
+    public Transform Canvas { get { return canvas.transform;} }
 
     public Checkpoint CurrentCheckpoint { get; private set; }
     public EncounterVolume CurrentEncounter { get; private set; }
-    Transitioner transitioner;
 
     public GameObject floatingTextPrefab;
 
@@ -55,10 +59,7 @@ public class LevelManager : MonoBehaviour
         }
 
         Id = SceneManager.GetActiveScene().buildIndex;
-        Canvas = GameObject.FindGameObjectWithTag("MainCanvas").transform;
-        WorldCanvas = GameObject.FindGameObjectWithTag("WorldCanvas").transform;
-        PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        PlayerScript = PlayerTransform.GetComponent<Player>();
+        PlayerTransform = PlayerScript.transform;
         transitioner = Canvas.GetChild(Canvas.childCount - 1).GetComponent<Transitioner>();
         if (!transitioner) Debug.LogWarning("The transitioner needs to be the last child of canvas!");
         else
@@ -91,7 +92,7 @@ public class LevelManager : MonoBehaviour
                 if (Vector3.Distance(enemy.transform.position, hit.position) < 2) goto next;
             }
 
-            return hit.position + Vector3.up * 2f;
+            return hit.position + Vector3.up;
         }
 
     next:

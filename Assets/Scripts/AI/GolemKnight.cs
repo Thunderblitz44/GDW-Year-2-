@@ -80,13 +80,13 @@ public class GolemKnight : Enemy
 
     public void EnableAI()
     {
-        agent.enabled = true;
+        if (agent) agent.enabled = true;
         HeadTarget.SetActive(true);
     }
 
     public void DisableAI()
     {
-        agent.enabled = false;
+        if (agent) agent.enabled = false;
         HeadTarget.SetActive(false);
     }
     
