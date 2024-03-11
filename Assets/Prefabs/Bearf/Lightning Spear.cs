@@ -1,36 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LightningSpear : MonoBehaviour
 {
-    private Transform playerTransform;
-    private Vector3 directionToPlayer;
-    private float speed = 10f;
-    private float destroyDelay = 5f;
-    private bool isDestroyed = false;
+    [SerializeField] int damage = 20;
+    [SerializeField] float speed = 80f;
+    [SerializeField] float damageRadius = 3f;
+    [SerializeField] float stuckInGroundTime = 10f;
+    [SerializeField] LayerMask playerLayer;
+    Vector3 directionToPlayer, start, end, currentPos, lastPos;
+    RaycastHit hit;
+    float dist, t;
+    bool deathCycle, hitPlayer;
 
     void Start()
     {
-        playerTransform = LevelManager.PlayerTransform;
-        directionToPlayer = (playerTransform.position - transform.position).normalized;
-        Destroy(gameObject, destroyDelay);
+        directionToPlayer = (LevelManager.PlayerTransform.position - transform.position).normalized;
+        transform.rotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
+        start = transform.position;
+        if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, 1000f, StaticUtilities.groundLayer, QueryTriggerInteraction.Ignore))
+        {
+            end = hit.point;
+            dist = Vector3.Distance(start, end);
+        }
     }
 
     void Update()
     {
-        if (!isDestroyed)
+        if (!deathCycle)
         {
-            // Rotate the spear to face the player
-            transform.rotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
-
-            // Move the spear towards the player's position
-            transform.position += directionToPlayer * speed * Time.deltaTime;
+            t += Time.deltaTime * speed;
+            transform.position = Vector3.Lerp(start, end, t / dist);
+            
+            if (!hitPlayer)
+            {
+                currentPos = transform.position;
+                if (Physics.CapsuleCast(lastPos, currentPos, damageRadius, currentPos - lastPos, out hit, 20f, playerLayer, QueryTriggerInteraction.Ignore))
+                {
+                    hitPlayer = true;
+                    StaticUtilities.TryToDamage(hit.transform.gameObject, damage);
+                }
+                lastPos = transform.position;
+            }
         }
-    }
 
-    void OnDestroy()
-    {
-        isDestroyed = true; // Set to true to avoid further updates after destruction
+        if (t > dist && !deathCycle)
+        {
+            deathCycle = true;
+            Destroy(gameObject, stuckInGroundTime);
+        }
     }
 }

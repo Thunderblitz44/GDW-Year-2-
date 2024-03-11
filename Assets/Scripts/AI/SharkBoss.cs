@@ -77,7 +77,7 @@ public class SharkBoss : Enemy, IBossCommands
     [Header("Shoot Attack")]
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
     [SerializeField] int shots = 3;
-    [SerializeField] float chargeTime = 1;
+    [SerializeField] float chargeTime = 0.317f;
     [SerializeField] float cooldown = 3;
     [SerializeField] Transform shootOrigin;
     [SerializeField] LayerMask hitMask;
@@ -577,7 +577,8 @@ public class SharkBoss : Enemy, IBossCommands
         // boss becomes a sentry turret for X amount of BIG shots
         int s = 0;
         float time = 0;
-        bool canShoot = true;
+        bool canShoot = false;
+        bool anticipate = false;
         while (s < shots)
         {
             yield return null;
@@ -586,9 +587,15 @@ public class SharkBoss : Enemy, IBossCommands
             transform.rotation = Quaternion.LookRotation(Vector3.up, -StaticUtilities.FlatDirection(target.position, transform.position));
             time += Time.deltaTime;
 
+            if (canShoot && !anticipate)
+            {
+                anticipate = true;
+                animator.SetTrigger("ShootProjectile");
+            }
             if (time >= chargeTime && canShoot)
             {
                 canShoot = false;
+                anticipate = false;
                 time = 0;
                 s++;
 
@@ -596,7 +603,7 @@ public class SharkBoss : Enemy, IBossCommands
                 if (Physics.Raycast(shootOrigin.position, target.position - shootOrigin.position, out hit, 100f, hitMask, QueryTriggerInteraction.Ignore))
                 {
                     Transform b = Instantiate(projectile.prefab, shootOrigin.position, Quaternion.LookRotation(target.position-shootOrigin.position)).transform;
-                    b.Rotate(Vector3.right, 90f);
+                    //b.Rotate(Vector3.right, 90f);
                     start = b.position;
                     end = hit.point;
                     float dist = Vector3.Distance(start, end);
@@ -737,8 +744,10 @@ public class SharkBoss : Enemy, IBossCommands
 
         (hp as BossHealthComponent).Hide();
 
-        Destroy(gameObject, 1f);
         LevelManager.Instance.CurrentEncounter.EndEncounter();
+        Physics.gravity = normalGravity;
+        Destroy(domain);
+        Destroy(gameObject, 1f);
     }
 
     public void OnTouchedPlayer()

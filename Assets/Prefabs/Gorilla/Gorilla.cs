@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Gorilla : Enemy
@@ -14,6 +12,11 @@ public class Gorilla : Enemy
     public Vector2 RangedKnockback;
     private float xSpeed;
     private float zSpeed;
+    Vector3 localVelocity;
+    public ParticleSystem DustSystemRight;
+    public ParticleSystem DustSystemLeft;
+
+    private int DeathType;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,27 +28,30 @@ public class Gorilla : Enemy
             trigger.knockback = RangedKnockback;
         }
        
-        
+        int randomDeathType = Random.Range(0, 2);
+        DeathType = randomDeathType;
+        animator.SetInteger("deathType", randomDeathType);
     }
 
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         Vector3 headPosition = LevelManager.PlayerTransform.position;
         
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
-            agent.SetDestination(headPosition);
+            if (agent) agent.SetDestination(headPosition);
             animator.SetBool("IsAttacking", inAttackRange);
         }
 
         
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        if (agent) localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        else localVelocity = Vector3.zero;
 
-     
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
         zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
       
@@ -54,7 +60,18 @@ public class Gorilla : Enemy
     
         
     }
-    
+
+    // temporary until we get a death animation
+    protected override void OnHealthZeroed()
+    {
+        Destroy(gameObject);
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
     private void EnableAI()
     {
         agent.enabled = true;
@@ -82,6 +99,16 @@ public class Gorilla : Enemy
             // Player exited the attack trigger, set inAttackRange to false
             inAttackRange = false;
         }
+    }
+    
+    public void DustLeft()
+    {
+        DustSystemLeft.Emit(6);
+    }
+    
+    public void DustRight()
+    {
+        DustSystemRight.Emit(6);
     }
 }
 
