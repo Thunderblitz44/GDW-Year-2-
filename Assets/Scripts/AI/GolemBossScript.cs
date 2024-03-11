@@ -68,7 +68,7 @@ public class GolemBossScript : Enemy, IBossCommands
     [Header("Phase 2+")]
     [SerializeField] float stunTime = 5f;
 
-
+    [SerializeField] Transform HeadTarget;
     // battle info
     bool battleStarted = false;
     float tempSpeed;
@@ -105,7 +105,8 @@ public class GolemBossScript : Enemy, IBossCommands
             StartCoroutine(MoveAcrossNavMeshLink(agent, 5f, 0.5f));
             MoveAcrossNavMeshesStarted=true;
         }
-      
+        HeadTarget.transform.position = target.position;
+
         // timers
         // attack checkers/counters
         // attacks

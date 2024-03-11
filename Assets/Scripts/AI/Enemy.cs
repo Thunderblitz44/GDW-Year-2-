@@ -73,7 +73,7 @@ public class Enemy : DamageableEntity
     {
         dissolve = true;
         Destroy(agent);
-      
+        
         base.OnHealthZeroed();
     }
 
