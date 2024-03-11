@@ -5564,6 +5564,7 @@ Transform:
   m_Children:
   - {fileID: 1788953157458372103}
   - {fileID: 1978699867368621012}
+  - {fileID: 1864417282329617167}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5709,6 +5710,7 @@ MonoBehaviour:
   isInvincible: 0
   slowUpdateInterval: 0.2
   flashTimer: 0
+  dissolveTimer: 0
   projectile:
     damage: 5
     lifeTime: 1
@@ -5793,14 +5795,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3380090511425167606}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.00198, z: 0}
+  m_LocalRotation: {x: 0.023839373, y: 0.9985076, z: -0.009464248, w: 0.048215684}
+  m_LocalPosition: {x: 0.025726318, y: 0.34669495, z: 0.12658691}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1352840681288162276}
+  m_Father: {fileID: 2469168450296438112}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 12.047, y: 0, z: 0}
 --- !u!2083052967 &5424835713434682655
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -5809,7 +5811,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3380090511425167606}
   m_Enabled: 1
-  m_Asset: {fileID: 0}
+  m_Asset: {fileID: 8926484042661614526, guid: 57435f627f7bc7c44b13f893241232aa, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -5818,7 +5820,10 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 0.01
+        m_Name: Size
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -21583,8 +21588,7 @@ Transform:
   m_LocalPosition: {x: 2.2091661e-13, y: 0.0043930057, z: 1.6342484e-14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1864417282329617167}
+  m_Children: []
   m_Father: {fileID: 7836170219101074587}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

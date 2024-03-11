@@ -77,7 +77,8 @@ public class Elana : Player
     
     [Header("Other")]
     [SerializeField] Animator specialAnimator;
-
+    [SerializeField] ProjectileData burstExplosionAura = ProjectileData.defaultProjectile;
+    [SerializeField] private ParticleSystem burstExplosion;
     [SerializeField] public Animator DragonflyAnimator;
     //animator to control portal and potentially other interactions between players/spirit
     public float recallDelay = 2f;
@@ -398,6 +399,7 @@ public class Elana : Player
             abilityHud.SpendPoint(portalId, portalCoolown);
             meshRenderer.enabled = true;
             specialAnimator.SetBool("Underground", false);
+            burstExplosion.Emit(1);
             TrailScript.isTrailActive = false;
             TrailScript.isTrailActive2 = false;
         }
