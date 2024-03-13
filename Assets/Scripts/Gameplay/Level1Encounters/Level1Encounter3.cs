@@ -22,6 +22,9 @@ public class Level1Encounter3 : EncounterVolume
     [SerializeField] Transform[] pillarPoses;
     [SerializeField] float fallSpeed;
     [SerializeField] AnimationCurve pillarFallCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    [SerializeField] float landShakeAmp = 8;
+    [SerializeField] float landShakeFreq = 1;
+    [SerializeField] float landShakeSpeed = 10;
 
     protected override void Awake()
     {
@@ -111,6 +114,7 @@ public class Level1Encounter3 : EncounterVolume
             FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Pillar Collapse", gameObject);
             yield return null;
         }
+        StaticUtilities.ShakePlayerCamera(landShakeAmp, landShakeFreq, landShakeSpeed);
         pillar.position = pillarPoses[1].position;
         pillar.rotation = pillarPoses[1].rotation;
 

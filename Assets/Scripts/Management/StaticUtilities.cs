@@ -113,5 +113,10 @@ public static class StaticUtilities
         }
         return false;
     }
+
+    public static void ShakePlayerCamera(float amplitude, float frequency, float speed = 1)
+    {
+        LevelManager.Instance.PlayerScript.DoCameraShake(amplitude, frequency, speed);
+    }
 }
 

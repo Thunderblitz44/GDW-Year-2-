@@ -67,7 +67,7 @@ public class Elana : Player
     [SerializeField] AnimationCurve dodgeFovIntensityCurve;
     [SerializeField] float dodgeFovIncrease = 10;
     [SerializeField] AnimationCurve fovRestoreCurve;
-    [SerializeField] float fovRestoreSpeed = 5;
+    //[SerializeField] float fovRestoreSpeed = 5;
     [SerializeField] LayerMask whatIsDodgeObstacle;
     TrailScript TrailScript;
     Coroutine currentdodgeRoutine;

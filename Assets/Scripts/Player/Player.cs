@@ -33,11 +33,14 @@ public abstract class Player : DamageableEntity
     protected bool autoLockOverride;
     protected float autoLockRadiusOverride;
     protected float autoLockRangeOverride;
-    
+
+    // camera shake
+    CinemachineBasicMultiChannelPerlin[] noise;
+    float shakeSpeed = 1;
+
     protected override void Awake()
     {
         base.Awake();
-
         MovementScript = GetComponent<PlayerMovement>();
         pauseScript = GetComponent<PlayerMenuController>();
         actions = new ActionMap();
@@ -52,6 +55,13 @@ public abstract class Player : DamageableEntity
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        noise = new CinemachineBasicMultiChannelPerlin[3]
+        {
+            freeLookCam.GetRig(0).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>(),
+            freeLookCam.GetRig(1).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>(),
+            freeLookCam.GetRig(2).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>()
+        };
     }
 
     void Start()
@@ -81,6 +91,12 @@ public abstract class Player : DamageableEntity
 
         // update camera frustrum planes
         StaticUtilities.cameraFrustrumPlanes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+
+
+        for (int i = 0; i < 3; i++)
+        {
+            noise[i].m_AmplitudeGain = Mathf.Clamp(noise[i].m_AmplitudeGain - Time.deltaTime * shakeSpeed, 0, 100f);
+        }
     }
 
     public void OnDestroy()
@@ -238,6 +254,22 @@ public abstract class Player : DamageableEntity
 
             if (!lockonIcon.isActiveAndEnabled) lockonIcon.enabled = true;
         }
+    }
+
+    public void DoCameraShake(float amp, float freq, float speed = 1)
+    {
+        foreach (var item in noise)
+        {
+            item.m_AmplitudeGain = amp;
+            item.m_FrequencyGain = freq;
+        }
+        shakeSpeed = speed;
+    }
+
+    public override void ApplyDamage(int damage)
+    {
+        base.ApplyDamage(damage);
+        DoCameraShake(2,1,12);
     }
 
     protected abstract void OnLockonTargetChanged();

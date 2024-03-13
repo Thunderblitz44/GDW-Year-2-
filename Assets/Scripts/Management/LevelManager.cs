@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -19,7 +21,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] List<Checkpoint> checkpoints = new();
     [SerializeField] List<GameObject> enemies;
     [SerializeField] GameObject boss;
-    Transitioner transitioner;
+    [SerializeField] GameObject loadingScreen;
+    [SerializeField] Image loadingProgressBar;
+    [SerializeField] GameObject saveIndicator;
+    [SerializeField] Transitioner transitioner;
 
     public List<GameObject> LevelEnemyList { get { return enemies; } }
     public static readonly List<DamageableEntity> spawnedEnemies = new();
@@ -60,7 +65,6 @@ public class LevelManager : MonoBehaviour
 
         Id = SceneManager.GetActiveScene().buildIndex;
         PlayerTransform = PlayerScript.transform;
-        transitioner = Canvas.GetChild(Canvas.childCount - 1).GetComponent<Transitioner>();
         if (!transitioner) Debug.LogWarning("The transitioner needs to be the last child of canvas!");
         else
         {
@@ -199,5 +203,39 @@ public class LevelManager : MonoBehaviour
     void ScreenIsClear()
     {
         PlayerScript.UnPausePlayer();
+    }
+
+    public void LoadNextLevel()
+    {
+        int id = 0;
+        if (Id + 1 < SceneManager.sceneCountInBuildSettings)
+        {
+            id++;
+        }
+        StartCoroutine(LoadSceneAsync(id));
+    }
+
+    IEnumerator LoadSceneAsync(int id)
+    {
+        AsyncOperation op = SceneManager.LoadSceneAsync(id);
+
+        loadingScreen.SetActive(true);
+        while (!op.isDone)
+        {
+            float prog = Mathf.Clamp01(op.progress / 0.9f);
+            loadingProgressBar.fillAmount = prog;
+            yield return null;
+        }
+    }
+
+    public void SavedGame()
+    {
+        StartCoroutine(ShowSavingGame());
+    }
+
+    IEnumerator ShowSavingGame()
+    {
+        yield return null;
+
     }
 }

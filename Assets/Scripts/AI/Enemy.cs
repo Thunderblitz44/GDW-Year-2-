@@ -14,7 +14,7 @@ public class Enemy : DamageableEntity
     [HideInInspector] public float flashTimer = 0f; 
     [HideInInspector] public float dissolveTimer = 0f; 
     private bool dissolve = false;
-    private float dissolveTime = 0f;
+    //private float dissolveTime = 0f;
     private float dissolveSpeed = 0.3f;
     private bool isAwake = true;
     public float spawndissolveTimer = 1f;
@@ -65,7 +65,6 @@ public class Enemy : DamageableEntity
             skinnedMeshRenderer.material.SetFloat("_dissolve", dissolveTimer);
 
          
-            Debug.Log("Dissolve Timer: " + dissolveTimer);
         }
     }
 
@@ -73,7 +72,7 @@ public class Enemy : DamageableEntity
     {
         dissolve = true;
         Destroy(agent);
-        
+        Destroy(GetComponent<LockonTarget>());
         base.OnHealthZeroed();
     }
 

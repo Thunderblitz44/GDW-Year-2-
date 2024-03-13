@@ -8,6 +8,7 @@ public class BossHealthComponent : HealthComponent
     [SerializeField] float[] phases = new float[4] { 1f, 0.75f, 0.5f, 0.25f};
     int phase = 0;
     public Action nextPhase;
+    public int Phase { get { return phase; } }
 
     public void Show()
     {

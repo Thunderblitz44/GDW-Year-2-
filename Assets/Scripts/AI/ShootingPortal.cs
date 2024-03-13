@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ShootingPortal : DamageableEntity
 {
-    int shotCount;
+    //int shotCount;
     ProjectileData projectile;
     float shotCooldown;
     float shotTimer;
@@ -44,7 +44,7 @@ public class ShootingPortal : DamageableEntity
     private void OnDisable()
     {
         startTimer = 0;
-        shotCount = 0;
+        //shotCount = 0;
         explode = false;
         hp.SetHealth(hp.MaxHealth);
     }

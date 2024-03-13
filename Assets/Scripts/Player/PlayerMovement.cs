@@ -91,7 +91,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // do move
         if (IsGrounded && Rb.velocity.magnitude < MoveSpeed)
         {
-            //Vector3 rotatedInput = 
             moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
             if (IsGrounded && groundAngle < maxSlopeAngle)
             {
@@ -114,7 +113,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         }
 
         DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
-       // Debug.Log(Rb.velocity + " - " + moveDirection);
 
         // Steps
         RaycastHit hitLower;

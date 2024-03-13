@@ -15,5 +15,9 @@ public class SharkBody : MonoBehaviour
         {
             boss.OnTouchedPlayer();
         }
+        else
+        {
+            boss.OnHitSomething(collision.gameObject);
+        }
     }
 }

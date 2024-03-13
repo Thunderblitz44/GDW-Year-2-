@@ -55,10 +55,7 @@ public class Salamander : Enemy
         // Set the velocity values in the animator
         animator.SetFloat("XSpeed", xSpeed);
         animator.SetFloat("ZSpeed", zSpeed);
-        
     }
-
-   
 
     private void EnableAI()
     {

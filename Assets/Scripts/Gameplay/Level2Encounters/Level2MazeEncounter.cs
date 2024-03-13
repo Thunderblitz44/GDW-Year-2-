@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Level2MazeEncounter : EncounterVolume
@@ -15,8 +14,7 @@ public class Level2MazeEncounter : EncounterVolume
 
     protected override IEnumerator EncounterRoutine()
     {
-        yield return base.EncounterRoutine();
-
+        yield return null;
         if (gem == 0) puzzleManager.BlueGemActivation();
         else if (gem == 1) puzzleManager.YellowGemActivation();
         else if (gem == 2) puzzleManager.GreenGemActivation();

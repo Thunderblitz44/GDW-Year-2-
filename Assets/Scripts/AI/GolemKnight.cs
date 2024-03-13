@@ -5,11 +5,11 @@ public class GolemKnight : Enemy
 {
     // attack
     [SerializeField] int attackDamage = 25;
-    [SerializeField] float attackCooldown = 1.5f;
-    [SerializeField] float attackDelay = 0.5f;
-    float attackTimer;
+    //[SerializeField] float attackCooldown = 1.5f;
+    //[SerializeField] float attackDelay = 0.5f;
+    //float attackTimer;
     //float attackCooldownTimer;
-    bool attack;
+    //bool attack;
     [SerializeField] GameObject HeadTarget;
     AttackTrigger trigger;
     MeleeHitBox sword;
@@ -67,14 +67,14 @@ public class GolemKnight : Enemy
 
     void OnAttackTriggerEnter(Collider other)
     {
-        attack = true;
+        //attack = true;
         animator.SetBool("CanAttack", true);
     }
 
     void OnAttackTriggerExit(Collider other)
     {
-        attack = false;
-        attackTimer = 0f;
+        //attack = false;
+        //attackTimer = 0f;
         animator.SetBool("CanAttack", false);
     }
 
