@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerMovement : MonoBehaviour, IInputExpander
 {
@@ -52,6 +53,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     public Transform Body { get; private set; }
     public Rigidbody Rb { get; private set; }
 
+    public bool IsDead;
+    public event UnityAction OnPlayerDeath;
     private void Awake()
     {
         Rb = GetComponent<Rigidbody>();
@@ -209,5 +212,14 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         actions.Locomotion.Move.Disable();
         actions.Locomotion.Jump.Disable();
         actions.Locomotion.Dodge.Disable();
+    }
+
+    public void Death()
+    {
+     
+            IsDead = true;
+            // Invoke the event if it's not null
+            OnPlayerDeath?.Invoke();
+        
     }
 }

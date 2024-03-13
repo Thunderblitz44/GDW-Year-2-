@@ -30,7 +30,7 @@ public class Gorilla : Enemy
             trigger.knockback = RangedKnockback;
         }
        
-        int randomDeathType = Random.Range(0, 2);
+        int randomDeathType = Random.Range(0, 3);
         DeathType = randomDeathType;
         animator.SetInteger("deathType", randomDeathType);
     }

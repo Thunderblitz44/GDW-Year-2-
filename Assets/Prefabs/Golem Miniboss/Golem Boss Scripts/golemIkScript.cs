@@ -35,7 +35,7 @@ public class golemIkScript : MonoBehaviour
         transform.up = currentNormal;
         Vector3 pos = hint.position;
         Debug.DrawRay(pos, hint.up * 10f, Color.red, Time.deltaTime);
-        if (Physics.Raycast(pos, hint.up, out RaycastHit info, 20f, terrainLayer.value, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(pos, hint.up, out RaycastHit info, 20f, terrainLayer.value, QueryTriggerInteraction.Ignore)&& footOverride == false)
         {
             HandleStep(info);
         }
