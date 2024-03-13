@@ -5944,6 +5944,7 @@ GameObject:
   - component: {fileID: 8505198260494097479}
   - component: {fileID: 8556671142400937088}
   - component: {fileID: 8562168883565677894}
+  - component: {fileID: 6110476852695930896}
   m_Layer: 12
   m_Name: Gorilla
   m_TagString: Untagged
@@ -6011,6 +6012,7 @@ MonoBehaviour:
   isInvincible: 0
   slowUpdateInterval: 0.2
   animator: {fileID: 22703637280118072}
+  skinnedMeshRenderer: {fileID: 0}
   attackTrigger: {fileID: 7736429351798985896}
   HeadTarget: {fileID: 8568648645733408583}
   RangedAttackDamage: 10
@@ -6125,6 +6127,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83c76d47260da7e4a8eeae6b0bee366e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6110476852695930896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7193714435628247317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 991209088
+      Data2: 1234283274
+      Data3: -940192126
+      Data4: -1311934452
+    Path: event:/Gorilla Step
+  Event: 
+  PlayEvent: 7
+  StopEvent: 8
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &7464868972732177698
 GameObject:
   m_ObjectHideFlags: 0

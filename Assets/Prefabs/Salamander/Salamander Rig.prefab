@@ -6030,6 +6030,7 @@ GameObject:
   - component: {fileID: 949204978320443307}
   - component: {fileID: 2533738470201342054}
   - component: {fileID: 4920023472164419216}
+  - component: {fileID: 5095570168680065613}
   m_Layer: 12
   m_Name: Salamander Rig
   m_TagString: Untagged
@@ -6181,6 +6182,7 @@ MonoBehaviour:
   isInvincible: 0
   slowUpdateInterval: 0.2
   animator: {fileID: 4674599754464899792}
+  skinnedMeshRenderer: {fileID: 0}
   attackTrigger: {fileID: 0}
   HeadTarget: {fileID: 1293930843929872002}
   RangedAttackDamage: 40
@@ -6213,6 +6215,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83c76d47260da7e4a8eeae6b0bee366e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5095570168680065613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8228145727357662907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -2115759982
+      Data2: 1300840001
+      Data3: -303488580
+      Data4: -1219272462
+    Path: event:/Salamander Step
+  Event: 
+  PlayEvent: 7
+  StopEvent: 8
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &8919782000282124661
 GameObject:
   m_ObjectHideFlags: 0
