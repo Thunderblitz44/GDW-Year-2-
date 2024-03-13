@@ -207,7 +207,14 @@ public class GolemBossScript : Enemy, IBossCommands
     void StartBattle()
     {
         battleStarted = true;
+        animator.SetTrigger("Intro Trigger");
+        Invoke("DelayedCamShake", 0.3f);
         target = LevelManager.PlayerTransform;
+    }
+
+    void DelayedCamShake()
+    {
+      //  StaticUtilities.ShakePlayerCamera();
     }
 
     IEnumerator LasersRoutine()

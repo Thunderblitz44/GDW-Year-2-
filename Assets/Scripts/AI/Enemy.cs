@@ -28,7 +28,7 @@ public class Enemy : DamageableEntity
 
         agent = GetComponent<NavMeshAgent>();
         target = LevelManager.PlayerTransform;
-        if (skinnedMeshRenderer) skinnedMeshRenderer.material.SetFloat("_dissolve", 1);
+      
     }
 
     protected virtual void Update()

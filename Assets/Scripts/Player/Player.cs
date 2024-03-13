@@ -183,7 +183,8 @@ public abstract class Player : DamageableEntity
         // player death.
         LevelManager.isGameOver = true;
         PausePlayer();
-        LevelManager.Instance.Respawn(0.5f);
+        MovementScript.Death();
+        LevelManager.Instance.Respawn(1f);
         Destroy(hp); 
     }
 
