@@ -10,7 +10,7 @@ public class SharkBoss : Enemy, IBossCommands
 {
     [Header("Attack Pattern")]
     [SerializeField] float timeBetweenAttacks = 2;
-    [SerializeField] float attackPrepareTime = 2;
+    //[SerializeField] float attackPrepareTime = 2;
     [SerializeField] float maxAttackReps = 2;
     float attackReps;
     int lastAttackIndex;
@@ -105,8 +105,8 @@ public class SharkBoss : Enemy, IBossCommands
 
     [Header("Other")]
     [SerializeField] GameObject headDamagerCollider;
-    [SerializeField] float bodyContactDamageCooldown = 2f;
-    bool canDamage = true;
+    //[SerializeField] float bodyContactDamageCooldown = 2f;
+    //bool canDamage = true;
 
     protected override void Awake()
     {
@@ -256,9 +256,9 @@ public class SharkBoss : Enemy, IBossCommands
                 break;
             case 2: 
                 StartCoroutine(DomainExpansionRoutine()); 
+                attackFuncs.Add(ShootRoutine);
                 break;
             case 3:
-                attackFuncs.Add(ShootRoutine);
                 blink = true; 
                 break;
             case 4: 

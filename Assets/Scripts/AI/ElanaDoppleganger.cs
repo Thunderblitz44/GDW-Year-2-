@@ -39,7 +39,7 @@ public class ElanaDoppleganger : Enemy
 
     [Header("Ranged Attack")]
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
-    [SerializeField] float shootStartDelay = 0.5f;
+    //[SerializeField] float shootStartDelay = 0.5f;
     [SerializeField] float bulletCooldown = 0.25f;
     [SerializeField] Transform shootOrigin;
     [SerializeField] int minBurst = 10;
@@ -62,7 +62,7 @@ public class ElanaDoppleganger : Enemy
     float dodgeAwayTimer;
 
     [Header("Fire Tornado")]
-    [SerializeField] float maxRange = 50f;
+    //[SerializeField] float maxRange = 50f;
     [SerializeField] int tornadoDamage = 5;
     [SerializeField] float burnTime = 3f;
     [SerializeField] float tornadoTime = 5f;

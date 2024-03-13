@@ -62,7 +62,7 @@ public class GolemBossScript : Enemy, IBossCommands
     [SerializeField] Transform[] gotoWalls;
     bool goingUp;
     
-    bool MoveAcrossNavMeshesStarted;
+    //bool MoveAcrossNavMeshesStarted;
    
     
     [Header("Phase 2+")]
@@ -103,7 +103,7 @@ public class GolemBossScript : Enemy, IBossCommands
         {
             animator.SetBool("Jumping", true);
             StartCoroutine(MoveAcrossNavMeshLink(agent, 5f, 0.5f));
-            MoveAcrossNavMeshesStarted=true;
+            //MoveAcrossNavMeshesStarted=true;
         }
         HeadTarget.transform.position = target.position;
 
@@ -206,15 +206,15 @@ public class GolemBossScript : Enemy, IBossCommands
 
     void StartBattle()
     {
-        battleStarted = true;
         animator.SetTrigger("Intro Trigger");
-        Invoke("DelayedCamShake", 0.3f);
+        Invoke("DelayedCamShake", 0.5f);
         target = LevelManager.PlayerTransform;
     }
 
     void DelayedCamShake()
     {
-      //  StaticUtilities.ShakePlayerCamera();
+        StaticUtilities.ShakePlayerCamera(8, 1, 18);
+        battleStarted = true;
     }
 
     IEnumerator LasersRoutine()

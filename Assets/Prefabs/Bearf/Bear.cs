@@ -7,7 +7,7 @@ public class Bear : Enemy
 {
     [Header("Attack Pattern")]
     [SerializeField] float timeBetweenAttacks = 2;
-    [SerializeField] float attackPrepareTime = 2;
+    //[SerializeField] float attackPrepareTime = 2;
     [SerializeField] float maxAttackReps = 1;
     [SerializeField] float startAttackingDelay = 2f;
     readonly List<Func<IEnumerator>> attackFuncs = new();
