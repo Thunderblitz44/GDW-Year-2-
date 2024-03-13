@@ -9,5 +9,6 @@ public class Teleporter : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
+        LevelManager.Instance.LoadNextLevel();
     }
 }

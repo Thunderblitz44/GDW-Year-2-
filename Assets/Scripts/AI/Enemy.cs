@@ -28,7 +28,7 @@ public class Enemy : DamageableEntity
 
         agent = GetComponent<NavMeshAgent>();
         target = LevelManager.PlayerTransform;
-        skinnedMeshRenderer.material.SetFloat("_dissolve", 1);
+        if (skinnedMeshRenderer) skinnedMeshRenderer.material.SetFloat("_dissolve", 1);
     }
 
     protected virtual void Update()
@@ -65,7 +65,6 @@ public class Enemy : DamageableEntity
             skinnedMeshRenderer.material.SetFloat("_dissolve", dissolveTimer);
 
          
-            Debug.Log("Dissolve Timer: " + dissolveTimer);
         }
     }
 
@@ -73,7 +72,7 @@ public class Enemy : DamageableEntity
     {
         dissolve = true;
         Destroy(agent);
-        
+        Destroy(GetComponent<LockonTarget>());
         base.OnHealthZeroed();
     }
 

@@ -1,37 +1,15 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
-    [SerializeField] Button resumeButton;
-    [SerializeField] Button settingsButton;
-    [SerializeField] Button quitButton;
-    //[SerializeField] Button mainMenuButton;
-    [SerializeField] Button returnButton;
-
     [SerializeField] Animator animator;
+    [SerializeField] Button resumeButton;
 
     const string pauseTrigger = "pauseTrigger";
     const string settingsTrigger = "settingsTrigger";
-
-    private void Awake()
-    {
-        resumeButton.onClick.AddListener(Resume);
-        settingsButton.onClick.AddListener(Settings);
-        quitButton.onClick.AddListener(Exit);
-        //mainMenuButton.onClick.AddListener(MainMenu);
-        returnButton.onClick.AddListener(Return);
-    }
-
-    private void OnDestroy()
-    {
-        resumeButton.onClick.RemoveAllListeners();
-        settingsButton.onClick.RemoveAllListeners();
-        quitButton.onClick.RemoveAllListeners();
-        //mainMenuButton.onClick.RemoveAllListeners();
-        returnButton.onClick.RemoveAllListeners();
-    }
 
     public void AddResumeListener(UnityAction call)
     {
@@ -56,22 +34,22 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    void Settings()
+    public void Settings()
     {
         animator.SetTrigger(settingsTrigger);
     }
 
-    void Exit()
+    public void Exit()
     {
         Application.Quit();
     }
 
-    void MainMenu()
+    public void MainMenu()
     {
-        
+        SceneManager.LoadScene(0);
     }
 
-    void Return()
+    public void Return()
     {
         animator.SetTrigger(settingsTrigger);
     }

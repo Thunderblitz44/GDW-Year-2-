@@ -16,11 +16,8 @@ public class LightningBall : MonoBehaviour
     public int RangedAttackDamage;
     public Vector2 RangedKnockback;
 
-    DamageableEntity de;
-
     private void Start()
     {
-        de = GetComponent<DamageableEntity>();
         playerTransform = LevelManager.PlayerTransform;
         RangedAttack = GetComponents<MeleeHitBox>();
         foreach (var trigger in RangedAttack)
@@ -89,10 +86,6 @@ public class LightningBall : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        MagicBullet mb;
-        if (other.TryGetComponent(out mb))
-        {
-            de.ApplyDamage(mb.Projectile.damage);
-        }
+        StaticUtilities.TryToDamage(other, RangedAttackDamage);
     }
 }
