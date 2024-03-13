@@ -9,7 +9,7 @@ public class HealthComponent : MonoBehaviour
     protected int health;
     public int Health { get { return health; } }
     protected HPBar hpbar;
-
+    bool dead;
     public Action onHealthZeroed;
 
     private void Awake()
@@ -27,8 +27,9 @@ public class HealthComponent : MonoBehaviour
 
         if (hpbar) hpbar.ChangeHPByAmount(-value);
 
-        if (health == 0)
+        if (health == 0 && !dead)
         {
+            dead = true;
             onHealthZeroed?.Invoke();
         }
     }

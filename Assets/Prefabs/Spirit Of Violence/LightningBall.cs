@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,8 +15,12 @@ public class LightningBall : MonoBehaviour
   
     public int RangedAttackDamage;
     public Vector2 RangedKnockback;
+
+    DamageableEntity de;
+
     private void Start()
     {
+        de = GetComponent<DamageableEntity>();
         playerTransform = LevelManager.PlayerTransform;
         RangedAttack = GetComponents<MeleeHitBox>();
         foreach (var trigger in RangedAttack)
@@ -26,8 +28,7 @@ public class LightningBall : MonoBehaviour
             trigger.damage = RangedAttackDamage;
             trigger.knockback = RangedKnockback;
         }
-
-
+        
         // Generate a random delay before starting movement
         GenerateRandomDelay();
     }
@@ -49,8 +50,6 @@ public class LightningBall : MonoBehaviour
             StartCoroutine(ScaleAndDisable());
         }
     }
-
- 
 
     private void GenerateRandomDelay()
     {
@@ -86,5 +85,14 @@ public class LightningBall : MonoBehaviour
 
         // Disable the object
         gameObject.SetActive(false);
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        MagicBullet mb;
+        if (other.TryGetComponent(out mb))
+        {
+            de.ApplyDamage(mb.Projectile.damage);
+        }
     }
 }

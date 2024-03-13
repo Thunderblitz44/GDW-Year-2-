@@ -469,8 +469,8 @@ public class GolemBossScript : Enemy, IBossCommands
             Destroy(portal.gameObject);
         }
 
-        Destroy(gameObject, 1f);
         LevelManager.Instance.CurrentEncounter.EndEncounter();
+        Destroy(gameObject, 1f);
     }
 
     public void Stun()

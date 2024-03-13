@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class GolemRanger : Enemy
 {
@@ -11,13 +12,20 @@ public class GolemRanger : Enemy
     private float xSpeed;
     private float zSpeed;
     public float shootForce = 5;
-    
+    public ParticleSystem DustSystemRight;
+    public ParticleSystem DustSystemLeft;
+    private int DeathType;
+    Vector3 localVelocity;
+    public VisualEffect vfxGraph;
+
     protected override void Awake()
     {
         base.Awake();
 
         particleSystem.GetComponent<MagicBullet>().Initialize(projectile, this);
-
+        int randomDeathType = Random.Range(0, 2);
+        DeathType = randomDeathType;
+        animator.SetInteger("deathType", randomDeathType);
         if (!shootOrigin) 
         { 
             Debug.LogWarning("No shoot origin set for ranger golem!");
@@ -41,7 +49,8 @@ public class GolemRanger : Enemy
 
         float smoothingFactor = 0.1f;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        if (agent) localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
+        else localVelocity = Vector3.zero;
 
         // Smooth the velocity components (remove the float keyword)
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
@@ -62,15 +71,41 @@ public class GolemRanger : Enemy
         animator.SetBool("InAttackRange", false);
     }
 
+    protected override void OnHealthZeroed()
+    {
+        base.OnHealthZeroed();
+        particleSystem.Stop(); 
+    }
+
     public void EnableAI()
     {
-        agent.enabled = true;
+        if (agent) agent.enabled = true;
         HeadTarget.SetActive(true);
     }
 
     public void DisableAI()
     {
-        agent.enabled = false;
+        if (agent) agent.enabled = false;
         HeadTarget.SetActive(false);
+    }
+    
+    public void DustLeft()
+    {
+        DustSystemLeft.Emit(6);
+    }
+    
+    public void DustRight()
+    {
+        DustSystemRight.Emit(6);
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
+    public void DeathBurst()
+    {
+        vfxGraph.SendEvent("death");
     }
 }

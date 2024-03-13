@@ -15,9 +15,14 @@ public class TrailScript : MonoBehaviour
     public bool isTrailActive2;
     public LayerMask groundLayer; // Specify the Ground layer in the Unity Editor
     public float meshRefreshRate2 = 0.1f;
-
+    public ParticleSystem DustSystemRight;
+    public ParticleSystem DustSystemLeft;
     private Coroutine trailCoroutine;
 
+    private void Start()
+    {
+       
+    }
     private void FixedUpdate()
     {
         if (isTrailActive2 && trailCoroutine == null)
@@ -70,4 +75,17 @@ public class TrailScript : MonoBehaviour
         // Reset the coroutine reference when it's finished
         trailCoroutine = null;
     }
+
+
+
+    public void DustLeft()
+    {
+        DustSystemLeft.Emit(6);
+    }
+    
+    public void DustRight()
+    {
+        DustSystemRight.Emit(6);
+    }
+    
 }

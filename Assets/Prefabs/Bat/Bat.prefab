@@ -99,7 +99,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2517570680695412239, guid: 196f82fd4bbbb0f4d895bafa3a22fbdf, type: 3}
+  - {fileID: -876546973899608171, guid: 1cf731edc8303f249ac409f642d58f60, type: 3}
   - {fileID: 4460463442345553458, guid: 196f82fd4bbbb0f4d895bafa3a22fbdf, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -382,8 +382,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2165838833724133790}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 10
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -436,7 +436,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -460,10 +460,10 @@ MonoBehaviour:
   damageNumberSpawnHeight: 1.5
   isInvincible: 0
   slowUpdateInterval: 0.2
-  animator: {fileID: 7901502079366827396}
+  flashTimer: 0
   attackTrigger: {fileID: 1809196394078911430}
   HeadTarget: {fileID: 6143442510977095172}
-  RangedAttackDamage: 49
+  RangedAttackDamage: 10
   RangedKnockback: {x: 0, y: 0}
 --- !u!136 &4220097765682372511
 CapsuleCollider:
@@ -516,7 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea8d4ed41bcecb428252d91617c38bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  maxHealth: 100
   hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
   height: 1.5
   autoHide: 1
