@@ -18,7 +18,9 @@ public class TrailScript : MonoBehaviour
     public ParticleSystem DustSystemRight;
     public ParticleSystem DustSystemLeft;
     private Coroutine trailCoroutine;
-
+    public ParticleSystem OnLanded;
+   
+    public PlayerMovement PlayerMovement;
     private void Start()
     {
        
@@ -80,12 +82,23 @@ public class TrailScript : MonoBehaviour
 
     public void DustLeft()
     {
-        DustSystemLeft.Emit(6);
+        if (PlayerMovement.IsGrounded)
+        {
+            DustSystemLeft.Emit(6);
+        }
+      
     }
     
     public void DustRight()
     {
+        if (PlayerMovement.IsGrounded)
+        {
         DustSystemRight.Emit(6);
+        }
     }
-    
+
+    public void OnLandedEvent()
+    {
+        OnLanded.Emit(10);
+    }
 }
