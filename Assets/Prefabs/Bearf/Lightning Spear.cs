@@ -10,7 +10,7 @@ public class LightningSpear : MonoBehaviour
     Vector3 directionToPlayer, start, end, currentPos, lastPos;
     RaycastHit hit;
     float dist, t;
-    bool deathCycle, hitPlayer;
+    bool deathCycle, hitPlayer, shake;
 
     void Start()
     {
@@ -47,6 +47,12 @@ public class LightningSpear : MonoBehaviour
         {
             deathCycle = true;
             Destroy(gameObject, stuckInGroundTime);
+        }
+
+        if (deathCycle && !shake)
+        {
+            shake = true;
+            StaticUtilities.ShakePlayerCamera(20,1,30);
         }
     }
 }

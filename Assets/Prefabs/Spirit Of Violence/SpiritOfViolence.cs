@@ -8,8 +8,7 @@ public class SpiritOfViolence : MonoBehaviour, IBossCommands
     ElanaDoppleganger ed;
     Bear b;
     int deaths;
-    public ParticleSystem DustSystemRight;
-    public ParticleSystem DustSystemLeft;
+
     private void Awake()
     {
         ed = GetComponentInChildren<ElanaDoppleganger>();
@@ -72,13 +71,5 @@ public class SpiritOfViolence : MonoBehaviour, IBossCommands
             hp = b.GetHPComponent();
         }
     }
-    public void DustLeft()
-    {
-        DustSystemLeft.Emit(6);
-    }
     
-    public void DustRight()
-    {
-        DustSystemRight.Emit(6);
-    }
 }
