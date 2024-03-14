@@ -748,7 +748,7 @@ public class SharkBoss : Enemy, IBossCommands
             domain.transform.localScale = Vector3.Lerp(Vector3.one * 2, domainTrueScale, curve.Evaluate(t));
             yield return null;
         }
-        spawnPlants = true;
+        //spawnPlants = true;
 
     skip:
 
