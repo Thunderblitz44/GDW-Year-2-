@@ -34,7 +34,7 @@ public class Elana : Player
 
     [Header("Portal")]
     [SerializeField] float portalRange = 30f;
-    [SerializeField] float teleportSpeed = 40f;
+    [SerializeField] float teleportSpeed = 5f;
     [SerializeField] float portalCoolown = 1f;
     [SerializeField] GameObject recallPointIndicatorPrefab;
     [SerializeField] LineRenderer portalLink;
@@ -77,11 +77,12 @@ public class Elana : Player
     
     [Header("Other")]
     [SerializeField] Animator specialAnimator;
-    [SerializeField] ProjectileData burstExplosionAura = ProjectileData.defaultProjectile;
-    [SerializeField] private ParticleSystem burstExplosion;
+   
+   
     [SerializeField] public Animator DragonflyAnimator;
     //animator to control portal and potentially other interactions between players/spirit
     public float recallDelay = 2f;
+private WindBurst WindBurstRef;
     //delay of recall
    
     //for determining the difference between the portal and dodge as they both call the same method
@@ -123,6 +124,7 @@ public class Elana : Player
         spiritWolf = spiritWolfAnimator.transform;
         pheonix = GetComponentInChildren<Pheonix>();
         TrailScript = GetComponentInChildren<TrailScript>();
+        WindBurstRef = GetComponentInChildren<WindBurst>();
     }
 
     protected override void Update()
@@ -147,7 +149,7 @@ public class Elana : Player
             {
                 portalLink.SetPosition(0, recallPos);
                 portalLink.SetPosition(1, transform.position);
-                instantiatedPortal.transform.rotation = Quaternion.LookRotation(StaticUtilities.GetCameraDir(),Vector3.up);
+                //instantiatedPortal.transform.rotation = Quaternion.LookRotation(StaticUtilities.GetCameraDir(),Vector3.up);
             }
         }
 
@@ -225,7 +227,7 @@ public class Elana : Player
 
             //Animate player/wolf attacking in sync
             spiritWolfAnimator.PrimaryAttack();
-            FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wolf Swipe", gameObject);
+          //  FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wolf Swipe", gameObject);
         };
         actions.Abilities.PrimaryAttack.canceled += ctx =>
         {
@@ -260,12 +262,13 @@ public class Elana : Player
          
             if (instantiatedPortal)
             {
-               
+                TrailScript.OnPortalEvent();
                 specialAnimator.SetTrigger("Recall");
                 specialAnimator.SetBool("Underground", true);
                 canPortal = false;
                 meshRenderer.enabled = false;
                 TrailScript.isTrailActive2 = true;
+               
                 StartCoroutine(DelayedDodge(transform.position, recallPos, teleportSpeed, 1f));
                       return;
                        
@@ -283,7 +286,7 @@ public class Elana : Player
             if (isDodgeing || !canDodge) return;
             canDodge = false;
             abilityHud.SpendPoint(dodgeId, dodgeCooldown);
-            
+            TrailScript.OnDodge();
             // raycast - make sure there are no obstacles in the way
             float newDist = dodgeDistance;
 
@@ -398,8 +401,8 @@ public class Elana : Player
             Destroy(instantiatedPortal);
             abilityHud.SpendPoint(portalId, portalCoolown);
             meshRenderer.enabled = true;
-            specialAnimator.SetBool("Underground", false);
-            burstExplosion.Emit(1);
+            specialAnimator.SetBool("Underground", false); 
+            WindBurstRef.Burst();
             TrailScript.isTrailActive = false;
             TrailScript.isTrailActive2 = false;
         }

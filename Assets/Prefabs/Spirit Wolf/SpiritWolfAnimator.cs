@@ -54,5 +54,8 @@ public class SpiritWolfAnimator : MonoBehaviour
         animator.SetInteger("attackCounter", attackCounter);
     }
 
- 
+    public void SwipeSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wolf Swipe", gameObject);
+    }
 }
