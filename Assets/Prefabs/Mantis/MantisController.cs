@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.VFX;
 
 public class MantisController : Enemy
@@ -12,7 +11,7 @@ public class MantisController : Enemy
     private bool inAttackRange;
     public int RangedAttackDamage;
     public Vector2 RangedKnockback;
-
+    public VisualEffect vfxGraph;
     private VisualEffect teleportEffect; // Reference to the teleport Visual Effect Graph
 
     void Start()
@@ -47,7 +46,7 @@ public class MantisController : Enemy
         
         // Enable AI and warp the agent to the player position
         EnableAI();
-        agent.Warp(LevelManager.PlayerTransform.position);
+        if (agent) agent.Warp(LevelManager.PlayerTransform.position);
 
     }
 
@@ -60,10 +59,12 @@ public class MantisController : Enemy
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
-            agent.SetDestination(headPosition);
+            if (agent) agent.SetDestination(headPosition);
             animator.SetBool("IsAttacking", inAttackRange);
         }
     }
+
+ 
 
     private void EnableAI()
     {
@@ -96,5 +97,14 @@ public class MantisController : Enemy
        
         
             
+    }
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+    
+    public void DeathBurst()
+    {
+        vfxGraph.SendEvent("death");
     }
 }

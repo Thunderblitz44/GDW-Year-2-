@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerMovement : MonoBehaviour, IInputExpander
 {
@@ -52,6 +53,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     public Transform Body { get; private set; }
     public Rigidbody Rb { get; private set; }
 
+    public bool IsDead;
+    public event UnityAction OnPlayerDeath;
+    //start moving = true, stop = false, turns on/off sound and dust effects while idle 
+    public bool effectsMoveCheck;
+   
     private void Awake()
     {
         Rb = GetComponent<Rigidbody>();
@@ -88,7 +94,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // do move
         if (IsGrounded && Rb.velocity.magnitude < MoveSpeed)
         {
-            //Vector3 rotatedInput = 
             moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
             if (IsGrounded && groundAngle < maxSlopeAngle)
             {
@@ -111,7 +116,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         }
 
         DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
-       // Debug.Log(Rb.velocity + " - " + moveDirection);
 
         // Steps
         RaycastHit hitLower;
@@ -141,18 +145,22 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
             if (input != Vector2.zero && !IsGrounded) Rb.drag = 1f;
             else Rb.drag = 0;
+
+            effectsMoveCheck = true;
         };
 
         actions.Locomotion.Move.canceled += ctx =>
         {
             input = Vector3.zero;
             isRunning = false;
+            effectsMoveCheck = false;
         };
 
         // Run
         actions.Locomotion.Run.performed += ctx =>
         {
             isRunning = true;
+            effectsMoveCheck = true;
         };
 
 
@@ -165,6 +173,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             canJump = false;
             Rb.velocity = StaticUtilities.HorizontalizeVector(Rb.velocity);
             Rb.velocity += Vector3.up * jumpForce;
+            effectsMoveCheck = false;
         };
 
         actions.Locomotion.Run.Enable();
@@ -209,5 +218,18 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         actions.Locomotion.Move.Disable();
         actions.Locomotion.Jump.Disable();
         actions.Locomotion.Dodge.Disable();
+    }
+
+    public void GroundTrail()
+    {
+        
+    }
+    public void Death()
+    {
+     
+            IsDead = true;
+            // Invoke the event if it's not null
+            OnPlayerDeath?.Invoke();
+        
     }
 }

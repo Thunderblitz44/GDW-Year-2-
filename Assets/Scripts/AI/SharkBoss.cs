@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Splines;
@@ -11,7 +10,7 @@ public class SharkBoss : Enemy, IBossCommands
 {
     [Header("Attack Pattern")]
     [SerializeField] float timeBetweenAttacks = 2;
-    [SerializeField] float attackPrepareTime = 2;
+    //[SerializeField] float attackPrepareTime = 2;
     [SerializeField] float maxAttackReps = 2;
     float attackReps;
     int lastAttackIndex;
@@ -77,7 +76,7 @@ public class SharkBoss : Enemy, IBossCommands
     [Header("Shoot Attack")]
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
     [SerializeField] int shots = 3;
-    [SerializeField] float chargeTime = 1;
+    [SerializeField] float chargeTime = 0.317f;
     [SerializeField] float cooldown = 3;
     [SerializeField] Transform shootOrigin;
     [SerializeField] LayerMask hitMask;
@@ -86,8 +85,12 @@ public class SharkBoss : Enemy, IBossCommands
 
     [Header("Domain Expansion")]
     [SerializeField] GameObject domain;
-    [SerializeField] Vector3 domainGravity;
-    Vector3 normalGravity;
+    [SerializeField] GameObject explodingPlantPrefab;
+    readonly List<GameObject> explodingPlants = new();
+    [SerializeField] int maxPlantsAtOnce = 4;
+    [SerializeField] float plantSpawnDelay = 3f;
+    float plantSpawnTimer;
+    bool spawnPlants;
 
     [Header("Damage")]
     [SerializeField] int bodyContactDamage = 5;
@@ -102,8 +105,8 @@ public class SharkBoss : Enemy, IBossCommands
 
     [Header("Other")]
     [SerializeField] GameObject headDamagerCollider;
-    [SerializeField] float bodyContactDamageCooldown = 2f;
-    bool canDamage = true;
+    //[SerializeField] float bodyContactDamageCooldown = 2f;
+    //bool canDamage = true;
 
     protected override void Awake()
     {
@@ -193,6 +196,27 @@ public class SharkBoss : Enemy, IBossCommands
                 }
             }
         }
+
+        if (spawnPlants)
+        {
+            plantSpawnTimer += Time.deltaTime;
+            if (plantSpawnTimer > plantSpawnDelay)
+            {
+                plantSpawnTimer = 0;
+
+                // remove if null
+                for (int i = 0; i < explodingPlants.Count; i++)
+                {
+                    if (explodingPlants[i] == null) explodingPlants.RemoveAt(i);
+                }
+
+                // spawn
+                if (explodingPlants.Count < maxPlantsAtOnce)
+                {
+                    explodingPlants.Add(Instantiate(explodingPlantPrefab, LevelManager.GetRandomEnemySpawnPoint(LevelManager.Instance.CurrentEncounter.EncounterBounds), explodingPlantPrefab.transform.rotation));
+                }
+            }
+        }
     }
 
     void FindNearestPassiveLinkPos(out float dist)
@@ -232,9 +256,9 @@ public class SharkBoss : Enemy, IBossCommands
                 break;
             case 2: 
                 StartCoroutine(DomainExpansionRoutine()); 
+                attackFuncs.Add(ShootRoutine);
                 break;
             case 3:
-                attackFuncs.Add(ShootRoutine);
                 blink = true; 
                 break;
             case 4: 
@@ -577,7 +601,8 @@ public class SharkBoss : Enemy, IBossCommands
         // boss becomes a sentry turret for X amount of BIG shots
         int s = 0;
         float time = 0;
-        bool canShoot = true;
+        bool canShoot = false;
+        bool anticipate = false;
         while (s < shots)
         {
             yield return null;
@@ -586,9 +611,15 @@ public class SharkBoss : Enemy, IBossCommands
             transform.rotation = Quaternion.LookRotation(Vector3.up, -StaticUtilities.FlatDirection(target.position, transform.position));
             time += Time.deltaTime;
 
+            if (canShoot && !anticipate)
+            {
+                anticipate = true;
+                animator.SetTrigger("ShootProjectile");
+            }
             if (time >= chargeTime && canShoot)
             {
                 canShoot = false;
+                anticipate = false;
                 time = 0;
                 s++;
 
@@ -596,16 +627,18 @@ public class SharkBoss : Enemy, IBossCommands
                 if (Physics.Raycast(shootOrigin.position, target.position - shootOrigin.position, out hit, 100f, hitMask, QueryTriggerInteraction.Ignore))
                 {
                     Transform b = Instantiate(projectile.prefab, shootOrigin.position, Quaternion.LookRotation(target.position-shootOrigin.position)).transform;
-                    b.Rotate(Vector3.right, 90f);
+                    //b.Rotate(Vector3.right, 90f);
                     start = b.position;
                     end = hit.point;
                     float dist = Vector3.Distance(start, end);
 
+                    StaticUtilities.ShakePlayerCamera(5, 1, 15);
                     for (float i = 0; i < dist; i += Time.deltaTime * projectile.speed)
                     {
                         b.position = Vector3.Lerp(start, end, i/dist);
                         yield return null;
                     }
+
                     b.position = end;
 
                     if (Physics.CheckCapsule(start,end, 1f, playerLayer, QueryTriggerInteraction.Ignore))
@@ -715,11 +748,7 @@ public class SharkBoss : Enemy, IBossCommands
             domain.transform.localScale = Vector3.Lerp(Vector3.one * 2, domainTrueScale, curve.Evaluate(t));
             yield return null;
         }
-
-        // gravity effects
-        // slow player?
-        normalGravity = Physics.gravity;
-        Physics.gravity = domainGravity;
+        //spawnPlants = true;
 
     skip:
 
@@ -733,12 +762,15 @@ public class SharkBoss : Enemy, IBossCommands
 
     protected override void OnHealthZeroed()
     {
+        spawnPlants = false;
+
         StopAllCoroutines();
 
         (hp as BossHealthComponent).Hide();
 
-        Destroy(gameObject, 1f);
         LevelManager.Instance.CurrentEncounter.EndEncounter();
+        Destroy(domain);
+        Destroy(gameObject, 1f);
     }
 
     public void OnTouchedPlayer()
@@ -768,6 +800,16 @@ public class SharkBoss : Enemy, IBossCommands
         targetRb.AddForce(force * targetRb.mass, ForceMode.Impulse);
     }
 
+    public void OnHitSomething(GameObject something)
+    {
+        int dmg = ramAttack ? ramDamage : diveAttack ? diveDamage : bodyContactDamage;
+        StaticUtilities.TryToDamage(something, dmg);
+        if (explodingPlants.Contains(something))
+        {
+            ApplyDamage(50);
+        }
+    }
+
     void EnableColliders()
     {
         foreach (var col in bodyColliders)
@@ -779,7 +821,7 @@ public class SharkBoss : Enemy, IBossCommands
     void Rage()
     {
         // behaviour
-        timeBetweenAttacks = 2f;
+        timeBetweenAttacks = 3f;
         passivePathSpeed *= 1.5f;
 
         // dive attack
@@ -793,6 +835,6 @@ public class SharkBoss : Enemy, IBossCommands
         // shoot attack
         popOutDelay = 0.5f;
         shots = 4;
-        cooldown = 0f;
+        cooldown = 1.5f;
     }
 }

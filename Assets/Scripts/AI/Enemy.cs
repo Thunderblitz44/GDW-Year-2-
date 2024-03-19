@@ -6,20 +6,29 @@ public class Enemy : DamageableEntity
     protected Transform target;
     protected NavMeshAgent agent;
     [SerializeField] float slowUpdateInterval = 0.2f;
+    protected bool updateTargetOnDamaged = true;
     float updateTimer;
-    
-    [SerializeField] protected Animator animator;
-    [SerializeField] protected SkinnedMeshRenderer skinnedMeshRenderer;
-   protected float flashDuration = 0.2f; 
-    protected float flashTimer = 0f;
 
+    protected Animator animator;
+    protected SkinnedMeshRenderer skinnedMeshRenderer;
+    [HideInInspector] public float flashTimer = 0f; 
+    [HideInInspector] public float dissolveTimer = 0f; 
+    private bool dissolve = false;
+    //private float dissolveTime = 0f;
+    private float dissolveSpeed = 0.3f;
+    private bool isAwake = true;
+    public float spawndissolveTimer = 1f;
     protected override void Awake()
     {
         base.Awake();
         
+        animator = GetComponent<Animator>();
+        if (!animator) animator = GetComponentInChildren<Animator>();
+        skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+
         agent = GetComponent<NavMeshAgent>();
         target = LevelManager.PlayerTransform;
-        
+      
     }
 
     protected virtual void Update()
@@ -31,14 +40,40 @@ public class Enemy : DamageableEntity
         updateTimer += Time.deltaTime;
         if (updateTimer >= slowUpdateInterval) SlowUpdate();
         
-        
-        if (flashTimer > 0)
+        if (skinnedMeshRenderer && flashTimer > 0)
         {
             flashTimer -= Time.deltaTime;
-            float flashIntensity = Mathf.Lerp(0f, 1f, flashTimer / flashDuration);
+            float flashIntensity = Mathf.Lerp(0f, 1f, flashTimer / StaticUtilities.damageFlashDuration);
             skinnedMeshRenderer.material.SetFloat("_flash", flashIntensity);
-            Debug.Log("hi");
         }
+
+        if (skinnedMeshRenderer && isAwake)
+        {
+            spawndissolveTimer = Mathf.Lerp(1f, 0f, Time.time );
+           
+            skinnedMeshRenderer.material.SetFloat("_dissolve", spawndissolveTimer);
+
+        }
+        if ( skinnedMeshRenderer && dissolve)
+        {
+            
+            dissolveTimer += Time.deltaTime * dissolveSpeed * 2;
+
+          
+          
+        
+            skinnedMeshRenderer.material.SetFloat("_dissolve", dissolveTimer);
+
+         
+        }
+    }
+
+    protected override void OnHealthZeroed()
+    {
+        dissolve = true;
+        Destroy(agent);
+        Destroy(GetComponent<LockonTarget>());
+        base.OnHealthZeroed();
     }
 
     protected virtual void SlowUpdate()
@@ -56,9 +91,11 @@ public class Enemy : DamageableEntity
     public override void ApplyDamage(int damage)
     {
         base.ApplyDamage(damage);
-        
+      
         // Trigger flash effect
-        flashTimer += flashDuration;
-        target = LevelManager.PlayerTransform;
+        if (!isInvincible) flashTimer = StaticUtilities.damageFlashDuration;
+        if (updateTargetOnDamaged) target = LevelManager.PlayerTransform;
     }
+
+    
 }

@@ -414,6 +414,15 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DeviceTest"",
+                    ""type"": ""Value"",
+                    ""id"": ""4b55dc3a-31de-4c82-b410-4d543e8e0471"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -469,6 +478,61 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""harmSelfTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b77c4c1a-ffa1-47b6-9fe7-3785fbb51983"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DeviceTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""76df6fda-d86a-4254-8012-5355336f4e91"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DeviceTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""534765ec-478d-4eb8-b176-4a95cc6c380c"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DeviceTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f67baa4-0418-479b-acf3-9d79cff8ad1e"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DeviceTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc7ca83c-31fc-4f49-aa34-48b165440b0c"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DeviceTest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -723,6 +787,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_General_respawnTest = m_General.FindAction("respawnTest", throwIfNotFound: true);
         m_General_resetProgressTest = m_General.FindAction("resetProgressTest", throwIfNotFound: true);
         m_General_harmSelfTest = m_General.FindAction("harmSelfTest", throwIfNotFound: true);
+        m_General_DeviceTest = m_General.FindAction("DeviceTest", throwIfNotFound: true);
         // Menus
         m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
         m_Menus_Resume = m_Menus.FindAction("Resume", throwIfNotFound: true);
@@ -936,6 +1001,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_General_respawnTest;
     private readonly InputAction m_General_resetProgressTest;
     private readonly InputAction m_General_harmSelfTest;
+    private readonly InputAction m_General_DeviceTest;
     public struct GeneralActions
     {
         private @ActionMap m_Wrapper;
@@ -944,6 +1010,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @respawnTest => m_Wrapper.m_General_respawnTest;
         public InputAction @resetProgressTest => m_Wrapper.m_General_resetProgressTest;
         public InputAction @harmSelfTest => m_Wrapper.m_General_harmSelfTest;
+        public InputAction @DeviceTest => m_Wrapper.m_General_DeviceTest;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -965,6 +1032,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @harmSelfTest.started += instance.OnHarmSelfTest;
             @harmSelfTest.performed += instance.OnHarmSelfTest;
             @harmSelfTest.canceled += instance.OnHarmSelfTest;
+            @DeviceTest.started += instance.OnDeviceTest;
+            @DeviceTest.performed += instance.OnDeviceTest;
+            @DeviceTest.canceled += instance.OnDeviceTest;
         }
 
         private void UnregisterCallbacks(IGeneralActions instance)
@@ -981,6 +1051,9 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @harmSelfTest.started -= instance.OnHarmSelfTest;
             @harmSelfTest.performed -= instance.OnHarmSelfTest;
             @harmSelfTest.canceled -= instance.OnHarmSelfTest;
+            @DeviceTest.started -= instance.OnDeviceTest;
+            @DeviceTest.performed -= instance.OnDeviceTest;
+            @DeviceTest.canceled -= instance.OnDeviceTest;
         }
 
         public void RemoveCallbacks(IGeneralActions instance)
@@ -1126,6 +1199,7 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         void OnRespawnTest(InputAction.CallbackContext context);
         void OnResetProgressTest(InputAction.CallbackContext context);
         void OnHarmSelfTest(InputAction.CallbackContext context);
+        void OnDeviceTest(InputAction.CallbackContext context);
     }
     public interface IMenusActions
     {

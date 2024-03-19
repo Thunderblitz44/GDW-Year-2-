@@ -62,13 +62,13 @@ public class GolemBossScript : Enemy, IBossCommands
     [SerializeField] Transform[] gotoWalls;
     bool goingUp;
     
-    bool MoveAcrossNavMeshesStarted;
+    //bool MoveAcrossNavMeshesStarted;
    
     
     [Header("Phase 2+")]
     [SerializeField] float stunTime = 5f;
 
-
+    [SerializeField] Transform HeadTarget;
     // battle info
     bool battleStarted = false;
     float tempSpeed;
@@ -103,9 +103,10 @@ public class GolemBossScript : Enemy, IBossCommands
         {
             animator.SetBool("Jumping", true);
             StartCoroutine(MoveAcrossNavMeshLink(agent, 5f, 0.5f));
-            MoveAcrossNavMeshesStarted=true;
+            //MoveAcrossNavMeshesStarted=true;
         }
-      
+        HeadTarget.transform.position = target.position;
+
         // timers
         // attack checkers/counters
         // attacks
@@ -205,8 +206,15 @@ public class GolemBossScript : Enemy, IBossCommands
 
     void StartBattle()
     {
-        battleStarted = true;
+        animator.SetTrigger("Intro Trigger");
+        Invoke("DelayedCamShake", 0.5f);
         target = LevelManager.PlayerTransform;
+    }
+
+    void DelayedCamShake()
+    {
+        StaticUtilities.ShakePlayerCamera(8, 1, 18);
+        battleStarted = true;
     }
 
     IEnumerator LasersRoutine()
@@ -469,8 +477,8 @@ public class GolemBossScript : Enemy, IBossCommands
             Destroy(portal.gameObject);
         }
 
-        Destroy(gameObject, 1f);
         LevelManager.Instance.CurrentEncounter.EndEncounter();
+        Destroy(gameObject, 1f);
     }
 
     public void Stun()

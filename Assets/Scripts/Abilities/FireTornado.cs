@@ -17,12 +17,8 @@ public class FireTornado : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer != LayerMask.NameToLayer("Player") ||
-            other.gameObject.layer != LayerMask.NameToLayer("Friendly"))
-        {
-            enemiesInTornado.Add(other.gameObject);
-            damageTimers.Add(0);
-        }
+        enemiesInTornado.Add(other.gameObject);
+        damageTimers.Add(0);
     }
 
     private void Update()
@@ -45,12 +41,8 @@ public class FireTornado : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer != LayerMask.NameToLayer("Player") || 
-            other.gameObject.layer != LayerMask.NameToLayer("Friendly"))
-        {
-            StaticUtilities.TryToDamageOverTime(other.gameObject, Damage, BurnTime);
-            damageTimers.RemoveAt(enemiesInTornado.IndexOf(other.gameObject));
-            enemiesInTornado.Remove(other.gameObject);
-        }
+        StaticUtilities.TryToDamageOverTime(other.gameObject, Damage, BurnTime);
+        damageTimers.RemoveAt(enemiesInTornado.IndexOf(other.gameObject));
+        enemiesInTornado.Remove(other.gameObject);
     }
 }

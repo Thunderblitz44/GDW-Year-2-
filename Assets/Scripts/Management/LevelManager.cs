@@ -1,34 +1,43 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
     public static int Id { get; private set; }
-    public static Transform PlayerTransform { get; private set; }
-    public Player PlayerScript { get; private set; }
     public static bool isGamePaused = false;
     public static bool isGameOver = false;
 
+    [SerializeField] Player playerScript;
+    [SerializeField] Canvas worldCanvas;
+    [SerializeField] Canvas canvas;
     [SerializeField] List<EncounterVolume> encounterVolumes;
     [SerializeField] List<Checkpoint> checkpoints = new();
     [SerializeField] List<GameObject> enemies;
     [SerializeField] GameObject boss;
+    [SerializeField] GameObject loadingScreen;
+    [SerializeField] Image loadingProgressBar;
+    [SerializeField] GameObject saveIndicator;
+    [SerializeField] Transitioner transitioner;
+
+    public List<GameObject> LevelEnemyList { get { return enemies; } }
     public static readonly List<DamageableEntity> spawnedEnemies = new();
     public Action onEncounterStart;
-
+    
+    public static Transform PlayerTransform { get; private set; }
+    public Player PlayerScript { get { return playerScript; }}
     public GameObject Boss { get { return boss; } }
-    public List<GameObject> LevelEnemyList { get { return enemies; } }
-    public Transform WorldCanvas { get; private set; }
-    public Transform Canvas { get; private set; }
+    public Transform WorldCanvas { get { return worldCanvas.transform; } }
+    public Transform Canvas { get { return canvas.transform;} }
 
     public Checkpoint CurrentCheckpoint { get; private set; }
     public EncounterVolume CurrentEncounter { get; private set; }
-    Transitioner transitioner;
 
     public GameObject floatingTextPrefab;
 
@@ -55,11 +64,7 @@ public class LevelManager : MonoBehaviour
         }
 
         Id = SceneManager.GetActiveScene().buildIndex;
-        Canvas = GameObject.FindGameObjectWithTag("MainCanvas").transform;
-        WorldCanvas = GameObject.FindGameObjectWithTag("WorldCanvas").transform;
-        PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        PlayerScript = PlayerTransform.GetComponent<Player>();
-        transitioner = Canvas.GetChild(Canvas.childCount - 1).GetComponent<Transitioner>();
+        PlayerTransform = PlayerScript.transform;
         if (!transitioner) Debug.LogWarning("The transitioner needs to be the last child of canvas!");
         else
         {
@@ -198,5 +203,39 @@ public class LevelManager : MonoBehaviour
     void ScreenIsClear()
     {
         PlayerScript.UnPausePlayer();
+    }
+
+    public void LoadNextLevel()
+    {
+        int id = 0;
+        if (Id + 1 < SceneManager.sceneCountInBuildSettings)
+        {
+            id++;
+        }
+        StartCoroutine(LoadSceneAsync(id));
+    }
+
+    IEnumerator LoadSceneAsync(int id)
+    {
+        AsyncOperation op = SceneManager.LoadSceneAsync(id);
+
+        loadingScreen.SetActive(true);
+        while (!op.isDone)
+        {
+            float prog = Mathf.Clamp01(op.progress / 0.9f);
+            loadingProgressBar.fillAmount = prog;
+            yield return null;
+        }
+    }
+
+    public void SavedGame()
+    {
+        StartCoroutine(ShowSavingGame());
+    }
+
+    IEnumerator ShowSavingGame()
+    {
+        yield return null;
+
     }
 }

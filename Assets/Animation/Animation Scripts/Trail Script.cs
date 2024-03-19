@@ -5,69 +5,148 @@ using UnityEngine;
 
 public class TrailScript : MonoBehaviour
 {
+  
+   
+   
+    //jackalope
+    public GameObject trailPrefab; 
+    public bool isTrailActive2;
+    public LayerMask groundLayer; 
+    public float meshRefreshRate2 = 0.1f;
+    public ParticleSystem DustSystemRight;
+    public ParticleSystem DustSystemLeft;
+    private Coroutine trailCoroutine;
+    public ParticleSystem dirtTrail;
+    
+    public PlayerMovement PlayerMovement;
+    
+    //dodge
+   public Transform positionToSpawn;
     public float activeTime = 2f;
     public bool isTrailActive;
     public float meshRefreshRate = 0.1f;
     public SkinnedMeshRenderer skinnedMeshRenderer;
     public Material mat;
     public float meshDestroyDelay = 1f;
-    public GameObject trailPrefab; // Reference to your trail prefab
-    public bool isTrailActive2;
-    public LayerMask groundLayer; // Specify the Ground layer in the Unity Editor
-    public float meshRefreshRate2 = 0.1f;
+    private GameObject dodgeTrailObject;
+    //other
+    public ParticleSystem OnLanded;
+   
+    public float _alpha = 0.38f;
+    void Start()
+    {
 
-    private Coroutine trailCoroutine;
 
+    
+
+    }
     private void FixedUpdate()
     {
-        if (isTrailActive2 && trailCoroutine == null)
-        {
-            // Start the coroutine and keep a reference to it
-            trailCoroutine = StartCoroutine(ActivateTrail2());
-        }
-
-        if (!isTrailActive2 && trailCoroutine != null)
-        {
-            StopCoroutine(trailCoroutine);
-            trailCoroutine = null;
-
-            // Disable the trail prefab
-            trailPrefab.SetActive(false);
-        }
+   
     }
 
     private IEnumerator ActivateTrail2()
     {
-        // Enable the trail prefab
-        trailPrefab.SetActive(true);
-
+       
+      
+        dirtTrail.Play();
         while (isTrailActive2)
         {
-            // Use Raycast logic to get position and rotation for Trail 2 with Y offset
+          
             RaycastHit hit;
-            Vector3 raycastOrigin = transform.position + new Vector3(0, 3f, 0); // Adding Y offset
-
-            // Raycast only against objects on the "Ground" layer
+            Vector3 raycastOrigin = transform.position + new Vector3(0, 3f, 0); 
+            
             if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, Mathf.Infinity, groundLayer))
             {
-                // Align the y-axis of the prefab with the normal of the raycast
+               
                 trailPrefab.transform.up = hit.normal;
-
-                // Set the position directly from the hit point
+                
                 trailPrefab.transform.position = hit.point;
-
-                // Perform any specific logic for Trail 2 here
+              
             }
 
-            yield return null; // Wait for the next frame
+            yield return null; 
         }
 
-        isTrailActive2 = false; // Disable the trail effect
-
-        // Disable the trail prefab
-        trailPrefab.SetActive(false);
-
-        // Reset the coroutine reference when it's finished
+        isTrailActive2 = false; 
+        
+   
+        dirtTrail.Stop();
         trailCoroutine = null;
+    }
+
+   IEnumerator ActivateTrail(float timeActive)
+    {
+        while (timeActive > 0 && isTrailActive2 == false)
+        {
+            timeActive -= meshRefreshRate;
+
+            GameObject gObj = new GameObject();
+            gObj.transform.SetLocalPositionAndRotation(positionToSpawn.position,
+                positionToSpawn.rotation * Quaternion.Euler(0, 180, 0));
+            MeshRenderer mr = gObj.AddComponent<MeshRenderer>();
+            MeshFilter mf = gObj.AddComponent<MeshFilter>();
+
+            Mesh mesh = new Mesh();
+            skinnedMeshRenderer.BakeMesh(mesh);
+
+            mf.mesh = mesh;
+            mr.material = mat;
+
+            // Set initial alpha value using direct property access
+            mr.material.SetFloat("_alpha", _alpha);
+
+            while (mr.material.GetFloat("_alpha") > 0)
+            {
+                float newAlpha = mr.material.GetFloat("_alpha") - (_alpha / timeActive) * Time.deltaTime;
+                mr.material.SetFloat("_alpha", Mathf.Max(newAlpha, 0));
+
+                yield return null;  // Wait for the end of the frame
+            }
+
+            Debug.Log(timeActive);
+            Destroy(gObj, meshDestroyDelay);
+        }
+
+        isTrailActive = false;
+    }
+
+    public  void OnPortalEvent()
+    {
+        isTrailActive2 = true;
+        StartCoroutine(ActivateTrail2());
+    }
+
+    public void OnDodge()
+    {
+        StartCoroutine(ActivateTrail(activeTime));
+    }
+    public void DustLeft()
+    {
+        if (PlayerMovement.IsGrounded && PlayerMovement.effectsMoveCheck)
+        {
+        
+           
+                DustSystemLeft.Emit(6);
+                FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Elana Footstep Placeholder",  DustSystemLeft.gameObject);
+            
+          
+        }
+      
+    }
+    
+    public void DustRight()
+    {
+        if (PlayerMovement.IsGrounded && PlayerMovement.effectsMoveCheck)
+        {
+
+        DustSystemRight.Emit(6);
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Elana Footstep Placeholder",  DustSystemRight.gameObject);
+        }
+    }
+
+    public void OnLandedEvent()
+    {
+        OnLanded.Emit(10);
     }
 }
