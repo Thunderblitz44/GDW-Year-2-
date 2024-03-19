@@ -16,6 +16,7 @@ public class HeathPickup : MonoBehaviour
         StaticUtilities.TryToDamage(other.transform.parent.gameObject, -healAmount);
         HealthEffect.SendEvent("Pickup");
    Invoke("DelayedDisable", 3f);
+   FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Placeholder Collectible Pickup", gameObject);
     }
 
   public void DelayedDisable()

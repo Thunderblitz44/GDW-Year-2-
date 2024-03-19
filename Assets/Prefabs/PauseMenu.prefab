@@ -3195,6 +3195,7 @@ GameObject:
   - component: {fileID: 8403365933000016807}
   - component: {fileID: 4195462634671418370}
   - component: {fileID: 3069688378811572062}
+  - component: {fileID: 5769544624051898920}
   m_Layer: 5
   m_Name: Resume
   m_TagString: Untagged
@@ -3317,6 +3318,37 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5769544624051898920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4486445581424775319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1249667009
+      Data2: 1087456354
+      Data3: -1049819748
+      Data4: 70724352
+    Path: event:/Placeholder Collectible Pickup
+  Event: 
+  PlayEvent: 17
+  StopEvent: 18
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 20000
+  OverrideMaxDistance: 20000
 --- !u!1 &4609060586812007816
 GameObject:
   m_ObjectHideFlags: 0

@@ -59,7 +59,11 @@
 			<destination>{82b81d85-9071-41bd-a581-c4364eb1d5ff}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{46738762-e85b-452d-a20b-a6c424db6161}" />
+	<object class="EventAutomatableProperties" id="{46738762-e85b-452d-a20b-a6c424db6161}">
+		<property name="dopplerScale">
+			<value>40</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{511390c6-bb3d-4191-8595-1261fc1a71fb}" />
 	<object class="Timeline" id="{ea6f4e4c-7132-4f00-b96a-2466a72ec6eb}">
 		<property name="isProxyEnabled">
@@ -98,17 +102,38 @@
 	<object class="MixerBusPanner" id="{4a6124ed-3164-4a33-88b2-0ccfa1b6e532}" />
 	<object class="MixerBusEffectChain" id="{fcf16c10-edea-45b0-b797-03e46050100a}">
 		<relationship name="effects">
+			<destination>{15aa5290-0c45-4ccd-8352-b502862c1463}</destination>
 			<destination>{b32a96d9-ced7-4033-9886-199eee0bd99f}</destination>
 			<destination>{4ee4be26-058b-493f-b114-52e4cf735dd9}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{5cb95e18-70b7-4c71-9b29-53d1f3aea0fb}" />
 	<object class="SingleSound" id="{47761580-6bf9-4008-86d9-f5ad2f2b18ff}">
+		<property name="volume">
+			<value>-13</value>
+		</property>
+		<property name="pitch">
+			<value>13</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{78897dc0-435d-46be-895e-60d85beddb3d}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{76bfbfee-4b89-4f98-9074-bfb4b69b0aee}" />
+	<object class="SFXReverbEffect" id="{15aa5290-0c45-4ccd-8352-b502862c1463}">
+		<property name="decayTime">
+			<value>8500</value>
+		</property>
+		<property name="HFReference">
+			<value>19800</value>
+		</property>
+		<property name="HFDecayRatio">
+			<value>71</value>
+		</property>
+		<property name="wetLevel">
+			<value>0</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{b32a96d9-ced7-4033-9886-199eee0bd99f}" />
 	<object class="SpatialiserEffect" id="{4ee4be26-058b-493f-b114-52e4cf735dd9}" />
 </objects>
