@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9159676963164760086}
   - component: {fileID: 3755919021773031338}
   - component: {fileID: 4215831457567624870}
+  - component: {fileID: 6989465403883288403}
   m_Layer: 0
   m_Name: GrassRenderTexture
   m_TagString: Untagged
@@ -74,7 +75,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 64
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 623319bf0a7012346be5bb3d7531ca82, type: 2}
   m_TargetDisplay: 0
@@ -106,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 0
+  m_RenderShadows: 1
   m_RequiresDepthTextureOption: 0
   m_RequiresOpaqueTextureOption: 0
   m_CameraType: 0
@@ -151,3 +152,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraWithoutFog: {fileID: 696965792287103592}
+--- !u!114 &6989465403883288403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8289037970641549424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12eac202f5652d54ba53a6c7638a43fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
