@@ -123,7 +123,7 @@ public class TrailScript : MonoBehaviour
     }
     public void DustLeft()
     {
-        if (PlayerMovement.IsGrounded && PlayerMovement.effectsMoveCheck)
+        if (PlayerMovement.IsGrounded && PlayerMovement.IsMoving)
         {
         
            
@@ -137,7 +137,7 @@ public class TrailScript : MonoBehaviour
     
     public void DustRight()
     {
-        if (PlayerMovement.IsGrounded && PlayerMovement.effectsMoveCheck)
+        if (PlayerMovement.IsGrounded && PlayerMovement.IsMoving)
         {
 
         DustSystemRight.Emit(6);

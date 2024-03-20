@@ -27,7 +27,7 @@ public class Elana : Player
     [SerializeField] float shootStartDelay = 0.5f;
     [SerializeField] float bulletCooldown = 0.25f;
     [SerializeField] Transform shootOrigin;
-    readonly List<GameObject> pooledProjectiles = new(8);
+    readonly List<GameObject> pooledProjectiles = new(10);
     bool shooting = false;
     float shootingCooldownTimer;
     float shootStartTimer;

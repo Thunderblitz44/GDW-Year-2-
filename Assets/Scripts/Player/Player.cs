@@ -3,6 +3,7 @@ using Cinemachine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public abstract class Player : DamageableEntity
 {
@@ -10,6 +11,7 @@ public abstract class Player : DamageableEntity
     [SerializeField] protected AbilityHUD abilityHud;
     PlayerMenuController pauseScript;
 
+    [SerializeField] private VisualEffect onHitEffects;
     // INPUT
     protected ActionMap actions;
 
@@ -269,6 +271,11 @@ public abstract class Player : DamageableEntity
     public override void ApplyDamage(int damage)
     {
         base.ApplyDamage(damage);
+        if (damage > 0)
+        {
+            onHitEffects.SendEvent("Blood");
+        }
+        
         DoCameraShake(2,1,12);
     }
 

@@ -50,7 +50,7 @@ playerMovement = playerMovement.GetComponent<PlayerMovement>();
         // Matches isGrounded with Groundcheck bool in animator
         
         animator.SetBool("GroundCheck", playerMovement.IsGrounded);
-animator.SetBool("IsMoving", playerMovement.effectsMoveCheck);
+animator.SetBool("IsMoving", playerMovement.IsMoving);
      
         }
 

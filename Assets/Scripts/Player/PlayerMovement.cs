@@ -55,8 +55,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     public bool IsDead;
     public event UnityAction OnPlayerDeath;
-    //start moving = true, stop = false, turns on/off sound and dust effects while idle 
-    public bool effectsMoveCheck;
+  
+   
    
     private void Awake()
     {
@@ -137,6 +137,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // Movement
         actions.Locomotion.Move.performed += ctx =>
         {
+           
             // convert wasd to 3D direction
             Vector2 input = ctx.ReadValue<Vector2>();
             this.input = Vector3.right * input.x + Vector3.forward * input.y;
@@ -146,21 +147,21 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (input != Vector2.zero && !IsGrounded) Rb.drag = 1f;
             else Rb.drag = 0;
 
-            effectsMoveCheck = true;
+           
         };
 
         actions.Locomotion.Move.canceled += ctx =>
         {
             input = Vector3.zero;
             isRunning = false;
-            effectsMoveCheck = false;
+           
         };
 
         // Run
         actions.Locomotion.Run.performed += ctx =>
         {
             isRunning = true;
-            effectsMoveCheck = true;
+           
         };
 
 
@@ -173,7 +174,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             canJump = false;
             Rb.velocity = StaticUtilities.HorizontalizeVector(Rb.velocity);
             Rb.velocity += Vector3.up * jumpForce;
-            effectsMoveCheck = false;
+          
         };
 
         actions.Locomotion.Run.Enable();

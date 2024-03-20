@@ -471,14 +471,15 @@ public class GolemBossScript : Enemy, IBossCommands
         StopAllCoroutines();
 
         (hp as BossHealthComponent).Hide();
-        
+        agent.isStopped = true;
         foreach (var portal in pooledPortals)
         {
             Destroy(portal.gameObject);
         }
-
+        animator.SetTrigger("Die");
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Golem Boss Death", gameObject);
         LevelManager.Instance.CurrentEncounter.EndEncounter();
-        Destroy(gameObject, 1f);
+       // Destroy(gameObject, 5f);
     }
 
     public void Stun()

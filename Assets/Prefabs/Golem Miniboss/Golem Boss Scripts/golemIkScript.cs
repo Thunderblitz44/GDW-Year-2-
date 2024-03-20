@@ -18,10 +18,7 @@ public class golemIkScript : MonoBehaviour
     public bool footOverride = false;
     private void Awake()
     {
-        if (controllerScript == null)
-        {
-            controllerScript = FindObjectOfType<legController>();
-        }
+     
 
         // initializing
         currentPosition = newPosition = oldPosition = transform.position;
@@ -80,7 +77,7 @@ public class golemIkScript : MonoBehaviour
         oldPosition = newPosition;
         oldNormal = newNormal;
 
-        if (footDelay == true)
+        if (footDelay)
         {
             controllerScript.SetActiveScript();
         }

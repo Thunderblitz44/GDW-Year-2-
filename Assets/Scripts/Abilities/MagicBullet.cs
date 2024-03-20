@@ -1,14 +1,18 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class MagicBullet : MonoBehaviour
 {
     public ProjectileData Projectile { get; private set; }
     public Rigidbody Rb { get; protected set; }
 
+
     void Awake()
     {
         Rb = GetComponent<Rigidbody>();
+       
         if (Rb) Die();
+      
     }
 
     void OnCollisionEnter(Collision collision)
@@ -23,15 +27,29 @@ public class MagicBullet : MonoBehaviour
     {
         FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Elana Shoot", gameObject);
         if (Rb) Invoke(nameof(Die), Projectile.lifeTime);
+    
     }
 
     void Die()
     {
-        if (Rb) Rb.velocity = Vector3.zero;
-        if (!Projectile.Destroy) gameObject.SetActive(false);
-        else Destroy(gameObject);
+      
+            if (Rb) Rb.velocity = Vector3.zero;
+            if (!Projectile.Destroy) gameObject.SetActive(false);
+            else Destroy(gameObject);
+      
+     
     }
-
+    void ProcessHitEffects()
+    {
+        if (!Projectile.Destroy)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     public void Initialize(ProjectileData data)
     {
         Initialize(data, data.owner);

@@ -23,7 +23,7 @@ public class legController : MonoBehaviour
     }
     public void SetActiveScript()
     {
-    
+      
             scriptsToControl[activeScriptIndex].footDelay = false;
 
       
