@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8378656663059077723}
   - component: {fileID: 8555421505071108716}
   - component: {fileID: 4507300484802119510}
+  - component: {fileID: 6892861100541781598}
   m_Layer: 8
   m_Name: Environment particles
   m_TagString: Untagged
@@ -42,8 +43,8 @@ VisualEffect:
   m_GameObject: {fileID: 6559546469949807791}
   m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: d61b57fc938caa849a290c93cfc10bf5, type: 3}
-  m_InitialEventName: Level1
-  m_InitialEventNameOverriden: 1
+  m_InitialEventName: OnPlayer
+  m_InitialEventNameOverriden: 0
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_AllowInstancing: 1
@@ -111,3 +112,16 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &6892861100541781598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6559546469949807791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4381253f0aa716648b7dda2b0f393dfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnvironmentalVFX: {fileID: 8555421505071108716}

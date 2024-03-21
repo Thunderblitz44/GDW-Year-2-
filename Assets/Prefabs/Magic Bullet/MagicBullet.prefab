@@ -69,9 +69,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da7de094ef5bc80469759a8d246e03b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
-  lifetime: 1
-  owner: {fileID: 0}
 --- !u!54 &1162546422820324753
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -108,8 +105,8 @@ VisualEffect:
   m_GameObject: {fileID: 3834878703041650075}
   m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: b43fc401d2524244e9c44ee8d7daed05, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
+  m_InitialEventName: OnHitExtraVFXStart
+  m_InitialEventNameOverriden: 1
   m_StartSeed: 0
   m_ResetSeedOnPlay: 0
   m_AllowInstancing: 1
