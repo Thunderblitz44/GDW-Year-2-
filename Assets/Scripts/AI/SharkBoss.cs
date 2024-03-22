@@ -770,7 +770,8 @@ public class SharkBoss : Enemy, IBossCommands
 
         LevelManager.Instance.CurrentEncounter.EndEncounter();
         Destroy(domain);
-        Destroy(gameObject, 1f);
+        animator.SetTrigger("Dead");
+        Destroy(gameObject, 5f);
     }
 
     public void OnTouchedPlayer()
