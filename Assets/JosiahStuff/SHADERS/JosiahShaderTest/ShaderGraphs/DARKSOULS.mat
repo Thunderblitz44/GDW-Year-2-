@@ -7,39 +7,48 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_StylizedRock_Desert
-  m_Shader: {fileID: -6465566751694194690, guid: ada99842a2101fe408e4f30125fabd4c, type: 3}
-  m_Parent: {fileID: 2100000, guid: 5780f48e0ad37ad4ba44b5360a4e5802, type: 2}
-  m_ModifiedSerializedProperties: 0
+  m_Name: DARKSOULS
+  m_Shader: {fileID: -6465566751694194690, guid: 1e24f1e0d5f8bd14f8f4f9881d59eb34, type: 3}
+  m_Parent: {fileID: 2100000, guid: ab906992d505e204db463839ba38f541, type: 2}
+  m_ModifiedSerializedProperties: 16
   m_ValidKeywords:
-  - MAIN_LIGHT_CALCULATE_SHADOWS
-  - _MAIN_LIGHT_SHADOWS_CASCADE
-  - _SHADOWS_SOFT
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap:
-    RenderType: Opaque
-  disabledShaderPasses: []
+    RenderType: Transparent
+  disabledShaderPasses:
+  - SHADOWCASTER
+  - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Emit: 0.25
-    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
-    - _Normal_Value: 0.5
-    - _TriPlanar: 1
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
+    - _CastShadows: 0
+    - _DstBlend: 10
+    - _Fog_Density: 3
+    - _Fog_Displace: 1
+    - _Fog_Wall_Distance: 2
+    - _Fresnel: 0
+    - _Posterize: 10
+    - _SrcBlend: 5
+    - _Surface: 1
+    - _ZTest: 4
+    - _ZWrite: 0
+    - _ZWriteControl: 0
     m_Colors:
-    - _EmitColor: {r: 0.6981132, g: 0.36865437, b: 0.32600567, a: 0}
-    - _Shadow_Color: {r: 0.2732734, g: 0.30448592, b: 0.6509434, a: 0}
-    - _TP_Middle: {r: 0.5, g: 0.2759434, b: 0.29625916, a: 0}
-    - _TP_Top: {r: 2.0152128, g: 0.90052634, b: 0.5486443, a: 1}
+    - _Color: {r: 0.428113, g: 0.5849056, b: 0.1682983, a: 1}
+    - _UnderFogColor: {r: 1.3596808, g: 1.7169813, b: 0.5303763, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &1691607133442829545
+--- !u!114 &5480372670319281721
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

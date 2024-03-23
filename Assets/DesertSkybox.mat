@@ -20,9 +20,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SkyBox Effect
+  m_Name: DesertSkybox
   m_Shader: {fileID: -6465566751694194690, guid: ec31b79b1ca4ffa418a338d6c28b7b26, type: 3}
-  m_Parent: {fileID: 0}
+  m_Parent: {fileID: 2100000, guid: 46bc223b5c351f642adb7212d8977221, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -44,34 +44,22 @@ Material:
         m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
+    - _SampleTexture3D_3e4a8a9d0ddd4e19b2402bfa6901bb48_Texture_1_Texture3D:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BUILTIN_QueueControl: -1
-    - _BUILTIN_QueueOffset: 0
-    - _Blend: 4.31
-    - _Blend2: 2.58
-    - _HorizonBlend: 17.35
-    - _NoiseScale: 0.1
-    - _NoiseSpeed: 0.1
-    - _QueueControl: 0
-    - _QueueOffset: 0
+    - _Blend: 0.15
+    - _Blend2: 0.37
+    - _HorizonBlend: 4.85
+    - _NoiseScale: 5.8
+    - _NoiseSpeed: 0.001
     m_Colors:
-    - _Color: {r: 0.27830186, g: 0.61460847, b: 1, a: 0}
-    - _Color2: {r: 1, g: 0.8349056, b: 0.8349056, a: 0}
-    - _HorizonColor: {r: 1, g: 1, b: 1, a: 0}
-    - _NoiseColor: {r: 0, g: 0, b: 0, a: 0}
+    - _Color: {r: 1, g: 0.42495286, b: 0.21226418, a: 0}
+    - _Color2: {r: 0.6132076, g: 0.17644179, b: 0.17644179, a: 0}
+    - _HorizonColor: {r: 2.8488648, g: 0.99709123, b: 0.6315879, a: 0}
+    - _NoiseColor: {r: 0.100159675, g: 0.16981131, b: 0.05206479, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &3631637791934140145
 MonoBehaviour:

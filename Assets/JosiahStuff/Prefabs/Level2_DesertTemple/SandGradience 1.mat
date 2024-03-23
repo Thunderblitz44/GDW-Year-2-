@@ -26,6 +26,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - MAIN_LIGHT_CALCULATE_SHADOWS
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -76,6 +77,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -159,6 +164,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 59c95727bf83fb547b2a6d6589eae8ac, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_aa41c124b55548f1879ebf206f25af5c_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_b114e3cca9eb49f9836e9cff1e71afdf_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 67c35435e754ce54fb3ee9228b4bb9c2, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -207,6 +216,7 @@ Material:
     m_Floats:
     - ADDITIONAL_LIGHTS_CALCULATE_SHADOWS: 0
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
+    - _Additional_Lights: 0.5
     - _Albedo_1: 1
     - _Albedo_Scale: 6.17
     - _AlphaClip: 0
@@ -234,6 +244,7 @@ Material:
     - _Dot_Smoothness: 2
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _EdgeNoiseSpeed: 0.05
     - _Emit: 0
     - _EnvironmentReflections: 1
     - _Fog: 1
@@ -243,12 +254,15 @@ Material:
     - _HeightBlend: 0.631
     - _Height_Blend: 777.93
     - _Height_Gradient: -85.7
+    - _HueRandom: 0
     - _Light_Contrast: 1
     - _Light_Intensity: 0
     - _Lighting_Noise: 0.1
-    - _MAIN_LIGHT_SHADOWS_CASCADE: 0
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _Mask_1: 0
     - _Metallic: 0
     - _Mode: 0
+    - _NoiseScale: 0.2
     - _NoiseStrength: 1
     - _Noise_Multiply: 1
     - _Noise_Scale: 0.65
@@ -286,11 +300,15 @@ Material:
     - _Color: {r: 1.6226416, g: 1.1831505, b: 0.86489856, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmitColor: {r: 1, g: 1, b: 1, a: 0}
+    - _MaskColor: {r: 1, g: 1, b: 1, a: 0}
+    - _MaskColor2: {r: 0, g: 0, b: 0, a: 0}
+    - _MaskNoise: {r: 0, g: 1, b: 0, a: 0}
     - _Shadow_Color: {r: 0.15755162, g: 0.18092497, b: 0.45754716, a: 0}
     - _Smoothness_Color: {r: 1.8060868, g: 1.0478365, b: 0.7922927, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _TP_Bottom: {r: 0.1805575, g: 0.1780883, b: 0.4339623, a: 0}
     - _TP_Middle: {r: 0.509434, g: 0.4397473, b: 0.4397473, a: 0}
     - _TP_Top: {r: 0.4043317, g: 0.7176471, b: 0.1647059, a: 0}
+    - _TP_Top2: {r: 0.3583302, g: 0.1775245, b: 0.8301887, a: 0}
     - _TopColor: {r: 0.7924528, g: 0.57708734, b: 0.39248842, a: 0}
   m_BuildTextureStacks: []

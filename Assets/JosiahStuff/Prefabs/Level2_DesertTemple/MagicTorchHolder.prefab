@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2131375824208659915
 Transform:
@@ -50,7 +50,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &545170081701572645
 Transform:
@@ -216,9 +216,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.071
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 2d522f2c46a51df44a7ce56aeea52792, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d522f2c46a51df44a7ce56aeea52792, type: 3}
       propertyPath: m_Name
       value: SM_MagicTorchHolder_ArtPass_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d522f2c46a51df44a7ce56aeea52792, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -285,6 +293,14 @@ PrefabInstance:
     - target: {fileID: 1768881013545301425, guid: 371258b0896c2f14e8506601615d83aa, type: 3}
       propertyPath: m_Name
       value: Fire
+      objectReference: {fileID: 0}
+    - target: {fileID: 1768881013545301425, guid: 371258b0896c2f14e8506601615d83aa, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8466481036418070669, guid: 371258b0896c2f14e8506601615d83aa, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -2,7 +2,7 @@ trackSelection = true
 refreshSearchWindowsInPlayMode = false
 fetchPreview = true
 defaultFlags = 0
-keepOpen = false
+keepOpen = true
 queryFolder = "Assets"
 onBoardingDoNotAskAgain = true
 showPackageIndexes = false
@@ -26,7 +26,7 @@ scopes = {
 	"last_search.E8DA15E5" = ""
 	"OpenInspectorPreview.E8DA15E5" = "0"
 	"currentGroup.E8DA15E5" = "all"
-	"last_search.310DEAF1" = "entity"
+	"last_search.310DEAF1" = "h: t:meshrenderer p(m_CastShadows)=On"
 	"OpenInspectorPreview.310DEAF1" = "0"
 	"currentGroup.310DEAF1" = "all"
 	"picker_window_position_offset.937786DF" = "154.4;128.8;547.2;210.4"
@@ -85,6 +85,10 @@ providers = {
 objectSelectors = {
 }
 recentSearches = [
+	"t:meshrendererp(m_CastShadows)=() "
+	"t:meshrendererp()=() "
+	"t:meshrendererp()=(something) "
+	"t:meshrendererp(something)=(something) "
 	""
 	"d"
 ]

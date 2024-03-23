@@ -24,14 +24,17 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: 1e24f1e0d5f8bd14f8f4f9881d59eb34, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses:
+  - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -157,12 +160,13 @@ Material:
     - _Border: 0
     - _Border_Effect: 1
     - _BumpScale: 1
+    - _CastShadows: 1
     - _Cell_Location: 0
     - _Cell_Strength: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Contrast: 0.3
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DepthFade: 17.53
     - _DetailAlbedoMapScale: 1
@@ -172,7 +176,7 @@ Material:
     - _Dot_Density: 400
     - _Dot_Distance: 300
     - _Dot_Smoothness: 2
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _Foam: 0.28
@@ -214,9 +218,9 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _Smoothness_1: 0.5
     - _SpecularHighlights: 1
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _SrcBlendAlpha: 1
-    - _Surface: 0
+    - _Surface: 1
     - _Transparency: 0.023
     - _WaterFallTexture_Size: 1
     - _Waterfall_Intensity: 0.5
@@ -224,7 +228,9 @@ Material:
     - _Waterfall_Texture_Speed: 0.7
     - _WorkflowMode: 1
     - _WorldPosition: 0
-    - _ZWrite: 1
+    - _ZTest: 4
+    - _ZWrite: 0
+    - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Border_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0}

@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 735757002480228587}
   - component: {fileID: 5958912813845192859}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: StoneWall_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &735757002480228587
 Transform:
@@ -31,7 +31,7 @@ Transform:
   m_Children:
   - {fileID: 2689764242327968739}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &5958912813845192859
 BoxCollider:
@@ -106,9 +106,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6800967572774843144, guid: df2edf282fdc8f14ca87ae27bfc54785, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: df2edf282fdc8f14ca87ae27bfc54785, type: 3}
       propertyPath: m_Name
       value: SM_StoneWall_Blockout_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: df2edf282fdc8f14ca87ae27bfc54785, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: df2edf282fdc8f14ca87ae27bfc54785, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296942891576337581, guid: df2edf282fdc8f14ca87ae27bfc54785, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296942891576337581, guid: df2edf282fdc8f14ca87ae27bfc54785, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
