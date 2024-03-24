@@ -13,6 +13,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - MAIN_LIGHT_CALCULATE_SHADOWS
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -29,9 +30,12 @@ Material:
     m_Ints: []
     m_Floats:
     - _Emit: 0.25
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _Normal_Value: 0.5
     - _TriPlanar: 1
     m_Colors:
     - _EmitColor: {r: 0.6981132, g: 0.36865437, b: 0.32600567, a: 0}
+    - _Shadow_Color: {r: 0.2732734, g: 0.30448592, b: 0.6509434, a: 0}
     - _TP_Middle: {r: 0.5, g: 0.2759434, b: 0.29625916, a: 0}
     - _TP_Top: {r: 2.0152128, g: 0.90052634, b: 0.5486443, a: 1}
   m_BuildTextureStacks: []

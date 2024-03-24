@@ -10,9 +10,10 @@ Material:
   m_Name: M_StylizedRock_Forest
   m_Shader: {fileID: -6465566751694194690, guid: ada99842a2101fe408e4f30125fabd4c, type: 3}
   m_Parent: {fileID: 2100000, guid: 5780f48e0ad37ad4ba44b5360a4e5802, type: 2}
-  m_ModifiedSerializedProperties: 0
+  m_ModifiedSerializedProperties: 4
   m_ValidKeywords:
   - MAIN_LIGHT_CALCULATE_SHADOWS
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -22,18 +23,28 @@ Material:
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses: []
-  m_LockedProperties: _WorldPosition
+  m_LockedProperties: _Noise_Multiply _WorldPosition
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _SampleTexture2D_aa41c124b55548f1879ebf206f25af5c_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Albedo_1: 1
     - _Border: 0
     - _Border_Effect: 1.27
-    - _Emit: 0.583
+    - _Emit: 0.91
     - _Fog: 1
+    - _Height_Blend: 0.25
+    - _Height_Gradient: 3.04
+    - _HueRandom: 0.05
     - _Lighting_Noise: 0.1
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _Normal_Noise: 0.5
+    - _Normal_Value: 0.53
     - _Shadow_Strength: 1
     - _Smoothness: 1.37
     - _Smoothness_1: 0.256
