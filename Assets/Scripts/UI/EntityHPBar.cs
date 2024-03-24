@@ -34,6 +34,7 @@ public class EntityHPBar : HPBar
     {
         filler.color = new Color(filler.color.r, filler.color.g, filler.color.b, 1);
         border.color = new Color(border.color.r, border.color.g, border.color.b, 1);
+        lerpingFiller.color = new Color(lerpingFiller.color.r, lerpingFiller.color.g, lerpingFiller.color.b, 1);
     }
 
     public void Disappear(bool immediate = false)
@@ -59,6 +60,8 @@ public class EntityHPBar : HPBar
     {
         filler.color = new Color(filler.color.r, filler.color.g, filler.color.b, 0);
         border.color = new Color(border.color.r, border.color.g, border.color.b, 0);
+          lerpingFiller.color = new Color(lerpingFiller.color.r, lerpingFiller.color.g, lerpingFiller.color.b, 0);
+               
     }
 
     private void OnDisable()

@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,8 +7,9 @@ public class HPBar : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] protected Image filler;
+    [SerializeField] protected Image lerpingFiller;
     [HideInInspector] public float maxHP;
-    
+
     float hp;
 
     public void SetHPValue(int value)
@@ -31,6 +33,31 @@ public class HPBar : MonoBehaviour
 
     void SetHPFill()
     {
-        if (filler) filler.fillAmount = maxHP > 0? hp / maxHP : 0;
+        if (filler && lerpingFiller)
+        {
+            float fillAmount = maxHP > 0 ? hp / maxHP : 0;
+
+          
+            filler.fillAmount = fillAmount;
+
+            
+            StartCoroutine(LerpFillAmount(lerpingFiller, fillAmount));
+        }
+    }
+
+    IEnumerator LerpFillAmount(Image lerpingFiller, float targetFill)
+    {
+        float startTime = Time.time;
+        float startFill = lerpingFiller.fillAmount;
+        float duration = 0.5f; 
+
+        while (Time.time - startTime < duration)
+        {
+            float t = (Time.time - startTime) / duration;
+            lerpingFiller.fillAmount = Mathf.Lerp(startFill, targetFill, t);
+            yield return null;
+        }
+
+        lerpingFiller.fillAmount = targetFill;
     }
 }
