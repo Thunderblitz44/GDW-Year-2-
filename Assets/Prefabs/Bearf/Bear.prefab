@@ -338,8 +338,7 @@ SkinnedMeshRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: -876546973899608171, guid: d8cf7fd011ddbd544a1e61fcce4e6be8, type: 3}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -560,7 +559,7 @@ Transform:
   - {fileID: 3099335849879861378}
   - {fileID: 3719016228967178754}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6535110002509659281
 Animator:
@@ -600,8 +599,9 @@ MonoBehaviour:
   isInvincible: 0
   slowUpdateInterval: 0.2
   flashTimer: 0
+  dissolveTimer: 0
+  spawndissolveTimer: 1
   timeBetweenAttacks: 2
-  attackPrepareTime: 2
   maxAttackReps: 1
   startAttackingDelay: 2
   enableSlam: 1

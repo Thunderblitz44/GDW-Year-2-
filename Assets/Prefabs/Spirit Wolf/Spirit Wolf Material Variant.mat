@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2824529266669016537
+--- !u!114 &-6673522835628467036
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,34 +20,29 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_StylizedPineLeaf_Level3
-  m_Shader: {fileID: -6465566751694194690, guid: 04f0a584c8249b04ba5ccbd11386e05a, type: 3}
-  m_Parent: {fileID: 2100000, guid: 590ff7706e5c0ec4797b4a650a74403a, type: 2}
+  m_Name: Spirit Wolf Material Variant
+  m_Shader: {fileID: -6465566751694194690, guid: 887d920fe7a08f04ca9246f1faccaa22, type: 3}
+  m_Parent: {fileID: 2100000, guid: 93404aded974e5144beb07ffd60f93cd, type: 2}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - MAIN_LIGHT_CALCULATE_SHADOWS
-  - _MAIN_LIGHT_SHADOWS_CASCADE
-  - _SHADOWS_SOFT
-  m_InvalidKeywords:
-  - _SURFACE_TYPE_TRANSPARENT
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: _GradientShift
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs:
-    - _Albedo:
-        m_Texture: {fileID: 2800000, guid: 1267bee20b82d804793e8fc0739b10ee, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+    m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _Foam: 1.28
+    - _FoamWidth: 2.21
+    - _NoiseStep: 8.09
+    - _Transparency: 0
     m_Colors:
-    - _Color: {r: 0.46666667, g: 0.8784314, b: 0.48778227, a: 1}
-    - _GradColor1: {r: 0, g: 0.7490196, b: 0.21465553, a: 0}
-    - _GradColor2: {r: 1, g: 0.89133024, b: 0, a: 0}
+    - _MaskNoise_1: {r: 0.01, g: 0.52, b: 0, a: 0}
+    - _UpperColor: {r: 17.689363, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

@@ -6603,7 +6603,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 4a628f178730a6b478ed5da00e3c16c3, type: 3}
+  - {fileID: 2100000, guid: b572853575aa70749b18c1be96dd3804, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7269,6 +7269,7 @@ MonoBehaviour:
   slowUpdateInterval: 0.2
   flashTimer: 0
   dissolveTimer: 0
+  spawndissolveTimer: 1
   attackTrigger: {fileID: 8397105649380987417}
   HeadTarget: {fileID: 1717914109324292108}
   RangedAttack: []
@@ -7290,6 +7291,7 @@ MonoBehaviour:
   maxHealth: 75
   hpBarPrefab: {fileID: 1041808532556473431, guid: 6b618294122e85c48981e313a7e14662, type: 3}
   height: 1.5
+  showOnAwake: 0
   autoHide: 1
 --- !u!114 &3025004461954741037
 MonoBehaviour:
