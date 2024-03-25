@@ -18,7 +18,7 @@ public class Gorilla : Enemy
     public VisualEffect vfxGraph;
     private int AttackType;
     private int DeathType;
-    // Start is called before the first frame update
+  
     void Start()
     {
         EnableAI();
@@ -80,20 +80,19 @@ public class Gorilla : Enemy
     {
         if (other.CompareTag("Player"))
         {
-            // Player entered the attack trigger, set inAttackRange to true
+         
             inAttackRange = true;
             animator.SetBool("inAttackRange", inAttackRange);
-            // You can also trigger an attack animation here if needed
-            // GolemKnightAnimator.SetTrigger("AttackTrigger");
+            
         }
     }
 
-    // Called when another collider exits the trigger
+  
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            // Player exited the attack trigger, set inAttackRange to false
+       
             inAttackRange = false;
             animator.SetBool("inAttackRange", inAttackRange);
         }

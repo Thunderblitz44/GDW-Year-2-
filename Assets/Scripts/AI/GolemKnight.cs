@@ -3,13 +3,9 @@ using UnityEngine.VFX;
 
 public class GolemKnight : Enemy
 {
-    // attack
+  
     [SerializeField] int attackDamage = 25;
-    //[SerializeField] float attackCooldown = 1.5f;
-    //[SerializeField] float attackDelay = 0.5f;
-    //float attackTimer;
-    //float attackCooldownTimer;
-    //bool attack;
+   
     [SerializeField] GameObject HeadTarget;
     AttackTrigger trigger;
     MeleeHitBox sword;
@@ -54,11 +50,11 @@ public class GolemKnight : Enemy
         if (agent) localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
         else localVelocity = Vector3.zero;
 
-        // Smooth the velocity components (remove the float keyword)
+     
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
         zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
         ySpeed = Mathf.Lerp(ySpeed, localVelocity.y, smoothingFactor);
-        // Set the velocity values in the animator
+      
         animator.SetFloat("XSpeed", xSpeed);
         animator.SetFloat("ZSpeed", zSpeed);
         animator.SetFloat("YSpeed", ySpeed);
@@ -67,14 +63,13 @@ public class GolemKnight : Enemy
 
     void OnAttackTriggerEnter(Collider other)
     {
-        //attack = true;
+      
         animator.SetBool("CanAttack", true);
     }
 
     void OnAttackTriggerExit(Collider other)
     {
-        //attack = false;
-        //attackTimer = 0f;
+       
         animator.SetBool("CanAttack", false);
     }
 
@@ -110,18 +105,18 @@ public class GolemKnight : Enemy
     public void DisableAttackR()
     {
         sword.gameObject.SetActive(false);
-        //Debug.Log("2");
+  
     }
     public void ReadyAttackL()
     {
-       // Debug.Log("3");
+     
         sword.gameObject.SetActive(true);
     }
 
     public void DisableAttackL()
     {
         sword.gameObject.SetActive(false);
-        //Debug.Log("4");
+       
     }
 
     public void Die()

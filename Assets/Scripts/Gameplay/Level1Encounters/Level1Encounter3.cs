@@ -111,7 +111,7 @@ public class Level1Encounter3 : EncounterVolume
         {
             pillar.rotation = Quaternion.Lerp(pillarPoses[0].rotation, pillarPoses[1].rotation, pillarFallCurve.Evaluate(i));
             pillar.position = Vector3.Slerp(pillarPoses[0].position, pillarPoses[1].position, pillarFallCurve.Evaluate(i));
-            FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Pillar Collapse", gameObject);
+          
             yield return null;
         }
         StaticUtilities.ShakePlayerCamera(landShakeAmp, landShakeFreq, landShakeSpeed);

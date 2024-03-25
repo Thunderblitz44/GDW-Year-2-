@@ -4,7 +4,7 @@ using UnityEngine.VFX;
 
 public class MantisController : Enemy
 {
-    private bool isEnabled = false;
+    private bool isEnabled = true;
     public CapsuleCollider attackTrigger;
     public GameObject HeadTarget;
     public MeleeHitBox[] RangedAttack;

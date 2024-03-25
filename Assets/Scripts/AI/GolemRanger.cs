@@ -3,7 +3,7 @@ using UnityEngine.VFX;
 
 public class GolemRanger : Enemy
 {
-    // attack
+  
     [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
     [SerializeField] Transform shootOrigin;
     [SerializeField] new ParticleSystem particleSystem;
@@ -52,17 +52,17 @@ public class GolemRanger : Enemy
         if (agent) localVelocity = transform.InverseTransformDirection(agent.velocity.normalized);
         else localVelocity = Vector3.zero;
 
-        // Smooth the velocity components (remove the float keyword)
+       
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
         zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
-        // Set the velocity values in the animator
+       
         animator.SetFloat("XSpeed", xSpeed);
         animator.SetFloat("ZSpeed", zSpeed);
     }
 
     void OnAttackTriggerEnter(Collider other)
     {
-        //attack = true;
+       
         animator.SetBool("InAttackRange", true);
     }
 
