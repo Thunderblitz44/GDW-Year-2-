@@ -40,8 +40,10 @@ public class HPBar : MonoBehaviour
           
             filler.fillAmount = fillAmount;
 
-            
-            StartCoroutine(LerpFillAmount(lerpingFiller, fillAmount));
+            if (isActiveAndEnabled)
+            {
+                StartCoroutine(LerpFillAmount(lerpingFiller, fillAmount));
+            }
         }
     }
 
