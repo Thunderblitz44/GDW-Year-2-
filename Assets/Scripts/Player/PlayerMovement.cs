@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     public Transform Body { get; private set; }
     public Rigidbody Rb { get; private set; }
 
-    public bool IsDead;
+    [HideInInspector] public bool IsDead;
     public event UnityAction OnPlayerDeath;
   
    
@@ -71,14 +71,25 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         }
 
         playerCollisions = Body.GetComponent<PlayerCollisions>();
-        playerCollisions.onCollisionStay += OnCollisionStay;
-        playerCollisions.onCollisionExit += OnCollisionExit;
-        playerCollisions.onCollisionEnter += OnCollisionEnter;
+        //playerCollisions.onCollisionStay += OnCollisionStay;
+        //playerCollisions.onCollisionExit += OnCollisionExit;
+        //playerCollisions.onCollisionEnter += OnCollisionEnter;
     }
 
     private void Update()
     {
-        if (collisions == 0 && IsGrounded && !stepClimbing && (jumped || Mathf.Abs(Rb.velocity.y) > 2f)) IsGrounded = false;
+        //if (collisions == 0 && IsGrounded && !stepClimbing && (jumped || Mathf.Abs(Rb.velocity.y) > 2f)) IsGrounded = false;
+        if (Physics.Raycast(groundCheck.position, Vector3.down, out ground, groundRaycastDist, groundLayer, QueryTriggerInteraction.Ignore))
+        {
+            groundAngle = Vector3.Angle(Vector3.up, ground.normal);
+            if (DebugHUD.instance)DebugHUD.instance.SetDebugText("ground angle : " + groundAngle.ToString("0.0"));
+
+            IsGrounded = true;
+        }
+        else IsGrounded = false;
+
+
+
         // can jump test
         if (IsGrounded && (jumpCooldownTimer += Time.deltaTime) >= jumpCooldown) canJump = true;
         if (jumped && IsGrounded && canJump) jumped = false;
@@ -86,7 +97,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // rotate body
         Body.rotation = Quaternion.LookRotation(StaticUtilities.GetCameraDir());
 
-        DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
+        if (DebugHUD.instance) DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
     }
 
     private void FixedUpdate()
@@ -115,7 +126,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (speed < MoveSpeed) oldMoveSpeed = MoveSpeed;
         }
 
-        DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
+        if (DebugHUD.instance) DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
 
         // Steps
         RaycastHit hitLower;
@@ -180,12 +191,12 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         actions.Locomotion.Run.Enable();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    /*private void OnCollisionEnter(Collision collision)
     {
         collisions++;
-    }
+    }*/
 
-    private void OnCollisionStay(Collision collision)
+    /*private void OnCollisionStay(Collision collision)
     {
         // is grounded test
         // are we colliding with an object lower than groundcheck
@@ -199,13 +210,14 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
                 IsGrounded = true;
             }
+            else IsGrounded = false;
         }
-    }
+    }*/
 
-    private void OnCollisionExit(Collision collision)
+    /*private void OnCollisionExit(Collision collision)
     {
         collisions--;
-    }
+    }*/
 
     public void EnableLocomotion()
     {
@@ -227,10 +239,8 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     }
     public void Death()
     {
-     
-            IsDead = true;
-            // Invoke the event if it's not null
-            OnPlayerDeath?.Invoke();
-        
+        IsDead = true;
+        // Invoke the event if it's not null
+        OnPlayerDeath?.Invoke();
     }
 }

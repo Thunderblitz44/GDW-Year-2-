@@ -84,6 +84,8 @@ public class ElanaDoppleganger : Enemy
     [SerializeField] float walkSpeed = 4f;
     [SerializeField] float runSpeed = 10f;
     [SerializeField] float rotationSpeed = 1000f;
+    public ParticleSystem DustSystemRight;
+    public ParticleSystem DustSystemLeft;
     float stopSpeed = 0.01f;
     bool isStopped;
     bool aggroChase;
@@ -497,5 +499,15 @@ public class ElanaDoppleganger : Enemy
     float GetRandomCooldown(float min, float max)
     {
         return Random.Range(min, max);
+    }
+
+    public void DustLeft()
+    {
+        DustSystemLeft.Emit(6);
+    }
+
+    public void DustRight()
+    {
+        DustSystemRight.Emit(6);
     }
 }
