@@ -70,7 +70,6 @@ public abstract class Player : DamageableEntity
 
     void Start()
     {
-        if (DebugHUD.instance) DebugHUD.instance.DisplayControls(actions);
         LevelManager.Instance.CurrentCheckpoint.Teleport(transform);
         hp.SetHealth(PlayerPrefs.GetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.MaxHealth));
     }
@@ -139,7 +138,6 @@ public abstract class Player : DamageableEntity
                 }
 
                 // change the controls panel
-                DebugHUD.instance.DisplayControls(actions, true);
             }
             else if (usingController && !wasUsingController)
             {
@@ -151,7 +149,6 @@ public abstract class Player : DamageableEntity
                 Cursor.lockState = CursorLockMode.Locked;
 
                 // change the controls panel
-                DebugHUD.instance.DisplayControls(actions, false);
             }
             wasUsingController = usingController;
         };

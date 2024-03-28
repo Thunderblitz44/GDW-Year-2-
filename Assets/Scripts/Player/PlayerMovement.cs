@@ -82,7 +82,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         if (Physics.Raycast(groundCheck.position, Vector3.down, out ground, groundRaycastDist, groundLayer, QueryTriggerInteraction.Ignore))
         {
             groundAngle = Vector3.Angle(Vector3.up, ground.normal);
-            if (DebugHUD.instance)DebugHUD.instance.SetDebugText("ground angle : " + groundAngle.ToString("0.0"));
 
             IsGrounded = true;
         }
@@ -97,7 +96,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // rotate body
         Body.rotation = Quaternion.LookRotation(StaticUtilities.GetCameraDir());
 
-        if (DebugHUD.instance) DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
     }
 
     private void FixedUpdate()
@@ -126,7 +124,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (speed < MoveSpeed) oldMoveSpeed = MoveSpeed;
         }
 
-        if (DebugHUD.instance) DebugHUD.instance.SetSpeed(Rb.velocity.magnitude);
 
         // Steps
         RaycastHit hitLower;
