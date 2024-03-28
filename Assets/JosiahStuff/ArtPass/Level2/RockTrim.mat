@@ -7,12 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sand_Shaded 1
+  m_Name: RockTrim
   m_Shader: {fileID: -6465566751694194690, guid: ada99842a2101fe408e4f30125fabd4c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - MAIN_LIGHT_CALCULATE_SHADOWS
+  - _MAIN_LIGHT_SHADOWS_CASCADE
+  - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -26,7 +28,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 5edac54f434015e42861fedeae2afc47, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -54,7 +56,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Emit_1:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: a7b781a86a8e2324eb9e0cba4c221f85, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Gradient_Texture:
@@ -74,7 +76,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: bab80c667fa26684e8f31947b1840c8e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -109,28 +111,12 @@ Material:
         m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_857d23b602c647d1a1382949211b482a_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 1267bee20b82d804793e8fc0739b10ee, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_aa41c124b55548f1879ebf206f25af5c_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_b3b6a5ef96f44c4ea09f6c713dbf3231_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_da7810e1e4344fa1a372d5aee7796ab0_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: c7437040d178fbf4b8139c9b9d74af6c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_dc5afe02ea9a4ec5ac29ada48a77400f_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: ffa27f35fda816f4fb84f88b550b2dbe, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_de677d32bf5e4b4893110c2a058d8d6d_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: b33a1b69d88b03d43ae6b9c8fd31f4b4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_ee6791df4eb44a658b83a3eb3e29fec4_Texture_1_Texture2D:
@@ -158,22 +144,21 @@ Material:
     - ADDITIONAL_LIGHTS_CALCULATE_SHADOWS: 0
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
     - _Additional_Lights: 0.5
-    - _Albedo_1: 1
+    - _Albedo_1: 0.535
     - _Albedo_Scale: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _Border: 1
+    - _Border: 0
     - _Border_Effect: 1
     - _BumpScale: 1
-    - _BumpStrength: -0.04
     - _CastShadows: 1
     - _Cell_Location: 0
     - _Cell_Strength: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Contrast: 0
+    - _Contrast: 0.3
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -186,40 +171,39 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeNoiseSpeed: 0.05
-    - _Emit: 0
+    - _Emit: 0.214
     - _EnvironmentReflections: 1
     - _Fog: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HeightBlend: 1
-    - _Height_Blend: 1.82
-    - _Height_Gradient: -1.59
+    - _HeightBlend: 0.8
+    - _Height_Blend: 3
+    - _Height_Gradient: -2
     - _HueRandom: 0
     - _Light_Contrast: 0.5
-    - _Lighting_Noise: 0.5
-    - _MAIN_LIGHT_SHADOWS_CASCADE: 0
+    - _Lighting_Noise: 0.1
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Mask_1: 0
     - _Metallic: 0
     - _NoiseScale: 0.2
     - _NoiseStrength: 1
     - _Noise_Multiply: 1
     - _Noise_Scale: 2
-    - _Normal_Noise: 0
-    - _Normal_Value: 0
+    - _Normal_Noise: 0.5
+    - _Normal_Value: 0.67
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _ReflectionProbe: 0.5
-    - _SHADOWS_SOFT: 0
-    - _Scale: 1.8
+    - _SHADOWS_SOFT: 1
     - _Shadow_Atten: 0
-    - _Shadow_Strength: 0
+    - _Shadow_Strength: 0.5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
-    - _Smoothness_1: 0
+    - _Smoothness_1: 0.5
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
@@ -233,23 +217,22 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Border_Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Border_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0}
+    - _Color: {r: 0.6957397, g: 0.514151, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EmitColor: {r: 1, g: 1, b: 1, a: 0}
+    - _EmitColor: {r: 0.9622642, g: 0.24956001, b: 0.11347453, a: 0}
     - _MaskColor: {r: 1, g: 1, b: 1, a: 0}
     - _MaskColor2: {r: 0, g: 0, b: 0, a: 0}
     - _MaskNoise: {r: 0, g: 1, b: 0, a: 0}
-    - _Outline_Color: {r: 0.17924526, g: 0.12597898, b: 0.12597898, a: 0}
-    - _Shadow_Color: {r: 0.4616857, g: 0.5431947, b: 0.7830189, a: 0}
-    - _Smoothness_Color: {r: 0.8962264, g: 0.8871413, b: 0.6552599, a: 0}
+    - _Shadow_Color: {r: 0, g: 0.016509417, b: 0.1981132, a: 0}
+    - _Smoothness_Color: {r: 2.670157, g: 1.509037, b: 1.034511, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _TP_Bottom: {r: 0.1805575, g: 0.1780883, b: 0.4339623, a: 0}
     - _TP_Middle: {r: 0.509434, g: 0.4397473, b: 0.4397473, a: 0}
     - _TP_Top: {r: 0.4043317, g: 0.7176471, b: 0.1647059, a: 0}
     - _TP_Top2: {r: 0.3583302, g: 0.1775245, b: 0.8301887, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &9042356397811627987
+--- !u!114 &5970047649729538634
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
