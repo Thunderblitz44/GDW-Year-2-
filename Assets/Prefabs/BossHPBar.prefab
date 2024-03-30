@@ -69,7 +69,7 @@ MonoBehaviour:
   m_text: 'HP : 100 / 100'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 19f6baf2713d14e44982e2cc5d7f1a5a, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -8188080022521164207, guid: 19f6baf2713d14e44982e2cc5d7f1a5a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32.9
+  m_fontSize: 18.4
   m_fontSizeBase: 28.55
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -135,6 +135,82 @@ MonoBehaviour:
   m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1515054210300662137
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8270471911329698217}
+  - component: {fileID: 5687704547826187291}
+  - component: {fileID: 1080334937456082121}
+  m_Layer: 0
+  m_Name: Ghostgame- Hp bar boss unlayered4 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8270471911329698217
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515054210300662137}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalScale: {x: 100, y: 100, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6540636947384558970}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -21, y: 16}
+  m_SizeDelta: {x: 6.38, y: 0.43}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5687704547826187291
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515054210300662137}
+  m_CullTransparentMesh: 1
+--- !u!114 &1080334937456082121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515054210300662137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: -876546973899608171, guid: a8384cf45fc39cb42894d8592ecec815, type: 3}
+  m_Color: {r: 1, g: 0.37169808, b: 0.40338024, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 545e952815148754f89ab51db0e98d86, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 0
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &4610604558869636433
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,15 +269,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: -876546973899608171, guid: a8384cf45fc39cb42894d8592ecec815, type: 3}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0d6ffd0f78dbf9a48bdca59e9ef9dd75, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 545e952815148754f89ab51db0e98d86, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -356,7 +432,7 @@ MonoBehaviour:
   m_text: NAME
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 19f6baf2713d14e44982e2cc5d7f1a5a, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -8188080022521164207, guid: 19f6baf2713d14e44982e2cc5d7f1a5a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -455,6 +531,7 @@ RectTransform:
   - {fileID: 3129800940824153320}
   - {fileID: 6452160793948845326}
   - {fileID: 6704578854896547307}
+  - {fileID: 8270471911329698217}
   - {fileID: 2366074052981325136}
   m_Father: {fileID: 0}
   m_RootOrder: -1
@@ -478,7 +555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 7501535474592753705}
   filler: {fileID: 4458333841872199778}
-  lerpingFiller: {fileID: 0}
+  lerpingFiller: {fileID: 1080334937456082121}
   maxHP: 0
 --- !u!95 &5815313074923565649
 Animator:

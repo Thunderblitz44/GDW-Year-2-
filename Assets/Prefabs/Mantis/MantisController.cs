@@ -23,7 +23,7 @@ public class MantisController : Enemy
             trigger.knockback = RangedKnockback;
         }
 
-        // Get the teleport Visual Effect Graph component
+        
         teleportEffect = GetComponentInChildren<VisualEffect>();
         if (teleportEffect == null)
         {
@@ -31,7 +31,7 @@ public class MantisController : Enemy
         }
     }
 
-    // Method to teleport after a delay
+ 
     public void Teleport()
     {
         
@@ -39,12 +39,12 @@ public class MantisController : Enemy
         StartCoroutine(WarpToPlayerAfterDelay(0.5f)); 
     }
 
-    // Coroutine to warp the agent to the player position after a delay
+    
     private IEnumerator WarpToPlayerAfterDelay(float delay)
     {
-        yield return new WaitForSeconds(delay); // Wait for the specified delay
+        yield return new WaitForSeconds(delay); 
         
-        // Enable AI and warp the agent to the player position
+        
         EnableAI();
         if (agent) agent.Warp(LevelManager.PlayerTransform.position);
 
@@ -60,7 +60,7 @@ public class MantisController : Enemy
         {
             HeadTarget.transform.position = headPosition;
             if (agent) agent.SetDestination(headPosition);
-            animator.SetBool("IsAttacking", inAttackRange);
+           
         }
     }
 
@@ -89,7 +89,7 @@ public class MantisController : Enemy
         }
     }
 
-    // Method to play the teleport Visual Effect Graph event
+  
     private void PlayTeleportEffect()
     {
         

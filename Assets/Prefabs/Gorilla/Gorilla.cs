@@ -45,7 +45,7 @@ public class Gorilla : Enemy
         {
             HeadTarget.transform.position = headPosition;
             if (agent) agent.SetDestination(headPosition);
-            animator.SetBool("IsAttacking", inAttackRange);
+  
         }
 
         
