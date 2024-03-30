@@ -20,7 +20,8 @@ public class Bat : Enemy
     void Start()
     {
         EnableAI();
-      GetComponentInChildren<MagicBullet>().Initialize(projectile, this);
+    GetComponentInChildren<MagicBullet>().Initialize(projectile, this);
+      
     }
     
     protected override void Update()
@@ -32,7 +33,7 @@ public class Bat : Enemy
         {
             HeadTarget.transform.position = headPosition;
             if (agent) agent.SetDestination(headPosition);
-         
+            animator.SetBool("IsAttacking", inAttackRange);
         }
 
         
@@ -44,7 +45,9 @@ public class Bat : Enemy
         xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
         zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
       
-
+        animator.SetFloat("XSpeed", xSpeed);
+        animator.SetFloat("ZSpeed", zSpeed);
+    
         
     }
 
