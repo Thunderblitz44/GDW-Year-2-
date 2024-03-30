@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 public class Enemy : DamageableEntity
 {
@@ -18,6 +19,7 @@ public class Enemy : DamageableEntity
     private float dissolveSpeed = 0.3f;
     private bool isAwake = true;
     public float spawndissolveTimer = 1f;
+    [SerializeField] VisualEffect OnHitEffects;
     protected override void Awake()
     {
         base.Awake();
@@ -25,7 +27,7 @@ public class Enemy : DamageableEntity
         animator = GetComponent<Animator>();
         if (!animator) animator = GetComponentInChildren<Animator>();
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-
+        if (!OnHitEffects) OnHitEffects = GetComponentInChildren<VisualEffect>();
         agent = GetComponent<NavMeshAgent>();
         target = LevelManager.PlayerTransform;
       
@@ -91,7 +93,7 @@ public class Enemy : DamageableEntity
     public override void ApplyDamage(int damage)
     {
         base.ApplyDamage(damage);
-      
+        OnHitEffects.SendEvent("Hit");
         // Trigger flash effect
         if (!isInvincible) flashTimer = StaticUtilities.damageFlashDuration;
         if (updateTargetOnDamaged) target = LevelManager.PlayerTransform;
