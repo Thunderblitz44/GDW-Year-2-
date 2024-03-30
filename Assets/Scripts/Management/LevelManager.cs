@@ -25,7 +25,6 @@ public class LevelManager : MonoBehaviour
     [SerializeField] Image loadingProgressBar;
     [SerializeField] GameObject saveIndicator;
     [SerializeField] Transitioner transitioner;
-
     public List<GameObject> LevelEnemyList { get { return enemies; } }
     public static readonly List<DamageableEntity> spawnedEnemies = new();
     public Action onEncounterStart;
@@ -127,6 +126,8 @@ public class LevelManager : MonoBehaviour
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, CurrentCheckpoint.Id);
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().Health);
         if (CurrentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, CurrentEncounter.Id);
+        PlayerPrefs.Save();
+        StartCoroutine(ShowSavingGame());
     }
 
     void LoadProgress()
@@ -205,12 +206,12 @@ public class LevelManager : MonoBehaviour
         PlayerScript.UnPausePlayer();
     }
 
-    public void LoadNextLevel()
+    public void LoadNextLevel(bool returnToMain = false)
     {
         int id = 0;
-        if (Id + 1 < SceneManager.sceneCountInBuildSettings)
+        if (!returnToMain && Id + 1 < SceneManager.sceneCountInBuildSettings)
         {
-            id++;
+            id = Id + 1;
         }
         StartCoroutine(LoadSceneAsync(id));
     }
@@ -226,11 +227,6 @@ public class LevelManager : MonoBehaviour
             loadingProgressBar.fillAmount = prog;
             yield return null;
         }
-    }
-
-    public void SavedGame()
-    {
-        StartCoroutine(ShowSavingGame());
     }
 
     IEnumerator ShowSavingGame()
