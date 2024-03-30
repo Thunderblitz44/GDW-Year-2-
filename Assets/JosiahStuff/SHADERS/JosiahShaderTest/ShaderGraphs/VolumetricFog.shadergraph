@@ -26,6 +26,9 @@
         },
         {
             "m_Id": "e711555dd9c548a2b5ca402931318b8d"
+        },
+        {
+            "m_Id": "e8834ec82e8b4864945a6cf59f91dca5"
         }
     ],
     "m_Keywords": [],
@@ -173,6 +176,9 @@
         },
         {
             "m_Id": "a2a38cf42f5e4d69a6cea728158b043a"
+        },
+        {
+            "m_Id": "d054db3d00b7427a9ae5c54273792792"
         }
     ],
     "m_GroupDatas": [],
@@ -573,20 +579,6 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
-                    "m_Id": "97941e426d0d4fc09b09283a126135d0"
-                },
-                "m_SlotId": 2
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "92fe143051e34c29add46790e2dc2604"
-                },
-                "m_SlotId": 1
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
                     "m_Id": "9b39adc8b793438f9611d039b20048c5"
                 },
                 "m_SlotId": 4
@@ -594,6 +586,20 @@
             "m_InputSlot": {
                 "m_Node": {
                     "m_Id": "3d91b0e1ac914d9a96dec7ad7ee1aabb"
+                },
+                "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "9b7681bf105a4d57ab86f74e2c6dc36e"
+                },
+                "m_SlotId": 2
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "92fe143051e34c29add46790e2dc2604"
                 },
                 "m_SlotId": 1
             }
@@ -678,6 +684,34 @@
             "m_InputSlot": {
                 "m_Node": {
                     "m_Id": "47b1e340d2914d04b9e4f80a28ed1125"
+                },
+                "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "d054db3d00b7427a9ae5c54273792792"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "97941e426d0d4fc09b09283a126135d0"
+                },
+                "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "d054db3d00b7427a9ae5c54273792792"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "9b7681bf105a4d57ab86f74e2c6dc36e"
                 },
                 "m_SlotId": 1
             }
@@ -851,6 +885,9 @@
         },
         {
             "m_Id": "e711555dd9c548a2b5ca402931318b8d"
+        },
+        {
+            "m_Id": "e8834ec82e8b4864945a6cf59f91dca5"
         }
     ]
 }
@@ -2086,10 +2123,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 1192.6666259765625,
-            "y": 767.3333129882813,
+            "x": 1245.3333740234375,
+            "y": 1006.666748046875,
             "width": 209.3333740234375,
-            "height": 279.99993896484377
+            "height": 280.0
         }
     },
     "m_Slots": [
@@ -2518,6 +2555,21 @@
     "m_Property": {
         "m_Id": "7ce356819c2340f18cd2c5ca921c46a5"
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "46b3282cb55447439b5aaa792589812b",
+    "m_Id": 0,
+    "m_DisplayName": "FogFaceFade",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
 }
 
 {
@@ -5188,6 +5240,42 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "d054db3d00b7427a9ae5c54273792792",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 639.3333129882813,
+            "y": 1034.0,
+            "width": 147.3333740234375,
+            "height": 36.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "46b3282cb55447439b5aaa792589812b"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "e8834ec82e8b4864945a6cf59f91dca5"
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "d07b1725442c4259a4963db678b8ddb8",
     "m_Id": 2,
@@ -5515,6 +5603,34 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "e8834ec82e8b4864945a6cf59f91dca5",
+    "m_Guid": {
+        "m_GuidSerialized": "36f85633-771c-44a8-874f-422deb558051"
+    },
+    "m_Name": "FogFaceFade",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "FogFaceFade",
+    "m_DefaultReferenceName": "_FogFaceFade",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.009999999776482582,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
 }
 
 {
