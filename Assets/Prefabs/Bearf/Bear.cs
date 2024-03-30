@@ -21,6 +21,7 @@ public class Bear : Enemy
     [SerializeField] bool enableSlam = true;
     [SerializeField] bool enableOrbs = true;
     [SerializeField] bool enableSpear = true;
+    [SerializeField] bool enableInstakill = true;
 
     [Header("Slam attack")]
     [SerializeField] float slamCooldown = 1;
@@ -36,6 +37,11 @@ public class Bear : Enemy
     [SerializeField] GameObject aoeIndicatorPrefab;
     [SerializeField] float spearCooldown = 1;
     Transform aoeIndicator;
+
+    [Header("Fields")]
+    [SerializeField] GameObject[] blueFields;
+    [SerializeField] GameObject[] redFields;
+
 
     protected override void Update()
     {
