@@ -25,45 +25,24 @@ public class LevelManager : MonoBehaviour
     [SerializeField] Image loadingProgressBar;
     [SerializeField] GameObject saveIndicator;
     [SerializeField] Transitioner transitioner;
-
-    public List<GameObject> LevelEnemyList
-    {
-        get { return enemies; }
-    }
-
+    public List<GameObject> LevelEnemyList { get { return enemies; } }
     public static readonly List<DamageableEntity> spawnedEnemies = new();
     public Action onEncounterStart;
 
+    [SerializeField] private SoundController soundController;
+    private bool encounterMusic;
+    private bool bossMusic;
+
     public static Transform PlayerTransform { get; private set; }
-
-    public Player PlayerScript
-    {
-        get { return playerScript; }
-    }
-
-    public GameObject Boss
-    {
-        get { return boss; }
-    }
-
-    public Transform WorldCanvas
-    {
-        get { return worldCanvas.transform; }
-    }
-
-    public Transform Canvas
-    {
-        get { return canvas.transform; }
-    }
+    public Player PlayerScript { get { return playerScript; }}
+    public GameObject Boss { get { return boss; } }
+    public Transform WorldCanvas { get { return worldCanvas.transform; } }
+    public Transform Canvas { get { return canvas.transform;} }
 
     public Checkpoint CurrentCheckpoint { get; private set; }
     public EncounterVolume CurrentEncounter { get; private set; }
 
     public GameObject floatingTextPrefab;
-
-    [SerializeField] private SoundController soundController;
-    private bool encounterMusic;
-    private bool bossMusic;
 
     private void Awake()
     {
@@ -73,7 +52,6 @@ public class LevelManager : MonoBehaviour
             Destroy(this);
             return;
         }
-
         Instance = this;
 
         // give encounterVolumes their ids
@@ -109,10 +87,8 @@ public class LevelManager : MonoBehaviour
     public static Vector3 GetRandomEnemySpawnPoint(Bounds volumeBounds)
     {
         int itterations = 0;
-        Start:
-        Vector3 spawnPoint = Vector3.right * UnityEngine.Random.Range(volumeBounds.min.x, volumeBounds.max.x) +
-                             Vector3.up * volumeBounds.center.y + Vector3.forward *
-                             UnityEngine.Random.Range(volumeBounds.min.z, volumeBounds.max.z);
+    Start:
+        Vector3 spawnPoint = Vector3.right * UnityEngine.Random.Range(volumeBounds.min.x, volumeBounds.max.x) + Vector3.up * volumeBounds.center.y + Vector3.forward * UnityEngine.Random.Range(volumeBounds.min.z, volumeBounds.max.z);
         if (NavMesh.SamplePosition(spawnPoint, out NavMeshHit hit, 30f, NavMesh.AllAreas))
         {
             if (Vector3.Distance(hit.position, PlayerTransform.position) < 3) goto Start;
@@ -126,7 +102,7 @@ public class LevelManager : MonoBehaviour
             return hit.position + Vector3.up;
         }
 
-        next:
+    next:
         if (++itterations < 20) goto Start;
         else
         {
@@ -148,13 +124,21 @@ public class LevelManager : MonoBehaviour
         transitioner.FadeToBlack(delay);
     }
 
+
+    public void SavedGame()
+    {
+        StartCoroutine(ShowSavingGame());
+    }
+
+
     void SaveProgress()
     {
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_LEVEL, Id);
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, CurrentCheckpoint.Id);
-        PlayerPrefs.SetInt(StaticUtilities.CURRENT_PLAYER_HEALTH,
-            PlayerTransform.GetComponent<HealthComponent>().Health);
+        PlayerPrefs.SetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().Health);
         if (CurrentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, CurrentEncounter.Id);
+        PlayerPrefs.Save();
+        StartCoroutine(ShowSavingGame());
     }
 
     void LoadProgress()
@@ -179,10 +163,10 @@ public class LevelManager : MonoBehaviour
             foreach (var checkpoint in checkpoints)
             {
                 if (!checkpoint.isActiveAndEnabled) continue;
-                if (checkpoint.Id < cc) checkpoint.Disable();
+                if (checkpoint.Id < cc) checkpoint.Disable(); 
             }
         }
-
+        
         // if we already beat this level
         else if (Id < cl)
         {
@@ -233,14 +217,13 @@ public class LevelManager : MonoBehaviour
         PlayerScript.UnPausePlayer();
     }
 
-    public void LoadNextLevel()
+    public void LoadNextLevel(bool returnToMain = false)
     {
         int id = 0;
-        if (Id + 1 < SceneManager.sceneCountInBuildSettings)
+        if (!returnToMain && Id + 1 < SceneManager.sceneCountInBuildSettings)
         {
-            id++;
+            id = Id + 1;
         }
-
         StartCoroutine(LoadSceneAsync(id));
     }
 
@@ -257,11 +240,6 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void SavedGame()
-    {
-        StartCoroutine(ShowSavingGame());
-    }
-
     IEnumerator ShowSavingGame()
     {
         yield return null;
@@ -273,16 +251,16 @@ public class LevelManager : MonoBehaviour
         get { return encounterMusic; }
         set
         {
-            if (value) 
+            if (value)
             {
-                if (!encounterMusic) 
+                if (!encounterMusic)
                 {
                     encounterMusic = value;
                     PlayEncounterMusic();
                     Debug.Log("BeginEncounterMusic");
                 }
             }
-            else 
+            else
             {
                 if (encounterMusic)
                 {
@@ -299,18 +277,18 @@ public class LevelManager : MonoBehaviour
         get { return bossMusic; }
         set
         {
-            if (value) 
+            if (value)
             {
-                if (!bossMusic) 
+                if (!bossMusic)
                 {
                     bossMusic = value;
                     PlayBossMusic();
                     Debug.Log("BeginBossMusic");
                 }
             }
-            else 
+            else
             {
-                if (bossMusic) 
+                if (bossMusic)
                 {
                     bossMusic = value;
                     EndBossMusic();
