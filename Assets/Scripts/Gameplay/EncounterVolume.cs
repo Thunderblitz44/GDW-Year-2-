@@ -65,7 +65,7 @@ public class EncounterVolume : MonoBehaviour
         {
             barrier.SetActive(false);
         }
-
+        LevelManager.Instance.EncounterMusic = false;
         LevelManager.Instance.SetCheckpoint(cp.Id);
         Disable();
     }
@@ -79,6 +79,7 @@ public class EncounterVolume : MonoBehaviour
 
     void StartEncounter()
     {
+        LevelManager.Instance.EncounterMusic = true;
         StartCoroutine(EncounterRoutine());
     }
 

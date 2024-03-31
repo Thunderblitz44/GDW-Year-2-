@@ -26,20 +26,44 @@ public class LevelManager : MonoBehaviour
     [SerializeField] GameObject saveIndicator;
     [SerializeField] Transitioner transitioner;
 
-    public List<GameObject> LevelEnemyList { get { return enemies; } }
+    public List<GameObject> LevelEnemyList
+    {
+        get { return enemies; }
+    }
+
     public static readonly List<DamageableEntity> spawnedEnemies = new();
     public Action onEncounterStart;
-    
+
     public static Transform PlayerTransform { get; private set; }
-    public Player PlayerScript { get { return playerScript; }}
-    public GameObject Boss { get { return boss; } }
-    public Transform WorldCanvas { get { return worldCanvas.transform; } }
-    public Transform Canvas { get { return canvas.transform;} }
+
+    public Player PlayerScript
+    {
+        get { return playerScript; }
+    }
+
+    public GameObject Boss
+    {
+        get { return boss; }
+    }
+
+    public Transform WorldCanvas
+    {
+        get { return worldCanvas.transform; }
+    }
+
+    public Transform Canvas
+    {
+        get { return canvas.transform; }
+    }
 
     public Checkpoint CurrentCheckpoint { get; private set; }
     public EncounterVolume CurrentEncounter { get; private set; }
 
     public GameObject floatingTextPrefab;
+
+    [SerializeField] private SoundController soundController;
+    private bool encounterMusic;
+    private bool bossMusic;
 
     private void Awake()
     {
@@ -49,6 +73,7 @@ public class LevelManager : MonoBehaviour
             Destroy(this);
             return;
         }
+
         Instance = this;
 
         // give encounterVolumes their ids
@@ -84,8 +109,10 @@ public class LevelManager : MonoBehaviour
     public static Vector3 GetRandomEnemySpawnPoint(Bounds volumeBounds)
     {
         int itterations = 0;
-    Start:
-        Vector3 spawnPoint = Vector3.right * UnityEngine.Random.Range(volumeBounds.min.x, volumeBounds.max.x) + Vector3.up * volumeBounds.center.y + Vector3.forward * UnityEngine.Random.Range(volumeBounds.min.z, volumeBounds.max.z);
+        Start:
+        Vector3 spawnPoint = Vector3.right * UnityEngine.Random.Range(volumeBounds.min.x, volumeBounds.max.x) +
+                             Vector3.up * volumeBounds.center.y + Vector3.forward *
+                             UnityEngine.Random.Range(volumeBounds.min.z, volumeBounds.max.z);
         if (NavMesh.SamplePosition(spawnPoint, out NavMeshHit hit, 30f, NavMesh.AllAreas))
         {
             if (Vector3.Distance(hit.position, PlayerTransform.position) < 3) goto Start;
@@ -99,7 +126,7 @@ public class LevelManager : MonoBehaviour
             return hit.position + Vector3.up;
         }
 
-    next:
+        next:
         if (++itterations < 20) goto Start;
         else
         {
@@ -125,7 +152,8 @@ public class LevelManager : MonoBehaviour
     {
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_LEVEL, Id);
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, CurrentCheckpoint.Id);
-        PlayerPrefs.SetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().Health);
+        PlayerPrefs.SetInt(StaticUtilities.CURRENT_PLAYER_HEALTH,
+            PlayerTransform.GetComponent<HealthComponent>().Health);
         if (CurrentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, CurrentEncounter.Id);
     }
 
@@ -151,10 +179,10 @@ public class LevelManager : MonoBehaviour
             foreach (var checkpoint in checkpoints)
             {
                 if (!checkpoint.isActiveAndEnabled) continue;
-                if (checkpoint.Id < cc) checkpoint.Disable(); 
+                if (checkpoint.Id < cc) checkpoint.Disable();
             }
         }
-        
+
         // if we already beat this level
         else if (Id < cl)
         {
@@ -212,6 +240,7 @@ public class LevelManager : MonoBehaviour
         {
             id++;
         }
+
         StartCoroutine(LoadSceneAsync(id));
     }
 
@@ -237,5 +266,76 @@ public class LevelManager : MonoBehaviour
     {
         yield return null;
 
+    }
+
+    public bool EncounterMusic
+    {
+        get { return encounterMusic; }
+        set
+        {
+            if (value) 
+            {
+                if (!encounterMusic) 
+                {
+                    encounterMusic = value;
+                    PlayEncounterMusic();
+                    Debug.Log("BeginEncounterMusic");
+                }
+            }
+            else 
+            {
+                if (encounterMusic)
+                {
+                    encounterMusic = value;
+                    EndEncounterMusic();
+                    Debug.Log("EndEncounterMusic");
+                }
+            }
+        }
+    }
+
+    public bool BossMusic
+    {
+        get { return bossMusic; }
+        set
+        {
+            if (value) 
+            {
+                if (!bossMusic) 
+                {
+                    bossMusic = value;
+                    PlayBossMusic();
+                    Debug.Log("BeginBossMusic");
+                }
+            }
+            else 
+            {
+                if (bossMusic) 
+                {
+                    bossMusic = value;
+                    EndBossMusic();
+                    Debug.Log("EndBossMusic");
+                }
+            }
+        }
+    }
+
+    private void PlayEncounterMusic()
+    {
+        soundController.BeginBattleMusic();
+    }
+
+    private void PlayBossMusic()
+    {
+        soundController.BeginBossMusic();
+    }
+
+    private void EndBossMusic()
+    {
+        soundController.EndBattleMusic();
+    }
+    private void EndEncounterMusic()
+    {
+        soundController.EndBossMusic();
     }
 }
