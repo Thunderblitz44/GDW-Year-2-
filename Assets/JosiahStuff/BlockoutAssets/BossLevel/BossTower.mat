@@ -13,6 +13,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - MAIN_LIGHT_CALCULATE_SHADOWS
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -188,17 +189,18 @@ Material:
     - _EdgeNoiseSpeed: 0.05
     - _Emit: 0
     - _EnvironmentReflections: 1
-    - _Fog: 0.525
+    - _Fog: 0.553
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _HeightBlend: 1
+    - _HeightBlend: 0.269
     - _Height_Blend: 817.26
     - _Height_Gradient: -4.11
     - _HueRandom: 0
     - _Light_Contrast: 1
     - _Lighting_Noise: 0
-    - _MAIN_LIGHT_SHADOWS_CASCADE: 0
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _MaskUV: 0
     - _Mask_1: 0
     - _Metallic: 0
     - _Mode: 0
@@ -216,7 +218,7 @@ Material:
     - _ReflectionProbe: 0.5
     - _SHADOWS_SOFT: 1
     - _Shadow_Atten: 0
-    - _Shadow_Strength: 0.911
+    - _Shadow_Strength: 0.33
     - _Smoothness: 5.41
     - _SmoothnessTextureChannel: 0
     - _Smoothness_1: 0.287
@@ -235,17 +237,17 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.6731503, g: 0.63201386, b: 0.6165444, a: 1}
     - _Border_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0}
-    - _Color: {r: 0.4716981, g: 0.37824848, b: 0.3537736, a: 1}
+    - _Color: {r: 0.4811321, g: 0.34133145, b: 0.3063813, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmitColor: {r: 1, g: 1, b: 1, a: 0}
     - _MaskColor: {r: 1, g: 1, b: 1, a: 0}
     - _MaskColor2: {r: 0, g: 0, b: 0, a: 0}
     - _MaskNoise: {r: 0, g: 1, b: 0, a: 0}
-    - _Shadow_Color: {r: 0.2970363, g: 0.3442177, b: 0.8396226, a: 0}
+    - _Shadow_Color: {r: 0.44517618, g: 0.5410017, b: 1.5471698, a: 0}
     - _Smoothness_Color: {r: 1.8333858, g: 1.1693065, b: 2.7240987, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _TP_Bottom: {r: 0.30840063, g: 0.3037113, b: 0.6132076, a: 0}
-    - _TP_Middle: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 0}
+    - _TP_Bottom: {r: 0.26079988, g: 0.25164652, b: 0.6132076, a: 0}
+    - _TP_Middle: {r: 0.5, g: 0.44103774, b: 0.44103774, a: 0}
     - _TP_Top: {r: 1, g: 0.7751151, b: 0.41176474, a: 1}
     - _TP_Top2: {r: 0.3583302, g: 0.1775245, b: 0.8301887, a: 0}
   m_BuildTextureStacks: []

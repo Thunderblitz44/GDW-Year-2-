@@ -13,6 +13,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - MAIN_LIGHT_CALCULATE_SHADOWS
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -179,7 +180,7 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _Distance_Atten: 0
-    - _Dot: 0.5
+    - _Dot: 0.214
     - _Dot_Density: 400
     - _Dot_Distance: 300
     - _Dot_Smoothness: 2
@@ -198,7 +199,8 @@ Material:
     - _HueRandom: 0
     - _Light_Contrast: 0.5
     - _Lighting_Noise: 0.5
-    - _MAIN_LIGHT_SHADOWS_CASCADE: 0
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _MaskUV: 0
     - _Mask_1: 0
     - _Metallic: 0
     - _Mode: 0
