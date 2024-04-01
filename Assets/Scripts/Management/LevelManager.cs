@@ -298,8 +298,6 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private void PlayEncounterMusic()
-   
 
     public void PlayEncounterMusic()
     {
