@@ -9,14 +9,14 @@ public class BossEncounter : EncounterVolume
     protected override IEnumerator EncounterRoutine()
     {
         LevelManager.Instance.Boss.GetComponent<IBossCommands>().Introduce();
-        LevelManager.Instance.BossMusic = true;
+        LevelManager.Instance.PlayBossMusic();
         yield return null;
     }
 
     public override void EndEncounter()
     {
         base.EndEncounter();
-        LevelManager.Instance.BossMusic = false;
+        LevelManager.Instance.EndBossMusic();
         if (teleporter) teleporter.SetActive(true);
     }
 }

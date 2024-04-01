@@ -299,21 +299,25 @@ public class LevelManager : MonoBehaviour
     }
 
     private void PlayEncounterMusic()
+   
+
+    public void PlayEncounterMusic()
     {
         soundController.BeginBattleMusic();
     }
 
-    private void PlayBossMusic()
+    public void PlayBossMusic()
     {
         soundController.BeginBossMusic();
     }
 
-    private void EndBossMusic()
-    {
-        soundController.EndBattleMusic();
-    }
-    private void EndEncounterMusic()
+  public void EndBossMusic()
     {
         soundController.EndBossMusic();
+      
+    }
+   public void EndEncounterMusic()
+    {
+        soundController.EndBattleMusic();
     }
 }
