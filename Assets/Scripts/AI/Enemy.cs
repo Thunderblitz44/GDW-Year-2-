@@ -20,6 +20,7 @@ public class Enemy : DamageableEntity
     private bool isAwake = true;
     public float spawndissolveTimer = 1f;
     [SerializeField] VisualEffect OnHitEffects;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -30,7 +31,7 @@ public class Enemy : DamageableEntity
         if (!OnHitEffects) OnHitEffects = GetComponentInChildren<VisualEffect>();
         agent = GetComponent<NavMeshAgent>();
         target = LevelManager.PlayerTransform;
-      
+        Invoke("DestroyStray", 10f);
     }
 
     protected virtual void Update()
@@ -99,5 +100,8 @@ public class Enemy : DamageableEntity
         if (updateTargetOnDamaged) target = LevelManager.PlayerTransform;
     }
 
-    
+    public void DestroyStray()
+    {
+        Destroy(gameObject);
+    }
 }

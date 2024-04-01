@@ -212,7 +212,7 @@ private WindBurst WindBurstRef;
 
 
         // BASIC
-        actions.Abilities.PrimaryAttack.started += ctx =>
+        actions.Abilities.SecondaryAttack.started += ctx =>
         {
             // melee
             melee = true;
@@ -229,7 +229,7 @@ private WindBurst WindBurstRef;
             spiritWolfAnimator.PrimaryAttack();
           //  FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wolf Swipe", gameObject);
         };
-        actions.Abilities.PrimaryAttack.canceled += ctx =>
+        actions.Abilities.SecondaryAttack.canceled += ctx =>
         {
             spiritWolfAnimator.EndAttack();
             wolfLerpTime = 1;
@@ -239,14 +239,14 @@ private WindBurst WindBurstRef;
             melee = false;
             autoLockOverride = false;
         };
-        actions.Abilities.SecondaryAttack.started += ctx =>
+        actions.Abilities.PrimaryAttack.started += ctx =>
         {
             shooting = true;
             // aim
             DragonflyAnimator.SetBool("IsShooting", true);
             PlayerAnimator.IsUsingDragonFly();
         };
-        actions.Abilities.SecondaryAttack.canceled += ctx =>
+        actions.Abilities.PrimaryAttack.canceled += ctx =>
         {
             shooting = false;
             shootStartTimer = 0;
