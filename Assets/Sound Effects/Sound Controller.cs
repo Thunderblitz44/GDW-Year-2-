@@ -22,24 +22,76 @@ public class SoundController : MonoBehaviour
 
     public void BeginBattleMusic()
     {
-        battleMusicEmitter.SetParameter("EncounterMusic", 1f);
+        if (battleMusicEmitter != null)
+        {
+            battleMusicEmitter.SetParameter("EncounterMusic", 1f);
+          
+        }
+        else
+        {
+            Debug.LogError("Battle music emitter reference is null.");
+        }
     }
 
     public void EndBattleMusic()
     {
-        battleMusicEmitter.SetParameter("EncounterMusic", 0f);
+        if (battleMusicEmitter != null)
+        {
+            battleMusicEmitter.SetParameter("EncounterMusic", 0f);
+          
+        }
+        else
+        {
+            Debug.LogError("Battle music emitter reference is null.");
+        }
     }
 
     public void BeginBossMusic()
     {
-        bossMusicEmitter.SetParameter("BossMusic", 1f);
-        battleMusicEmitter.Stop();
+        Debug.Log("FUCK");
+        if (bossMusicEmitter != null)
+        {
+            Debug.Log("FUCK");
+            bossMusicEmitter.SetParameter("BossMusic", 1f);
+            if (battleMusicEmitter != null)
+            {
+                battleMusicEmitter.Stop();
+            }
+            else
+            {
+                Debug.LogError("Battle music emitter reference is null.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Boss music emitter reference is null.");
+        }
     }
 
     public void EndBossMusic()
     {
-        bossMusicEmitter.SetParameter("BossMusic", 0f);
-        battleMusicEmitter.Play();
+        if (bossMusicEmitter != null)
+        {
+            Debug.Log("FRICK");
+            bossMusicEmitter.SetParameter("BossMusic", 0f);
+            if (battleMusicEmitter != null)
+            {
+                battleMusicEmitter.Play();
+            }
+            else
+            {
+                Debug.LogError("Battle music emitter reference is null.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Boss music emitter reference is null.");
+        }
     }
-    
+
+
+    public void ChangeBossMusic()
+    {
+        bossMusicEmitter.SetParameter("Stage2", 1f);
+    }
 }

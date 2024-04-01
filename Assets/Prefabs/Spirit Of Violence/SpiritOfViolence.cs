@@ -43,13 +43,18 @@ public class SpiritOfViolence : MonoBehaviour, IBossCommands
             ed.Introduce();
             ed.GetHPComponent().onHealthZeroed += OnDead;
         }
+        LevelManager.Instance.PlayBossMusic();
     }
 
     void OnDead()
     {
         deaths++;
         if (deaths < 2) Invoke(nameof(NextPart), nextPartDelay);
-        else hp.Hide(); 
+        else hp.Hide();
+        if (deaths == 2)
+        {
+            LevelManager.Instance.EndBossMusic();
+        }
     }
 
     void NextPart()
@@ -70,6 +75,7 @@ public class SpiritOfViolence : MonoBehaviour, IBossCommands
             b.Introduce();
             hp = b.GetHPComponent();
         }
+        LevelManager.Instance.ChangeBossMusic();
     }
     
 }

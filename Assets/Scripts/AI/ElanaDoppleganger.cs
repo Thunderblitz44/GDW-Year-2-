@@ -89,7 +89,11 @@ public class ElanaDoppleganger : Enemy
     float stopSpeed = 0.01f;
     bool isStopped;
     bool aggroChase;
-
+    private float xSpeed;
+    private float ySpeed;
+    private float zSpeed;
+    private Rigidbody Rb;
+    [SerializeField] private Animator Animator;
     protected override void Awake()
     {
         base.Awake();
@@ -99,6 +103,8 @@ public class ElanaDoppleganger : Enemy
         spiritWolf = spiritWolfAnimator.transform;
         pheonix = GetComponentInChildren<Pheonix>();
         updateTargetOnDamaged = false;
+        Rb = GetComponent<Rigidbody>();
+       
     }
 
     protected override void Update()
@@ -143,6 +149,25 @@ public class ElanaDoppleganger : Enemy
         aggroChase = playerDistance >= aggressiveChaseDist;
         if (aggroChase && !aimingFireTornado && !melee) agent.speed = runSpeed;
         else if (!aggroChase && !aimingFireTornado && !melee) agent.speed = walkSpeed;
+        
+        float smoothingFactor = 0.1f;
+
+        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity/2);
+
+      
+        xSpeed = Mathf.Lerp(xSpeed, localVelocity.x, smoothingFactor);
+        zSpeed = Mathf.Lerp(zSpeed, localVelocity.z, smoothingFactor);
+        ySpeed = Mathf.Lerp(ySpeed, localVelocity.y, smoothingFactor);
+       
+        Animator.SetFloat("XSpeed", xSpeed);
+        Animator.SetFloat("ZSpeed", zSpeed);
+        Animator.SetFloat("YSpeed", ySpeed);
+
+        Animator.SetBool("IsMoving", true);
+
+        
+        
+        
     }
 
     protected override void SlowUpdate()

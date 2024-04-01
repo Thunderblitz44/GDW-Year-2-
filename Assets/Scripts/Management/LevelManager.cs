@@ -318,4 +318,9 @@ public class LevelManager : MonoBehaviour
     {
         soundController.EndBattleMusic();
     }
+
+   public void ChangeBossMusic()
+   {
+       soundController.ChangeBossMusic();
+   }
 }
