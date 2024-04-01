@@ -22,22 +22,24 @@ public class SoundController : MonoBehaviour
 
     public void BeginBattleMusic()
     {
-        
+        battleMusicEmitter.SetParameter("EncounterMusic", 1f);
     }
 
     public void EndBattleMusic()
     {
-        
+        battleMusicEmitter.SetParameter("EncounterMusic", 0f);
     }
 
     public void BeginBossMusic()
     {
-        
+        bossMusicEmitter.SetParameter("BossMusic", 1f);
+        battleMusicEmitter.Stop();
     }
 
     public void EndBossMusic()
     {
-        
+        bossMusicEmitter.SetParameter("BossMusic", 0f);
+        battleMusicEmitter.Play();
     }
     
 }

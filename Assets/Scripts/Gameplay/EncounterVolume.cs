@@ -21,6 +21,7 @@ public class EncounterVolume : MonoBehaviour
         bc = GetComponent<BoxCollider>();
         cp = GetComponent<Checkpoint>();
         cp.SetOnTriggerEnter = false;
+        
     }
 
     protected virtual void Update()
@@ -65,7 +66,8 @@ public class EncounterVolume : MonoBehaviour
         {
             barrier.SetActive(false);
         }
-        LevelManager.Instance.EncounterMusic = false;
+
+        LevelManager.Instance.EndEncounterMusic();
         LevelManager.Instance.SetCheckpoint(cp.Id);
         Disable();
     }
@@ -79,7 +81,7 @@ public class EncounterVolume : MonoBehaviour
 
     void StartEncounter()
     {
-        LevelManager.Instance.EncounterMusic = true;
+        LevelManager.Instance.PlayEncounterMusic();
         StartCoroutine(EncounterRoutine());
     }
 
