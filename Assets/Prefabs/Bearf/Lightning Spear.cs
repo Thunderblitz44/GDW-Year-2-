@@ -11,7 +11,10 @@ public class LightningSpear : MonoBehaviour
     RaycastHit hit;
     float dist, t;
     bool deathCycle, hitPlayer, shake;
-
+    MeleeHitBox[] RangedAttack;
+  
+    private int RangedAttackDamage = 99;
+    public Vector2 RangedKnockback;
     void Start()
     {
         directionToPlayer = (LevelManager.PlayerTransform.position - transform.position).normalized;
@@ -21,6 +24,12 @@ public class LightningSpear : MonoBehaviour
         {
             end = hit.point;
             dist = Vector3.Distance(start, end);
+        }
+        RangedAttack = GetComponentsInChildren<MeleeHitBox>();
+        foreach (var trigger in RangedAttack)
+        {
+            trigger.damage = RangedAttackDamage;
+            trigger.knockback = RangedKnockback;
         }
     }
 
@@ -54,5 +63,9 @@ public class LightningSpear : MonoBehaviour
             shake = true;
             StaticUtilities.ShakePlayerCamera(20,1,30);
         }
+    }
+    private void OnParticleCollision(GameObject other)
+    {
+        StaticUtilities.TryToDamage(other, RangedAttackDamage);
     }
 }

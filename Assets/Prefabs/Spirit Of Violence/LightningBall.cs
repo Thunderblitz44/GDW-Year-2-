@@ -26,7 +26,7 @@ public class LightningBall : MonoBehaviour
             trigger.knockback = RangedKnockback;
         }
         
-        // Generate a random delay before starting movement
+
         GenerateRandomDelay();
     }
 
@@ -35,15 +35,15 @@ public class LightningBall : MonoBehaviour
         if (isDisabled || !isMoving)
             return;
 
-        // Move towards player
+  
         float movementSpeed = 4f;
         transform.position = Vector3.MoveTowards(transform.position, playerTransform.position, movementSpeed * Time.deltaTime);
 
-        // Check if close to player
+   
         float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
         if (!isScaling && distanceToPlayer <= 0.5f)
         {
-            // Start scaling and disable coroutine
+      
             StartCoroutine(ScaleAndDisable());
         }
     }
@@ -64,7 +64,7 @@ public class LightningBall : MonoBehaviour
     {
         isScaling = true;
 
-        // Scale up quickly to 2
+     
         float scaleSpeed = 0.5f;
         float elapsedTime = 0f;
         Vector3 startScale = transform.localScale;
@@ -77,10 +77,10 @@ public class LightningBall : MonoBehaviour
             yield return null;
         }
 
-        // Delay for 1 second before disabling the object
+    
         yield return new WaitForSeconds(1f);
 
-        // Disable the object
+   
         gameObject.SetActive(false);
     }
 

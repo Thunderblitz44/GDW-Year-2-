@@ -42,7 +42,8 @@ public class Bear : Enemy
     [SerializeField] GameObject[] blueFields;
     [SerializeField] GameObject[] redFields;
 
-
+    public GameObject LightningNukeAttack;
+    public GameObject LightningNukeAttackSpawnPoint;
     protected override void Update()
     {
         if (!battleStarted) return;
@@ -77,10 +78,10 @@ public class Bear : Enemy
 
     public void OrbAttack()
     {
-        // Check if orbPrefab and orbSpawnPoint are set
+   
         if (orbPrefab != null && orbSpawnPoint != null)
         {
-            // Instantiate the prefab at the specified position and rotation
+        
             Instantiate(orbPrefab, orbSpawnPoint.position, orbSpawnPoint.rotation);
         }
         else
@@ -91,10 +92,10 @@ public class Bear : Enemy
 
     public void SpearAttack()
     {
-        // Check if orbPrefab and orbSpawnPoint are set
+   
         if (spearPrefab != null && spearSpawnPoint != null)
         {
-            // Instantiate the prefab at the specified position and rotation
+          
             Instantiate(spearPrefab, spearSpawnPoint.position, spearSpawnPoint.rotation);
         }
         else
@@ -174,4 +175,9 @@ public class Bear : Enemy
         isAttacking = false;
     }
 
+    public void lightningNuke()
+    {
+        Instantiate(LightningNukeAttack, new Vector3(-0.09f, 1.537f, -1.3f), Quaternion.identity);
+        
+    }
 }

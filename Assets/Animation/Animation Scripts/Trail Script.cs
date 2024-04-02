@@ -173,4 +173,9 @@ public class TrailScript : MonoBehaviour
         OnLanded.Emit(10);
         FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Warrior Footsteps",  DustSystemRight.gameObject);
     }
+
+    public void DeathBurst()
+    {
+        
+    }
 }

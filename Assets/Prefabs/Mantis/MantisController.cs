@@ -12,7 +12,7 @@ public class MantisController : Enemy
     public int RangedAttackDamage;
     public Vector2 RangedKnockback;
     public VisualEffect vfxGraph;
-    private VisualEffect teleportEffect; // Reference to the teleport Visual Effect Graph
+    private VisualEffect teleportEffect; 
 
     void Start()
     {
