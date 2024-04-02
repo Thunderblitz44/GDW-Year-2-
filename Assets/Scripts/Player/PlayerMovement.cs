@@ -1,3 +1,4 @@
+using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -43,8 +44,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     [Space(10f)]
 
     // Smoothing
-    [Header("test")]
-    [SerializeField] float stickFactor = 1.5f;
+    float stickFactor = 2f;
 
     // INPUT
     Vector3 input;
@@ -77,15 +77,23 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         {
             groundAngle = Vector3.Angle(Vector3.up, ground.normal);
 
+            if (!IsGrounded) Debug.Log("on landed");
+
             IsGrounded = true;
             if (input == Vector3.zero) Rb.useGravity = true;
             else Rb.useGravity = false;
-        }
+        } 
         else if (!stepClimbing)
         {
             IsGrounded = false;
             Rb.useGravity = true;
         }
+
+        // stick to ground
+        stickFactor = Mathf.Lerp(0.5f, 2f, ground.distance/groundRaycastDist);
+        //Debug.LogFormat("{0} - {1}", ground.distance, stickFactor);
+
+        if (stickFactor > 1) Debug.Log(stickFactor);
 
         // can jump test
         if (IsGrounded && (jumpCooldownTimer += Time.deltaTime) >= jumpCooldown) canJump = true;
@@ -106,7 +114,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             {
                 moveDirection = Vector3.ProjectOnPlane(moveDirection, ground.normal);
             }
-            Rb.velocity += MoveAcceleration * Time.fixedDeltaTime * moveDirection - (ground.normal/stickFactor);
+            Rb.velocity += MoveAcceleration * Time.fixedDeltaTime * moveDirection - (ground.normal*stickFactor);
             oldMoveSpeed = MoveSpeed;
         }
         else if (!IsGrounded)
@@ -134,8 +142,9 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         }
         else if (stepClimbing) stepClimbing = false;
 
-        //Debug.DrawRay(transform.position, Rb.velocity, Color.green, Time.fixedDeltaTime);
-        //Debug.DrawRay(transform.position, moveDirection * 2, Color.red, Time.fixedDeltaTime);
+        Debug.DrawRay(transform.position, Rb.velocity, Color.green, Time.fixedDeltaTime);
+        Debug.DrawRay(transform.position, moveDirection * 2, Color.red, Time.fixedDeltaTime);
+        Debug.DrawRay(ground.point, ground.normal/2, Color.red, Time.fixedDeltaTime);
     }
 
     public void SetupInputEvents(object sender, ActionMap actions)
@@ -167,7 +176,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         {
             isRunning = true;
         };
-
 
         // Jump
         actions.Locomotion.Jump.started += ctx =>
