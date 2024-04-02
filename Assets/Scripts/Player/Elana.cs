@@ -84,7 +84,7 @@ public class Elana : Player
     public float recallDelay = 2f;
 private WindBurst WindBurstRef;
     //delay of recall
-   
+   [SerializeField] PlayerAnimator PlayerAnimator;
     //for determining the difference between the portal and dodge as they both call the same method
     protected override void Awake()
     {
@@ -212,7 +212,7 @@ private WindBurst WindBurstRef;
 
 
         // BASIC
-        actions.Abilities.PrimaryAttack.started += ctx =>
+        actions.Abilities.SecondaryAttack.started += ctx =>
         {
             // melee
             melee = true;
@@ -224,32 +224,34 @@ private WindBurst WindBurstRef;
             autoLockOverride = true;
             autoLockRadiusOverride = lockonRadiusOverride;
             autoLockRangeOverride = range;
-
+            PlayerAnimator.IsUsingWolf();
             //Animate player/wolf attacking in sync
             spiritWolfAnimator.PrimaryAttack();
           //  FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Wolf Swipe", gameObject);
         };
-        actions.Abilities.PrimaryAttack.canceled += ctx =>
+        actions.Abilities.SecondaryAttack.canceled += ctx =>
         {
             spiritWolfAnimator.EndAttack();
             wolfLerpTime = 1;
             spiritWolf.position = GetSpiritWolfPassivePos();
             lerpWolf = false;
-
+            PlayerAnimator.IsNotUsingWolf();
             melee = false;
             autoLockOverride = false;
         };
-        actions.Abilities.SecondaryAttack.started += ctx =>
+        actions.Abilities.PrimaryAttack.started += ctx =>
         {
             shooting = true;
             // aim
             DragonflyAnimator.SetBool("IsShooting", true);
+            PlayerAnimator.IsUsingDragonFly();
         };
-        actions.Abilities.SecondaryAttack.canceled += ctx =>
+        actions.Abilities.PrimaryAttack.canceled += ctx =>
         {
             shooting = false;
             shootStartTimer = 0;
             DragonflyAnimator.SetBool("IsShooting", false);
+            PlayerAnimator.IsNotUsingDragonFly();
         };
 
 

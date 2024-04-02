@@ -6,7 +6,7 @@ public class Bat : Enemy
 {
    private bool isEnabled = false;
    public VisualEffect vfxGraph;
-
+   [SerializeField] ProjectileData projectile = ProjectileData.defaultProjectile;
     public CapsuleCollider attackTrigger;
     public GameObject HeadTarget;
     MeleeHitBox[] RangedAttack;
@@ -20,12 +20,8 @@ public class Bat : Enemy
     void Start()
     {
         EnableAI();
-        RangedAttack = GetComponentsInChildren<MeleeHitBox>(true);
-        foreach (var trigger in RangedAttack)
-        {
-            trigger.damage = RangedAttackDamage;
-            trigger.knockback = RangedKnockback;
-        }
+    GetComponentInChildren<MagicBullet>().Initialize(projectile, this);
+      
     }
     
     protected override void Update()

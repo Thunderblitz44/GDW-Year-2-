@@ -10,14 +10,26 @@ public class PlayerMenuController : MonoBehaviour, IInputExpander
     {
         playerScript = (Player)sender;
 
-        actions.Menus.Resume.performed += ctx => 
+        actions.Menus.Return.performed += ctx => 
         {
             pauseMenu.Resume(); 
             actions.Menus.Disable();
             playerScript.UnPausePlayer();
         };
-        actions.Menus.Select.performed += ctx => { };
-        actions.Menus.Confirm.performed += ctx => { };
+
+        actions.Menus.Navigate.started += ctx =>
+        {
+            Vector2 input = ctx.ReadValue<Vector2>();
+            if (input.y > 0) pauseMenu.SelectVertical(-1);
+            else if (input.y < 0) pauseMenu.SelectVertical(1);
+            else if (input.x > 0) pauseMenu.SelectHorizontal(1);
+            else if (input.x < 0) pauseMenu.SelectHorizontal(-1);
+        };
+
+        actions.Menus.Submit.started += ctx =>
+        {
+            pauseMenu.Submit();
+        };
 
         pauseMenu.AddResumeListener(playerScript.UnPausePlayer);
         actions.Menus.Disable();

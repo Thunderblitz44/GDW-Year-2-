@@ -25,11 +25,14 @@ public class LevelManager : MonoBehaviour
     [SerializeField] Image loadingProgressBar;
     [SerializeField] GameObject saveIndicator;
     [SerializeField] Transitioner transitioner;
-
     public List<GameObject> LevelEnemyList { get { return enemies; } }
     public static readonly List<DamageableEntity> spawnedEnemies = new();
     public Action onEncounterStart;
-    
+
+    [SerializeField] private SoundController soundController;
+    private bool encounterMusic;
+    private bool bossMusic;
+
     public static Transform PlayerTransform { get; private set; }
     public Player PlayerScript { get { return playerScript; }}
     public GameObject Boss { get { return boss; } }
@@ -121,12 +124,21 @@ public class LevelManager : MonoBehaviour
         transitioner.FadeToBlack(delay);
     }
 
+
+    public void SavedGame()
+    {
+        StartCoroutine(ShowSavingGame());
+    }
+
+
     void SaveProgress()
     {
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_LEVEL, Id);
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_CHECKPOINT, CurrentCheckpoint.Id);
         PlayerPrefs.SetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, PlayerTransform.GetComponent<HealthComponent>().Health);
         if (CurrentEncounter) PlayerPrefs.SetInt(StaticUtilities.LAST_ENCOUNTER, CurrentEncounter.Id);
+        PlayerPrefs.Save();
+        StartCoroutine(ShowSavingGame());
     }
 
     void LoadProgress()
@@ -205,12 +217,12 @@ public class LevelManager : MonoBehaviour
         PlayerScript.UnPausePlayer();
     }
 
-    public void LoadNextLevel()
+    public void LoadNextLevel(bool returnToMain = false)
     {
         int id = 0;
-        if (Id + 1 < SceneManager.sceneCountInBuildSettings)
+        if (!returnToMain && Id + 1 < SceneManager.sceneCountInBuildSettings)
         {
-            id++;
+            id = Id + 1;
         }
         StartCoroutine(LoadSceneAsync(id));
     }
@@ -228,14 +240,87 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void SavedGame()
-    {
-        StartCoroutine(ShowSavingGame());
-    }
-
     IEnumerator ShowSavingGame()
     {
         yield return null;
 
     }
+
+    public bool EncounterMusic
+    {
+        get { return encounterMusic; }
+        set
+        {
+            if (value)
+            {
+                if (!encounterMusic)
+                {
+                    encounterMusic = value;
+                    PlayEncounterMusic();
+                    Debug.Log("BeginEncounterMusic");
+                }
+            }
+            else
+            {
+                if (encounterMusic)
+                {
+                    encounterMusic = value;
+                    EndEncounterMusic();
+                    Debug.Log("EndEncounterMusic");
+                }
+            }
+        }
+    }
+
+    public bool BossMusic
+    {
+        get { return bossMusic; }
+        set
+        {
+            if (value)
+            {
+                if (!bossMusic)
+                {
+                    bossMusic = value;
+                    PlayBossMusic();
+                    Debug.Log("BeginBossMusic");
+                }
+            }
+            else
+            {
+                if (bossMusic)
+                {
+                    bossMusic = value;
+                    EndBossMusic();
+                    Debug.Log("EndBossMusic");
+                }
+            }
+        }
+    }
+
+
+    public void PlayEncounterMusic()
+    {
+        soundController.BeginBattleMusic();
+    }
+
+    public void PlayBossMusic()
+    {
+        soundController.BeginBossMusic();
+    }
+
+  public void EndBossMusic()
+    {
+        soundController.EndBossMusic();
+      
+    }
+   public void EndEncounterMusic()
+    {
+        soundController.EndBattleMusic();
+    }
+
+   public void ChangeBossMusic()
+   {
+       soundController.ChangeBossMusic();
+   }
 }

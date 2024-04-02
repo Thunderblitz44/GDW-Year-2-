@@ -12,7 +12,7 @@ public class FireTornado : MonoBehaviour
 
     private void Awake()
     {
-        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Fire Tornado Placeholder", gameObject);
+       
     }
 
     private void OnTriggerEnter(Collider other)

@@ -5,78 +5,83 @@ using UnityEngine;
 
 public class TrailScript : MonoBehaviour
 {
-  
-   
-   
+
+
+
     //jackalope
-    public GameObject trailPrefab; 
+    public GameObject trailPrefab;
     public bool isTrailActive2;
-    public LayerMask groundLayer; 
+    public LayerMask groundLayer;
     public float meshRefreshRate2 = 0.1f;
     public ParticleSystem DustSystemRight;
     public ParticleSystem DustSystemLeft;
     private Coroutine trailCoroutine;
     public ParticleSystem dirtTrail;
-    
+
     public PlayerMovement PlayerMovement;
-    
+
     //dodge
-   public Transform positionToSpawn;
+    public Transform positionToSpawn;
     public float activeTime = 2f;
     public bool isTrailActive;
     public float meshRefreshRate = 0.1f;
     public SkinnedMeshRenderer skinnedMeshRenderer;
     public Material mat;
     public float meshDestroyDelay = 1f;
+
     private GameObject dodgeTrailObject;
+
     //other
     public ParticleSystem OnLanded;
-   
+    private ParticleSystem TrailRibbon;
     public float _alpha = 0.38f;
+
     void Start()
     {
+        TrailRibbon = GetComponent<ParticleSystem>();
 
 
-    
 
     }
+
     private void FixedUpdate()
     {
-   
+
     }
 
     private IEnumerator ActivateTrail2()
     {
-       
-      
+
+
         dirtTrail.Play();
         while (isTrailActive2)
         {
-          
+
             RaycastHit hit;
-            Vector3 raycastOrigin = transform.position + new Vector3(0, 3f, 0); 
-            
+            Vector3 raycastOrigin = transform.position + new Vector3(0, 3f, 0);
+
             if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, Mathf.Infinity, groundLayer))
             {
-               
+
                 trailPrefab.transform.up = hit.normal;
-                
+
                 trailPrefab.transform.position = hit.point;
-              
+
             }
 
-            yield return null; 
+            yield return null;
         }
 
-        isTrailActive2 = false; 
-        
-   
+        isTrailActive2 = false;
+
+
         dirtTrail.Stop();
         trailCoroutine = null;
     }
 
-   IEnumerator ActivateTrail(float timeActive)
+    IEnumerator ActivateTrail(float timeActive)
     {
+        TrailRibbon.Play();
         while (timeActive > 0 && isTrailActive2 == false)
         {
             timeActive -= meshRefreshRate;
@@ -93,23 +98,41 @@ public class TrailScript : MonoBehaviour
             mf.mesh = mesh;
             mr.material = mat;
 
-            // Set initial alpha value using direct property access
-            mr.material.SetFloat("_alpha", _alpha);
+            // Initialize alpha value
+            float alphaValue = 1.0f;
 
-            while (mr.material.GetFloat("_alpha") > 0)
+            // Define lerping duration
+            float lerpDuration = 1.0f; // You can adjust this duration as needed
+
+            // Coroutine for lerping alpha value
+            IEnumerator LerpAlpha()
             {
-                float newAlpha = mr.material.GetFloat("_alpha") - (_alpha / timeActive) * Time.deltaTime;
-                mr.material.SetFloat("_alpha", Mathf.Max(newAlpha, 0));
+                float elapsed = 0.0f;
+                while (elapsed < lerpDuration)
+                {
+                    alphaValue = Mathf.Lerp(1.0f, 0.0f, elapsed / lerpDuration);
+                    mat.SetFloat("_AlphaThres", alphaValue);
+                    elapsed += Time.deltaTime;
+                    yield return null;
+                }
 
-                yield return null;  // Wait for the end of the frame
+                // Ensure the final alpha value is set
+                alphaValue = 0.0f;
+                mat.SetFloat("_AlphaThres", alphaValue);
             }
+
+            // Start lerping alpha value
+            StartCoroutine(LerpAlpha());
 
             Debug.Log(timeActive);
             Destroy(gObj, meshDestroyDelay);
-        }
 
+            yield return new WaitForSeconds(0.1f);
+        }
         isTrailActive = false;
+        TrailRibbon.Stop();
     }
+
 
     public  void OnPortalEvent()
     {

@@ -8,6 +8,7 @@ using UnityEngine.VFX;
 public abstract class Player : DamageableEntity
 {
     public PlayerMovement MovementScript { get; private set; }
+    [SerializeField] GameSettings activeSettings;
     [SerializeField] protected AbilityHUD abilityHud;
     PlayerMenuController pauseScript;
 
@@ -35,6 +36,7 @@ public abstract class Player : DamageableEntity
     protected bool autoLockOverride;
     protected float autoLockRadiusOverride;
     protected float autoLockRangeOverride;
+
 
     // camera shake
     CinemachineBasicMultiChannelPerlin[] noise;
@@ -68,7 +70,6 @@ public abstract class Player : DamageableEntity
 
     void Start()
     {
-        DebugHUD.instance.DisplayControls(actions);
         LevelManager.Instance.CurrentCheckpoint.Teleport(transform);
         hp.SetHealth(PlayerPrefs.GetInt(StaticUtilities.CURRENT_PLAYER_HEALTH, hp.MaxHealth));
     }
@@ -111,12 +112,15 @@ public abstract class Player : DamageableEntity
         actions.General.Pause.performed += ctx =>
         {
             PausePlayer();
-            MovementScript.Rb.velocity = Vector3.zero;
-
             actions.Menus.Enable();
             pauseScript.Pause();
+            if (!usingController)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         };
-        actions.CameraControl.Look.started += ctx =>
+        actions.General.DeviceTest.performed += ctx =>
         {
             if (ctx.control.ToString().Contains("Stick")) usingController = true;
             else usingController = false;
@@ -124,25 +128,30 @@ public abstract class Player : DamageableEntity
             if (!usingController && wasUsingController)
             {
                 // using mouse
-                
-                freeLookCam.m_XAxis.m_MaxSpeed = SettingsManager.Instance.Settings.MouseSensXForCinemachine;
-                freeLookCam.m_YAxis.m_MaxSpeed = SettingsManager.Instance.Settings.MouseSensYForCinemachine;
+                freeLookCam.m_XAxis.m_MaxSpeed = activeSettings.MouseSensXForCinemachine;
+                freeLookCam.m_YAxis.m_MaxSpeed = activeSettings.MouseSensYForCinemachine;
+
+                if (LevelManager.isGamePaused)
+                {
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
+                }
 
                 // change the controls panel
-                DebugHUD.instance.DisplayControls(actions, true);
             }
             else if (usingController && !wasUsingController)
             {
                 // using controller
-                freeLookCam.m_XAxis.m_MaxSpeed = SettingsManager.Instance.Settings.GamepadSensXForCinemachine;
-                freeLookCam.m_YAxis.m_MaxSpeed = SettingsManager.Instance.Settings.GamepadSensYForCinemachine;
+                freeLookCam.m_XAxis.m_MaxSpeed = activeSettings.GamepadSensXForCinemachine;
+                freeLookCam.m_YAxis.m_MaxSpeed = activeSettings.GamepadSensYForCinemachine;
+                
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
 
                 // change the controls panel
-                DebugHUD.instance.DisplayControls(actions, false);
             }
             wasUsingController = usingController;
         };
-        
 
         // v TEMPORARY v //
         actions.General.respawnTest.performed += ctx =>
@@ -151,22 +160,22 @@ public abstract class Player : DamageableEntity
         };
         actions.General.resetProgressTest.performed += ctx =>
         {
-            PlayerPrefs.DeleteAll();
+            PlayerPrefs.DeleteKey(StaticUtilities.CURRENT_LEVEL);
+            PlayerPrefs.DeleteKey(StaticUtilities.CURRENT_CHECKPOINT);
+            PlayerPrefs.DeleteKey(StaticUtilities.LAST_ENCOUNTER);
+            PlayerPrefs.DeleteKey(StaticUtilities.CURRENT_PLAYER_HEALTH);
             SceneManager.LoadScene(LevelManager.Id);
-        };
-        actions.General.harmSelfTest.performed += ctx =>
-        {
-            ApplyDamage(10);
         };
         // ^ TEMPORARY ^ //
 
         actions.General.Enable();
-        actions.CameraControl.Enable();
     }
 
     public void PausePlayer()
     {
-        actions.General.Disable();
+        actions.General.respawnTest.Disable();
+        actions.General.Pause.Disable();
+        actions.General.resetProgressTest.Disable();
         actions.Abilities.Disable();
         MovementScript.DisableLocomotion();
         freeLookCam.gameObject.SetActive(false);
@@ -174,6 +183,7 @@ public abstract class Player : DamageableEntity
 
     public void UnPausePlayer()
     {
+        actions.Menus.Disable();
         actions.General.Enable();
         actions.Abilities.Enable();
         MovementScript.EnableLocomotion();
@@ -277,6 +287,22 @@ public abstract class Player : DamageableEntity
         }
         
         DoCameraShake(2,1,12);
+    }
+
+    public void SettingsChanged()
+    {
+        if (usingController)
+        {
+            freeLookCam.m_YAxis.m_MaxSpeed = activeSettings.GamepadSensYForCinemachine;
+            freeLookCam.m_XAxis.m_MaxSpeed = activeSettings.GamepadSensXForCinemachine;
+        }
+        else
+        {
+            freeLookCam.m_XAxis.m_MaxSpeed = activeSettings.MouseSensXForCinemachine;
+            freeLookCam.m_YAxis.m_MaxSpeed = activeSettings.MouseSensYForCinemachine;
+        }
+
+        autoLock = activeSettings.autoLock;
     }
 
     protected abstract void OnLockonTargetChanged();

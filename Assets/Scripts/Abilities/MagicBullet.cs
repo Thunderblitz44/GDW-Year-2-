@@ -5,7 +5,7 @@ public class MagicBullet : MonoBehaviour
 {
     public ProjectileData Projectile { get; private set; }
     public Rigidbody Rb { get; protected set; }
-
+    public GameObject decalPrefab;
 
     void Awake()
     {
@@ -34,7 +34,7 @@ public class MagicBullet : MonoBehaviour
     {
       
             if (Rb) Rb.velocity = Vector3.zero;
-            if (!Projectile.Destroy) gameObject.SetActive(false);
+            if (!Projectile.Destroy) Decal();
             else Destroy(gameObject);
       
      
@@ -71,4 +71,26 @@ public class MagicBullet : MonoBehaviour
             (Projectile.owner.gameObject.layer == LayerMask.NameToLayer("Player") && other.layer == LayerMask.NameToLayer("Friendly"))) return;
         StaticUtilities.TryToDamage(other, Projectile.damage);
     }
-}
+
+    private void Decal()
+    {
+        GameObject decalInstance = Instantiate(decalPrefab, transform.position, Quaternion.identity);
+        
+        // Calculate the rotation to face towards the collision point
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit))
+        {
+            Vector3 hitPoint = hit.point;
+            Vector3 objectPosition = transform.position;
+            Vector3 directionToHit = hitPoint - objectPosition;
+            Quaternion rotationToHit = Quaternion.LookRotation(directionToHit);
+
+            decalInstance.transform.rotation = rotationToHit;
+        }
+
+        gameObject.SetActive(false);
+        Destroy(decalInstance, 1f); 
+    }
+
+    }
+    
+
