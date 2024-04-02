@@ -90,10 +90,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         }
 
         // stick to ground
-        stickFactor = Mathf.Lerp(0.5f, 2f, ground.distance/groundRaycastDist);
-        //Debug.LogFormat("{0} - {1}", ground.distance, stickFactor);
-
-        if (stickFactor > 1) Debug.Log(stickFactor);
+        stickFactor = Mathf.Lerp(0.5f, 3f, ground.distance/groundRaycastDist);
 
         // can jump test
         if (IsGrounded && (jumpCooldownTimer += Time.deltaTime) >= jumpCooldown) canJump = true;
@@ -107,14 +104,18 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     private void FixedUpdate()
     {
         // do move
-        if (IsGrounded && Rb.velocity.magnitude < MoveSpeed)
+        if (IsGrounded)
         {
             moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
             if (IsGrounded && groundAngle < maxSlopeAngle)
             {
                 moveDirection = Vector3.ProjectOnPlane(moveDirection, ground.normal);
             }
-            Rb.velocity += MoveAcceleration * Time.fixedDeltaTime * moveDirection - (ground.normal*stickFactor);
+            Vector3 newVel = Rb.velocity + MoveAcceleration * Time.fixedDeltaTime * moveDirection - (ground.normal * stickFactor);
+            if (newVel.magnitude < MoveSpeed)
+            {
+                Rb.velocity = newVel;
+            }
             oldMoveSpeed = MoveSpeed;
         }
         else if (!IsGrounded)
@@ -160,9 +161,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             this.input = Vector3.right * input.x + Vector3.forward * input.y;
 
             if (input.y < 0.5f && isRunning) isRunning = false;
-
-            //if (input != Vector2.zero && !IsGrounded) Rb.drag = 1f;
-            //else Rb.drag = 0;
         };
 
         actions.Locomotion.Move.canceled += ctx =>
