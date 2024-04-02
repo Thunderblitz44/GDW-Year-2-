@@ -34,7 +34,7 @@ public class EnvironmentalParticles : MonoBehaviour
         }
 
    
-        Debug.Log("Current Scene Value: " + sceneValue);
+        //Debug.Log("Current Scene Value: " + sceneValue);
         Invoke("SetEnviVFX", 2f);
    
     }

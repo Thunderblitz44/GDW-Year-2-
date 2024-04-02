@@ -124,7 +124,7 @@ public class TrailScript : MonoBehaviour
             // Start lerping alpha value
             StartCoroutine(LerpAlpha());
 
-            Debug.Log(timeActive);
+            //Debug.Log(timeActive);
             Destroy(gObj, meshDestroyDelay);
 
             yield return new WaitForSeconds(0.1f);

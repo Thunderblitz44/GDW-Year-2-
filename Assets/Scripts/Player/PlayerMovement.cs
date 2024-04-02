@@ -40,8 +40,11 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     RaycastHit ground;
     float groundAngle;
     public bool IsGrounded { get; private set; }
-    int collisions;
     [Space(10f)]
+
+    // Smoothing
+    [Header("test")]
+    [SerializeField] float stickFactor = 1.5f;
 
     // INPUT
     Vector3 input;
@@ -49,15 +52,12 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     ActionMap actions;
 
     // PLAYER STUFF
-    PlayerCollisions playerCollisions;
     public Transform Body { get; private set; }
     public Rigidbody Rb { get; private set; }
 
     [HideInInspector] public bool IsDead;
     public event UnityAction OnPlayerDeath;
   
-   
-   
     private void Awake()
     {
         Rb = GetComponent<Rigidbody>();
@@ -69,25 +69,23 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (name == "KneeClearance") kneeClearanceCheck = Body.GetChild(c);
             else if (name == "GroundChecker") groundCheck = Body.GetChild(c);
         }
-
-        playerCollisions = Body.GetComponent<PlayerCollisions>();
-        //playerCollisions.onCollisionStay += OnCollisionStay;
-        //playerCollisions.onCollisionExit += OnCollisionExit;
-        //playerCollisions.onCollisionEnter += OnCollisionEnter;
     }
 
     private void Update()
     {
-        //if (collisions == 0 && IsGrounded && !stepClimbing && (jumped || Mathf.Abs(Rb.velocity.y) > 2f)) IsGrounded = false;
         if (Physics.Raycast(groundCheck.position, Vector3.down, out ground, groundRaycastDist, groundLayer, QueryTriggerInteraction.Ignore))
         {
             groundAngle = Vector3.Angle(Vector3.up, ground.normal);
 
             IsGrounded = true;
+            if (input == Vector3.zero) Rb.useGravity = true;
+            else Rb.useGravity = false;
         }
-        else IsGrounded = false;
-
-
+        else if (!stepClimbing)
+        {
+            IsGrounded = false;
+            Rb.useGravity = true;
+        }
 
         // can jump test
         if (IsGrounded && (jumpCooldownTimer += Time.deltaTime) >= jumpCooldown) canJump = true;
@@ -108,7 +106,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             {
                 moveDirection = Vector3.ProjectOnPlane(moveDirection, ground.normal);
             }
-            Rb.velocity += MoveAcceleration * Time.fixedDeltaTime * moveDirection;
+            Rb.velocity += MoveAcceleration * Time.fixedDeltaTime * moveDirection - (ground.normal/stickFactor);
             oldMoveSpeed = MoveSpeed;
         }
         else if (!IsGrounded)
@@ -124,7 +122,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (speed < MoveSpeed) oldMoveSpeed = MoveSpeed;
         }
 
-
         // Steps
         RaycastHit hitLower;
         if (Physics.Raycast(groundCheck.position, moveDirection, out hitLower, 0.25f))
@@ -132,10 +129,13 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             if (Vector3.Dot(hitLower.normal, moveDirection) < -0.7f && !Physics.Raycast(kneeClearanceCheck.position, moveDirection, 0.4f))
             {
                 stepClimbing = true;
-                Rb.position += Vector3.up * 0.05f;
+                Rb.position += Vector3.up * 0.08f;
             }
         }
         else if (stepClimbing) stepClimbing = false;
+
+        //Debug.DrawRay(transform.position, Rb.velocity, Color.green, Time.fixedDeltaTime);
+        //Debug.DrawRay(transform.position, moveDirection * 2, Color.red, Time.fixedDeltaTime);
     }
 
     public void SetupInputEvents(object sender, ActionMap actions)
@@ -152,24 +152,20 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
             if (input.y < 0.5f && isRunning) isRunning = false;
 
-            if (input != Vector2.zero && !IsGrounded) Rb.drag = 1f;
-            else Rb.drag = 0;
-
-           
+            //if (input != Vector2.zero && !IsGrounded) Rb.drag = 1f;
+            //else Rb.drag = 0;
         };
 
         actions.Locomotion.Move.canceled += ctx =>
         {
             input = Vector3.zero;
             isRunning = false;
-           
         };
 
         // Run
         actions.Locomotion.Run.performed += ctx =>
         {
             isRunning = true;
-           
         };
 
 
@@ -182,39 +178,10 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             canJump = false;
             Rb.velocity = StaticUtilities.HorizontalizeVector(Rb.velocity);
             Rb.velocity += Vector3.up * jumpForce;
-          
         };
 
         actions.Locomotion.Run.Enable();
     }
-
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        collisions++;
-    }*/
-
-    /*private void OnCollisionStay(Collision collision)
-    {
-        // is grounded test
-        // are we colliding with an object lower than groundcheck
-        if (collision.collider.gameObject.layer == 6 &&
-            collision.contacts[0].point.y < groundCheck.position.y + 1.5f)
-        {
-            if (Physics.Raycast(groundCheck.position, Vector3.down, out ground, groundRaycastDist, groundLayer, QueryTriggerInteraction.Ignore))
-            {
-                groundAngle = Vector3.Angle(Vector3.up, ground.normal);
-                DebugHUD.instance.SetDebugText("ground angle : " + groundAngle.ToString("0.0"));
-
-                IsGrounded = true;
-            }
-            else IsGrounded = false;
-        }
-    }*/
-
-    /*private void OnCollisionExit(Collision collision)
-    {
-        collisions--;
-    }*/
 
     public void EnableLocomotion()
     {
@@ -234,6 +201,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     {
         
     }
+
     public void Death()
     {
         IsDead = true;
