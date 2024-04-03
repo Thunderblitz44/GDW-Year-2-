@@ -7,13 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BossTower
+  m_Name: M_eastAsianRooftop_Material
   m_Shader: {fileID: -6465566751694194690, guid: ada99842a2101fe408e4f30125fabd4c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - MAIN_LIGHT_CALCULATE_SHADOWS
-  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -28,7 +27,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 147280d65790b6247ba19fda5d37e48d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -56,7 +55,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Emit_1:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d1b6151dae414084db9d2b6782e3d200, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Gradient_Texture:
@@ -76,7 +75,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 643d21ec7815e074594ea9cbbf6f02f9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -160,21 +159,21 @@ Material:
     - ADDITIONAL_LIGHTS_CALCULATE_SHADOWS: 0
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
     - _Additional_Lights: 0.5
-    - _Albedo_1: 0.535
+    - _Albedo_1: 1
     - _Albedo_Scale: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _Border: 0.079
+    - _Border: 0
     - _Border_Effect: 1
     - _BumpScale: 1
     - _CastShadows: 1
-    - _Cell_Location: 0.36
+    - _Cell_Location: 0
     - _Cell_Strength: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Contrast: 0.419
+    - _Contrast: 0.3
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -187,19 +186,19 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeNoiseSpeed: 0.05
-    - _Emit: 0
+    - _Emit: 0.084
     - _EnvironmentReflections: 1
-    - _Fog: 0.553
+    - _Fog: 1
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _HeightBlend: 0.269
-    - _Height_Blend: 817.26
-    - _Height_Gradient: -4.11
+    - _HeightBlend: 0.8
+    - _Height_Blend: 3
+    - _Height_Gradient: -2
     - _HueRandom: 0
-    - _Light_Contrast: 1
-    - _Lighting_Noise: 0
-    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _Light_Contrast: 0.5
+    - _Lighting_Noise: 0.5
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 0
     - _MaskUV: 0
     - _Mask_1: 0
     - _Metallic: 0
@@ -207,9 +206,9 @@ Material:
     - _NoiseScale: 0.2
     - _NoiseStrength: 1
     - _Noise_Multiply: 1
-    - _Noise_Scale: 20.62
+    - _Noise_Scale: 0.62
     - _Normal_Noise: 0.5
-    - _Normal_Value: 0
+    - _Normal_Value: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueControl: 0
@@ -218,40 +217,40 @@ Material:
     - _ReflectionProbe: 0.5
     - _SHADOWS_SOFT: 1
     - _Shadow_Atten: 0
-    - _Shadow_Strength: 0.33
-    - _Smoothness: 5.41
+    - _Shadow_Strength: 0.67
+    - _Smoothness: 4.97
     - _SmoothnessTextureChannel: 0
-    - _Smoothness_1: 0.287
+    - _Smoothness_1: 0.27
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TP_Noise: 0.119
-    - _TriPlanar: 1
+    - _TP_Noise: 0.5
+    - _TriPlanar: 0
     - _UVSec: 0
     - _WorkflowMode: 1
-    - _WorldPosition: 1
+    - _WorldPosition: 0
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
     m_Colors:
-    - _BaseColor: {r: 0.6731503, g: 0.63201386, b: 0.6165444, a: 1}
+    - _BaseColor: {r: 0.4432224, g: 0.5082956, b: 0.49495357, a: 1}
     - _Border_Color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0}
-    - _Color: {r: 0.4811321, g: 0.34133145, b: 0.3063813, a: 1}
+    - _Color: {r: 0.23312683, g: 1, b: 0.1745283, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EmitColor: {r: 1, g: 1, b: 1, a: 0}
+    - _EmitColor: {r: 0.22745098, g: 0.4627451, b: 0.45671478, a: 0}
     - _MaskColor: {r: 1, g: 1, b: 1, a: 0}
     - _MaskColor2: {r: 0, g: 0, b: 0, a: 0}
     - _MaskNoise: {r: 0, g: 1, b: 0, a: 0}
-    - _Shadow_Color: {r: 0.44517618, g: 0.5410017, b: 1.5471698, a: 0}
-    - _Smoothness_Color: {r: 1.8333858, g: 1.1693065, b: 2.7240987, a: 0}
+    - _Shadow_Color: {r: 0.2970363, g: 0.3442177, b: 0.8396226, a: 0}
+    - _Smoothness_Color: {r: 2.670157, g: 1.509037, b: 1.034511, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _TP_Bottom: {r: 0.26079988, g: 0.25164652, b: 0.6132076, a: 0}
-    - _TP_Middle: {r: 0.5, g: 0.44103774, b: 0.44103774, a: 0}
-    - _TP_Top: {r: 1, g: 0.7751151, b: 0.41176474, a: 1}
+    - _TP_Bottom: {r: 0.1805575, g: 0.1780883, b: 0.4339623, a: 0}
+    - _TP_Middle: {r: 0.509434, g: 0.4397473, b: 0.4397473, a: 0}
+    - _TP_Top: {r: 0.4043317, g: 0.7176471, b: 0.1647059, a: 0}
     - _TP_Top2: {r: 0.3583302, g: 0.1775245, b: 0.8301887, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &7630471853080362250
+--- !u!114 &6035502649035809145
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

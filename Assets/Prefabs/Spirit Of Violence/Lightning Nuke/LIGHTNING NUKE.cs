@@ -1,25 +1,48 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.VFX;
 
-public class LIGHTNINGNUKE : MonoBehaviour
+public class LIGHTNINGNUKE : Enemy
 {
       public float buildupDelay = 3f;
     public float nukeDelay = 10f;
     public Volume localVolume;
     public Light pointLight; 
     private VisualEffect vfx;
+    public ParticleSystem Nuke;
+MeleeHitBox sword;
+AttackTrigger trigger;
 
-    void OnEnable()
+
+public MeleeHitBox[] RangedAttack;
+
+private int RangedAttackDamage = 999;
+public Vector2 RangedKnockback;
+
+private void Start()
+{
+    
+    RangedAttack = GetComponentsInChildren<MeleeHitBox>();
+    foreach (var trigger in RangedAttack)
     {
+        trigger.damage = RangedAttackDamage;
+        trigger.knockback = RangedKnockback;
+    }
+}
+
+
+void OnEnable()
+    {
+        
         vfx = GetComponent<VisualEffect>();
         if (vfx != null)
         {
             vfx.SendEvent("BUILDUP");
         }
-
+     
         StartCoroutine(TriggerNukeAfterDelay());
     }
 
@@ -29,7 +52,9 @@ public class LIGHTNINGNUKE : MonoBehaviour
 
         vfx.SendEvent("NUKE");
         Invoke("NukeVibration", 1f);
-
+        Nuke.Play();
+   
+    
         yield return new WaitForSeconds(nukeDelay);
 
         Destroy(gameObject);
@@ -86,5 +111,9 @@ public class LIGHTNINGNUKE : MonoBehaviour
 
     
         pointLight.intensity = 0f;
+    }
+    private void OnParticleCollision(GameObject other)
+    {
+        StaticUtilities.TryToDamage(other, RangedAttackDamage);
     }
 }

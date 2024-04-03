@@ -48,10 +48,10 @@ public class SoundController : MonoBehaviour
 
     public void BeginBossMusic()
     {
-        Debug.Log("FUCK");
+      
         if (bossMusicEmitter != null)
         {
-            Debug.Log("FUCK");
+          
             bossMusicEmitter.SetParameter("BossMusic", 1f);
             if (battleMusicEmitter != null)
             {
@@ -73,6 +73,7 @@ public class SoundController : MonoBehaviour
         if (bossMusicEmitter != null)
         {
             Debug.Log("FRICK");
+          
             bossMusicEmitter.SetParameter("BossMusic", 0f);
             if (battleMusicEmitter != null)
             {

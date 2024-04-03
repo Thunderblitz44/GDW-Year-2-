@@ -94,6 +94,7 @@ public class ElanaDoppleganger : Enemy
     private float zSpeed;
     private Rigidbody Rb;
     [SerializeField] private Animator Animator;
+    [SerializeField] private GameObject Target;
     protected override void Awake()
     {
         base.Awake();
@@ -111,7 +112,7 @@ public class ElanaDoppleganger : Enemy
     {
         if (!battleStarted) return;
         base.Update();
-
+     //   agent.SetDestination(LevelManager.PlayerTransform.position);
         if (startAttackingDelay > 0)
         {
             startAttackingDelay -= Time.deltaTime;
@@ -165,9 +166,8 @@ public class ElanaDoppleganger : Enemy
 
         Animator.SetBool("IsMoving", true);
 
-        
-        
-        
+        Vector3 headPosition = LevelManager.PlayerTransform.position;
+            Target.transform.position = headPosition;
     }
 
     protected override void SlowUpdate()

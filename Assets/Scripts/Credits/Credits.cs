@@ -3,10 +3,13 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Credits : MonoBehaviour
 {
-    [SerializeField] AnimatedText gameTitle;
+    [SerializeField] Image gameTitle;
+    bool imgFadeEnd;
+
     [SerializeField] AnimatedText thanksMsg;
     [SerializeField] AnimatedText skipMsg;
     [SerializeField] RectTransform credits;
@@ -17,21 +20,13 @@ public class Credits : MonoBehaviour
     [SerializeField] float scrollDelay = 1f;
 
     [Serializable]
-    struct AnimatedText
+    class AnimatedText
     {
         public TextMeshProUGUI textMesh;
         public float fadeSpeed;
 
         [HideInInspector] public bool startedFade;
         [HideInInspector] public bool finishedFade;
-
-        public AnimatedText(TextMeshProUGUI tmp)
-        {
-            textMesh = tmp;
-            finishedFade = false;
-            startedFade = false;
-            fadeSpeed = 1;
-        }
     }
 
     private void Start()
@@ -50,7 +45,7 @@ public class Credits : MonoBehaviour
 
     private void Update()
     {
-        if (gameTitle.finishedFade && !scroll)
+        if (imgFadeEnd && !scroll)
         {
             scroll = true;
         }
@@ -67,10 +62,10 @@ public class Credits : MonoBehaviour
             }
 
             credits.position += Time.deltaTime * scrollSpeed * Vector3.up;
-            gameTitle.textMesh.transform.position += Time.deltaTime * scrollSpeed * Vector3.up;
+            gameTitle.transform.position += Time.deltaTime * scrollSpeed * Vector3.up;
         }
 
-        if (credits.position.y > 1050 && !thanksMsg.startedFade)
+        if (credits.localPosition.y > 1050 && !thanksMsg.startedFade)
         {
             StartCoroutine(FadeRoutine(thanksMsg));
         }
@@ -93,5 +88,18 @@ public class Credits : MonoBehaviour
 
         obj.textMesh.color = Color.white;
         obj.finishedFade = true;
+    }
+
+    IEnumerator FadeRoutine(Image obj)
+    {
+        AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        for (float t = 0; t < 1; t += Time.deltaTime)
+        {
+            obj.color = Color.Lerp(Color.clear, Color.white, curve.Evaluate(t));
+            yield return null;
+        }
+
+        obj.color = Color.white;
+        imgFadeEnd = true;
     }
 }

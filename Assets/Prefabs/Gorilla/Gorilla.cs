@@ -33,6 +33,8 @@ public class Gorilla : Enemy
         int randomDeathType = Random.Range(0, 3);
         DeathType = randomDeathType;
         animator.SetInteger("deathType", randomDeathType);
+        Invoke("Doom", 120f);
+
     }
 
 
@@ -44,8 +46,11 @@ public class Gorilla : Enemy
         if (isEnabled)
         {
             HeadTarget.transform.position = headPosition;
-            if (agent) agent.SetDestination(headPosition);
-  
+    
+            if (agent && agent.isOnNavMesh)
+            {
+                agent.SetDestination(headPosition);
+            }
         }
 
         
