@@ -115,6 +115,7 @@ public class Gorilla : Enemy
     public void DeathBurst()
     {
         vfxGraph.SendEvent("death");
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Death", gameObject);
     }
 
     public void ChooseNextAttack()

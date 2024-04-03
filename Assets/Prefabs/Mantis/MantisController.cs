@@ -107,6 +107,7 @@ public class MantisController : Enemy
     
     public void DeathBurst()
     {
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Death", gameObject);
         vfxGraph.SendEvent("death");
     }
 }

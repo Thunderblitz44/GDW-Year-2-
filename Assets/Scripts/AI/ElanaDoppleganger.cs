@@ -166,8 +166,7 @@ public class ElanaDoppleganger : Enemy
 
         Animator.SetBool("IsMoving", true);
 
-        Vector3 headPosition = LevelManager.PlayerTransform.position;
-            Target.transform.position = headPosition;
+     
     }
 
     protected override void SlowUpdate()

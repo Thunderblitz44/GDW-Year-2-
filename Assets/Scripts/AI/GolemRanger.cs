@@ -110,7 +110,7 @@ public class GolemRanger : Enemy
     public void DeathBurst()
     {
         LineRenderer[] lineRenderers = GetComponentsInChildren<LineRenderer>();
-
+        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Death", gameObject);
         foreach (LineRenderer lineRenderer in lineRenderers)
         {
             Destroy(lineRenderer.gameObject);
