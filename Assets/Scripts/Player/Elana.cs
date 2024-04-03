@@ -455,6 +455,7 @@ private WindBurst WindBurstRef;
                 force = camLook.direction * projectile.speed;
             }
             StaticUtilities.ShootProjectile(pooledProjectiles,shootOrigin.position, force);
+            
         }
     }
 
@@ -462,6 +463,7 @@ private WindBurst WindBurstRef;
     {
         fireTornado.GetComponent<VisualEffect>().Stop();
         Invoke(nameof(KillTornado), tornadoCooldown > 0.5f ? tornadoCooldown - 0.5f : 0);
+        
     }
 
     void KillTornado()

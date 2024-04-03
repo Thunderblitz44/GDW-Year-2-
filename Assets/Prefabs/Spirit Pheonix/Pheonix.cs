@@ -60,5 +60,14 @@ public class Pheonix : MonoBehaviour
         FireBallParticleSystem.Play();
     }
 
+    private void Update()
+    {
+        RaycastHit hit;
+        Ray camLook = Camera.main.ScreenPointToRay(StaticUtilities.GetCenterOfScreen());
 
+        if (Physics.Raycast(camLook, out hit))
+        {
+            Target.transform.position = hit.point;
+        }
+    }
 }
