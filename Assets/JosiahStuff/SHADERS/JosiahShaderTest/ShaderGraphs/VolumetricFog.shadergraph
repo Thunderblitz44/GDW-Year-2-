@@ -29,6 +29,9 @@
         },
         {
             "m_Id": "e8834ec82e8b4864945a6cf59f91dca5"
+        },
+        {
+            "m_Id": "146612579f33437dabe195060e1fceef"
         }
     ],
     "m_Keywords": [],
@@ -179,6 +182,9 @@
         },
         {
             "m_Id": "d054db3d00b7427a9ae5c54273792792"
+        },
+        {
+            "m_Id": "43360c280fa24115932e5e7a7c45cd83"
         }
     ],
     "m_GroupDatas": [],
@@ -364,6 +370,20 @@
                     "m_Id": "2e04449cca1e43c19d16532a1b0259ce"
                 },
                 "m_SlotId": 3
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "43360c280fa24115932e5e7a7c45cd83"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "0633a3447c2941d2a07eaa73a691abb7"
+                },
+                "m_SlotId": 2
             }
         },
         {
@@ -888,6 +908,9 @@
         },
         {
             "m_Id": "e8834ec82e8b4864945a6cf59f91dca5"
+        },
+        {
+            "m_Id": "146612579f33437dabe195060e1fceef"
         }
     ]
 }
@@ -1313,6 +1336,34 @@
     },
     "m_Labels": [],
     "m_Channel": 0
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "146612579f33437dabe195060e1fceef",
+    "m_Guid": {
+        "m_GuidSerialized": "f5804ceb-76d3-4d0c-84d9-c5fef4efcceb"
+    },
+    "m_Name": "FresnelPower",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "FresnelPower",
+    "m_DefaultReferenceName": "_FresnelPower",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 27.600000381469728,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
 }
 
 {
@@ -2533,10 +2584,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 80.80003356933594,
-            "y": 84.00001525878906,
-            "width": 123.199951171875,
-            "height": 33.600006103515628
+            "x": 41.33332061767578,
+            "y": 88.66666412353516,
+            "width": 124.00000762939453,
+            "height": 36.00000762939453
         }
     },
     "m_Slots": [
@@ -2554,6 +2605,42 @@
     },
     "m_Property": {
         "m_Id": "7ce356819c2340f18cd2c5ca921c46a5"
+    }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "43360c280fa24115932e5e7a7c45cd83",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -183.33334350585938,
+            "y": 452.66668701171877,
+            "width": 148.0,
+            "height": 35.999969482421878
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "b1146c3711ff4ed7a4a0bd0fe815c5fe"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "146612579f33437dabe195060e1fceef"
     }
 }
 
@@ -4847,6 +4934,21 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "b1146c3711ff4ed7a4a0bd0fe815c5fe",
+    "m_Id": 0,
+    "m_DisplayName": "FresnelPower",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
 }
 
 {
