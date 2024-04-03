@@ -31,15 +31,7 @@ public class Enemy : DamageableEntity
         if (!OnHitEffects) OnHitEffects = GetComponentInChildren<VisualEffect>();
         agent = GetComponent<NavMeshAgent>();
         target = LevelManager.PlayerTransform;
-        if (GetComponent<ElanaDoppleganger>() != null || GetComponent<Bear>() != null)
-        {
-          
-        }
-        else
-        {
-           
-            Invoke("Doom", 120f); 
-        }
+        
     }
 
     protected virtual void Update()
@@ -107,7 +99,7 @@ public class Enemy : DamageableEntity
         if (!isInvincible) flashTimer = StaticUtilities.damageFlashDuration;
         if (updateTargetOnDamaged) target = LevelManager.PlayerTransform;
     }
-    private void Doom()
+    protected void Doom()
     {
         dissolve = true;
         Destroy(agent);

@@ -29,9 +29,11 @@ public class MantisController : Enemy
         {
             Debug.LogError("Teleport Visual Effect Graph component not found!");
         }
+        Invoke("Doom", 120f);
+
     }
 
- 
+
     public void Teleport()
     {
         

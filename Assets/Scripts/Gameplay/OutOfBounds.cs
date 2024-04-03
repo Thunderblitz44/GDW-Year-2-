@@ -4,6 +4,10 @@ public class OutOfBounds : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        LevelManager.Instance.Respawn();
+        if (other.tag == "Player") LevelManager.Instance.Respawn();
+        else
+        {
+            Destroy(other.gameObject);
+        }
     }
 }
