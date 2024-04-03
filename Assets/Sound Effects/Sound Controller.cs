@@ -73,6 +73,7 @@ public class SoundController : MonoBehaviour
         if (bossMusicEmitter != null)
         {
             Debug.Log("FRICK");
+          
             bossMusicEmitter.SetParameter("BossMusic", 0f);
             if (battleMusicEmitter != null)
             {
