@@ -1,5 +1,4 @@
 using System.Collections;
-using FMOD;
 using UnityEngine;
 
 public class BossEncounter : EncounterVolume
