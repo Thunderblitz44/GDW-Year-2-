@@ -260,9 +260,9 @@ private WindBurst WindBurstRef;
         // PORTAL ABILITY
         actions.Abilities.Portal.performed += ctx =>
         {
-            if (!canPortal) return;
+            if (!canPortal ) return;
          
-            if (instantiatedPortal)
+            if (instantiatedPortal )
             {
                 TrailScript.OnPortalEvent();
                 specialAnimator.SetTrigger("Recall");
@@ -271,14 +271,18 @@ private WindBurst WindBurstRef;
                 meshRenderer.enabled = false;
                 TrailScript.isTrailActive2 = true;
                
-                StartCoroutine(DelayedDodge(transform.position, recallPos, teleportSpeed, 1f));
+                StartCoroutine(DelayedDodge(transform.position, recallPos, teleportSpeed, 0f));
                       return;
                        
             }
         
             portalLink.enabled = true;
             recallPos = transform.position;
-            instantiatedPortal = Instantiate(recallPointIndicatorPrefab, recallPos, Quaternion.LookRotation(StaticUtilities.GetCameraDir(), Vector3.up));
+            if (MovementScript.IsGrounded)
+            {
+                instantiatedPortal = Instantiate(recallPointIndicatorPrefab, recallPos, Quaternion.LookRotation(StaticUtilities.GetCameraDir(), Vector3.up));
+            }
+          
         };
       
         // Dodge
@@ -393,6 +397,7 @@ private WindBurst WindBurstRef;
 
         // dodge end
         MovementScript.EnableLocomotion();
+        MovementScript.Rb.velocity = Vector3.zero;
         isInvincible = false;
         isDodgeing = false;
         MovementScript.Rb.velocity = StaticUtilities.HorizontalizeVector(MovementScript.Rb.velocity);

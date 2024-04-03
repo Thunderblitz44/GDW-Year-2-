@@ -187,6 +187,7 @@ public class GolemBossScript : Enemy, IBossCommands
 
     public void Introduce()
     {
+        Invoke(nameof(StartBattle), 1f);
         // entrance animation
         // pool portals
         projectile.owner = this;
@@ -200,7 +201,7 @@ public class GolemBossScript : Enemy, IBossCommands
         }
 
         (hp as BossHealthComponent).Show();
-        Invoke(nameof(StartBattle), 1f);
+      
         NextPhase();
     }
 
@@ -224,7 +225,7 @@ public class GolemBossScript : Enemy, IBossCommands
 
         List<GameObject> damagedEntities = new();
         laserEmitter.SetActive(true);
-        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Boss Laser", gameObject);
+      
         yield return new WaitForSeconds(attackPrepareTime);
 
         Vector3 targetDir, start, end, sweepDir = Vector3.zero;

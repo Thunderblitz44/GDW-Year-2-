@@ -21,9 +21,11 @@ public class Bat : Enemy
     {
         EnableAI();
     GetComponentInChildren<MagicBullet>().Initialize(projectile, this);
-      
+        Invoke("Doom", 120f);
+
+
     }
-    
+
     protected override void Update()
     {
         base.Update();

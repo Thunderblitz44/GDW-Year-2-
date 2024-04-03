@@ -21,7 +21,6 @@ public class EncounterVolume : MonoBehaviour
         bc = GetComponent<BoxCollider>();
         cp = GetComponent<Checkpoint>();
         cp.SetOnTriggerEnter = false;
-        
     }
 
     protected virtual void Update()

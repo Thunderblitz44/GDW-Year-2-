@@ -124,7 +124,7 @@ public class TrailScript : MonoBehaviour
             // Start lerping alpha value
             StartCoroutine(LerpAlpha());
 
-            Debug.Log(timeActive);
+            //Debug.Log(timeActive);
             Destroy(gObj, meshDestroyDelay);
 
             yield return new WaitForSeconds(0.1f);
@@ -172,5 +172,10 @@ public class TrailScript : MonoBehaviour
     {
         OnLanded.Emit(10);
         FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Warrior Footsteps",  DustSystemRight.gameObject);
+    }
+
+    public void DeathBurst()
+    {
+        
     }
 }

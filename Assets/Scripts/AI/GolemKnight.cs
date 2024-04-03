@@ -35,7 +35,8 @@ public class GolemKnight : Enemy
             trigger.onTriggerEnter += OnAttackTriggerEnter;
             trigger.onTriggerExit += OnAttackTriggerExit;
         }
-        
+
+        Invoke("Doom", 120f);
     }
 
     protected override void Update()
