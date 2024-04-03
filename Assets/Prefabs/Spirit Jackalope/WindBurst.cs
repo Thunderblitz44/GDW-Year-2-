@@ -21,6 +21,6 @@ public class WindBurst : MonoBehaviour
 
     public void Burst()
     {
-        WindBurstSystem.Play();
+        WindBurstSystem.Emit(1);
     }
 }

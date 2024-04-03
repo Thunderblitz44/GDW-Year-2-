@@ -20,6 +20,7 @@ public class Enemy : DamageableEntity
     private bool isAwake = true;
     public float spawndissolveTimer = 1f;
     [SerializeField] VisualEffect OnHitEffects;
+    private float LifeTime = 100;
     protected override void Awake()
     {
         base.Awake();
@@ -30,7 +31,15 @@ public class Enemy : DamageableEntity
         if (!OnHitEffects) OnHitEffects = GetComponentInChildren<VisualEffect>();
         agent = GetComponent<NavMeshAgent>();
         target = LevelManager.PlayerTransform;
-      
+        if (GetComponent<ElanaDoppleganger>() != null || GetComponent<Bear>() != null)
+        {
+          
+        }
+        else
+        {
+           
+            Invoke("Doom", 120f); 
+        }
     }
 
     protected virtual void Update()
@@ -98,6 +107,13 @@ public class Enemy : DamageableEntity
         if (!isInvincible) flashTimer = StaticUtilities.damageFlashDuration;
         if (updateTargetOnDamaged) target = LevelManager.PlayerTransform;
     }
-
+    private void Doom()
+    {
+        dissolve = true;
+        Destroy(agent);
+        Destroy(GetComponent<LockonTarget>());
+        base.OnHealthZeroed();
+        // Add your desired logic here
+    }
     
 }
