@@ -28,6 +28,9 @@ public class Salamander : Enemy
         }
          //  MantisAgent.enabled = false;
          EnableAI();
+
+        Invoke("Doom", 120f);
+
     }
 
     // Update is called once per frame

@@ -38,6 +38,8 @@ public class GolemRanger : Enemy
             trigger.onTriggerEnter += OnAttackTriggerEnter;
             trigger.onTriggerExit += OnAttackTriggerExit;
         }
+
+        Invoke("Doom", 120f);
     }
 
     protected override void Update()

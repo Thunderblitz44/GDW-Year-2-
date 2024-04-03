@@ -33,6 +33,8 @@ public class Gorilla : Enemy
         int randomDeathType = Random.Range(0, 3);
         DeathType = randomDeathType;
         animator.SetInteger("deathType", randomDeathType);
+        Invoke("Doom", 120f);
+
     }
 
 
