@@ -225,7 +225,7 @@ public class GolemBossScript : Enemy, IBossCommands
 
         List<GameObject> damagedEntities = new();
         laserEmitter.SetActive(true);
-        FMODUnity.RuntimeManager.PlayOneShotAttached("event:/Boss Laser", gameObject);
+      
         yield return new WaitForSeconds(attackPrepareTime);
 
         Vector3 targetDir, start, end, sweepDir = Vector3.zero;
