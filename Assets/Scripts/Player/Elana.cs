@@ -397,6 +397,7 @@ private WindBurst WindBurstRef;
 
         // dodge end
         MovementScript.EnableLocomotion();
+        MovementScript.Rb.velocity = Vector3.zero;
         isInvincible = false;
         isDodgeing = false;
         MovementScript.Rb.velocity = StaticUtilities.HorizontalizeVector(MovementScript.Rb.velocity);
