@@ -17,6 +17,7 @@ public abstract class Player : DamageableEntity
     protected ActionMap actions;
 
     [SerializeField] protected CinemachineFreeLook freeLookCam;
+    [SerializeField] GameObject ingameConsole;
     bool usingController = false;
     bool wasUsingController = false;
 
@@ -303,6 +304,7 @@ public abstract class Player : DamageableEntity
         }
 
         autoLock = activeSettings.autoLock;
+        ingameConsole.SetActive(activeSettings.debugConsole);
     }
 
     protected abstract void OnLockonTargetChanged();

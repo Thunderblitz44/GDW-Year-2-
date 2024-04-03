@@ -22,6 +22,7 @@ public class SettingsPanel : MonoBehaviour
         ambientSlider.onValueChanged.AddListener(OnAmbientChanged);
         sensSlider.onValueChanged.AddListener(OnSensitivityChanged);
         aimAssistToggle.onValueChanged.AddListener(OnAutoAssistChanged);
+        if (debugPanelToggle) debugPanelToggle.onValueChanged.AddListener(OnDebugPanelChanged);
         
         // load settings
         masterSlider.value = PlayerPrefs.GetFloat("masterVolume", defaultSettings.masterVolume);
@@ -29,6 +30,7 @@ public class SettingsPanel : MonoBehaviour
         ambientSlider.value = PlayerPrefs.GetFloat("ambianceVolume", defaultSettings.ambianceVolume);
         sensSlider.value = PlayerPrefs.GetFloat("sensitivity", defaultSettings.sensitivity);
         aimAssistToggle.isOn = PlayerPrefs.GetInt("autoLock", defaultSettings.autoLock ? 1 : 0) == 1 ? true : false;
+        if (debugPanelToggle) debugPanelToggle.isOn = PlayerPrefs.GetInt("debugConsole", defaultSettings.debugConsole ? 1 : 0) == 1 ? true : false;
         Save();
         gameObject.SetActive(false);
     }
@@ -37,6 +39,13 @@ public class SettingsPanel : MonoBehaviour
     {
         activeSettings.autoLock = toggle;
         PlayerPrefs.SetInt("autoLock", toggle ? 1 : 0);
+        Save();
+    }
+
+    public void OnDebugPanelChanged(bool toggle)
+    {
+        activeSettings.debugConsole = toggle;
+        PlayerPrefs.SetInt("debugConsole", toggle ? 1 : 0);
         Save();
     }
 
@@ -75,6 +84,7 @@ public class SettingsPanel : MonoBehaviour
         ambientSlider.value = defaultSettings.ambianceVolume;
         sensSlider.value = defaultSettings.sensitivity;
         aimAssistToggle.isOn = defaultSettings.autoLock;
+        if (debugPanelToggle) debugPanelToggle.isOn = defaultSettings.autoLock;
         Save();
     }
 

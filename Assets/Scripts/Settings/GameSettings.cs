@@ -5,6 +5,7 @@ public class GameSettings : ScriptableObject
 {
     [Header("Gameplay")]
     public bool autoLock;
+    public bool debugConsole;
     [Range(1, 100)]public float sensitivity = 15; 
     public float MouseSensXForCinemachine { get { return sensitivity / 100f; } }
     public float MouseSensYForCinemachine { get { return sensitivity / 10000f; } }
