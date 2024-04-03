@@ -8,6 +8,7 @@ public class SettingsPanel : MonoBehaviour
     [SerializeField] Slider ambientSlider;
     [SerializeField] Slider sensSlider;
     [SerializeField] Toggle aimAssistToggle;
+    [SerializeField] Toggle debugPanelToggle;
 
     [SerializeField] GameSettings activeSettings;
     [SerializeField] GameSettings defaultSettings;
