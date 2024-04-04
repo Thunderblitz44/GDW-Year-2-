@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameSettings : ScriptableObject
 {
     [Header("Gameplay")]
-    public bool autoLock;
+    public bool autoLock = false;
     public bool debugConsole;
     [Range(1, 100)]public float sensitivity = 15; 
     public float MouseSensXForCinemachine { get { return sensitivity / 100f; } }
