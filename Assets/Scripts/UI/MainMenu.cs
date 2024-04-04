@@ -32,6 +32,8 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
+        Time.timeScale = 1;
+
         ChangeSelectables(0);
         map = new ActionMap();
         currentLevel = PlayerPrefs.GetInt(StaticUtilities.CURRENT_LEVEL, 0);

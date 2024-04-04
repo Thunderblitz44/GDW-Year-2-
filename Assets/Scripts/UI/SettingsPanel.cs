@@ -39,6 +39,13 @@ public class SettingsPanel : MonoBehaviour
         Save();
     }
 
+    public void OnDebugPanelChanged(bool toggle)
+    {
+        activeSettings.debugConsole = toggle;
+        PlayerPrefs.SetInt("debugConsole", toggle ? 1 : 0);
+        Save();
+    }
+
     public void OnSensitivityChanged(float value)
     {
         activeSettings.sensitivity = value;
