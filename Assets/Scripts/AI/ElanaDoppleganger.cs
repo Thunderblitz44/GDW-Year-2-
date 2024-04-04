@@ -95,6 +95,7 @@ public class ElanaDoppleganger : Enemy
     private Rigidbody Rb;
     [SerializeField] private Animator Animator;
     [SerializeField] private GameObject Target;
+    [SerializeField] private GameObject teleporter;
     protected override void Awake()
     {
         base.Awake();
@@ -180,6 +181,7 @@ public class ElanaDoppleganger : Enemy
     protected override void OnHealthZeroed()
     {
         StopAllCoroutines();
+        teleporter.SetActive(true);
         Destroy(gameObject, 1f);
     }
 
