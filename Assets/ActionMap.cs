@@ -568,15 +568,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Confirm"",
-                    ""type"": ""Button"",
-                    ""id"": ""754941e4-7aa6-4cfe-b538-8a87ec92ddaa"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Return"",
                     ""type"": ""Button"",
                     ""id"": ""5fe9cd05-cc7d-4179-b85c-fd13519eab18"",
@@ -587,28 +578,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""c0e1eed3-3ad8-4842-b1f2-b463673aaade"",
-                    ""path"": ""<Keyboard>/enter"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Confirm"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""483faf7a-580a-41a6-bfe5-3511284e11a2"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Confirm"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""86b7f602-bfcf-4c70-a276-de946d0b83f8"",
@@ -953,7 +922,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         m_Menus_Point = m_Menus.FindAction("Point", throwIfNotFound: true);
         m_Menus_Submit = m_Menus.FindAction("Submit", throwIfNotFound: true);
         m_Menus_Navigate = m_Menus.FindAction("Navigate", throwIfNotFound: true);
-        m_Menus_Confirm = m_Menus.FindAction("Confirm", throwIfNotFound: true);
         m_Menus_Return = m_Menus.FindAction("Return", throwIfNotFound: true);
         // CameraControl
         m_CameraControl = asset.FindActionMap("CameraControl", throwIfNotFound: true);
@@ -1234,7 +1202,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_Menus_Point;
     private readonly InputAction m_Menus_Submit;
     private readonly InputAction m_Menus_Navigate;
-    private readonly InputAction m_Menus_Confirm;
     private readonly InputAction m_Menus_Return;
     public struct MenusActions
     {
@@ -1245,7 +1212,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         public InputAction @Point => m_Wrapper.m_Menus_Point;
         public InputAction @Submit => m_Wrapper.m_Menus_Submit;
         public InputAction @Navigate => m_Wrapper.m_Menus_Navigate;
-        public InputAction @Confirm => m_Wrapper.m_Menus_Confirm;
         public InputAction @Return => m_Wrapper.m_Menus_Return;
         public InputActionMap Get() { return m_Wrapper.m_Menus; }
         public void Enable() { Get().Enable(); }
@@ -1271,9 +1237,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Navigate.started += instance.OnNavigate;
             @Navigate.performed += instance.OnNavigate;
             @Navigate.canceled += instance.OnNavigate;
-            @Confirm.started += instance.OnConfirm;
-            @Confirm.performed += instance.OnConfirm;
-            @Confirm.canceled += instance.OnConfirm;
             @Return.started += instance.OnReturn;
             @Return.performed += instance.OnReturn;
             @Return.canceled += instance.OnReturn;
@@ -1296,9 +1259,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
             @Navigate.started -= instance.OnNavigate;
             @Navigate.performed -= instance.OnNavigate;
             @Navigate.canceled -= instance.OnNavigate;
-            @Confirm.started -= instance.OnConfirm;
-            @Confirm.performed -= instance.OnConfirm;
-            @Confirm.canceled -= instance.OnConfirm;
             @Return.started -= instance.OnReturn;
             @Return.performed -= instance.OnReturn;
             @Return.canceled -= instance.OnReturn;
@@ -1393,7 +1353,6 @@ public partial class @ActionMap: IInputActionCollection2, IDisposable
         void OnPoint(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
         void OnNavigate(InputAction.CallbackContext context);
-        void OnConfirm(InputAction.CallbackContext context);
         void OnReturn(InputAction.CallbackContext context);
     }
     public interface ICameraControlActions
