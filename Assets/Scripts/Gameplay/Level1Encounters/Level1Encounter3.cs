@@ -115,9 +115,14 @@ public class Level1Encounter3 : EncounterVolume
             yield return null;
         }
         StaticUtilities.ShakePlayerCamera(landShakeAmp, landShakeFreq, landShakeSpeed);
-        pillar.position = pillarPoses[1].position;
-        pillar.rotation = pillarPoses[1].rotation;
+        SetPillarDown();
 
         EndEncounter();
+    }
+
+    public void SetPillarDown()
+    {
+        pillar.position = pillarPoses[1].position;
+        pillar.rotation = pillarPoses[1].rotation;
     }
 }

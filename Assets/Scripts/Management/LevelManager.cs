@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -156,6 +157,7 @@ public class LevelManager : MonoBehaviour
             // disable old encounters
             foreach (var volume in encounterVolumes)
             {
+                if (volume is Level1Encounter3) (volume as Level1Encounter3).SetPillarDown();
                 if (volume.Id <= le) volume.Disable();
             }
 
