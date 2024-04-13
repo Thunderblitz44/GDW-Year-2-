@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     [SerializeField] float walkAcceleration = 1f;
     [SerializeField] float runSpeed = 6f;
     [SerializeField] float runAcceleration = 4f;
-    //[SerializeField] float runSpeedLR = 5f;
     [SerializeField] float airSpeed = 3f;
     [SerializeField] float airAcceleration = 3f;
     bool isRunning;
@@ -128,10 +127,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             }
         }
         else if (stepClimbing) stepClimbing = false;
-
-        //Debug.DrawRay(transform.position, Rb.velocity, Color.green, Time.fixedDeltaTime);
-        //Debug.DrawRay(transform.position, moveDirection * 2, Color.red, Time.fixedDeltaTime);
-        //Debug.DrawRay(ground.point, ground.normal/2, Color.red, Time.fixedDeltaTime);
     }
 
     public void SetupInputEvents(object sender, ActionMap actions)
