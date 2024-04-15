@@ -3,18 +3,17 @@ using UnityEngine;
 public class PlayerMenuController : MonoBehaviour, IInputExpander
 {
     Player playerScript;
-
+    ActionMap actions;
     [SerializeField] PauseMenu pauseMenu;
 
     public void SetupInputEvents(object sender, ActionMap actions)
     {
         playerScript = (Player)sender;
+        this.actions = actions;
 
         actions.Menus.Return.performed += ctx => 
         {
-            pauseMenu.Resume(); 
-            actions.Menus.Disable();
-            playerScript.UnPausePlayer();
+            Return();
         };
 
         actions.Menus.Navigate.started += ctx =>
@@ -31,8 +30,16 @@ public class PlayerMenuController : MonoBehaviour, IInputExpander
             pauseMenu.Submit();
         };
 
-        pauseMenu.AddResumeListener(playerScript.UnPausePlayer);
+        pauseMenu.AddResumeListener(Return);
         actions.Menus.Disable();
+    }
+
+    void Return()
+    {
+        pauseMenu.Resume();
+        actions.Menus.Disable();
+        playerScript.UnPausePlayer();
+        pauseMenu.Save();
     }
 
     public void Pause()

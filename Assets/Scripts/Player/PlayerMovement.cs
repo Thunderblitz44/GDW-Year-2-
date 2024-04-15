@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     [SerializeField] float walkAcceleration = 1f;
     [SerializeField] float runSpeed = 6f;
     [SerializeField] float runAcceleration = 4f;
-    //[SerializeField] float runSpeedLR = 5f;
     [SerializeField] float airSpeed = 3f;
     [SerializeField] float airAcceleration = 3f;
     bool isRunning;
@@ -17,7 +16,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
     public bool IsMoving { get { return input != Vector3.zero; } }
     public Vector3 MoveDirection { get { return moveDirection; } }
     float MoveSpeed { get { return IsGrounded ? isRunning ? runSpeed : walkSpeed : airSpeed; } }
-    float oldMoveSpeed = 0f;
     float MoveAcceleration { get { return IsGrounded ? isRunning ? runAcceleration : walkAcceleration : airAcceleration; } }
     [Space(10f)]
 
@@ -91,7 +89,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         else stickFactor = Mathf.Lerp(0.5f, 3f, ground.distance / groundRaycastDist);
 
         // can jump test
-        if (IsGrounded && (jumpCooldownTimer += Time.deltaTime) >= jumpCooldown) canJump = true;
+        if ((jumpCooldownTimer += Time.deltaTime) >= jumpCooldown && IsGrounded) canJump = true;
         if (jumped && IsGrounded && canJump) jumped = false;
 
         // rotate body
@@ -110,20 +108,12 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
                 moveDirection = Vector3.ProjectOnPlane(moveDirection, ground.normal);
             }
             Rb.velocity = Vector3.ClampMagnitude(Rb.velocity + MoveAcceleration * Time.fixedDeltaTime * moveDirection - (ground.normal * stickFactor), MoveSpeed);
-            
-            oldMoveSpeed = MoveSpeed;
         }
         else
         {
             moveDirection = StaticUtilities.GetCameraDir() * input.z + StaticUtilities.HorizontalizeVector(Camera.main.transform.right) * input.x;
-            Vector3 newVel = Rb.velocity + MoveAcceleration * Time.fixedDeltaTime * moveDirection;
-            float speed = StaticUtilities.HorizontalizeVector(newVel).magnitude;
-            if (speed < oldMoveSpeed)
-            {
-                Rb.velocity = newVel;
-            }
-
-            if (speed < MoveSpeed) oldMoveSpeed = MoveSpeed;
+            Vector3 upVel = Vector3.up * Rb.velocity.y;
+            Rb.velocity = upVel + Vector3.ClampMagnitude(Rb.velocity - upVel + MoveAcceleration * Time.fixedDeltaTime * moveDirection, MoveSpeed);
         }
 
         // Steps
@@ -137,10 +127,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             }
         }
         else if (stepClimbing) stepClimbing = false;
-
-        //Debug.DrawRay(transform.position, Rb.velocity, Color.green, Time.fixedDeltaTime);
-        //Debug.DrawRay(transform.position, moveDirection * 2, Color.red, Time.fixedDeltaTime);
-        //Debug.DrawRay(ground.point, ground.normal/2, Color.red, Time.fixedDeltaTime);
     }
 
     public void SetupInputEvents(object sender, ActionMap actions)
@@ -155,7 +141,6 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             Vector2 input = ctx.ReadValue<Vector2>();
             this.input = Vector3.right * input.x + Vector3.forward * input.y;
 
-            if (input.y < 0.5f && isRunning) isRunning = false;
         };
 
         actions.Locomotion.Move.canceled += ctx =>

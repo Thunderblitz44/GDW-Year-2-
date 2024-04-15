@@ -17,6 +17,9 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] Selectable[] tutorial;
     [SerializeField] Selectable[] scrollBars;
 
+    GameObject settingsPanel;
+    GameObject tutorialPanel;
+
     int selected;
     bool selectingScrollbar;
 
@@ -25,6 +28,8 @@ public class PauseMenu : MonoBehaviour
 
     private void Awake()
     {
+        settingsPanel = settings[0].transform.parent.parent.gameObject;
+        tutorialPanel = scrollBars[0].transform.parent.parent.gameObject;
     }
 
     public void AddResumeListener(UnityAction call)
@@ -42,6 +47,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
+        settingsPanel.SetActive(false);
+        tutorialPanel.SetActive(false);
         animator.SetTrigger(pauseTrigger);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -129,5 +136,10 @@ public class PauseMenu : MonoBehaviour
             Toggle boggle = (controls[selected] as Toggle);
             boggle.isOn = !boggle.isOn;
         }
+    }
+
+    public void Save()
+    {
+        settingsPanel.GetComponent<SettingsPanel>().Save();
     }
 }
