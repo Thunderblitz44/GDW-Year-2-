@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     [HideInInspector] public bool IsDead;
     public event UnityAction OnPlayerDeath;
-  
+
     private void Awake()
     {
         Rb = GetComponent<Rigidbody>();
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
             IsGrounded = true;
             if (input == Vector3.zero) Rb.useGravity = true;
             else Rb.useGravity = false;
-        } 
+        }
         else if (!stepClimbing)
         {
             IsGrounded = false;
@@ -136,7 +136,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         // Movement
         actions.Locomotion.Move.performed += ctx =>
         {
-           
+
             // convert wasd to 3D direction
             Vector2 input = ctx.ReadValue<Vector2>();
             this.input = Vector3.right * input.x + Vector3.forward * input.y;
@@ -146,13 +146,17 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         actions.Locomotion.Move.canceled += ctx =>
         {
             input = Vector3.zero;
-            isRunning = false;
         };
 
         // Run
-        actions.Locomotion.Run.performed += ctx =>
+        actions.Locomotion.Run.started += ctx =>
         {
             isRunning = true;
+        };
+
+        actions.Locomotion.Run.canceled += ctx =>
+        {
+            isRunning = false;
         };
 
         // Jump
@@ -185,7 +189,7 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
 
     public void GroundTrail()
     {
-        
+
     }
 
     public void Death()

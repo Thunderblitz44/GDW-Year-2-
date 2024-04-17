@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Spirit Wolf Material Variant Variant
+  m_Name: SharkSpirit
   m_Shader: {fileID: -6465566751694194690, guid: 887d920fe7a08f04ca9246f1faccaa22, type: 3}
   m_Parent: {fileID: 2100000, guid: b572853575aa70749b18c1be96dd3804, type: 2}
   m_ModifiedSerializedProperties: 0
@@ -37,7 +37,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Mask:
-        m_Texture: {fileID: 2800000, guid: 1b7bf93bba2618e4286745345409c7e8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6a03b336ea6ac6447a1ca09e57e204fa, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -45,16 +45,21 @@ Material:
     - _Float: 1
     - _Foam: 1.28
     - _FoamWidth: 2.21
+    - _FresnelPower: 7
+    - _LerpColor: -1
     - _MaskNoise: 0.67
+    - _Mask_1: 30
     - _NoiseScale: 0.98
     - _NoiseStep: 8.09
     - _Transparency: 0
     - _Transparency_1: -0.524
+    - _Water: 0.503
     m_Colors:
     - _DissolveColor: {r: 3.022819, g: 0, b: 2.6746407, a: 0}
-    - _FresnelOuterColor: {r: 0, g: 0, b: 0, a: 0}
-    - _LowerColor: {r: 0, g: 0, b: 0, a: 0}
+    - _FresnelInnerColor: {r: 0.20996436, g: 0.18062477, b: 0.9339623, a: 0}
+    - _FresnelOuterColor: {r: 0.23621728, g: 1.7177749, b: 7.1540046, a: 0}
+    - _LowerColor: {r: 0, g: 0.30537167, b: 1.2757747, a: 0}
     - _MaskColor: {r: 0.4582669, g: 0.54449964, b: 0.94506407, a: 0}
     - _MaskNoise_1: {r: 0.01, g: 0.52, b: 0, a: 0}
-    - _UpperColor: {r: 0, g: 0.30537167, b: 1.2757747, a: 0}
+    - _UpperColor: {r: 0, g: 0.25541356, b: 1.06052, a: 0}
   m_BuildTextureStacks: []
