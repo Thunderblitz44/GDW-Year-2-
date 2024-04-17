@@ -331,7 +331,7 @@ private WindBurst WindBurstRef;
         };
         actions.Abilities.FireTornado.canceled += ctx =>
         {
-            pheonix.EndAttack();
+            Invoke("EndPheonix", 4f);
             if (!canUseFireTornado) return;
           
            
@@ -354,7 +354,13 @@ private WindBurst WindBurstRef;
 
         actions.Abilities.Enable();
     }
-
+void EndPheonix()
+    {
+        
+        
+          pheonix.EndAttack();
+        
+        }
     private IEnumerator DelayedDodge(Vector3 startPosition, Vector3 targetPosition, float speed, float delay)
     {
         yield return new WaitForSeconds(delay);
