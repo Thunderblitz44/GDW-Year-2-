@@ -19,7 +19,7 @@ public class SharkCubeAttack : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInside = true;
-            SetFogSettings(FogMode.Linear, 1.0f, 50.0f, new Color(50.0f / 255.0f, 20.0f / 255.0f, 128.0f / 255.0f));
+            SetFogSettings(FogMode.Linear, 1.0f, 50.0f, new Color(50.0f / 255.0f, 20.0f / 255.0f, 64.0f / 255.0f));
         }
     }
 
