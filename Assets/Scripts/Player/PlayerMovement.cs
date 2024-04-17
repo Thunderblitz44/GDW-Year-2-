@@ -146,13 +146,17 @@ public class PlayerMovement : MonoBehaviour, IInputExpander
         actions.Locomotion.Move.canceled += ctx =>
         {
             input = Vector3.zero;
-            isRunning = false;
         };
 
         // Run
-        actions.Locomotion.Run.performed += ctx =>
+        actions.Locomotion.Run.started += ctx =>
         {
             isRunning = true;
+        };
+
+        actions.Locomotion.Run.canceled += ctx =>
+        {
+            isRunning = false;
         };
 
         // Jump
